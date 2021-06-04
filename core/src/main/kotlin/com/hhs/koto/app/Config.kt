@@ -30,7 +30,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
-
+import ktx.collections.GdxArray
 
 data class Config(
     var logLevel: Int = Logger.DEBUG,
@@ -70,17 +70,17 @@ data class Config(
     var musicVolume: Float = 0f,
     var SEVolume: Float = 0f,
 
-    var keyDown: List<Int> = listOf(Keys.DOWN),
-    var keyUp: List<Int> = listOf(Keys.UP),
-    var keyLeft: List<Int> = listOf(Keys.LEFT),
-    var keyRight: List<Int> = listOf(Keys.RIGHT),
-    var keySelect: List<Int> = listOf(Keys.Z, Keys.ENTER),
-    var keyCancel: List<Int> = listOf(Keys.X, Keys.ESCAPE),
-    var keyShot: List<Int> = listOf(Keys.Z),
-    var keySlow: List<Int> = listOf(Keys.SHIFT_LEFT),
-    var keyBomb: List<Int> = listOf(Keys.X),
-    var keyPause: List<Int> = listOf(Keys.ESCAPE),
-    var keyCustom: List<Int> = listOf(Keys.C),
+    var keyDown: GdxArray<Int> = GdxArray.with(Keys.DOWN),
+    var keyUp: GdxArray<Int> = GdxArray.with(Keys.UP),
+    var keyLeft: GdxArray<Int> = GdxArray.with(Keys.LEFT),
+    var keyRight: GdxArray<Int> = GdxArray.with(Keys.RIGHT),
+    var keySelect: GdxArray<Int> = GdxArray.with(Keys.Z, Keys.ENTER),
+    var keyCancel: GdxArray<Int> = GdxArray.with(Keys.X, Keys.ESCAPE),
+    var keyShot: GdxArray<Int> = GdxArray.with(Keys.Z),
+    var keySlow: GdxArray<Int> = GdxArray.with(Keys.SHIFT_LEFT),
+    var keyBomb: GdxArray<Int> = GdxArray.with(Keys.X),
+    var keyPause: GdxArray<Int> = GdxArray.with(Keys.ESCAPE),
+    var keyCustom: GdxArray<Int> = GdxArray.with(Keys.C),
 
     var UIFont: String = "font/SongSC.ttf",
     var UIFontColor: Color = Color.WHITE,

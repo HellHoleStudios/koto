@@ -26,9 +26,13 @@
 package com.hhs.koto.app
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.utils.viewport.ScalingViewport
+import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.BasicScreen
 import com.hhs.koto.util.A
+import com.hhs.koto.util.InputBlocker
 import com.hhs.koto.util.config
 import com.hhs.koto.util.loadAssetIndex
 import ktx.app.KtxGame
@@ -36,10 +40,22 @@ import ktx.app.KtxScreen
 import ktx.async.KtxAsync
 
 class AppMain : KtxGame<KtxScreen>() {
-    val batch by lazy { SpriteBatch() }
+    lateinit var batch: SpriteBatch
+    lateinit var viewport: Viewport
+    lateinit var input: InputMultiplexer
+    lateinit var blocker: InputBlocker
 
-    override fun create() {
+    override
+
+    fun create() {
         Gdx.app.logLevel = config.logLevel;
+
+        batch = SpriteBatch()
+        viewport = ScalingViewport(config.windowScaling, config.screenWidth, config.screenHeight)
+        input = InputMultiplexer()
+        blocker = InputBlocker()
+        input.addProcessor(blocker)
+        Gdx.input.inputProcessor = input
 
         KtxAsync.initiate()
 

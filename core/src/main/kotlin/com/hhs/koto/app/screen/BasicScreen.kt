@@ -25,20 +25,38 @@
 
 package com.hhs.koto.app.screen
 
-import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.hhs.koto.app.AppMain
-import com.hhs.koto.util.A
+import com.hhs.koto.util.KeyListener
+import com.hhs.koto.util.config
+import com.hhs.koto.util.getTexture
 import ktx.app.KtxScreen
 
-class BasicScreen(private val game: AppMain) : KtxScreen {
+open class BasicScreen(private val game: AppMain) : KtxScreen {
+    private val st = Stage(game.viewport)
+    private val input = InputMultiplexer()
+
+    init {
+        st.isDebugAll = config.debugActorLayout
+
+        input.addProcessor(st)
+        input.addProcessor(KeyListener(config.keyCancel) { onQuit() })
+
+        game.input.addProcessor(input)
+    }
 
     override fun render(delta: Float) {
         game.batch.begin()
-        game.batch.draw(A["bg/title.png", Texture::class.java], 0f, 0f)
+        game.batch.draw(getTexture("bg/title.png"), 0f, 0f)
         game.batch.end()
     }
 
     override fun show() {
+
+    }
+
+    open fun onQuit() {
 
     }
 }

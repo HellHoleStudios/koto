@@ -32,7 +32,7 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.assets.loaders.SynchronousAssetLoader
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.utils.Array as GdxArray
+import ktx.collections.GdxArray
 import com.hhs.koto.util.json
 import ktx.json.fromJson
 

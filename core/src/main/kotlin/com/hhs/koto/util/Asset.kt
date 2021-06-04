@@ -25,7 +25,6 @@
 
 package com.hhs.koto.util
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetLoaderParameters.LoadedCallback
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.*
@@ -56,6 +55,10 @@ val A by lazy {
 
 private val textureReflect = ObjectMap<Texture, String>()
 private val fontCache = ObjectMap<String, BitmapFont>()
+
+fun getTexture(fileName: String): Texture {
+    return A.get(fileName)
+}
 
 inline fun <reified T> getRegion(fileName: String): TextureRegion {
     return when (val tmp: T = A[fileName]) {
