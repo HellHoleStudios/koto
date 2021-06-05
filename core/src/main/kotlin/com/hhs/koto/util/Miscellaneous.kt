@@ -25,10 +25,14 @@
 
 package com.hhs.koto.util
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Json
-import com.badlogic.gdx.utils.Logger
+import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Config
 
-var config = Config()
 val json = Json()
-val logger = Logger("System", config.logLevel)
+var config = Config()
+@Suppress("GDXKotlinStaticResource")
+lateinit var koto: KotoApp
+
+fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f);

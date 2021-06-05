@@ -65,7 +65,7 @@ inline fun <reified T> getRegion(fileName: String): TextureRegion {
         is TextureRegion -> tmp
         is Texture -> TextureRegion(tmp as Texture)
         else -> {
-            A.logger.error("[A] getRegion() requires a Texture-like asset!")
+            A.logger.error("getRegion() requires a Texture-like asset!")
             tmp as TextureRegion
         }
     }

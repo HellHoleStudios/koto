@@ -27,7 +27,7 @@ package com.hhs.koto.app.lwjgl3
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import com.hhs.koto.app.AppMain
+import com.hhs.koto.app.KotoApp
 import com.hhs.koto.util.config
 
 object Lwjgl3Launcher {
@@ -43,6 +43,6 @@ object Lwjgl3Launcher {
         configuration.setResizable(config.allowResize)
         configuration.setTitle(config.windowTitle)
         configuration.setWindowIcon("icon/icon_16x.png", "icon/icon_32x.png", "icon/icon_48x.png", "icon/icon_128x.png")
-        return Lwjgl3Application(AppMain(), configuration)
+        return Lwjgl3Application(KotoApp(), configuration)
     }
 }

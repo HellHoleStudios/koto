@@ -27,13 +27,13 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.hhs.koto.app.AppMain
+import com.hhs.koto.app.KotoApp
 import com.hhs.koto.util.KeyListener
 import com.hhs.koto.util.config
-import com.hhs.koto.util.getTexture
+import com.hhs.koto.util.safeDeltaTime
 import ktx.app.KtxScreen
 
-open class BasicScreen(private val game: AppMain) : KtxScreen {
+open class BasicScreen(private val game: KotoApp) : KtxScreen {
     private val st = Stage(game.viewport)
     private val input = InputMultiplexer()
 
@@ -48,12 +48,17 @@ open class BasicScreen(private val game: AppMain) : KtxScreen {
 
     override fun render(delta: Float) {
         game.batch.begin()
-        game.batch.draw(getTexture("bg/title.png"), 0f, 0f)
+        st.act(safeDeltaTime())
+        st.draw()
         game.batch.end()
     }
 
     override fun show() {
 
+    }
+
+    override fun hide() {
+        game.input.removeProcessor(input)
     }
 
     open fun onQuit() {

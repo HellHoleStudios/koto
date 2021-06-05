@@ -30,7 +30,8 @@ import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.util.json
-import com.hhs.koto.util.logger
+import com.hhs.koto.util.koto
+import ktx.collections.iterate
 import ktx.json.fromJson
 
 class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
@@ -45,18 +46,17 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
         }
     }
 
-    constructor(internalSheetFile: String?) : this(Gdx.files.internal(internalSheetFile)) {}
-    constructor(sheetFile: FileHandle) : this(sheetFile, json.fromJson<ShotSheetLoader.RawShotSheet>(sheetFile)) {}
+    constructor(internalSheetFile: String?) : this(Gdx.files.internal(internalSheetFile))
+    constructor(sheetFile: FileHandle) : this(sheetFile, json.fromJson<ShotSheetLoader.RawShotSheet>(sheetFile))
     constructor(sheetFile: FileHandle, raw: ShotSheetLoader.RawShotSheet) : this(
         TextureAtlas(sheetFile.parent().child(raw.atlas)),
         raw
-    ) {
-    }
+    )
 
     fun getId(name: String): Int {
         val tmp = nameToId.get(name)
         if (tmp == null) {
-            logger.error("Shot data of name\"$name\" not found!")
+            koto.logger.error("Shot data of name\"$name\" not found!")
         }
         return tmp
     }
