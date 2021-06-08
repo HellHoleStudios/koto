@@ -32,8 +32,8 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.assets.loaders.SynchronousAssetLoader
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import ktx.collections.GdxArray
 import com.hhs.koto.util.json
+import ktx.collections.GdxArray
 import ktx.json.fromJson
 
 class ShotSheetLoader(resolver: FileHandleResolver) :

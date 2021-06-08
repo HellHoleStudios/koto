@@ -27,8 +27,8 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Json
-import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Config
+import com.hhs.koto.app.KotoApp
 
 val json = Json()
 var config = Config()

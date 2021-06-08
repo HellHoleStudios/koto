@@ -31,7 +31,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.util.json
 import com.hhs.koto.util.koto
-import ktx.collections.iterate
 import ktx.json.fromJson
 
 class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {

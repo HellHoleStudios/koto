@@ -27,7 +27,8 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.assets.AssetLoaderParameters.LoadedCallback
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.assets.loaders.*
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader
+import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
@@ -60,8 +61,8 @@ fun getTexture(fileName: String): Texture {
     return A.get(fileName)
 }
 
-inline fun <reified T> getRegion(fileName: String): TextureRegion {
-    return when (val tmp: T = A[fileName]) {
+fun getRegion(fileName: String): TextureRegion {
+    return when (val tmp: Any = A[fileName]) {
         is TextureRegion -> tmp
         is Texture -> TextureRegion(tmp as Texture)
         else -> {

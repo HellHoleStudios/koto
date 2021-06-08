@@ -35,11 +35,11 @@ import com.hhs.koto.app.screen.BasicScreen
 import com.hhs.koto.util.*
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
+import ktx.app.clearScreen
 import ktx.async.KtxAsync
 
 class KotoApp : KtxGame<KtxScreen>() {
 
-    var config = Config()
     lateinit var batch: SpriteBatch
     lateinit var viewport: Viewport
     var input = InputMultiplexer()
@@ -63,14 +63,18 @@ class KotoApp : KtxGame<KtxScreen>() {
         loadAssetIndex(Gdx.files.internal(".assets.json"))
         A.finishLoading()
 
-        addScreen(BasicScreen(this))
+        BGM.register(LoopingMusic("mus/E.0120.ogg", 2f, 58f))
+
+        addScreen(BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")))
         setScreen<BasicScreen>()
         super.create()
     }
 
     override fun render() {
         A.update()
-        super.render()
+        BGM.update()
+        clearScreen(0f, 0f, 0f, 1f)
+        currentScreen.render(safeDeltaTime())
     }
 
     override fun dispose() {
