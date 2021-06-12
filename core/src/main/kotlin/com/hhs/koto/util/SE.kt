@@ -23,20 +23,31 @@
  *
  */
 
-package com.hhs.koto.app.lwjgl3
+package com.hhs.koto.util
 
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
+import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.utils.Logger
+import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
-import com.hhs.koto.app.KotoApp
 
-object Lwjgl3Launcher {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val configuration = Lwjgl3ApplicationConfiguration()
-        configuration.setResizable(Config.allowResize)
-        configuration.setTitle(Config.windowTitle)
-        configuration.setWindowIcon("icon/icon_16x.png", "icon/icon_32x.png", "icon/icon_48x.png", "icon/icon_128x.png")
-        Lwjgl3Application(KotoApp(), configuration)
+object SE {
+    private val ses = ObjectMap<String, Sound>()
+    private val logger = Logger("SE", Config.logLevel)
+
+    fun play(name: String) {
+        val se = ses.get(name)
+        if (se == null) {
+            logger.error("SE with this name doesn't exist!")
+        } else {
+            val id = se.play()
+            se.setVolume(id, options.SEVolume)
+        }
+    }
+
+    fun register(name: String, path: String): Sound {
+        logger.debug("Registering sound with alias: $name path: $path")
+        val snd: Sound = A[path]
+        ses.put(name, snd)
+        return snd
     }
 }

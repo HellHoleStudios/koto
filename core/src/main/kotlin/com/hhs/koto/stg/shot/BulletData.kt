@@ -27,12 +27,13 @@ package com.hhs.koto.stg.shot
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.app.Config
 import com.hhs.koto.stg.Collision
 
 class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData) {
     var id: Int = raw.id
     var name: String = raw.name
-    var render: String = raw.render ?: "ALPHA"
+    var render: String = raw.render ?: Config.defaultBlending
     var originX = 0f
     var originY = 0f
     var texture: BulletTexture

@@ -29,10 +29,8 @@ import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.hhs.koto.util.BGM
-import com.hhs.koto.util.KeyListener
-import com.hhs.koto.util.config
-import com.hhs.koto.util.koto
+import com.hhs.koto.app.Config
+import com.hhs.koto.util.*
 import ktx.app.KtxScreen
 
 open class BasicScreen(private val backgroundMusic: String, private val backgroundTexture: TextureRegion) : KtxScreen {
@@ -41,14 +39,14 @@ open class BasicScreen(private val backgroundMusic: String, private val backgrou
     private val background = Image(backgroundTexture)
 
     init {
-        st.isDebugAll = config.debugActorLayout
+        st.isDebugAll = Config.debugActorLayout
 
         background.zIndex = 0
-        background.setBounds(0f, 0f, config.screenWidth, config.screenHeight)
+        background.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
         st.addActor(background)
 
         input.addProcessor(st)
-        input.addProcessor(KeyListener(config.keyCancel) { onQuit() })
+        input.addProcessor(KeyListener(options.keyCancel) { onQuit() })
     }
 
     override fun render(delta: Float) {
@@ -69,6 +67,6 @@ open class BasicScreen(private val backgroundMusic: String, private val backgrou
     }
 
     open fun onQuit() {
-
+        SE.play("cancel");
     }
 }

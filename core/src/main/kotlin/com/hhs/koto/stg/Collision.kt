@@ -25,8 +25,8 @@
 
 package com.hhs.koto.stg
 
+import com.hhs.koto.app.Config
 import com.hhs.koto.util.clamp
-import com.hhs.koto.util.config
 import com.hhs.koto.util.dist2
 import com.hhs.koto.util.sqr
 import kotlin.math.abs
@@ -36,7 +36,7 @@ object Collision {
     fun collide(x1: Float, y1: Float, m1: CollisionData?, x2: Float, y2: Float, m2: CollisionData?): Boolean {
         if (m1 is Circle) {
             if (m2 is Circle) {
-                return if (config.orthoCircleCollision) {
+                return if (Config.orthoCircleCollision) {
                     circleCircleOrtho(x1, y1, m1.radius, x2, y2, m2.radius)
                 } else {
                     circleCircle(x1, y1, m1.radius, x2, y2, m2.radius)

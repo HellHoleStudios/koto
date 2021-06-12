@@ -44,17 +44,22 @@ class KotoApp : KtxGame<KtxScreen>() {
     lateinit var viewport: Viewport
     var input = InputMultiplexer()
     var blocker = InputBlocker()
-    val logger = Logger("Main", config.logLevel)
+    val logger = Logger("Main", Config.logLevel)
 
     override fun create() {
+        loadOptions()
+
         koto = this
 
-        Gdx.app.logLevel = config.logLevel
+        Gdx.app.logLevel = Config.logLevel
 
         logger.info("Game start.")
 
+        Gdx.graphics.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
+        Gdx.graphics.setVSync(options.vsyncEnabled)
+
         batch = SpriteBatch()
-        viewport = ScalingViewport(config.windowScaling, config.screenWidth, config.screenHeight)
+        viewport = ScalingViewport(Config.windowScaling, Config.screenWidth, Config.screenHeight)
         input.addProcessor(blocker)
         Gdx.input.inputProcessor = input
 
@@ -63,10 +68,22 @@ class KotoApp : KtxGame<KtxScreen>() {
         loadAssetIndex(Gdx.files.internal(".assets.json"))
         A.finishLoading()
 
+        SE.register("cancel", "snd/se_cancel00.wav")
+        SE.register("invalid", "snd/se_invalid.wav")
+        SE.register("ok", "snd/se_ok00.wav")
+        SE.register("select", "snd/se_select00.wav")
+        SE.register("pldead", "snd/se_pldead00.wav")
+        SE.register("item", "snd/se_item00.wav")
+        SE.register("graze", "snd/se_graze.wav")
+        SE.register("shoot", "snd/se_plst00.wav")
+
         BGM.register(LoopingMusic("mus/E.0120.ogg", 2f, 58f))
+
+        B.setSheet(Config.defaultShotSheet);
 
         addScreen(BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")))
         setScreen<BasicScreen>()
+
         super.create()
     }
 
@@ -79,5 +96,11 @@ class KotoApp : KtxGame<KtxScreen>() {
 
     override fun dispose() {
         batch.dispose()
+        BGM.dispose()
+    }
+
+    override fun <Type : KtxScreen> setScreen(type: Class<Type>) {
+        logger.debug("Set screen to: $type")
+        super.setScreen(type)
     }
 }

@@ -25,16 +25,16 @@
 
 package com.hhs.koto.util
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.ObjectMap
+import com.hhs.koto.app.Config
 
 object BGM {
 
     var bgm: LoopingMusic? = null
     private val bgms: ObjectMap<String, LoopingMusic> = ObjectMap<String, LoopingMusic>()
-    val logger = Logger("BGM", config.logLevel)
+    val logger = Logger("BGM", Config.logLevel)
 
     fun play(name: String?) {
         if (name == null) {
@@ -78,9 +78,10 @@ object BGM {
 
     fun dispose() {
         if (bgm != null) {
-            logger.debug("\"$bgm.name\" is stopped and disposed.")
             bgm!!.stop()
-            bgm!!.dispose()
+        }
+        bgms.forEach {
+            it.value.dispose()
         }
     }
 
@@ -92,11 +93,21 @@ object BGM {
 }
 
 class LoopingMusic(val name: String) {
-    private lateinit var music: Music
+    private var music: Music = A[name]
     private var isPlaying = false
     private var isLooping = false
     var loopStart = 0f
     var loopEnd = 0f
+
+    init {
+        music.setOnCompletionListener { music ->
+            if (isLooping) {
+                music.volume = options.musicVolume
+                music.play()
+                music.position = loopStart
+            }
+        }
+    }
 
     constructor(name: String, loopStart: Float, loopEnd: Float) : this(name) {
         isLooping = true
@@ -110,28 +121,15 @@ class LoopingMusic(val name: String) {
         music.stop()
     }
 
-    fun load() {
-        BGM.logger.debug("Loading music file \"$name\".")
-        music = Gdx.audio.newMusic(Gdx.files.internal(name))
-        music.setOnCompletionListener { music ->
-            if (isLooping) {
-                music.volume = config.musicVolume
-                music.play()
-                music.position = loopStart
-            }
-        }
-    }
-
     fun dispose() {
         BGM.logger.debug("Disposing music file \"$name\".")
         music.dispose()
     }
 
     fun play() {
-        load()
         isPlaying = true
         music.isLooping = false
-        music.volume = config.musicVolume
+        music.volume = options.musicVolume
         music.play()
     }
 
@@ -142,7 +140,7 @@ class LoopingMusic(val name: String) {
 
     fun resume() {
         isPlaying = true
-        music.volume = config.musicVolume
+        music.volume = options.musicVolume
         music.play()
     }
 
@@ -150,7 +148,7 @@ class LoopingMusic(val name: String) {
         if (isPlaying && isLooping) {
             if (!music.isPlaying) {
                 music.position = loopStart
-                music.volume = config.musicVolume
+                music.volume = options.musicVolume
                 music.play()
             } else if (music.position >= loopEnd) {
                 music.position = loopStart + (music.position - loopEnd)

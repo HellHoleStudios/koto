@@ -30,6 +30,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader
 import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -40,6 +41,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
 import com.badlogic.gdx.utils.ObjectMap
+import com.hhs.koto.app.Config
 import com.hhs.koto.stg.shot.ShotSheet
 import com.hhs.koto.stg.shot.ShotSheetLoader
 import ktx.assets.load
@@ -50,7 +52,7 @@ val A by lazy {
     AssetManager().apply {
         setLoader(ShotSheet::class.java, ShotSheetLoader(fileHandleResolver))
         registerFreeTypeFontLoaders()
-        logger.level = config.logLevel
+        logger.level = Config.logLevel
     }
 }
 
@@ -90,8 +92,8 @@ fun getFont(name: String, size: Int, color: Color, borderWidth: Float = 0f, bord
         parameter.borderWidth = borderWidth
         parameter.borderColor = borderColor
     }
-    parameter.minFilter = config.textureMinFilter
-    parameter.magFilter = config.textureMagFilter
+    parameter.minFilter = options.textureMinFilter
+    parameter.magFilter = options.textureMagFilter
     val font = generator.generateFont(parameter)
     fontCache.put(key, font)
     return font
@@ -100,15 +102,19 @@ fun getFont(name: String, size: Int, color: Color, borderWidth: Float = 0f, bord
 fun loadAssetIndex(file: FileHandle) {
     A.logger.debug("Loading asset index from file $file")
     for (i in json.fromJson<Array<String>>(file)) {
-        loadSync(i)
+        loadSmart(i)
     }
 }
 
-fun loadSync(fileName: String) {
-    A.logger.debug("LoadSync: $fileName")
+fun loadSmart(fileName: String) {
     with(A) {
         when (fileHandleResolver.resolve(fileName).extension()) {
             "png", "jpg", "jpeg", "bmp", "gif" -> load<Texture>(fileName, defaultTextureParameter())
+            "wav" -> if (Config.wavMusic) {
+                load<Music>(fileName)
+            } else {
+                load<Sound>(fileName)
+            }
             "mp3", "ogg" -> load<Music>(fileName)
             "atlas" -> load<TextureAtlas>(fileName)
             "fnt" -> load<BitmapFont>(fileName, defaultBitmapFontParameter())
@@ -140,12 +146,12 @@ class TextureReflectCallback() : LoadedCallback {
 }
 
 fun defaultTextureParameter() = TextureLoader.TextureParameter().apply {
-    minFilter = config.textureMinFilter
-    magFilter = config.textureMagFilter
+    minFilter = options.textureMinFilter
+    magFilter = options.textureMagFilter
     loadedCallback = TextureReflectCallback()
 }
 
 fun defaultBitmapFontParameter() = BitmapFontLoader.BitmapFontParameter().apply {
-    minFilter = config.textureMinFilter
-    magFilter = config.textureMagFilter
+    minFilter = options.textureMinFilter
+    magFilter = options.textureMagFilter
 }

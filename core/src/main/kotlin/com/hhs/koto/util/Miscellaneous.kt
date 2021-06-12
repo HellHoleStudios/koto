@@ -27,12 +27,29 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Json
+import com.badlogic.gdx.utils.JsonWriter
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
+import com.hhs.koto.app.Options
+import ktx.json.fromJson
 
-val json = Json()
-var config = Config()
-@Suppress("GDXKotlinStaticResource")
+val json = Json().apply {
+    setUsePrototypes(false)
+    setOutputType(JsonWriter.OutputType.json)
+}
+lateinit var options: Options
+
 lateinit var koto: KotoApp
 
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f);
+
+fun loadOptions() {
+    val file = Gdx.files.external(Config.configPath)
+    if (file.exists()) {
+        options = json.fromJson(file)
+    } else {
+        options = Options()
+        Gdx.files.external(Config.configPath).parent().mkdirs()
+        json.toJson(options, file)
+    }
+}

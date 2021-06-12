@@ -32,44 +32,19 @@ import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
 import ktx.collections.GdxArray
 
-data class Config(
-    var logLevel: Int = Logger.DEBUG,
-    var autoload: Boolean = false,
+data class Options(
     var fpsMultiplier: Int = 0,
     var fpsLimit: Int = 60,
     var vsyncEnabled: Boolean = false,
-    var windowTitle: String = "Koto",
-    var screenWidth: Float = 1280f,
-    var screenHeight: Float = 960f,
-    var startupWindowWidth: Int = 1280,
-    var startupWindowHeight: Int = 960,
-    var frameWidth: Int = 768,
-    var frameHeight: Int = 896,
-    var frameOffsetX: Float = 64f,
-    var frameOffsetY: Float = 32f,
-    var allowFullScreen: Boolean = true,
-    var allowResize: Boolean = true,
+    var startupWindowWidth: Int = 960,
+    var startupWindowHeight: Int = 720,
     var startupFullScreen: Boolean = false,
-    var windowScaling: Scaling = Scaling.fit,
     var textureMinFilter: TextureFilter = TextureFilter.Linear,
     var textureMagFilter: TextureFilter = TextureFilter.Linear,
-
-    var w: Float = 384f,
-    var h: Float = 448f,
-    var originX: Float = w / 2,
-    var originY: Float = h,
-    var deleteDistance: Float = 1024f,
-    var safeDistance: Float = 16f,
-    var orthoCircleCollision: Boolean = true,
     var invulnerable: Boolean = false,
-    var cleanupBulletCount: Int = 8192,
-    var cleanupBlankCount: Int = 512,
-    var defaultShotSheet: String = "default_shot.shot",
-    var allowSpeedUpOutOfReplay: Boolean = true,
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
     var SEVolume: Float = 1f,
-
     var keyDown: GdxArray<Int> = GdxArray.with(Keys.DOWN),
     var keyUp: GdxArray<Int> = GdxArray.with(Keys.UP),
     var keyLeft: GdxArray<Int> = GdxArray.with(Keys.LEFT),
@@ -81,10 +56,38 @@ data class Config(
     var keyBomb: GdxArray<Int> = GdxArray.with(Keys.X),
     var keyPause: GdxArray<Int> = GdxArray.with(Keys.ESCAPE),
     var keyCustom: GdxArray<Int> = GdxArray.with(Keys.C),
-
-    var UIFont: String = "font/SongSC.ttf",
-    var UIFontColor: Color = Color.WHITE,
-    var UIFontBorderWidth: Float = 4f,
-    var UIFontBorderColor: Color = Color.BLACK,
-    var debugActorLayout: Boolean = false
 )
+
+object Config {
+    var logLevel = Logger.DEBUG
+    const val appName = "Koto"
+    const val configPath = ".config/koto/config.json"
+    const val windowTitle = "Koto"
+    const val screenWidth = 1280f
+    const val screenHeight = 960f
+    const val frameWidth = 768
+    const val frameHeight = 896
+    const val frameOffsetX = 64f
+    const val frameOffsetY = 32f
+    const val allowFullScreen = true
+    const val allowResize = true
+    val windowScaling: Scaling = Scaling.fit
+    const val defaultBlending = "ALPHA"
+    const val w = 384f
+    const val h = 448f
+    const val originX = w / 2
+    const val originY = h
+    const val deleteDistance = 1024f
+    const val safeDistance = 16f
+    const val orthoCircleCollision = true
+    const val cleanupBulletCount = 8192
+    const val cleanupBlankCount = 512
+    const val defaultShotSheet = "default_shot.shot"
+    const val allowSpeedUpOutOfReplay = true
+    const val wavMusic = false
+    const val UIFont = "font/SongSC.ttf"
+    var UIFontColor = Color.WHITE
+    const val UIFontBorderWidth = 4f
+    var UIFontBorderColor = Color.BLACK
+    const val debugActorLayout = false
+}
