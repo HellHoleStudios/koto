@@ -61,7 +61,7 @@ data class Options(
 object Config {
     var logLevel = Logger.DEBUG
     const val appName = "Koto"
-    const val configPath = ".config/koto/config.json"
+    const val optionsPath = ".config/koto/options.json"
     const val windowTitle = "Koto"
     const val screenWidth = 1280f
     const val screenHeight = 960f

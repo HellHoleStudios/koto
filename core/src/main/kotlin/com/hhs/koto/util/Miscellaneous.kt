@@ -44,12 +44,14 @@ lateinit var koto: KotoApp
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f);
 
 fun loadOptions() {
-    val file = Gdx.files.external(Config.configPath)
+    val file = Gdx.files.external(Config.optionsPath)
     if (file.exists()) {
+        Gdx.app.log("Main", "Reading options from file")
         options = json.fromJson(file)
     } else {
         options = Options()
-        Gdx.files.external(Config.configPath).parent().mkdirs()
+        Gdx.files.external(Config.optionsPath).parent().mkdirs()
+        Gdx.app.log("Main", "Creating options file")
         json.toJson(options, file)
     }
 }
