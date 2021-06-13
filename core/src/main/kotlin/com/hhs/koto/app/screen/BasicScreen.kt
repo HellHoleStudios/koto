@@ -34,10 +34,14 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.util.*
 
 
-open class BasicScreen(private val backgroundMusic: String, private val backgroundTexture: TextureRegion) : KotoScreen {
-    private val st = Stage(koto.viewport)
-    private val input = InputMultiplexer()
-    private val background = Image(backgroundTexture)
+open class BasicScreen(
+    private val backgroundMusic: String?,
+    backgroundTexture: TextureRegion,
+    override val name: String
+) : KotoScreen {
+    var st = Stage(koto.viewport)
+    private var input = InputMultiplexer()
+    private var background = Image(backgroundTexture)
     override var state: ScreenState = ScreenState.HIDDEN
 
     init {
@@ -69,16 +73,16 @@ open class BasicScreen(private val backgroundMusic: String, private val backgrou
         state = ScreenState.HIDDEN;
     }
 
-    override fun fadeOut(newScreen: KotoScreen) {
+    override fun fadeOut(newScreen: KotoScreen?, fadeTime: Float) {
         state = ScreenState.FADING_OUT
-        st.root.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run { hide() }))
+        st.root.addAction(Actions.sequence(Actions.fadeOut(fadeTime), Actions.run { hide() }))
     }
 
-    override fun fadeIn(oldScreen: KotoScreen) {
+    override fun fadeIn(oldScreen: KotoScreen?, fadeTime: Float) {
         state = ScreenState.FADING_IN
         show()
         st.root.color.a = 1f
-        st.root.addAction(Actions.sequence(Actions.delay(0.5f), Actions.run {
+        st.root.addAction(Actions.sequence(Actions.delay(fadeTime), Actions.run {
             state = ScreenState.SHOWN
         }))
     }
@@ -90,4 +94,5 @@ open class BasicScreen(private val backgroundMusic: String, private val backgrou
     open fun onQuit() {
         SE.play("cancel");
     }
+
 }

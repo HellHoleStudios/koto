@@ -28,10 +28,13 @@ package com.hhs.koto.util
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
+import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import ktx.json.fromJson
+
+val global = ObjectMap<String, Any>()
 
 val json = Json().apply {
     setUsePrototypes(false)

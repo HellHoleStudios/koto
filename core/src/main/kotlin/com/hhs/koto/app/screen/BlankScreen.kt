@@ -25,23 +25,30 @@
 
 package com.hhs.koto.app.screen
 
-import ktx.app.KtxScreen
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.global
+import com.hhs.koto.util.koto
 
-interface KotoScreen : KtxScreen {
-    fun fadeOut(newScreen: KotoScreen?, fadeTime: Float)
-    fun fadeIn(oldScreen: KotoScreen?, fadeTime: Float)
-    var state: ScreenState
-    val name: String
-}
-
-enum class ScreenState {
-    SHOWN, FADING_IN, FADING_OUT, HIDDEN;
-
-    fun isRendered(): Boolean {
-        return this != HIDDEN
-    }
-
-    fun isFading(): Boolean {
-        return this == FADING_IN || this == FADING_OUT
+class BlankScreen : BasicScreen(null, getRegion("bg/blank.png"), "blank") {
+    override fun fadeIn(oldScreen: KotoScreen?, fadeTime: Float) {
+        state = ScreenState.FADING_IN
+        show()
+        st.root.color.a = 1f
+        st.root.addAction(Actions.sequence(Actions.delay(fadeTime), Actions.run {
+            state = ScreenState.SHOWN
+            if (global["_redirect"] != null) {
+                if (global["_redirectDelay"] != null) {
+                    koto.setScreen(
+                        global["_redirect"] as String,
+                        global["_redirectDelay"] as Float
+                    )
+                    global.remove("_redirectDelay")
+                } else {
+                    koto.setScreen(global["_redirect"] as String)
+                }
+                global.remove("_redirect")
+            }
+        }))
     }
 }

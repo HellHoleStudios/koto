@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.BasicScreen
+import com.hhs.koto.app.screen.BlankScreen
 import com.hhs.koto.app.screen.KotoScreen
 import com.hhs.koto.app.screen.ScreenState
 import com.hhs.koto.app.ui.FPSDisplay
@@ -100,8 +101,10 @@ class KotoApp : ApplicationListener {
 
         B.setSheet(Config.defaultShotSheet);
 
-        screens.add(BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")))
-        setScreen(BasicScreen::class.java)
+        screens.add(BlankScreen())
+        screens.add(BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png"), "zjs"))
+        setScreen("blank")
+        setScreen("zjs", 0.5f)
     }
 
     override fun resize(width: Int, height: Int) {
@@ -150,9 +153,9 @@ class KotoApp : ApplicationListener {
         BGM.dispose()
     }
 
-    fun <T : KotoScreen> setScreen(type: Class<T>) {
+    fun setScreen(name: String?) {
         val scr: KotoScreen? = screens.find {
-            it.javaClass == type
+            it.name == name
         }
         blocker.isBlocking = true
         screens.filter { it.state.isRendered() }.forEach {
@@ -160,12 +163,32 @@ class KotoApp : ApplicationListener {
             it.state = ScreenState.HIDDEN
         }
         if (scr != null) {
-            logger.info("Switching to screen $type.")
+            logger.info("Switching to screen $name")
             scr.resize(Gdx.graphics.width, Gdx.graphics.height)
             scr.show()
             scr.state = ScreenState.SHOWN
         } else {
-            logger.info("Switching to no screen.")
+            logger.info("Switching to no screen")
+        }
+    }
+
+    fun setScreen(name: String?, fadeTime: Float) {
+        val scr: KotoScreen? = screens.find {
+            it.name == name
+        }
+        blocker.isBlocking = true
+        var oldScreen: KotoScreen? = null
+        screens.filter { it.state.isRendered() }.forEach {
+            it.fadeOut(scr, fadeTime)
+            oldScreen = it
+        }
+        if (scr != null) {
+            logger.info("Switching to screen \"$name\" with fading time $fadeTime")
+            scr.resize(Gdx.graphics.width, Gdx.graphics.height)
+            scr.fadeIn(oldScreen, fadeTime)
+            scr.state = ScreenState.SHOWN
+        } else {
+            logger.info("Switching to no screen")
         }
     }
 }
