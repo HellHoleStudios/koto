@@ -28,15 +28,17 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.*
-import ktx.app.KtxScreen
 
-open class BasicScreen(private val backgroundMusic: String, private val backgroundTexture: TextureRegion) : KtxScreen {
+
+open class BasicScreen(private val backgroundMusic: String, private val backgroundTexture: TextureRegion) : KotoScreen {
     private val st = Stage(koto.viewport)
     private val input = InputMultiplexer()
     private val background = Image(backgroundTexture)
+    override var state: ScreenState = ScreenState.HIDDEN
 
     init {
         st.isDebugAll = Config.debugActorLayout
@@ -64,6 +66,25 @@ open class BasicScreen(private val backgroundMusic: String, private val backgrou
 
     override fun hide() {
         koto.input.removeProcessor(input)
+        state = ScreenState.HIDDEN;
+    }
+
+    override fun fadeOut(newScreen: KotoScreen) {
+        state = ScreenState.FADING_OUT
+        st.root.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run { hide() }))
+    }
+
+    override fun fadeIn(oldScreen: KotoScreen) {
+        state = ScreenState.FADING_IN
+        show()
+        st.root.color.a = 1f
+        st.root.addAction(Actions.sequence(Actions.delay(0.5f), Actions.run {
+            state = ScreenState.SHOWN
+        }))
+    }
+
+    override fun dispose() {
+        st.dispose()
     }
 
     open fun onQuit() {

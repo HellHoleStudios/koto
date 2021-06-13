@@ -32,12 +32,12 @@ import ktx.collections.GdxArray
 
 class InputBlocker : InputProcessor {
 
-    private var isBlocking = false
+    var isBlocking = false
         set(value) {
             if (value) {
-                Gdx.app.log("InputBlocker", "Blocking enabled.")
+                if (!isBlocking) Gdx.app.log("InputBlocker", "Blocking enabled.")
             } else {
-                Gdx.app.log("InputBlocker", "Blocking disabled.")
+                if (isBlocking) Gdx.app.log("InputBlocker", "Blocking disabled.")
             }
             field = value
         }
@@ -59,7 +59,7 @@ class InputBlocker : InputProcessor {
     override fun scrolled(amountX: Float, amountY: Float) = isBlocking
 }
 
-class KeyListener(private val keycodes: GdxArray<Int>, private var f:()->Unit) : InputAdapter() {
+class KeyListener(private val keycodes: GdxArray<Int>, private var f: () -> Unit) : InputAdapter() {
     override fun keyDown(keycode: Int): Boolean {
         if (keycodes.contains(keycode)) {
             f()
