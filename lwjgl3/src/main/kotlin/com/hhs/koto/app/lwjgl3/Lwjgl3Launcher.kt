@@ -29,14 +29,25 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
+import java.lang.Thread.sleep
 
 object Lwjgl3Launcher {
+
+    var restart: Boolean = false
+
     @JvmStatic
     fun main(args: Array<String>) {
         val configuration = Lwjgl3ApplicationConfiguration()
         configuration.setResizable(Config.allowResize)
         configuration.setTitle(Config.windowTitle)
         configuration.setWindowIcon("icon/icon_16x.png", "icon/icon_32x.png", "icon/icon_48x.png", "icon/icon_128x.png")
-        Lwjgl3Application(KotoApp(), configuration)
+        Lwjgl3Application(KotoApp {
+            restart = it
+        }, configuration)
+        while (restart) {
+            Lwjgl3Application(KotoApp {
+                restart = it
+            }, configuration)
+        }
     }
 }

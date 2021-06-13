@@ -48,16 +48,18 @@ import ktx.assets.load
 import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.json.fromJson
 
-val A by lazy {
-    AssetManager().apply {
-        setLoader(ShotSheet::class.java, ShotSheetLoader(fileHandleResolver))
-        registerFreeTypeFontLoaders()
-        logger.level = Config.logLevel
-    }
-}
+lateinit var A: AssetManager
+private lateinit var textureReflect: ObjectMap<Texture, String>
+private lateinit var fontCache: ObjectMap<String, BitmapFont>
 
-private val textureReflect = ObjectMap<Texture, String>()
-private val fontCache = ObjectMap<String, BitmapFont>()
+fun initA() {
+    textureReflect = ObjectMap<Texture, String>()
+    fontCache = ObjectMap<String, BitmapFont>()
+    A = AssetManager()
+    A.setLoader(ShotSheet::class.java, ShotSheetLoader(A.fileHandleResolver))
+    A.registerFreeTypeFontLoaders()
+    A.logger.level = Config.logLevel
+}
 
 fun getTexture(fileName: String): Texture {
     return A.get(fileName)

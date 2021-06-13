@@ -45,7 +45,7 @@ import ktx.async.KtxAsync
 import ktx.collections.GdxArray
 
 
-class KotoApp : ApplicationListener {
+class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
 
     lateinit var batch: SpriteBatch
     lateinit var viewport: Viewport
@@ -59,9 +59,10 @@ class KotoApp : ApplicationListener {
     val logger = Logger("Main", Config.logLevel)
 
     override fun create() {
-        loadOptions()
-
         koto = this
+
+        loadOptions()
+        initAll()
 
         Gdx.app.logLevel = Config.logLevel
 
@@ -96,7 +97,7 @@ class KotoApp : ApplicationListener {
         SE.register("item", "snd/se_item00.wav")
         SE.register("graze", "snd/se_graze.wav")
         SE.register("shoot", "snd/se_plst00.wav")
-
+        3
         BGM.register(LoopingMusic("mus/E.0120.ogg", 2f, 58f))
 
         B.setSheet(Config.defaultShotSheet);
@@ -134,7 +135,7 @@ class KotoApp : ApplicationListener {
         }
         blocker.isBlocking = flag1
         if (!flag1 && !flag2) {
-            Gdx.app.exit()
+            exitApp()
         }
         st.act(safeDeltaTime())
         st.draw()

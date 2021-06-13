@@ -32,9 +32,15 @@ import com.hhs.koto.app.Config
 
 object BGM {
 
-    var bgm: LoopingMusic? = null
-    private val bgms: ObjectMap<String, LoopingMusic> = ObjectMap<String, LoopingMusic>()
-    val logger = Logger("BGM", Config.logLevel)
+    private var bgm: LoopingMusic? = null
+    private lateinit var bgms: ObjectMap<String, LoopingMusic>
+    lateinit var logger: Logger
+
+    fun init() {
+        bgm = null
+        bgms = ObjectMap<String, LoopingMusic>()
+        logger = Logger("BGM", Config.logLevel)
+    }
 
     fun play(name: String?) {
         if (name == null) {

@@ -26,6 +26,8 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
 import com.badlogic.gdx.utils.ObjectMap
@@ -34,7 +36,7 @@ import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import ktx.json.fromJson
 
-val global = ObjectMap<String, Any>()
+lateinit var global: ObjectMap<String, Any>
 
 val json = Json().apply {
     setUsePrototypes(false)
@@ -45,6 +47,23 @@ lateinit var options: Options
 lateinit var koto: KotoApp
 
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f);
+
+fun exitApp() {
+    koto.restartCallback(false)
+    Gdx.app.exit()
+}
+
+fun restartApp() {
+    koto.restartCallback(true)
+    Gdx.app.exit()
+}
+
+fun initAll() {
+    global = ObjectMap<String, Any>()
+    initA()
+    BGM.init()
+    SE.init()
+}
 
 fun loadOptions() {
     val file = Gdx.files.external(Config.optionsPath)

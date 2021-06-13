@@ -31,8 +31,13 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
 
 object SE {
-    private val ses = ObjectMap<String, Sound>()
-    private val logger = Logger("SE", Config.logLevel)
+    private lateinit var ses: ObjectMap<String, Sound>
+    private lateinit var logger: Logger
+
+    fun init() {
+        ses = ObjectMap<String, Sound>()
+        logger = Logger("SE", Config.logLevel)
+    }
 
     fun play(name: String) {
         val se = ses.get(name)
