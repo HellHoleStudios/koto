@@ -31,11 +31,11 @@ import com.hhs.koto.util.global
 import com.hhs.koto.util.koto
 
 class BlankScreen : BasicScreen(null, getRegion("bg/blank.png"), "blank") {
-    override fun fadeIn(oldScreen: KotoScreen?, fadeTime: Float) {
+    override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         state = ScreenState.FADING_IN
         show()
         st.root.color.a = 1f
-        st.root.addAction(Actions.sequence(Actions.delay(fadeTime), Actions.run {
+        st.root.addAction(Actions.sequence(Actions.delay(duration), Actions.run {
             state = ScreenState.SHOWN
             if (global["_redirect"] != null) {
                 if (global["_redirectDelay"] != null) {

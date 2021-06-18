@@ -40,6 +40,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.shot.ShotSheet
@@ -76,7 +77,13 @@ fun getRegion(fileName: String): TextureRegion {
     }
 }
 
-fun getFont(name: String, size: Int, color: Color, borderWidth: Float = 0f, borderColor: Color? = null): BitmapFont {
+fun getFont(
+    name: String,
+    size: Int,
+    color: Color = Color.BLACK,
+    borderWidth: Float = 0f,
+    borderColor: Color? = null
+): BitmapFont {
     val tmp = StringBuilder(64)
     tmp.append(name).append(':').append(size).append(':').append(color).append(':')
     if (borderWidth != 0f) {
@@ -99,6 +106,15 @@ fun getFont(name: String, size: Int, color: Color, borderWidth: Float = 0f, bord
     val font = generator.generateFont(parameter)
     fontCache.put(key, font)
     return font
+}
+
+fun getUILabelStyle(fontSize: Int): LabelStyle {
+    return LabelStyle(
+        getFont(
+            Config.UIFont, fontSize, Config.UIFontColor,
+            Config.UIFontBorderWidth, Config.UIFontBorderColor
+        ), Color.WHITE
+    )
 }
 
 fun loadAssetIndex(file: FileHandle) {
@@ -132,7 +148,6 @@ fun putTextureReflect(texture: Texture, fileName: String) {
     A.logger.debug("Texture reflect info: ${texture.hashCode()} <- $fileName")
     textureReflect.put(texture, fileName)
 }
-
 
 class TextureReflectCallback() : LoadedCallback {
     private var original: LoadedCallback? = null

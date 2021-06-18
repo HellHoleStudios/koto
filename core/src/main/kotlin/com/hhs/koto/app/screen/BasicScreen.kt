@@ -40,8 +40,8 @@ open class BasicScreen(
     override val name: String
 ) : KotoScreen {
     var st = Stage(koto.viewport)
-    private var input = InputMultiplexer()
-    private var background = Image(backgroundTexture)
+    var input = InputMultiplexer()
+    var background = Image(backgroundTexture)
     override var state: ScreenState = ScreenState.HIDDEN
 
     init {
@@ -73,16 +73,16 @@ open class BasicScreen(
         state = ScreenState.HIDDEN;
     }
 
-    override fun fadeOut(newScreen: KotoScreen?, fadeTime: Float) {
+    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         state = ScreenState.FADING_OUT
-        st.root.addAction(Actions.sequence(Actions.fadeOut(fadeTime), Actions.run { hide() }))
+        st.root.addAction(Actions.sequence(Actions.fadeOut(duration), Actions.run { hide() }))
     }
 
-    override fun fadeIn(oldScreen: KotoScreen?, fadeTime: Float) {
+    override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         state = ScreenState.FADING_IN
         show()
         st.root.color.a = 1f
-        st.root.addAction(Actions.sequence(Actions.delay(fadeTime), Actions.run {
+        st.root.addAction(Actions.sequence(Actions.delay(duration), Actions.run {
             state = ScreenState.SHOWN
         }))
     }

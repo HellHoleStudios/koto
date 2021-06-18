@@ -34,10 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.hhs.koto.app.screen.BasicScreen
-import com.hhs.koto.app.screen.BlankScreen
-import com.hhs.koto.app.screen.KotoScreen
-import com.hhs.koto.app.screen.ScreenState
+import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
@@ -97,15 +94,15 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
         SE.register("item", "snd/se_item00.wav")
         SE.register("graze", "snd/se_graze.wav")
         SE.register("shoot", "snd/se_plst00.wav")
-        3
+
         BGM.register(LoopingMusic("mus/E.0120.ogg", 2f, 58f))
 
         B.setSheet(Config.defaultShotSheet);
 
         screens.add(BlankScreen())
-        screens.add(BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png"), "zjs"))
+        screens.add(TitleScreen())
         setScreen("blank")
-        setScreen("zjs", 0.5f)
+        setScreen("title", 0.5f)
     }
 
     override fun resize(width: Int, height: Int) {
@@ -173,20 +170,20 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
         }
     }
 
-    fun setScreen(name: String?, fadeTime: Float) {
+    fun setScreen(name: String?, duration: Float) {
         val scr: KotoScreen? = screens.find {
             it.name == name
         }
         blocker.isBlocking = true
         var oldScreen: KotoScreen? = null
         screens.filter { it.state.isRendered() }.forEach {
-            it.fadeOut(scr, fadeTime)
+            it.fadeOut(scr, duration)
             oldScreen = it
         }
         if (scr != null) {
-            logger.info("Switching to screen \"$name\" with fading time $fadeTime")
+            logger.info("Switching to screen \"$name\" with fading time $duration")
             scr.resize(Gdx.graphics.width, Gdx.graphics.height)
-            scr.fadeIn(oldScreen, fadeTime)
+            scr.fadeIn(oldScreen, duration)
             scr.state = ScreenState.SHOWN
         } else {
             logger.info("Switching to no screen")

@@ -26,14 +26,15 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
 import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
+import ktx.collections.GdxArray
+import ktx.collections.removeAll
 import ktx.json.fromJson
 
 lateinit var global: ObjectMap<String, Any>
@@ -77,3 +78,18 @@ fun loadOptions() {
         json.toJson(options, file)
     }
 }
+
+fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
+    if (koto.blocker.isBlocking) return false
+    return keycode in key
+}
+
+fun checkKey(key: GdxArray<Int>): Boolean {
+    if (koto.blocker.isBlocking) return false
+    for (i in key.safeIterator()) {
+        if (Gdx.input.isKeyPressed(i)) return true
+    }
+    return false
+}
+
+fun <Type> GdxArray<Type>.safeIterator() = Array.ArrayIterator(this)

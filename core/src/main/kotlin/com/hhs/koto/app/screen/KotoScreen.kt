@@ -28,8 +28,8 @@ package com.hhs.koto.app.screen
 import ktx.app.KtxScreen
 
 interface KotoScreen : KtxScreen {
-    fun fadeOut(newScreen: KotoScreen?, fadeTime: Float)
-    fun fadeIn(oldScreen: KotoScreen?, fadeTime: Float)
+    fun fadeOut(newScreen: KotoScreen?, duration: Float)
+    fun fadeIn(oldScreen: KotoScreen?, duration: Float)
     var state: ScreenState
     val name: String
 }
