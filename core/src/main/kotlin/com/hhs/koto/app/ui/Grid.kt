@@ -47,6 +47,26 @@ interface GridComponent {
     val gridY: Int
 
     fun trigger()
+
+    fun activate(): GridComponent {
+        active = true
+        return this
+    }
+
+    fun deactivate(): GridComponent {
+        active = false
+        return this
+    }
+
+    fun enable(): GridComponent {
+        enabled = true
+        return this
+    }
+
+    fun disable(): GridComponent {
+        enabled = false
+        return this
+    }
 }
 
 open class Grid(
@@ -233,26 +253,6 @@ open class Grid(
                 i.active = true
             }
         }
-    }
-
-    fun activate(): Grid {
-        active = true
-        return this
-    }
-
-    fun deactivate(): Grid {
-        active = false
-        return this
-    }
-
-    fun enable(): Grid {
-        enabled = true
-        return this
-    }
-
-    fun disable(): Grid {
-        enabled = false
-        return this
     }
 
     private fun distance(x1: Int, y1: Int, x2: Int, y2: Int): Int {

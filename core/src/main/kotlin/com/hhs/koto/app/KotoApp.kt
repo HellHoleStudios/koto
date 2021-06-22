@@ -34,7 +34,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.hhs.koto.app.screen.*
+import com.hhs.koto.app.screen.BlankScreen
+import com.hhs.koto.app.screen.KotoScreen
+import com.hhs.koto.app.screen.ScreenState
+import com.hhs.koto.app.screen.TitleScreen
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen

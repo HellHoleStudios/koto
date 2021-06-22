@@ -31,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.util.getUILabelStyle
-import java.util.concurrent.Callable
 
 class GridButton(
     initialText: CharSequence,
@@ -149,25 +148,5 @@ class GridButton(
         if (!enabled) {
             style = LabelStyle(inactiveStyle.font, inactiveStyle.fontColor.cpy().mul(0.5f, 0.5f, 0.5f, 1f))
         }
-    }
-
-    fun activate(): GridButton {
-        active = true
-        return this
-    }
-
-    fun deactivate(): GridButton {
-        active = false
-        return this
-    }
-
-    fun enable(): GridButton {
-        enabled = true
-        return this
-    }
-
-    fun disable(): GridButton {
-        enabled = false
-        return this
     }
 }

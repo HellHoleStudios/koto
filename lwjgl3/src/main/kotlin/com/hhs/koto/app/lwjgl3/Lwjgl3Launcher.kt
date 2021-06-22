@@ -29,7 +29,6 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
-import java.lang.Thread.sleep
 
 object Lwjgl3Launcher {
 

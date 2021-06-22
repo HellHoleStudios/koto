@@ -84,9 +84,9 @@ object Config {
     const val defaultShotSheet = "default_shot.shot"
     const val allowSpeedUpOutOfReplay = true
     const val wavMusic = false
-    const val UIFont = "font/SongSC.ttf"
+    const val UIFont = "font/SHSSC-Mini-Heavy.ttf"
     var UIFontColor = Color.WHITE
-    const val UIFontBorderWidth = 4f
+    const val UIFontBorderWidth = 3f
     var UIFontBorderColor = Color.BLACK
     const val debugActorLayout = false
 }

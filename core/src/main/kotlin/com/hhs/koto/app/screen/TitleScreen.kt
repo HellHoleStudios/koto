@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.util.*
@@ -39,51 +40,49 @@ import ktx.collections.set
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png"), "title") {
     private var grid: Grid = Grid()
     private var title: Label = Label(
-        "Jade Demo Game",
-        LabelStyle(getFont("font/LBRITE.ttf", 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE)
+        "Koto Test Game",
+        LabelStyle(getFont(Config.UIFont, 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE)
     )
     private var subtitle = Label(
-        "by Hell Hole Studios 2020",
-        LabelStyle(getFont("font/LBRITEI.ttf", 36), Color.BLACK)
+        "by Hell Hole Studios 2021",
+        LabelStyle(getFont("font/SSP-Italic.ttf", 36), Color.BLACK)
     )
     private var titles: Group = Group()
 
     init {
-        title = Label(
-            "Jade Demo Game",
-            LabelStyle(getFont("font/LBRITE.ttf", 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE)
-        )
-        title.setPosition(180f, 780f)
-        subtitle.setPosition(800f, 720f)
+        title.setPosition(80f, 780f)
+        subtitle.setPosition(100f, 740f)
         titles.addActor(title)
         titles.addActor(subtitle)
         st.addActor(titles)
         st.addActor(grid)
-        grid.add(GridButton("Game Start", 48, 860f, 580f, 400f, 60f, 0, 0) {
+
+        grid.add(GridButton("Game Start", 32, 950f, 400f, 400f, 40f, 0, 0) {
             global["_gameMode"] = "regular"
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Extra Start", 48, 840f, 520f, 400f, 60f, 0, 1) {
+        grid.add(GridButton("Extra Start", 32, 950f, 360f, 400f, 40f, 0, 1) {
             global["_gameMode"] = "extra"
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Stage Practice", 48, 820f, 460f, 400f, 60f, 0, 2) {
+        grid.add(GridButton("Stage Practice", 32, 950f, 320f, 400f, 40f, 0, 2) {
             global["_gameMode"] = "stagePractice"
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Spell Practice", 48, 800f, 400f, 400f, 60f, 0, 3) {
+        grid.add(GridButton("Spell Practice", 32, 950f, 280f, 400f, 40f, 0, 3) {
             global["_gameMode"] = "spellPractice"
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Replay", 48, 780f, 340f, 400f, 60f, 0, 4)).enabled = false
-        grid.add(GridButton("Player Data", 48, 760f, 280f, 400f, 60f, 0, 5)).enabled = false
-        grid.add(GridButton("Music Room", 48, 740f, 220f, 400f, 60f, 0, 6) {
+        grid.add(GridButton("Replay", 32, 950f, 240f, 400f, 40f, 0, 4)).disable()
+        grid.add(GridButton("Player Data", 32, 950f, 200f, 400f, 40f, 0, 5)).disable()
+        grid.add(GridButton("Music Room", 32, 950f, 160f, 400f, 40f, 0, 6) {
             koto.setScreen("musicRoom", 0.5f)
         })
-        grid.add(GridButton("Option", 48, 720f, 160f, 400f, 60f, 0, 7) {
+        grid.add(GridButton("Option", 32, 950f, 120f, 400f, 40f, 0, 7) {
             koto.setScreen("option", 0.5f)
         })
-        grid.add(GridButton("Quit", 48, 700f, 100f, 400f, 60f, 0, 8) { exitApp() })
+        grid.add(GridButton("Quit", 32, 950f, 80f, 400f, 40f, 0, 8) { exitApp() })
+
         grid.selectFirst()
         grid.updateComponent()
         input.addProcessor(grid)

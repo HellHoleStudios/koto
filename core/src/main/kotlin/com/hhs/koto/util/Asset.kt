@@ -25,6 +25,7 @@
 
 package com.hhs.koto.util
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetLoaderParameters.LoadedCallback
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader
@@ -46,12 +47,14 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.stg.shot.ShotSheet
 import com.hhs.koto.stg.shot.ShotSheetLoader
 import ktx.assets.load
+import ktx.collections.GdxArray
 import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.json.fromJson
 
 lateinit var A: AssetManager
 private lateinit var textureReflect: ObjectMap<Texture, String>
 private lateinit var fontCache: ObjectMap<String, BitmapFont>
+private var charset: String = ""
 
 fun initA() {
     textureReflect = ObjectMap<Texture, String>()
@@ -60,6 +63,9 @@ fun initA() {
     A.setLoader(ShotSheet::class.java, ShotSheetLoader(A.fileHandleResolver))
     A.registerFreeTypeFontLoaders()
     A.logger.level = Config.logLevel
+    for (i in json.fromJson<GdxArray<String>>(Gdx.files.internal(".charset.json")).safeIterator()) {
+        charset += i
+    }
 }
 
 fun getTexture(fileName: String): Texture {
@@ -101,6 +107,7 @@ fun getFont(
         parameter.borderWidth = borderWidth
         parameter.borderColor = borderColor
     }
+    parameter.characters = charset
     parameter.minFilter = options.textureMinFilter
     parameter.magFilter = options.textureMagFilter
     val font = generator.generateFont(parameter)

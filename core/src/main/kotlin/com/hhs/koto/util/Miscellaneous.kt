@@ -34,7 +34,6 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import ktx.collections.GdxArray
-import ktx.collections.removeAll
 import ktx.json.fromJson
 
 lateinit var global: ObjectMap<String, Any>
