@@ -39,7 +39,12 @@ object Lwjgl3Launcher {
         val configuration = Lwjgl3ApplicationConfiguration()
         configuration.setResizable(Config.allowResize)
         configuration.setTitle(Config.windowTitle)
-        configuration.setWindowIcon("icon/icon_16x.png", "icon/icon_32x.png", "icon/icon_48x.png", "icon/icon_128x.png")
+        configuration.setWindowIcon(
+            "icon/koto-icon_16x.png",
+            "icon/koto-icon_32x.png",
+            "icon/koto-icon_48x.png",
+            "icon/koto-icon_128x.png"
+        )
         Lwjgl3Application(KotoApp {
             restart = it
         }, configuration)
