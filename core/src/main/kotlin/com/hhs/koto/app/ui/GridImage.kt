@@ -26,14 +26,14 @@
 package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.hhs.koto.util.getUILabelStyle
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 
-class GridButton(
-    text: CharSequence,
+class GridImage(
+    texture: TextureRegion,
     x: Float,
     y: Float,
     width: Float,
@@ -42,20 +42,8 @@ class GridButton(
     override val gridY: Int = 0,
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
-    activeStyle: LabelStyle,
-    inactiveStyle: LabelStyle? = null,
     var runnable: (() -> Unit)? = null
-) : Label(text, activeStyle), GridComponent {
-    var activeStyle: LabelStyle = activeStyle
-        set(value) {
-            field = value
-            update()
-        }
-    var inactiveStyle: LabelStyle = inactiveStyle ?: activeStyle
-        set(value) {
-            field = value
-            update()
-        }
+) : Image(texture), GridComponent {
     override var active = true
         set(value) {
             field = value
@@ -73,7 +61,7 @@ class GridButton(
     }
 
     constructor(
-        text: CharSequence,
+        texture: TextureRegion,
         fontSize: Int,
         x: Float,
         y: Float,
@@ -83,7 +71,7 @@ class GridButton(
         gridY: Int,
         runnable: (() -> Unit)? = null
     ) : this(
-        text,
+        texture,
         x,
         y,
         width,
@@ -92,30 +80,42 @@ class GridButton(
         gridY,
         null,
         null,
-        getUILabelStyle(fontSize),
-        getUILabelStyle(fontSize),
         runnable
     ) {
         activeAction = {
-            Actions.parallel(
+            Actions.sequence(
+                Actions.moveTo(staticX, staticY),
+                Actions.color(Color.WHITE),
                 Actions.sequence(
-                    Actions.color(Color.WHITE),
-                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
-                ),
-                Actions.forever(
-                    Actions.sequence(
-                        Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f)
-                    )
+                    Actions.moveTo(staticX - 10, staticY, 0.1f, Interpolation.sine),
+                    Actions.moveTo(staticX, staticY, 0.1f, Interpolation.sine)
                 )
             )
         }
         inactiveAction = {
-            Actions.parallel(
-                Actions.alpha(1f),
-                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
-                Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))
+            Actions.forever(
+                Actions.color(Color.GRAY)
             )
+        }
+    }
+
+
+    override fun update() {
+        color = if (enabled) {
+            Color.WHITE
+        } else {
+            Color.GRAY
+        }
+        if (active && enabled) {
+            actions.clear()
+            if (activeAction != null) {
+                addAction(activeAction!!())
+            }
+        } else {
+            actions.clear()
+            if (inactiveAction != null) {
+                addAction(inactiveAction!!())
+            }
         }
     }
 
@@ -125,22 +125,5 @@ class GridButton(
         }
     }
 
-    override fun update() {
-        if (active && enabled) {
-            style = activeStyle
-            actions.clear()
-            if (activeAction != null) {
-                addAction(activeAction!!())
-            }
-        } else {
-            style = inactiveStyle
-            actions.clear()
-            if (inactiveAction != null) {
-                addAction(inactiveAction!!())
-            }
-        }
-        if (!enabled) {
-            style = LabelStyle(inactiveStyle.font, inactiveStyle.fontColor.cpy().mul(0.5f, 0.5f, 0.5f, 1f))
-        }
-    }
+
 }

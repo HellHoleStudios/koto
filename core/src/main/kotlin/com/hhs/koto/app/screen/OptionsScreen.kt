@@ -126,7 +126,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png"))
         SEVolume.update()
         input.addProcessor(SEVolume)
         grid.add(SEVolume)
-        grid.add(GridButton("Key Config", 32, 940f, 160f, 200f, 40f, 0, 2) {}).disable()
+        grid.add(GridButton("Key Config", 32, 940f, 160f, 200f, 40f, 0, 2)).disable()
         grid.add(GridButton("Default", 32, 940f, 120f, 200f, 40f, 0, 3) {
             options = Options()
             BGM.setVolume(options.musicVolume)

@@ -93,13 +93,14 @@ open class Grid(
 
     override fun update() {
         clearActions()
-        val action = if (active) {
-            activeAction
+        if (active) {
+            if (activeAction != null) {
+                addAction(activeAction!!())
+            }
         } else {
-            inactiveAction
-        }
-        if (action != null) {
-            addAction(action())
+            if (inactiveAction != null) {
+                addAction(inactiveAction!!())
+            }
         }
     }
 

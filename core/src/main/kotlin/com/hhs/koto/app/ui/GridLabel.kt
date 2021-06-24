@@ -25,26 +25,25 @@
 
 package com.hhs.koto.app.ui
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.util.getUILabelStyle
+import java.util.concurrent.Callable
 
-class GridButton(
+
+class GridLabel(
     text: CharSequence,
+    fontSize: Int,
     x: Float,
     y: Float,
     width: Float,
     height: Float,
-    override val gridX: Int = 0,
-    override val gridY: Int = 0,
+    override val gridX: Int,
+    override val gridY: Int,
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
-    activeStyle: LabelStyle,
-    inactiveStyle: LabelStyle? = null,
-    var runnable: (() -> Unit)? = null
+    activeStyle: LabelStyle = getUILabelStyle(fontSize),
+    inactiveStyle: LabelStyle? = getUILabelStyle(fontSize)
 ) : Label(text, activeStyle), GridComponent {
     var activeStyle: LabelStyle = activeStyle
         set(value) {
@@ -61,7 +60,9 @@ class GridButton(
             field = value
             update()
         }
-    override var enabled = true
+    @Suppress("SetterBackingFieldAssignment")
+    override var enabled = false
+        set(value) {}
     override var parent: Grid? = null
     var staticX = 0f
     var staticY = 0f
@@ -80,10 +81,10 @@ class GridButton(
         width: Float,
         height: Float,
         gridX: Int,
-        gridY: Int,
-        runnable: (() -> Unit)? = null
+        gridY: Int
     ) : this(
         text,
+        fontSize,
         x,
         y,
         width,
@@ -93,37 +94,8 @@ class GridButton(
         null,
         null,
         getUILabelStyle(fontSize),
-        getUILabelStyle(fontSize),
-        runnable
-    ) {
-        activeAction = {
-            Actions.parallel(
-                Actions.sequence(
-                    Actions.color(Color.WHITE),
-                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
-                ),
-                Actions.forever(
-                    Actions.sequence(
-                        Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f)
-                    )
-                )
-            )
-        }
-        inactiveAction = {
-            Actions.parallel(
-                Actions.alpha(1f),
-                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
-                Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))
-            )
-        }
-    }
-
-    override fun trigger() {
-        if (enabled && runnable != null) {
-            runnable!!()
-        }
-    }
+        getUILabelStyle(fontSize)
+    )
 
     override fun update() {
         if (active && enabled) {
@@ -143,4 +115,6 @@ class GridButton(
             style = LabelStyle(inactiveStyle.font, inactiveStyle.fontColor.cpy().mul(0.5f, 0.5f, 0.5f, 1f))
         }
     }
+
+    override fun trigger() = Unit
 }
