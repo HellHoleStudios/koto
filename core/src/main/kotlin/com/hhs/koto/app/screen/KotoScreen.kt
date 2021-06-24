@@ -31,7 +31,6 @@ interface KotoScreen : KtxScreen {
     fun fadeOut(newScreen: KotoScreen?, duration: Float)
     fun fadeIn(oldScreen: KotoScreen?, duration: Float)
     var state: ScreenState
-    val name: String
 }
 
 enum class ScreenState {

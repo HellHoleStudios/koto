@@ -30,7 +30,7 @@ import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.global
 import com.hhs.koto.util.koto
 
-class BlankScreen : BasicScreen(null, getRegion("bg/blank.png"), "blank") {
+class BlankScreen : BasicScreen(null, getRegion("bg/blank.png")) {
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         state = ScreenState.FADING_IN
         show()

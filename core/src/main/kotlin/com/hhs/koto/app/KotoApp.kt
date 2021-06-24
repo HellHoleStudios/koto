@@ -32,17 +32,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.WindowedMean
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.hhs.koto.app.screen.BlankScreen
-import com.hhs.koto.app.screen.KotoScreen
-import com.hhs.koto.app.screen.ScreenState
-import com.hhs.koto.app.screen.TitleScreen
+import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
 import ktx.async.KtxAsync
 import ktx.collections.GdxArray
+import ktx.collections.set
 
 
 class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
@@ -53,7 +52,7 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
     private lateinit var fps: FPSDisplay
     lateinit var fpsCounter: WindowedMean
 
-    val screens = GdxArray<KotoScreen>()
+    val screens = ObjectMap<String, KotoScreen>()
     var input = InputMultiplexer()
     var blocker = InputBlocker()
     val logger = Logger("Main", Config.logLevel)
@@ -102,14 +101,15 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
 
         B.setSheet(Config.defaultShotSheet);
 
-        screens.add(BlankScreen())
-        screens.add(TitleScreen())
+        screens["blank"] = BlankScreen()
+        screens["title"] = TitleScreen()
+        screens["options"] = OptionsScreen()
         setScreen("blank")
-        setScreen("title", 0.5f)
+        setScreen("title", 1f)
     }
 
     override fun resize(width: Int, height: Int) {
-        screens.filter { it.state.isRendered() }.forEach { it.resize(width, height) }
+        screens.safeValues().filter { it.state.isRendered() }.forEach { it.resize(width, height) }
         viewport.update(width, height)
     }
 
@@ -121,15 +121,15 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
         clearScreen(0f, 0f, 0f, 1f)
         var flag1 = false
         var flag2 = false
-        screens.filter { it.state == ScreenState.FADING_IN }.forEach {
+        screens.safeValues().filter { it.state == ScreenState.FADING_IN }.forEach {
             flag1 = true
             it.render(safeDeltaTime())
         }
-        screens.filter { it.state == ScreenState.SHOWN }.forEach {
+        screens.safeValues().filter { it.state == ScreenState.SHOWN }.forEach {
             flag2 = true
             it.render(safeDeltaTime())
         }
-        screens.filter { it.state == ScreenState.FADING_OUT }.forEach {
+        screens.safeValues().filter { it.state == ScreenState.FADING_OUT }.forEach {
             flag1 = true
             it.render(safeDeltaTime())
         }
@@ -142,11 +142,11 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
     }
 
     override fun pause() {
-        screens.filter { it.state.isRendered() }.forEach { it.pause() }
+        screens.safeValues().filter { it.state.isRendered() }.forEach { it.pause() }
     }
 
     override fun resume() {
-        screens.filter { it.state.isRendered() }.forEach { it.resume() }
+        screens.safeValues().filter { it.state.isRendered() }.forEach { it.resume() }
     }
 
     override fun dispose() {
@@ -155,11 +155,9 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
     }
 
     fun setScreen(name: String?) {
-        val scr: KotoScreen? = screens.find {
-            it.name == name
-        }
+        val scr: KotoScreen? = screens[name]
         blocker.isBlocking = true
-        screens.filter { it.state.isRendered() }.forEach {
+        screens.safeValues().filter { it.state.isRendered() }.forEach {
             it.hide()
             it.state = ScreenState.HIDDEN
         }
@@ -174,12 +172,10 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
     }
 
     fun setScreen(name: String?, duration: Float) {
-        val scr: KotoScreen? = screens.find {
-            it.name == name
-        }
+        val scr: KotoScreen? = screens[name]
         blocker.isBlocking = true
         var oldScreen: KotoScreen? = null
-        screens.filter { it.state.isRendered() }.forEach {
+        screens.safeValues().filter { it.state.isRendered() }.forEach {
             it.fadeOut(scr, duration)
             oldScreen = it
         }

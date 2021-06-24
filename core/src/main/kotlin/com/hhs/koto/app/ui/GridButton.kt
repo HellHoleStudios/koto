@@ -104,9 +104,7 @@ class GridButton(
             Actions.parallel(
                 Actions.sequence(
                     Actions.color(Color.WHITE),
-                    Actions.moveTo(staticX + 2, staticY, 0.03f, Interpolation.sine),
-                    Actions.moveTo(staticX - 4, staticY, 0.06f, Interpolation.sine),
-                    Actions.moveTo(staticX, staticY, 0.03f, Interpolation.sine)
+                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
                 ),
                 Actions.forever(
                     Actions.sequence(
@@ -119,7 +117,7 @@ class GridButton(
         inactiveAction = {
             Actions.parallel(
                 Actions.alpha(1f),
-                Actions.moveTo(staticX, staticY, 0.1f, Interpolation.sine),
+                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
                 Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))
             )
         }
@@ -132,7 +130,7 @@ class GridButton(
     }
 
     override fun update() {
-        if (active) {
+        if (active && enabled) {
             style = activeStyle
             actions.clear()
             if (activeAction != null) {

@@ -37,7 +37,6 @@ import com.hhs.koto.util.*
 open class BasicScreen(
     private val backgroundMusic: String?,
     backgroundTexture: TextureRegion,
-    override val name: String
 ) : KotoScreen {
     var st = Stage(koto.viewport)
     var input = InputMultiplexer()

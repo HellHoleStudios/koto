@@ -46,7 +46,7 @@ lateinit var options: Options
 
 lateinit var koto: KotoApp
 
-fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f);
+fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
 
 fun exitApp() {
     koto.restartCallback(false)
@@ -73,9 +73,18 @@ fun loadOptions() {
     } else {
         options = Options()
         Gdx.files.external(Config.optionsPath).parent().mkdirs()
-        Gdx.app.log("Main", "Creating options file")
+        Gdx.app.log("Main", "Creating default options file")
         json.toJson(options, file)
     }
+}
+
+fun saveOptions() {
+    val file = Gdx.files.external(Config.optionsPath)
+    Gdx.app.log("Main", "Writing options to file")
+    if (!file.exists()) {
+        Gdx.files.external(Config.optionsPath).parent().mkdirs()
+    }
+    json.toJson(options, file)
 }
 
 fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
@@ -92,3 +101,9 @@ fun checkKey(key: GdxArray<Int>): Boolean {
 }
 
 fun <Type> GdxArray<Type>.safeIterator() = Array.ArrayIterator(this)
+
+fun <K, V> ObjectMap<K, V>.safeEntries() = ObjectMap.Entries(this)
+
+fun <K, V> ObjectMap<K, V>.safeKeys() = ObjectMap.Keys(this)
+
+fun <K, V> ObjectMap<K, V>.safeValues() = ObjectMap.Values(this)

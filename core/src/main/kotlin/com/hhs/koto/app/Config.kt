@@ -44,7 +44,7 @@ data class Options(
     var invulnerable: Boolean = false,
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
-    var SEVolume: Float = 1f,
+    var SEVolume: Float = 0.5f,
     var keyDown: GdxArray<Int> = GdxArray.with(Keys.DOWN),
     var keyUp: GdxArray<Int> = GdxArray.with(Keys.UP),
     var keyLeft: GdxArray<Int> = GdxArray.with(Keys.LEFT),

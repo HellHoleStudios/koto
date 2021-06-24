@@ -37,17 +37,17 @@ import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.util.*
 import ktx.collections.set
 
-class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png"), "title") {
-    private var grid: Grid = Grid()
-    private var title: Label = Label(
+class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
+    private val grid: Grid = Grid()
+    private val title: Label = Label(
         "Koto Test Game",
         LabelStyle(getFont(Config.UIFont, 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE)
     )
-    private var subtitle = Label(
+    private val subtitle = Label(
         "by Hell Hole Studios 2021",
         LabelStyle(getFont("font/SSP-Italic.ttf", 36), Color.BLACK)
     )
-    private var titles: Group = Group()
+    private val titles: Group = Group()
 
     init {
         title.setPosition(80f, 780f)
@@ -78,10 +78,12 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png"), "ti
         grid.add(GridButton("Music Room", 32, 950f, 160f, 400f, 40f, 0, 6) {
             koto.setScreen("musicRoom", 0.5f)
         })
-        grid.add(GridButton("Option", 32, 950f, 120f, 400f, 40f, 0, 7) {
-            koto.setScreen("option", 0.5f)
+        grid.add(GridButton("Options", 32, 950f, 120f, 400f, 40f, 0, 7) {
+            koto.setScreen("options", 0.5f)
         })
-        grid.add(GridButton("Quit", 32, 950f, 80f, 400f, 40f, 0, 8) { exitApp() })
+        grid.add(GridButton("Quit", 32, 950f, 80f, 400f, 40f, 0, 8) {
+            koto.setScreen("", 1f)
+        })
 
         grid.selectFirst()
         grid.updateComponent()
@@ -92,13 +94,14 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png"), "ti
         super.fadeIn(oldScreen, duration)
         grid.clearActions()
         grid.setPosition(400f, 0f)
-        grid.addAction(Actions.moveTo(0f, 0f, duration, Interpolation.sineOut))
+        grid.addAction(Actions.moveTo(0f, 0f, duration, Interpolation.pow5Out))
         titles.clearActions()
         titles.setPosition(0f, 400f)
-        titles.addAction(Actions.moveTo(0f, 0f, duration, Interpolation.sineOut))
+        titles.addAction(Actions.moveTo(0f, 0f, duration, Interpolation.pow5Out))
     }
 
-    fun onFadeOut(duration: Float) {
+    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
+        super.fadeOut(newScreen, duration)
         grid.clearActions()
         grid.addAction(Actions.moveTo(400f, 0f, duration, Interpolation.sineOut))
         titles.clearActions()
