@@ -30,11 +30,9 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
 import com.badlogic.gdx.utils.ObjectMap
-import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import ktx.collections.GdxArray
-import ktx.json.fromJson
 
 lateinit var global: ObjectMap<String, Any>
 
@@ -49,12 +47,12 @@ lateinit var koto: KotoApp
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
 
 fun exitApp() {
-    koto.restartCallback(false)
+    koto.callbacks.restartCallback(false)
     Gdx.app.exit()
 }
 
 fun restartApp() {
-    koto.restartCallback(true)
+    koto.callbacks.restartCallback(true)
     Gdx.app.exit()
 }
 
@@ -66,25 +64,11 @@ fun initAll() {
 }
 
 fun loadOptions() {
-    val file = Gdx.files.external(Config.optionsPath)
-    if (file.exists()) {
-        Gdx.app.log("Main", "Reading options from file")
-        options = json.fromJson(file)
-    } else {
-        options = Options()
-        Gdx.files.external(Config.optionsPath).parent().mkdirs()
-        Gdx.app.log("Main", "Creating default options file")
-        json.toJson(options, file)
-    }
+    options = koto.callbacks.getOptions()
 }
 
 fun saveOptions() {
-    val file = Gdx.files.external(Config.optionsPath)
-    Gdx.app.log("Main", "Writing options to file")
-    if (!file.exists()) {
-        Gdx.files.external(Config.optionsPath).parent().mkdirs()
-    }
-    json.toJson(options, file)
+    koto.callbacks.saveOptions(options)
 }
 
 fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {

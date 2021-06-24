@@ -43,8 +43,7 @@ import ktx.async.KtxAsync
 import ktx.collections.GdxArray
 import ktx.collections.set
 
-
-class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
+class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     lateinit var batch: SpriteBatch
     lateinit var viewport: Viewport
@@ -66,10 +65,6 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
         Gdx.app.logLevel = Config.logLevel
 
         logger.info("Game start.")
-
-        Gdx.graphics.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
-        Gdx.graphics.setVSync(options.vsyncEnabled)
-        Gdx.graphics.setForegroundFPS(options.fpsLimit)
 
         batch = SpriteBatch()
         fpsCounter = WindowedMean(10);
@@ -188,4 +183,10 @@ class KotoApp(val restartCallback: (Boolean) -> Unit) : ApplicationListener {
             logger.info("Switching to no screen")
         }
     }
+}
+
+interface KotoCallbacks {
+    fun restartCallback(restart: Boolean)
+    fun getOptions(): Options
+    fun saveOptions(options: Options)
 }

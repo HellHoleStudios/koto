@@ -191,7 +191,7 @@ open class Grid(
         select(selectedX, selectedY)
     }
 
-    open fun select(nx: Int, ny: Int, dx: Int, dy: Int) {
+    open fun select(nx: Int, ny: Int, dx: Int, dy: Int, silent: Boolean = false) {
         var closest: GridComponent? = null
         var dist = Int.MAX_VALUE
         for (i in grid.safeIterator()) {
@@ -212,7 +212,7 @@ open class Grid(
         if (closest == null) {
             return
         }
-        if (closest.gridX != selectedX || closest.gridY != selectedY) {
+        if (!silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
             SE.play("select")
         }
         selectedX = closest.gridX
@@ -227,7 +227,7 @@ open class Grid(
         }
     }
 
-    open fun select(nx: Int, ny: Int) {
+    open fun select(nx: Int, ny: Int, silent: Boolean = false) {
         var closest: GridComponent? = null
         var dist = Int.MAX_VALUE
         for (i in grid.safeIterator()) {
@@ -241,7 +241,7 @@ open class Grid(
         if (closest == null) {
             return
         }
-        if (closest.gridX != selectedX || closest.gridY != selectedY) {
+        if (!silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
             SE.play("select")
         }
         selectedX = closest.gridX

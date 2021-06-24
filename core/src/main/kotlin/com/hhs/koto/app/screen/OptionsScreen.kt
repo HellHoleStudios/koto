@@ -72,7 +72,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png"))
             }
             button.inactiveAction = { Actions.hide() }
         }
-        musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0)
+        musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
         musicVolume.update()
         input.addProcessor(musicVolume)
         grid.add(musicVolume)
@@ -122,7 +122,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png"))
             }
             tmpButton2.inactiveAction = { Actions.hide() }
         }
-        SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0)
+        SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0, true)
         SEVolume.update()
         input.addProcessor(SEVolume)
         grid.add(SEVolume)
