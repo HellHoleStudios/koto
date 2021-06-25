@@ -27,15 +27,15 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Logger
-import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
+import ktx.collections.GdxMap
 
 object SE {
-    private lateinit var ses: ObjectMap<String, Sound>
+    private lateinit var ses: GdxMap<String, Sound>
     private lateinit var logger: Logger
 
     fun init() {
-        ses = ObjectMap<String, Sound>()
+        ses = GdxMap()
         logger = Logger("SE", Config.logLevel)
     }
 

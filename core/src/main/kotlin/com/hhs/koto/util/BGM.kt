@@ -27,18 +27,18 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.utils.Logger
-import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
+import ktx.collections.GdxMap
 
 object BGM {
 
     private var bgm: LoopingMusic? = null
-    private lateinit var bgms: ObjectMap<String, LoopingMusic>
+    private lateinit var bgms: GdxMap<String, LoopingMusic>
     lateinit var logger: Logger
 
     fun init() {
         bgm = null
-        bgms = ObjectMap<String, LoopingMusic>()
+        bgms = GdxMap()
         logger = Logger("BGM", Config.logLevel)
     }
 
@@ -59,7 +59,7 @@ object BGM {
             stop()
         }
         logger.debug("Playing \"$name\".")
-        bgm = bgms.get(name)
+        bgm = bgms[name]
         if (bgm == null) {
             logger.error("BGM with this name doesn't exist!")
         } else {

@@ -32,7 +32,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.WindowedMean
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
-import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
@@ -40,6 +39,7 @@ import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
 import ktx.async.KtxAsync
+import ktx.collections.GdxMap
 import ktx.collections.set
 
 class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
@@ -50,7 +50,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     private lateinit var fps: FPSDisplay
     lateinit var fpsCounter: WindowedMean
 
-    val screens = ObjectMap<String, KotoScreen>()
+    val screens = GdxMap<String, KotoScreen>()
     var input = InputMultiplexer()
     var blocker = InputBlocker()
     val logger = Logger("Main", Config.logLevel)

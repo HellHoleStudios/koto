@@ -46,24 +46,25 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
-import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.GridButtonBase
 import com.hhs.koto.stg.shot.ShotSheet
 import com.hhs.koto.stg.shot.ShotSheetLoader
 import ktx.assets.load
 import ktx.collections.GdxArray
+import ktx.collections.GdxMap
+import ktx.collections.contains
 import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.json.fromJson
 
 lateinit var A: AssetManager
-private lateinit var textureReflect: ObjectMap<Texture, String>
-private lateinit var fontCache: ObjectMap<String, BitmapFont>
+private lateinit var textureReflect: GdxMap<Texture, String>
+private lateinit var fontCache: GdxMap<String, BitmapFont>
 private var charset: String = ""
 
 fun initA() {
-    textureReflect = ObjectMap<Texture, String>()
-    fontCache = ObjectMap<String, BitmapFont>()
+    textureReflect = GdxMap()
+    fontCache = GdxMap()
     A = AssetManager()
     A.setLoader(ShotSheet::class.java, ShotSheetLoader(A.fileHandleResolver))
     A.registerFreeTypeFontLoaders()
@@ -74,7 +75,7 @@ fun initA() {
 }
 
 fun getTexture(fileName: String): Texture {
-    return A.get(fileName)
+    return A[fileName]
 }
 
 fun getRegion(fileName: String): TextureRegion {
@@ -101,8 +102,8 @@ fun getFont(
         tmp.append(borderWidth).append(':').append(borderColor.toString())
     }
     val key = tmp.toString()
-    if (fontCache.containsKey(key)) {
-        return fontCache.get(key)
+    if (fontCache.contains(key)) {
+        return fontCache[key]
     }
     val generator: FreeTypeFontGenerator = A[name]
     val parameter = FreeTypeFontParameter()
@@ -212,7 +213,7 @@ class TextureReflectCallback() : LoadedCallback {
     }
 
     override fun finishedLoading(assetManager: AssetManager, fileName: String, type: Class<*>?) {
-        putTextureReflect(assetManager.get(fileName), fileName)
+        putTextureReflect(assetManager[fileName], fileName)
         original?.finishedLoading(assetManager, fileName, type)
     }
 }

@@ -33,8 +33,9 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import ktx.collections.GdxArray
+import ktx.collections.GdxMap
 
-lateinit var global: ObjectMap<String, Any>
+lateinit var global: GdxMap<String, Any>
 
 val json = Json().apply {
     setUsePrototypes(false)
@@ -57,7 +58,7 @@ fun restartApp() {
 }
 
 fun initAll() {
-    global = ObjectMap<String, Any>()
+    global = GdxMap()
     initA()
     BGM.init()
     SE.init()
@@ -73,8 +74,8 @@ fun saveOptions() {
 
 fun <Type> GdxArray<Type>.safeIterator() = Array.ArrayIterator(this)
 
-fun <K, V> ObjectMap<K, V>.safeEntries() = ObjectMap.Entries(this)
+fun <K, V> GdxMap<K, V>.safeEntries() = ObjectMap.Entries(this)
 
-fun <K, V> ObjectMap<K, V>.safeKeys() = ObjectMap.Keys(this)
+fun <K, V> GdxMap<K, V>.safeKeys() = ObjectMap.Keys(this)
 
-fun <K, V> ObjectMap<K, V>.safeValues() = ObjectMap.Values(this)
+fun <K, V> GdxMap<K, V>.safeValues() = ObjectMap.Values(this)

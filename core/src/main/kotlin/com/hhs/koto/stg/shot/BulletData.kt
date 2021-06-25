@@ -48,9 +48,9 @@ class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletD
         rotation = raw.rotation
         texture = BulletTexture(parent.atlas, name, raw.frames)
         collision = when (raw.collisionMethod) {
-            "Circle" -> Collision.Circle(raw.collisionData!!.get(0))
-            "Rectangle" -> Collision.Rectangle(raw.collisionData!!.get(0), raw.collisionData!!.get(1))
-            else -> Collision.Circle(raw.collisionData!!.get(0))
+            "Circle" -> Collision.Circle(raw.collisionData!![0])
+            "Rectangle" -> Collision.Rectangle(raw.collisionData!![0], raw.collisionData[1])
+            else -> Collision.Circle(raw.collisionData!![0])
         }
         originX = raw.originX ?: texture.maxWidth / 2f
         originY = raw.originY ?: texture.maxWidth / 2f

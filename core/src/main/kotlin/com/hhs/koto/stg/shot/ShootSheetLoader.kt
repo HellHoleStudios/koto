@@ -82,7 +82,5 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
         }
     }
 
-    class ShotSheetParameters : AssetLoaderParameters<ShotSheet>() {
-
-    }
+    class ShotSheetParameters : AssetLoaderParameters<ShotSheet>()
 }

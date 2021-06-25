@@ -28,14 +28,14 @@ package com.hhs.koto.stg.shot
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.util.json
 import com.hhs.koto.util.koto
+import ktx.collections.GdxMap
 import ktx.json.fromJson
 
 class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
-    var data = ObjectMap<Int, BulletData>()
-    private var nameToId = ObjectMap<String, Int>()
+    var data = GdxMap<Int, BulletData>()
+    private var nameToId = GdxMap<String, Int>()
 
     init {
         for (i in raw.data) {
@@ -53,7 +53,7 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     )
 
     fun getId(name: String): Int {
-        val tmp = nameToId.get(name)
+        val tmp = nameToId[name]
         if (tmp == null) {
             koto.logger.error("Shot data of name\"$name\" not found!")
         }
@@ -61,10 +61,10 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     }
 
     fun findBullet(id: Int): BulletData {
-        return data.get(id)
+        return data[id]
     }
 
     fun findBullet(name: String): BulletData {
-        return data.get(nameToId.get(name))
+        return data[nameToId[name]]
     }
 }
