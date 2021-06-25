@@ -67,3 +67,16 @@ class KeyListener(private val keycodes: GdxArray<Int>, private var f: () -> Unit
         return false
     }
 }
+
+fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
+    if (koto.blocker.isBlocking) return false
+    return keycode in key
+}
+
+fun checkKey(key: GdxArray<Int>): Boolean {
+    if (koto.blocker.isBlocking) return false
+    for (i in key.safeIterator()) {
+        if (Gdx.input.isKeyPressed(i)) return true
+    }
+    return false
+}

@@ -27,10 +27,11 @@ package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.hhs.koto.util.SE
+import com.hhs.koto.util.getButtonActivateAction
+import com.hhs.koto.util.getButtonDeactivateAction
 
 class GridImage(
     texture: TextureRegion,
@@ -40,10 +41,11 @@ class GridImage(
     height: Float,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
-    var activeAction: (() -> Action)? = null,
-    var inactiveAction: (() -> Action)? = null,
-    var runnable: (() -> Unit)? = null
-) : Image(texture), GridComponent {
+    override var activeAction: (() -> Action)? = null,
+    override var inactiveAction: (() -> Action)? = null,
+    override var triggerSound: String? = "ok",
+    override var runnable: (() -> Unit)? = null,
+) : Image(texture), GridComponent, GridButtonBase {
     override var active = true
         set(value) {
             field = value
@@ -51,8 +53,8 @@ class GridImage(
         }
     override var enabled = true
     override var parent: Grid? = null
-    var staticX = 0f
-    var staticY = 0f
+    override var staticX = 0f
+    override var staticY = 0f
 
     init {
         staticX = x
@@ -69,6 +71,7 @@ class GridImage(
         height: Float,
         gridX: Int,
         gridY: Int,
+        triggerSound: String? = "ok",
         runnable: (() -> Unit)? = null
     ) : this(
         texture,
@@ -80,23 +83,11 @@ class GridImage(
         gridY,
         null,
         null,
+        triggerSound,
         runnable
     ) {
-        activeAction = {
-            Actions.sequence(
-                Actions.moveTo(staticX, staticY),
-                Actions.color(Color.WHITE),
-                Actions.sequence(
-                    Actions.moveTo(staticX - 10, staticY, 0.1f, Interpolation.sine),
-                    Actions.moveTo(staticX, staticY, 0.1f, Interpolation.sine)
-                )
-            )
-        }
-        inactiveAction = {
-            Actions.forever(
-                Actions.color(Color.GRAY)
-            )
-        }
+        activeAction = getButtonActivateAction(this)
+        inactiveAction = getButtonDeactivateAction(this)
     }
 
 
@@ -120,10 +111,11 @@ class GridImage(
     }
 
     override fun trigger() {
+        if (triggerSound != null) {
+            SE.play(triggerSound!!)
+        }
         if (enabled && runnable != null) {
             runnable!!()
         }
     }
-
-
 }

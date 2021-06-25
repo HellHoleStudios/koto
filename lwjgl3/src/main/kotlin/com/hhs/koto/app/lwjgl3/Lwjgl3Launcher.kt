@@ -46,16 +46,7 @@ object Lwjgl3Launcher {
     @JvmStatic
     fun main(args: Array<String>) {
         val optionsFile = getOptionsFile()
-        val options = if (optionsFile.exists()) {
-            println("Reading options from file...")
-            json.fromJson(optionsFile)
-        } else {
-            val options = Options()
-            optionsFile.parent().mkdirs()
-            println("Creating default options file...")
-            json.toJson(options, optionsFile)
-            options
-        }
+        var options = readOptions(optionsFile)
 
         val callbacks = object : KotoCallbacks {
             override fun restartCallback(restartTemp: Boolean) {
@@ -88,6 +79,10 @@ object Lwjgl3Launcher {
 
         Lwjgl3Application(KotoApp(callbacks), configuration)
         while (restart) {
+            options = readOptions(optionsFile)
+            configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
+            configuration.useVsync(options.vsyncEnabled)
+            configuration.setForegroundFPS(options.fpsLimit)
             Lwjgl3Application(KotoApp(callbacks), configuration)
         }
     }
@@ -113,5 +108,16 @@ object Lwjgl3Launcher {
                 Lwjgl3FileHandle(".koto/options.json", Files.FileType.External)
             }
         }
+    }
+
+    private fun readOptions(optionsFile: FileHandle) = if (optionsFile.exists()) {
+        println("Reading options from file...")
+        json.fromJson(optionsFile)
+    } else {
+        val options = Options()
+        optionsFile.parent().mkdirs()
+        println("Creating default options file...")
+        json.toJson(options, optionsFile)
+        options
     }
 }

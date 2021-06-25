@@ -28,7 +28,6 @@ package com.hhs.koto.app.ui
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.util.getUILabelStyle
-import java.util.concurrent.Callable
 
 
 class GridLabel(
@@ -60,9 +59,10 @@ class GridLabel(
             field = value
             update()
         }
-    @Suppress("SetterBackingFieldAssignment")
+
+    @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
     override var enabled = false
-        set(value) {}
+        set(value) = Unit
     override var parent: Grid? = null
     var staticX = 0f
     var staticY = 0f

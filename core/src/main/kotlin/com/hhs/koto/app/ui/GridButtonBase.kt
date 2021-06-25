@@ -23,36 +23,15 @@
  *
  */
 
-package com.hhs.koto.util
+package com.hhs.koto.app.ui
 
-import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.utils.Logger
-import com.badlogic.gdx.utils.ObjectMap
-import com.hhs.koto.app.Config
+import com.badlogic.gdx.scenes.scene2d.Action
 
-object SE {
-    private lateinit var ses: ObjectMap<String, Sound>
-    private lateinit var logger: Logger
-
-    fun init() {
-        ses = ObjectMap<String, Sound>()
-        logger = Logger("SE", Config.logLevel)
-    }
-
-    fun play(name: String) {
-        val se = ses[name]
-        if (se == null) {
-            logger.error("SE with this name doesn't exist!")
-        } else {
-            val id = se.play()
-            se.setVolume(id, options.SEVolume)
-        }
-    }
-
-    fun register(name: String, path: String): Sound {
-        logger.debug("Registering sound with alias: $name path: $path")
-        val snd: Sound = A[path]
-        ses.put(name, snd)
-        return snd
-    }
+interface GridButtonBase {
+    var staticX: Float
+    var staticY: Float
+    var activeAction: (() -> Action)?
+    var inactiveAction: (() -> Action)?
+    var triggerSound: String?
+    var runnable: (() -> Unit)?
 }

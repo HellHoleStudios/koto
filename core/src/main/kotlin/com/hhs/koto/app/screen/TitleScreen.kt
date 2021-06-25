@@ -34,7 +34,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
-import com.hhs.koto.util.*
+import com.hhs.koto.util.getFont
+import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.global
+import com.hhs.koto.util.koto
 import ktx.collections.set
 
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
@@ -81,8 +84,8 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         grid.add(GridButton("Options", 32, 950f, 120f, 400f, 40f, 0, 7) {
             koto.setScreen("options", 0.5f)
         })
-        grid.add(GridButton("Quit", 32, 950f, 80f, 400f, 40f, 0, 8) {
-            koto.setScreen("", 1f)
+        grid.add(GridButton("Quit", 32, 950f, 80f, 400f, 40f, 0, 8, triggerSound = null) {
+            onQuit()
         })
 
         grid.selectFirst()
@@ -111,7 +114,7 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     override fun onQuit() {
         if (grid.selectedY == 8) {
             super.onQuit()
-            exitApp()
+            koto.setScreen("", 1f)
         } else {
             grid.select(0, 8)
         }

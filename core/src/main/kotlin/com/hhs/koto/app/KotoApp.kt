@@ -40,7 +40,6 @@ import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
 import ktx.async.KtxAsync
-import ktx.collections.GdxArray
 import ktx.collections.set
 
 class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {

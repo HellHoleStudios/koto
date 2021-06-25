@@ -71,19 +71,6 @@ fun saveOptions() {
     koto.callbacks.saveOptions(options)
 }
 
-fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
-    if (koto.blocker.isBlocking) return false
-    return keycode in key
-}
-
-fun checkKey(key: GdxArray<Int>): Boolean {
-    if (koto.blocker.isBlocking) return false
-    for (i in key.safeIterator()) {
-        if (Gdx.input.isKeyPressed(i)) return true
-    }
-    return false
-}
-
 fun <Type> GdxArray<Type>.safeIterator() = Array.ArrayIterator(this)
 
 fun <K, V> ObjectMap<K, V>.safeEntries() = ObjectMap.Entries(this)
