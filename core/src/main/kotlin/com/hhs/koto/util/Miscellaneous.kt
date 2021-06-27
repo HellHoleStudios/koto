@@ -32,6 +32,8 @@ import com.badlogic.gdx.utils.JsonWriter
 import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
+import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.GameMode
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 
@@ -40,7 +42,8 @@ var global = GdxMap<String, Any>()
 object systemFlag {
     var redirect: String? = null
     var redirectDuration: Float? = null
-    var gamemode: String? = null
+    var gamemode: GameMode? = null
+    var difficulty: GameDifficulty? = null
 }
 
 val json = Json().apply {

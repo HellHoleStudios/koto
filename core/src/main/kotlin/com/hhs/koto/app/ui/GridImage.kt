@@ -27,20 +27,21 @@ package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.SE
-import com.hhs.koto.util.getButtonActivateAction
-import com.hhs.koto.util.getButtonDeactivateAction
 
 class GridImage(
     texture: TextureRegion,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
+    x: Float,
+    y: Float,
+    width: Float = texture.regionWidth.toFloat(),
+    height: Float = texture.regionHeight.toFloat(),
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
     override var triggerSound: String? = "ok",
@@ -64,30 +65,29 @@ class GridImage(
 
     constructor(
         texture: TextureRegion,
-        fontSize: Int,
-        x: Float,
-        y: Float,
-        width: Float,
-        height: Float,
         gridX: Int,
         gridY: Int,
+        x: Float,
+        y: Float,
+        width: Float = texture.regionWidth.toFloat(),
+        height: Float = texture.regionHeight.toFloat(),
         triggerSound: String? = "ok",
         runnable: (() -> Unit)? = null
     ) : this(
         texture,
+        gridX,
+        gridY,
         x,
         y,
         width,
         height,
-        gridX,
-        gridY,
         null,
         null,
         triggerSound,
         runnable
     ) {
-        activeAction = getButtonActivateAction(this)
-        inactiveAction = getButtonDeactivateAction(this)
+        activeAction = getActivateAction()
+        inactiveAction = getDeactivateAction()
     }
 
 
@@ -116,6 +116,38 @@ class GridImage(
         }
         if (enabled && runnable != null) {
             runnable!!()
+        }
+    }
+
+    fun getActivateAction(vararg actions: () -> Action): () -> Action {
+        return {
+            val ret = ParallelAction()
+            ret.addAction(
+                Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
+            )
+            ret.addAction(
+                Actions.color(Color.WHITE, 0.5f)
+            )
+            for (action in actions) {
+                ret.addAction(action())
+            }
+            ret
+        }
+    }
+
+    fun getDeactivateAction(vararg actions: () -> Action): () -> Action {
+        return {
+            val ret = ParallelAction()
+            ret.addAction(
+                Actions.color(Color.GRAY)
+            )
+            ret.addAction(
+                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
+            )
+            for (action in actions) {
+                ret.addAction(action())
+            }
+            ret
         }
     }
 }

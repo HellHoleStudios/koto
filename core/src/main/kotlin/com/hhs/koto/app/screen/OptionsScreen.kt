@@ -36,7 +36,7 @@ import com.hhs.koto.app.ui.ScrollingGrid
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
-class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png")) {
+class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     val grid = ConstrainedGrid(Rectangle(-2048f, 64f, 4096f, 832f))
     val musicVolume = ScrollingGrid(0f, 0f, cycle = false)
     val SEVolume = ScrollingGrid(0f, 0f, cycle = false, gridY = 1)
@@ -48,20 +48,19 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png"))
         grid.add(GridButton("Music Vol", 32, 940f, 280f, 200f, 40f, 0, 0, triggerSound = null))
         musicVolume.setPosition(1150f, 280f)
         for (i in 0..20) {
-            val button: GridButton = musicVolume
-                .add(
-                    GridButton(
-                        (i * 5).toString() + "%",
-                        32,
-                        0f,
-                        0f,
-                        200f,
-                        40f,
-                        i,
-                        0,
-                        triggerSound = null
-                    )
-                ) as GridButton
+            val button: GridButton = musicVolume.add(
+                GridButton(
+                    (i * 5).toString() + "%",
+                    32,
+                    0f,
+                    0f,
+                    200f,
+                    40f,
+                    i,
+                    0,
+                    triggerSound = null
+                )
+            ) as GridButton
             button.activeAction = {
                 Actions.parallel(
                     Actions.sequence(
@@ -91,7 +90,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png"))
         grid.add(musicVolume)
 
         val tmpButton1 = GridButton("S.E. Vol", 32, 940f, 240f, 200f, 40f, 0, 1, triggerSound = null)
-        tmpButton1.activeAction = getButtonActivateAction(tmpButton1, {
+        tmpButton1.activeAction = tmpButton1.getActivateAction({
             Actions.forever(
                 Actions.sequence(
                     Actions.delay(1.5f),

@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
+import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.koto
@@ -60,19 +61,19 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         st.addActor(grid)
 
         grid.add(GridButton("Game Start", 32, 950f, 400f, 400f, 40f, 0, 0) {
-            systemFlag.gamemode = "regular"
+            systemFlag.gamemode = GameMode.STORY
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Extra Start", 32, 950f, 360f, 400f, 40f, 0, 1) {
-            systemFlag.gamemode = "extra"
+            systemFlag.gamemode = GameMode.EXTRA
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Stage Practice", 32, 950f, 320f, 400f, 40f, 0, 2) {
-            systemFlag.gamemode = "stagePractice"
+            systemFlag.gamemode = GameMode.STAGE_PRACTICE
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Spell Practice", 32, 950f, 280f, 400f, 40f, 0, 3) {
-            systemFlag.gamemode = "spellPractice"
+            systemFlag.gamemode = GameMode.SPELL_PRACTICE
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Replay", 32, 950f, 240f, 400f, 40f, 0, 4)).disable()

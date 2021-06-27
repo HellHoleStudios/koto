@@ -41,16 +41,15 @@ import java.util.*
 
 object Lwjgl3Launcher {
 
-    var restart: Boolean = false
-
     @JvmStatic
     fun main(args: Array<String>) {
         val optionsFile = getOptionsFile()
         var options = readOptions(optionsFile)
+        var restart0: Boolean = false
 
         val callbacks = object : KotoCallbacks {
-            override fun restartCallback(restartTemp: Boolean) {
-                restart = restartTemp
+            override fun restartCallback(restart: Boolean) {
+                restart0 = restart
             }
 
             override fun getOptions(): Options = options
@@ -78,7 +77,7 @@ object Lwjgl3Launcher {
         configuration.setForegroundFPS(options.fpsLimit)
 
         Lwjgl3Application(KotoApp(callbacks), configuration)
-        while (restart) {
+        while (restart0) {
             options = readOptions(optionsFile)
             configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
             configuration.useVsync(options.vsyncEnabled)

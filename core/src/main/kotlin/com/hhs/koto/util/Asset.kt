@@ -130,49 +130,6 @@ fun getUILabelStyle(fontSize: Int): LabelStyle {
     )
 }
 
-fun getButtonActivateAction(button: GridButtonBase, vararg actions: () -> Action): () -> Action {
-    return {
-        val ret = ParallelAction()
-        ret.addAction(
-            Actions.sequence(
-                Actions.color(Color.WHITE),
-                Actions.moveTo(button.staticX - 10, button.staticY, 1f, Interpolation.pow5Out)
-            )
-        )
-        ret.addAction(
-            Actions.forever(
-                Actions.sequence(
-                    Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                    Actions.color(Color.WHITE, 0.5f)
-                )
-            )
-        )
-        for (action in actions) {
-            ret.addAction(action())
-        }
-        ret
-    }
-}
-
-fun getButtonDeactivateAction(button: GridButtonBase, vararg actions: () -> Action): () -> Action {
-    return {
-        val ret = ParallelAction()
-        ret.addAction(
-            Actions.alpha(1f),
-        )
-        ret.addAction(
-            Actions.moveTo(button.staticX, button.staticY, 1f, Interpolation.pow5Out),
-        )
-        ret.addAction(
-            Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))
-        )
-        for (action in actions) {
-            ret.addAction(action())
-        }
-        ret
-    }
-}
-
 fun loadAssetIndex(file: FileHandle) {
     A.logger.debug("Loading asset index from file $file")
     for (i in json.fromJson<Array<String>>(file)) {

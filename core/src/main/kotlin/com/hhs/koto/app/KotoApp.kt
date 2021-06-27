@@ -97,6 +97,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()
+        screens["difficultySelect"] = DifficultySelectScreen()
         screens["options"] = OptionsScreen()
         setScreen("blank")
         setScreen("title", 1f)
@@ -108,7 +109,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     }
 
     override fun render() {
-        A.update()
         BGM.update()
         fpsCounter.addValue(Gdx.graphics.deltaTime);
 

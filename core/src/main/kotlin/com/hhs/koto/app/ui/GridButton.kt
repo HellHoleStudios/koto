@@ -25,11 +25,13 @@
 
 package com.hhs.koto.app.ui
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.util.SE
-import com.hhs.koto.util.getButtonActivateAction
-import com.hhs.koto.util.getButtonDeactivateAction
 import com.hhs.koto.util.getUILabelStyle
 
 class GridButton(
@@ -99,8 +101,8 @@ class GridButton(
         triggerSound,
         runnable
     ) {
-        activeAction = getButtonActivateAction(this)
-        inactiveAction = getButtonDeactivateAction(this)
+        activeAction = getActivateAction()
+        inactiveAction = getDeactivateAction()
     }
 
     override fun trigger() {
@@ -128,6 +130,49 @@ class GridButton(
         }
         if (!enabled) {
             style = LabelStyle(inactiveStyle.font, inactiveStyle.fontColor.cpy().mul(0.5f, 0.5f, 0.5f, 1f))
+        }
+    }
+
+    fun getActivateAction(vararg actions: () -> Action): () -> Action {
+        return {
+            val ret = ParallelAction()
+            ret.addAction(
+                Actions.sequence(
+                    Actions.color(Color.WHITE),
+                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
+                )
+            )
+            ret.addAction(
+                Actions.forever(
+                    Actions.sequence(
+                        Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
+                        Actions.color(Color.WHITE, 0.5f)
+                    )
+                )
+            )
+            for (action in actions) {
+                ret.addAction(action())
+            }
+            ret
+        }
+    }
+
+    fun getDeactivateAction(vararg actions: () -> Action): () -> Action {
+        return {
+            val ret = ParallelAction()
+            ret.addAction(
+                Actions.alpha(1f),
+            )
+            ret.addAction(
+                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
+            )
+            ret.addAction(
+                Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))
+            )
+            for (action in actions) {
+                ret.addAction(action())
+            }
+            ret
         }
     }
 }

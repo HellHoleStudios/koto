@@ -177,7 +177,7 @@ open class Grid(
 
     open fun selectFirst() {
         if (grid.size == 0) return
-        val component = grid[0]
+        val component = grid.first { it.enabled }
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY)
@@ -185,7 +185,7 @@ open class Grid(
 
     open fun selectLast() {
         if (grid.size == 0) return
-        val component = grid[grid.size - 1]
+        val component = grid.last { it.enabled }
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY)
@@ -337,4 +337,6 @@ open class Grid(
             }
         }
     }
+
+    operator fun get(i: Int) = getChild(i) as GridComponent
 }
