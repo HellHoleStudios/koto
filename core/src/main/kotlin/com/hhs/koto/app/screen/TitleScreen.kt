@@ -36,9 +36,8 @@ import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.global
 import com.hhs.koto.util.koto
-import ktx.collections.set
+import com.hhs.koto.util.systemFlag
 
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val grid: Grid = Grid()
@@ -61,19 +60,19 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         st.addActor(grid)
 
         grid.add(GridButton("Game Start", 32, 950f, 400f, 400f, 40f, 0, 0) {
-            global["_gameMode"] = "regular"
+            systemFlag.gamemode = "regular"
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Extra Start", 32, 950f, 360f, 400f, 40f, 0, 1) {
-            global["_gameMode"] = "extra"
+            systemFlag.gamemode = "extra"
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Stage Practice", 32, 950f, 320f, 400f, 40f, 0, 2) {
-            global["_gameMode"] = "stagePractice"
+            systemFlag.gamemode = "stagePractice"
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Spell Practice", 32, 950f, 280f, 400f, 40f, 0, 3) {
-            global["_gameMode"] = "spellPractice"
+            systemFlag.gamemode = "spellPractice"
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Replay", 32, 950f, 240f, 400f, 40f, 0, 4)).disable()

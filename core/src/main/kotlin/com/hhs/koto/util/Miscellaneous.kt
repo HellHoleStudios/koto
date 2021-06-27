@@ -35,7 +35,13 @@ import com.hhs.koto.app.Options
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 
-lateinit var global: GdxMap<String, Any>
+var global = GdxMap<String, Any>()
+
+object systemFlag {
+    var redirect: String? = null
+    var redirectDuration: Float? = null
+    var gamemode: String? = null
+}
 
 val json = Json().apply {
     setUsePrototypes(false)
@@ -58,7 +64,6 @@ fun restartApp() {
 }
 
 fun initAll() {
-    global = GdxMap()
     initA()
     BGM.init()
     SE.init()
