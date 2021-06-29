@@ -74,7 +74,7 @@ open class Grid(
     override val gridY: Int = 0,
     var cycle: Boolean = true,
     var activeAction: (() -> Action)? = null,
-    var inactiveAction: (() -> Action)? = null
+    var inactiveAction: (() -> Action)? = null,
 ) : Group(), GridComponent, InputProcessor {
     val grid = GdxArray<GridComponent>()
     var selectedX: Int = 0

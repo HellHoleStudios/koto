@@ -25,6 +25,7 @@
 
 package com.hhs.koto.app.screen
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Rectangle
@@ -58,7 +59,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                     40f,
                     i,
                     0,
-                    triggerSound = null
+                    triggerSound = null,
                 )
             ) as GridButton
             button.activeAction = {
@@ -68,21 +69,23 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                         Actions.color(Color.WHITE),
                         Actions.moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
                         Actions.moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
-                        Actions.moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine)
+                        Actions.moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
                     ),
                     Actions.forever(
                         Actions.sequence(
                             Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                            Actions.color(Color.WHITE, 0.5f)
+                            Actions.color(Color.WHITE, 0.5f),
                         )
                     ),
                     Actions.run {
                         options.musicVolume = i / 20f
                         BGM.setVolume(i / 20f)
-                    }
+                    },
                 )
             }
-            button.inactiveAction = { Actions.hide() }
+            button.inactiveAction = {
+                Actions.hide()
+            }
         }
         musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
         musicVolume.update()
@@ -94,7 +97,9 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             Actions.forever(
                 Actions.sequence(
                     Actions.delay(1.5f),
-                    Actions.run { SE.play("pldead") }
+                    Actions.run {
+                        SE.play("pldead")
+                    },
                 )
             )
         })
@@ -112,7 +117,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                         40f,
                         i,
                         0,
-                        triggerSound = null
+                        triggerSound = null,
                     )
                 ) as GridButton
             tmpButton2.activeAction = {
@@ -122,15 +127,17 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                         Actions.color(Color.WHITE),
                         Actions.moveTo(tmpButton2.staticX + 2, tmpButton2.staticY, 0.03f, Interpolation.sine),
                         Actions.moveTo(tmpButton2.staticX - 4, tmpButton2.staticY, 0.06f, Interpolation.sine),
-                        Actions.moveTo(tmpButton2.staticX, tmpButton2.staticY, 0.03f, Interpolation.sine)
+                        Actions.moveTo(tmpButton2.staticX, tmpButton2.staticY, 0.03f, Interpolation.sine),
                     ),
                     Actions.forever(
                         Actions.sequence(
                             Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                            Actions.color(Color.WHITE, 0.5f)
+                            Actions.color(Color.WHITE, 0.5f),
                         )
                     ),
-                    Actions.run { options.SEVolume = i / 20f }
+                    Actions.run {
+                        options.SEVolume = i / 20f
+                    },
                 )
             }
             tmpButton2.inactiveAction = { Actions.hide() }
@@ -153,25 +160,26 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                         VsyncDisableButton.staticX + 2,
                         VsyncDisableButton.staticY,
                         0.03f,
-                        Interpolation.sine
+                        Interpolation.sine,
                     ),
                     Actions.moveTo(
                         VsyncDisableButton.staticX - 4,
                         VsyncDisableButton.staticY,
                         0.06f,
-                        Interpolation.sine
+                        Interpolation.sine,
                     ),
-                    Actions.moveTo(VsyncDisableButton.staticX, VsyncDisableButton.staticY, 0.03f, Interpolation.sine)
+                    Actions.moveTo(VsyncDisableButton.staticX, VsyncDisableButton.staticY, 0.03f, Interpolation.sine),
                 ),
                 Actions.forever(
                     Actions.sequence(
                         Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f)
+                        Actions.color(Color.WHITE, 0.5f),
                     )
                 ),
                 Actions.run {
                     options.vsyncEnabled = false
-                }
+                    Gdx.graphics.setVSync(false)
+                },
             )
         }
         val VsyncEnableButton: GridButton =
@@ -183,17 +191,18 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                     Actions.color(Color.WHITE),
                     Actions.moveTo(VsyncEnableButton.staticX + 2, VsyncEnableButton.staticY, 0.03f, Interpolation.sine),
                     Actions.moveTo(VsyncEnableButton.staticX - 4, VsyncEnableButton.staticY, 0.06f, Interpolation.sine),
-                    Actions.moveTo(VsyncEnableButton.staticX, VsyncEnableButton.staticY, 0.03f, Interpolation.sine)
+                    Actions.moveTo(VsyncEnableButton.staticX, VsyncEnableButton.staticY, 0.03f, Interpolation.sine),
                 ),
                 Actions.forever(
                     Actions.sequence(
                         Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f)
+                        Actions.color(Color.WHITE, 0.5f),
                     )
                 ),
                 Actions.run {
                     options.vsyncEnabled = true
-                }
+                    Gdx.graphics.setVSync(true)
+                },
             )
         }
         VsyncEnableButton.inactiveAction = { Actions.hide() }
@@ -207,8 +216,10 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         grid.add(GridButton("Default", 32, 940f, 120f, 200f, 40f, 0, 3) {
             options = Options()
             BGM.setVolume(options.musicVolume)
+            Gdx.graphics.setVSync(options.vsyncEnabled)
             musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0)
             SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0)
+            Vsync.select(if (options.vsyncEnabled) 1 else 0, 0, true)
         })
         grid.add(GridButton("Quit", 32, 940f, 80f, 200f, 40f, 0, 4, triggerSound = null) {
             onQuit()
@@ -239,8 +250,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         if (grid.selectedY == 4) {
             super.onQuit()
             saveOptions()
-            if (oldOptions!!.vsyncEnabled != options.vsyncEnabled
-                || oldOptions!!.textureMagFilter != options.textureMagFilter
+            if (oldOptions!!.textureMagFilter != options.textureMagFilter
                 || oldOptions!!.textureMinFilter != options.textureMinFilter
                 || oldOptions!!.fpsMultiplier != options.fpsMultiplier
             ) {

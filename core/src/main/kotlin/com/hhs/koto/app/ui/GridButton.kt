@@ -47,7 +47,7 @@ class GridButton(
     activeStyle: LabelStyle,
     inactiveStyle: LabelStyle? = null,
     override var triggerSound: String? = "ok",
-    override var runnable: (() -> Unit)? = null
+    override var runnable: (() -> Unit)? = null,
 ) : Label(text, activeStyle), GridComponent, GridButtonBase {
     var activeStyle: LabelStyle = activeStyle
         set(value) {
@@ -85,7 +85,7 @@ class GridButton(
         gridX: Int,
         gridY: Int,
         triggerSound: String? = "ok",
-        runnable: (() -> Unit)? = null
+        runnable: (() -> Unit)? = null,
     ) : this(
         text,
         x,
@@ -99,7 +99,7 @@ class GridButton(
         getUILabelStyle(fontSize),
         getUILabelStyle(fontSize),
         triggerSound,
-        runnable
+        runnable,
     ) {
         activeAction = getActivateAction()
         inactiveAction = getDeactivateAction()
@@ -139,14 +139,14 @@ class GridButton(
             ret.addAction(
                 Actions.sequence(
                     Actions.color(Color.WHITE),
-                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
+                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out),
                 )
             )
             ret.addAction(
                 Actions.forever(
                     Actions.sequence(
                         Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f)
+                        Actions.color(Color.WHITE, 0.5f),
                     )
                 )
             )
@@ -161,10 +161,10 @@ class GridButton(
         return {
             val ret = ParallelAction()
             ret.addAction(
-                Actions.alpha(1f),
+                Actions.alpha(1f)
             )
             ret.addAction(
-                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
+                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
             )
             ret.addAction(
                 Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))

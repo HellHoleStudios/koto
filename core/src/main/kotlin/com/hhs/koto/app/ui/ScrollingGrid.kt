@@ -39,7 +39,7 @@ open class ScrollingGrid(
     gridY: Int = 0,
     cycle: Boolean = true,
     activeAction: (() -> Action)? = null,
-    inactiveAction: (() -> Action)? = null
+    inactiveAction: (() -> Action)? = null,
 ) : Grid(gridX, gridY, cycle, activeAction, inactiveAction) {
 
     override fun act(delta: Float) {

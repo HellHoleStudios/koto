@@ -70,7 +70,7 @@ object Lwjgl3Launcher {
             "icon/koto-icon_16x.png",
             "icon/koto-icon_32x.png",
             "icon/koto-icon_48x.png",
-            "icon/koto-icon_128x.png"
+            "icon/koto-icon_128x.png",
         )
         configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
         configuration.useVsync(options.vsyncEnabled)
@@ -78,6 +78,7 @@ object Lwjgl3Launcher {
 
         Lwjgl3Application(KotoApp(callbacks), configuration)
         while (restart0) {
+            restart0 = false
             options = readOptions(optionsFile)
             configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
             configuration.useVsync(options.vsyncEnabled)

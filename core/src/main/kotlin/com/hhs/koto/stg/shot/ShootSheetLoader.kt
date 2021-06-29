@@ -44,7 +44,7 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
     override fun getDependencies(
         fileName: String,
         sheetFile: FileHandle,
-        parameter: ShotSheetParameters?
+        parameter: ShotSheetParameters?,
     ): GdxArray<AssetDescriptor<*>> {
         val imgDir = sheetFile.parent()
         raw = json.fromJson(sheetFile)
@@ -57,7 +57,7 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
         assetManager: AssetManager,
         fileName: String,
         file: FileHandle,
-        parameter: ShotSheetParameters?
+        parameter: ShotSheetParameters?,
     ) = ShotSheet(assetManager[raw.atlas, TextureAtlas::class.java], raw)
 
     data class RawShotSheet(val atlas: String, val data: GdxArray<RawBulletData>) {

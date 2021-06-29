@@ -38,17 +38,17 @@ import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.koto
-import com.hhs.koto.util.systemFlag
+import com.hhs.koto.util.SystemFlag
 
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val grid: Grid = Grid()
     private val title: Label = Label(
         "Koto Test Game",
-        LabelStyle(getFont(Config.UIFont, 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE)
+        LabelStyle(getFont(Config.UIFont, 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
     )
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont("font/SSP-Italic.ttf", 36), Color.BLACK)
+        LabelStyle(getFont("font/SSP-Italic.ttf", 36), Color.BLACK),
     )
     private val titles: Group = Group()
 
@@ -61,19 +61,19 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         st.addActor(grid)
 
         grid.add(GridButton("Game Start", 32, 950f, 400f, 400f, 40f, 0, 0) {
-            systemFlag.gamemode = GameMode.STORY
+            SystemFlag.gamemode = GameMode.STORY
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Extra Start", 32, 950f, 360f, 400f, 40f, 0, 1) {
-            systemFlag.gamemode = GameMode.EXTRA
+            SystemFlag.gamemode = GameMode.EXTRA
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Stage Practice", 32, 950f, 320f, 400f, 40f, 0, 2) {
-            systemFlag.gamemode = GameMode.STAGE_PRACTICE
+            SystemFlag.gamemode = GameMode.STAGE_PRACTICE
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Spell Practice", 32, 950f, 280f, 400f, 40f, 0, 3) {
-            systemFlag.gamemode = GameMode.SPELL_PRACTICE
+            SystemFlag.gamemode = GameMode.SPELL_PRACTICE
             koto.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Replay", 32, 950f, 240f, 400f, 40f, 0, 4)).disable()

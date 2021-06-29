@@ -42,7 +42,7 @@ class GridLabel(
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
     activeStyle: LabelStyle = getUILabelStyle(fontSize),
-    inactiveStyle: LabelStyle? = getUILabelStyle(fontSize)
+    inactiveStyle: LabelStyle? = getUILabelStyle(fontSize),
 ) : Label(text, activeStyle), GridComponent {
     var activeStyle: LabelStyle = activeStyle
         set(value) {
@@ -81,7 +81,7 @@ class GridLabel(
         x: Float,
         y: Float,
         width: Float = 1024f,
-        height: Float = 1024f
+        height: Float = 1024f,
     ) : this(
         text,
         fontSize,
@@ -94,7 +94,7 @@ class GridLabel(
         null,
         null,
         getUILabelStyle(fontSize),
-        getUILabelStyle(fontSize)
+        getUILabelStyle(fontSize),
     )
 
     override fun update() {

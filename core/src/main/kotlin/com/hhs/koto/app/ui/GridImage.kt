@@ -40,8 +40,8 @@ class GridImage(
     override val gridY: Int = 0,
     x: Float,
     y: Float,
-    width: Float = texture.regionWidth.toFloat(),
-    height: Float = texture.regionHeight.toFloat(),
+    width: Float,
+    height: Float,
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
     override var triggerSound: String? = "ok",
@@ -69,10 +69,10 @@ class GridImage(
         gridY: Int,
         x: Float,
         y: Float,
-        width: Float = texture.regionWidth.toFloat(),
-        height: Float = texture.regionHeight.toFloat(),
+        width: Float,
+        height: Float,
         triggerSound: String? = "ok",
-        runnable: (() -> Unit)? = null
+        runnable: (() -> Unit)? = null,
     ) : this(
         texture,
         gridX,
@@ -84,7 +84,7 @@ class GridImage(
         null,
         null,
         triggerSound,
-        runnable
+        runnable,
     ) {
         activeAction = getActivateAction()
         inactiveAction = getDeactivateAction()

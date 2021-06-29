@@ -33,36 +33,36 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.koto
-import com.hhs.koto.util.systemFlag
+import com.hhs.koto.util.SystemFlag
 
 class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png")) {
     val grid = Grid()
 
     init {
         st.addActor(grid)
-        val switchTarget: String = when (systemFlag.gamemode) {
+        val switchTarget: String = when (SystemFlag.gamemode) {
             GameMode.SPELL_PRACTICE -> "spellSelect"
             GameMode.STAGE_PRACTICE -> "stageSelect"
             else -> "playerSelect"
         }
-        grid.add(GridImage(getRegion("diff/easy.png"), 0, 0, 120f, 740f) {
-            systemFlag.difficulty = GameDifficulty.EASY
+        grid.add(GridImage(getRegion("diff/easy.png"), 0, 0, 120f, 740f, 384f, 216f) {
+            SystemFlag.difficulty = GameDifficulty.EASY
             koto.setScreen(switchTarget, 0.5f)
         })
-        grid.add(GridImage(getRegion("diff/normal.png"), 0, 1, 120f, 560f) {
-            systemFlag.difficulty = GameDifficulty.NORMAL
+        grid.add(GridImage(getRegion("diff/normal.png"), 0, 1, 120f, 560f, 384f, 216f) {
+            SystemFlag.difficulty = GameDifficulty.NORMAL
             koto.setScreen(switchTarget, 0.5f)
         })
-        grid.add(GridImage(getRegion("diff/hard.png"), 0, 2, 120f, 380f) {
-            systemFlag.difficulty = GameDifficulty.HARD
+        grid.add(GridImage(getRegion("diff/hard.png"), 0, 2, 120f, 380f, 384f, 216f) {
+            SystemFlag.difficulty = GameDifficulty.HARD
             koto.setScreen(switchTarget, 0.5f)
         })
-        grid.add(GridImage(getRegion("diff/lunatic.png"), 0, 3, 120f, 200f) {
-            systemFlag.difficulty = GameDifficulty.LUNATIC
+        grid.add(GridImage(getRegion("diff/lunatic.png"), 0, 3, 120f, 200f, 384f, 216f) {
+            SystemFlag.difficulty = GameDifficulty.LUNATIC
             koto.setScreen(switchTarget, 0.5f)
         })
-        grid.add(GridImage(getRegion("diff/extra.png"), 0, 4, 120f, 20f) {
-            systemFlag.difficulty = GameDifficulty.EXTRA
+        grid.add(GridImage(getRegion("diff/extra.png"), 0, 4, 120f, 20f, 384f, 216f) {
+            SystemFlag.difficulty = GameDifficulty.EXTRA
             koto.setScreen(switchTarget, 0.5f)
         })
         grid.updateComponent()
@@ -77,16 +77,16 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         grid.addAction(Actions.moveTo(0f, 0f, duration, Interpolation.sineOut))
 
         for (i in 0..3) {
-            grid[i].enabled = systemFlag.gamemode!!.hasRegularDifficulty()
-            (grid[i] as GridImage).isVisible = systemFlag.gamemode!!.hasRegularDifficulty()
+            grid[i].enabled = SystemFlag.gamemode!!.hasRegularDifficulty()
+            (grid[i] as GridImage).isVisible = SystemFlag.gamemode!!.hasRegularDifficulty()
         }
-        grid[4].enabled = systemFlag.gamemode!!.hasExtraDifficulty()
-        (grid[4] as GridImage).isVisible = systemFlag.gamemode!!.hasExtraDifficulty()
+        grid[4].enabled = SystemFlag.gamemode!!.hasExtraDifficulty()
+        (grid[4] as GridImage).isVisible = SystemFlag.gamemode!!.hasExtraDifficulty()
 
-        if (systemFlag.difficulty == null) {
+        if (SystemFlag.difficulty == null) {
             grid.selectFirst()
         } else {
-            grid.select(0, systemFlag.difficulty!!.toInt() - 1)
+            grid.select(0, SystemFlag.difficulty!!.toInt() - 1)
         }
     }
 

@@ -42,22 +42,13 @@ object Collision {
                     circleCircle(x1, y1, m1.radius, x2, y2, m2.radius)
                 }
             } else if (m2 is Rectangle) {
-                return circleRect(x1, y1, m1.radius, x2, y2, m2.boundingWidth, m2.boundingHeight)
+                return circleRect(x1, y1, m1.radius, x2, y2, m2.width, m2.height)
             }
         } else if (m1 is Rectangle) {
             if (m2 is Circle) {
-                return circleRect(x2, y2, m2.radius, x1, y1, m1.boundingWidth, m1.boundingHeight)
+                return circleRect(x2, y2, m2.radius, x1, y1, m1.width, m1.height)
             } else if (m2 is Rectangle) {
-                return rectRect(
-                    x1,
-                    y1,
-                    m1.boundingWidth,
-                    m2.boundingHeight,
-                    x2,
-                    y2,
-                    m2.boundingWidth,
-                    m2.boundingHeight
-                )
+                return rectRect(x1, y1, m1.width, m2.height, x2, y2, m2.width, m2.height)
             }
         }
         return false
@@ -94,20 +85,16 @@ object Collision {
         rectRect(x1, y1, s1, s1, x2, y2, s2, s2)
 
     abstract class CollisionData {
-        abstract val boundingHeight: Float
-        abstract val boundingWidth: Float
+        abstract val height: Float
+        abstract val width: Float
     }
 
     class Circle(var radius: Float) : CollisionData() {
-        override val boundingWidth: Float
+        override val width: Float
             get() = radius * 2
-        override val boundingHeight: Float
+        override val height: Float
             get() = radius * 2
     }
 
-    class Rectangle(width: Float, height: Float) : CollisionData() {
-        override var boundingWidth = width
-        override var boundingHeight = height
-
-    }
+    class Rectangle(override val width: Float, override val height: Float) : CollisionData()
 }

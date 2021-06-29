@@ -43,7 +43,6 @@ import ktx.collections.GdxMap
 import ktx.collections.set
 
 class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
-
     lateinit var batch: SpriteBatch
     lateinit var viewport: Viewport
     lateinit var st: Stage
@@ -146,6 +145,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     override fun dispose() {
         batch.dispose()
         BGM.dispose()
+        A.dispose()
     }
 
     fun setScreen(name: String?) {

@@ -39,7 +39,7 @@ import ktx.collections.GdxMap
 
 var global = GdxMap<String, Any>()
 
-object systemFlag {
+object SystemFlag {
     var redirect: String? = null
     var redirectDuration: Float? = null
     var gamemode: GameMode? = null
