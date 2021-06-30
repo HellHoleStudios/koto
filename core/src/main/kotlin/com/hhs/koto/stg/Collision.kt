@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg
 
-import com.hhs.koto.app.Config
 import com.hhs.koto.util.clamp
 import com.hhs.koto.util.dist2
 import com.hhs.koto.util.sqr
@@ -33,27 +32,10 @@ import kotlin.math.abs
 
 object Collision {
 
-    fun collide(x1: Float, y1: Float, m1: CollisionData?, x2: Float, y2: Float, m2: CollisionData?): Boolean {
-        if (m1 is Circle) {
-            if (m2 is Circle) {
-                return if (Config.orthoCircleCollision) {
-                    circleCircleOrtho(x1, y1, m1.radius, x2, y2, m2.radius)
-                } else {
-                    circleCircle(x1, y1, m1.radius, x2, y2, m2.radius)
-                }
-            } else if (m2 is Rectangle) {
-                return circleRect(x1, y1, m1.radius, x2, y2, m2.width, m2.height)
-            }
-        } else if (m1 is Rectangle) {
-            if (m2 is Circle) {
-                return circleRect(x2, y2, m2.radius, x1, y1, m1.width, m1.height)
-            } else if (m2 is Rectangle) {
-                return rectRect(x1, y1, m1.width, m2.height, x2, y2, m2.width, m2.height)
-            }
-        }
-        return false
-    }
+    fun collide(s1: CollisionShape, x1: Float, y1: Float, s2: CollisionShape, x2: Float, y2: Float) =
+        s1.collide(s2, x1, y1, x2, y2)
 
+//    TODO Entities
 //    fun collide(e1: Entity, e2: Entity): Boolean {
 //        return collide(e1.getX(), e1.getY(), e1.getCollisionData(e2), e2.getX(), e2.getY(), e2.getCollisionData(e1))
 //    }
@@ -83,18 +65,4 @@ object Collision {
 
     fun squareSquare(x1: Float, y1: Float, s1: Float, x2: Float, y2: Float, s2: Float) =
         rectRect(x1, y1, s1, s1, x2, y2, s2, s2)
-
-    abstract class CollisionData {
-        abstract val height: Float
-        abstract val width: Float
-    }
-
-    class Circle(var radius: Float) : CollisionData() {
-        override val width: Float
-            get() = radius * 2
-        override val height: Float
-            get() = radius * 2
-    }
-
-    class Rectangle(override val width: Float, override val height: Float) : CollisionData()
 }

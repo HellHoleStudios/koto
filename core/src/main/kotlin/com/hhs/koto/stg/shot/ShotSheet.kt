@@ -27,9 +27,16 @@ package com.hhs.koto.stg.shot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.AABBCollision
+import com.hhs.koto.stg.CircleCollision
+import com.hhs.koto.stg.CollisionShape
+import com.hhs.koto.stg.NoCollision
 import com.hhs.koto.util.json
 import com.hhs.koto.util.koto
+import com.hhs.koto.util.safeIterator
 import ktx.collections.GdxMap
 import ktx.json.fromJson
 
@@ -38,7 +45,7 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     private var nameToId = GdxMap<String, Int>()
 
     init {
-        for (i in raw.data) {
+        for (i in raw.data.safeIterator()) {
             val tmp = BulletData(this, i)
             data.put(tmp.id, tmp)
             nameToId.put(tmp.name, tmp.id)
@@ -48,8 +55,8 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     constructor(internalSheetFile: String?) : this(Gdx.files.internal(internalSheetFile))
     constructor(sheetFile: FileHandle) : this(sheetFile, json.fromJson<ShotSheetLoader.RawShotSheet>(sheetFile))
     constructor(sheetFile: FileHandle, raw: ShotSheetLoader.RawShotSheet) : this(
-        TextureAtlas(sheetFile.parent().child(raw.atlas)),
-        raw
+        TextureAtlas(sheetFile.parent().child(raw.atlas!!)),
+        raw,
     )
 
     fun getId(name: String): Int {
@@ -67,4 +74,23 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     fun findBullet(name: String): BulletData {
         return data[nameToId[name]]
     }
+}
+
+class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData) {
+    var id: Int = raw.id!!
+    var name: String = raw.name!!
+    var render: String = raw.render
+    var texture: BulletTexture = BulletTexture(parent.atlas, name, raw.frames)
+    var originX = raw.originX ?: texture.maxWidth / 2f
+    var originY = raw.originY ?: texture.maxWidth / 2f
+    var delayTexture: TextureRegion = parent.atlas.findRegion(raw.delaySrc!!)
+    var delayColor: Color = Color.valueOf(raw.delayColor!!)
+    var spinVelocity = raw.spinVelocity
+    var collision: CollisionShape = when (raw.collisionMethod) {
+        null -> NoCollision()
+        "Circle" -> CircleCollision(raw.collisionData!![0])
+        "Rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
+        else -> CircleCollision(raw.collisionData!![0]) // use circle as default
+    }
+    var rotation = raw.rotation
 }

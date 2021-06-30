@@ -32,6 +32,7 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.assets.loaders.SynchronousAssetLoader
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.hhs.koto.app.Config
 import com.hhs.koto.util.json
 import ktx.collections.GdxArray
 import ktx.json.fromJson
@@ -49,7 +50,7 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
         val imgDir = sheetFile.parent()
         raw = json.fromJson(sheetFile)
         val dependencies = GdxArray<AssetDescriptor<*>>()
-        dependencies.add(AssetDescriptor(imgDir.child(raw.atlas), TextureAtlas::class.java))
+        dependencies.add(AssetDescriptor(imgDir.child(raw.atlas!!), TextureAtlas::class.java))
         return dependencies
     }
 
@@ -58,28 +59,23 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
         fileName: String,
         file: FileHandle,
         parameter: ShotSheetParameters?,
-    ) = ShotSheet(assetManager[raw.atlas, TextureAtlas::class.java], raw)
+    ) = ShotSheet(assetManager[raw.atlas!!, TextureAtlas::class.java], raw)
 
-    data class RawShotSheet(val atlas: String, val data: GdxArray<RawBulletData>) {
-
-        constructor() : this("", GdxArray())
-
+    data class RawShotSheet(val atlas: String? = null, val data: GdxArray<RawBulletData> = GdxArray()) {
         data class RawBulletData(
-            val id: Int,
-            val name: String,
-            val frames: GdxArray<Int>,
-            val render: String?,
-            val delaySrc: String,
-            val delayColor: String,
-            val collisionMethod: String?,
-            val collisionData: GdxArray<Float>?,
-            val rotation: Float,
-            val spinVelocity: Float,
-            val originX: Float?,
-            val originY: Float?,
-        ) {
-            constructor() : this(0, "", GdxArray.with(1), null, "", "", null, null, 0f, 0f, null, null)
-        }
+            val id: Int? = null,
+            val name: String? = null,
+            val frames: GdxArray<Int> = GdxArray.with(1),
+            val render: String = Config.defaultBlending,
+            val delaySrc: String? = null,
+            val delayColor: String? = null,
+            val collisionMethod: String? = null,
+            val collisionData: GdxArray<Float>? = null,
+            val rotation: Float = 0f,
+            val spinVelocity: Float = 0f,
+            val originX: Float? = null,
+            val originY: Float? = null,
+        )
     }
 
     class ShotSheetParameters : AssetLoaderParameters<ShotSheet>()

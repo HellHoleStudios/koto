@@ -49,6 +49,7 @@ object B {
         return defaultSheet!!.findBullet(name)
     }
 
+//    TODO B
 //    fun setAngleSpeed(bullet: Bullet, x: Float, y: Float, angle: Float, speed: Float): Bullet {
 //        var angle = angle
 //        angle = M.normalizeAngle(angle)
