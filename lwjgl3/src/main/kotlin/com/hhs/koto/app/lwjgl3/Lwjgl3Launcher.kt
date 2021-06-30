@@ -45,7 +45,7 @@ object Lwjgl3Launcher {
     fun main(args: Array<String>) {
         val optionsFile = getOptionsFile()
         var options = readOptions(optionsFile)
-        var restart0: Boolean = false
+        var restart0 = false
 
         val callbacks = object : KotoCallbacks {
             override fun restartCallback(restart: Boolean) {

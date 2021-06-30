@@ -250,10 +250,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         if (grid.selectedY == 4) {
             super.onQuit()
             saveOptions()
-            if (oldOptions!!.textureMagFilter != options.textureMagFilter
-                || oldOptions!!.textureMinFilter != options.textureMinFilter
-                || oldOptions!!.fpsMultiplier != options.fpsMultiplier
-            ) {
+            if (oldOptions!!.fpsMultiplier != options.fpsMultiplier) {
                 restartApp()
             } else {
                 koto.setScreen("title", 0.5f)

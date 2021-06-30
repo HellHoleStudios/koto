@@ -73,10 +73,18 @@ fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
     return keycode in key
 }
 
-fun checkKey(key: GdxArray<Int>): Boolean {
+fun keyPressed(key: GdxArray<Int>): Boolean {
     if (koto.blocker.isBlocking) return false
     for (i in key.safeIterator()) {
         if (Gdx.input.isKeyPressed(i)) return true
+    }
+    return false
+}
+
+fun keyJustPressed(key: GdxArray<Int>): Boolean {
+    if (koto.blocker.isBlocking) return false
+    for (i in key.safeIterator()) {
+        if (Gdx.input.isKeyJustPressed(i)) return true
     }
     return false
 }

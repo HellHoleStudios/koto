@@ -109,7 +109,17 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     override fun render() {
         BGM.update()
-        fpsCounter.addValue(Gdx.graphics.deltaTime);
+
+        if (Config.allowFullScreen && keyJustPressed(options.keyFullScreen)) {
+            println(Gdx.graphics.supportsDisplayModeChange())
+            if (Gdx.graphics.isFullscreen) {
+                Gdx.graphics.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
+            } else {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
+            }
+        }
+
+        fpsCounter.addValue(Gdx.graphics.deltaTime)
 
         clearScreen(0f, 0f, 0f, 1f)
         var flag1 = false

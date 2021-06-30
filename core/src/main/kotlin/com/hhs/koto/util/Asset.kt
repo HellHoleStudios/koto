@@ -114,8 +114,9 @@ fun getFont(
         parameter.borderColor = borderColor
     }
     parameter.characters = charset
-    parameter.minFilter = options.textureMinFilter
-    parameter.magFilter = options.textureMagFilter
+    parameter.minFilter = Config.textureMinFilter
+    parameter.magFilter = Config.textureMagFilter
+    parameter.genMipMaps = Config.genMipMaps
     val font = generator.generateFont(parameter)
     fontCache.put(key, font)
     return font
@@ -176,12 +177,14 @@ class TextureReflectCallback() : LoadedCallback {
 }
 
 fun defaultTextureParameter() = TextureLoader.TextureParameter().apply {
-    minFilter = options.textureMinFilter
-    magFilter = options.textureMagFilter
+    minFilter = Config.textureMinFilter
+    magFilter = Config.textureMagFilter
+    genMipMaps = Config.genMipMaps
     loadedCallback = TextureReflectCallback()
 }
 
 fun defaultBitmapFontParameter() = BitmapFontLoader.BitmapFontParameter().apply {
-    minFilter = options.textureMinFilter
-    magFilter = options.textureMagFilter
+    minFilter = Config.textureMinFilter
+    magFilter = Config.textureMagFilter
+    genMipMaps = Config.genMipMaps
 }

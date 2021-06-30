@@ -39,8 +39,6 @@ data class Options(
     var startupWindowWidth: Int = 960,
     var startupWindowHeight: Int = 720,
     var startupFullScreen: Boolean = false,
-    var textureMinFilter: TextureFilter = TextureFilter.Linear,
-    var textureMagFilter: TextureFilter = TextureFilter.Linear,
     var invulnerable: Boolean = false,
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
@@ -56,10 +54,14 @@ data class Options(
     var keyBomb: GdxArray<Int> = GdxArray.with(Keys.X),
     var keyPause: GdxArray<Int> = GdxArray.with(Keys.ESCAPE),
     var keyCustom: GdxArray<Int> = GdxArray.with(Keys.C),
+    var keyFullScreen: GdxArray<Int> = GdxArray.with(Keys.F4),
 )
 
 object Config {
     var logLevel = Logger.DEBUG
+    val textureMinFilter = TextureFilter.MipMapLinearLinear
+    val textureMagFilter = TextureFilter.Linear
+    const val genMipMaps = true
     const val windowTitle = "Koto"
     const val screenWidth = 1280f
     const val screenHeight = 960f
@@ -84,8 +86,8 @@ object Config {
     const val allowSpeedUpOutOfReplay = true
     const val wavMusic = false
     const val UIFont = "font/SHSSC-Mini-Heavy.ttf"
-    var UIFontColor = Color.WHITE
+    val UIFontColor: Color = Color.WHITE
     const val UIFontBorderWidth = 3f
-    var UIFontBorderColor = Color.BLACK
+    val UIFontBorderColor: Color = Color.BLACK
     const val debugActorLayout = false
 }
