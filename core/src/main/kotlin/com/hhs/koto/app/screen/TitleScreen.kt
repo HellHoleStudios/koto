@@ -53,41 +53,41 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val titles: Group = Group()
 
     init {
-        title.setPosition(80f, 780f)
-        subtitle.setPosition(100f, 740f)
+        title.setPosition(80f, 860f)
+        subtitle.setPosition(100f, 820f)
         titles.addActor(title)
         titles.addActor(subtitle)
         st.addActor(titles)
         st.addActor(grid)
 
-        grid.add(GridButton("Game Start", 32, 950f, 400f, 400f, 40f, 0, 0) {
+        grid.add(GridButton("Game Start", 36, 0, 0) {
             SystemFlag.gamemode = GameMode.STORY
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Extra Start", 32, 950f, 360f, 400f, 40f, 0, 1) {
+        grid.add(GridButton("Extra Start", 36, 0, 1) {
             SystemFlag.gamemode = GameMode.EXTRA
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Stage Practice", 32, 950f, 320f, 400f, 40f, 0, 2) {
+        grid.add(GridButton("Stage Practice", 36, 0, 2) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Spell Practice", 32, 950f, 280f, 400f, 40f, 0, 3) {
+        grid.add(GridButton("Spell Practice", 36, 0, 3) {
             SystemFlag.gamemode = GameMode.SPELL_PRACTICE
             koto.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Replay", 32, 950f, 240f, 400f, 40f, 0, 4)).disable()
-        grid.add(GridButton("Player Data", 32, 950f, 200f, 400f, 40f, 0, 5)).disable()
-        grid.add(GridButton("Music Room", 32, 950f, 160f, 400f, 40f, 0, 6) {
+        grid.add(GridButton("Replay", 36, 0, 4)).disable()
+        grid.add(GridButton("Player Data", 36, 0, 5)).disable()
+        grid.add(GridButton("Music Room", 36, 0, 6) {
             koto.setScreen("musicRoom", 0.5f)
         })
-        grid.add(GridButton("Options", 32, 950f, 120f, 400f, 40f, 0, 7) {
+        grid.add(GridButton("Options", 36, 0, 7) {
             koto.setScreen("options", 0.5f)
         })
-        grid.add(GridButton("Quit", 32, 950f, 80f, 400f, 40f, 0, 8, triggerSound = null) {
+        grid.add(GridButton("Quit", 36, 0, 8, triggerSound = null) {
             onQuit()
         })
-
+        grid.arrange(1050f, 450f, 0f, -45f)
         grid.selectFirst()
         grid.updateComponent()
         input.addProcessor(grid)

@@ -43,11 +43,10 @@ open class ConstrainedGrid(
 ) : Grid(gridX, gridY, cycle, activeAction, inactiveAction) {
 
     override fun act(delta: Float) {
-        for (component in grid.safeIterator()) {
-            if (component.active && component is Actor) {
-                val actor = component as Actor
-                val dx = calculateDelta(actor.x + offsetX, actor.width, region.getX(), region.getWidth())
-                val dy = calculateDelta(actor.y + offsetY, actor.height, region.getY(), region.getHeight())
+        for (i in grid.safeIterator()) {
+            if (i.active && i is Actor) {
+                val dx = calculateDelta(i.x + offsetX, i.width, region.getX(), region.getWidth())
+                val dy = calculateDelta(i.y + offsetY, i.height, region.getY(), region.getHeight())
                 if (dx == 0f && dy == 0f) continue
                 offsetX -= dx
                 offsetY -= dy
@@ -60,7 +59,6 @@ open class ConstrainedGrid(
     override fun draw(batch: Batch?, parentAlpha: Float) {
         val tmpX1 = x
         val tmpY1 = y
-        val cullingArea = cullingArea
         if (cullingArea != null) {
             val tmpX2 = cullingArea.getX()
             val tmpY2 = cullingArea.getY()

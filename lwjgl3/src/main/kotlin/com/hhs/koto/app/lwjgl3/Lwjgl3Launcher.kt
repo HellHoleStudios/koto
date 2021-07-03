@@ -58,7 +58,7 @@ object Lwjgl3Launcher {
                 Gdx.app.log("Main", "Writing options to file")
                 if (!optionsFile.exists()) {
                     optionsFile.parent().mkdirs()
-                }
+                } 
                 json.toJson(options, optionsFile)
             }
         }
@@ -72,7 +72,11 @@ object Lwjgl3Launcher {
             "icon/koto-icon_48x.png",
             "icon/koto-icon_128x.png",
         )
-        configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
+        if (options.startupFullScreen) {
+            configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
+        } else {
+            configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
+        }
         configuration.useVsync(options.vsyncEnabled)
         configuration.setForegroundFPS(options.fpsLimit)
 

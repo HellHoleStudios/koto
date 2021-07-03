@@ -36,19 +36,19 @@ import com.hhs.koto.util.getUILabelStyle
 
 class GridButton(
     text: CharSequence,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
+    x: Float = 0f,
+    y: Float = 0f,
+    width: Float = 2048f,
+    height: Float = 2048f,
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
     activeStyle: LabelStyle,
     inactiveStyle: LabelStyle? = null,
     override var triggerSound: String? = "ok",
     override var runnable: (() -> Unit)? = null,
-) : Label(text, activeStyle), GridComponent, GridButtonBase {
+) : Label(text, activeStyle), GridButtonBase {
     var activeStyle: LabelStyle = activeStyle
         set(value) {
             field = value
@@ -78,22 +78,22 @@ class GridButton(
     constructor(
         text: CharSequence,
         fontSize: Int,
-        x: Float,
-        y: Float,
-        width: Float,
-        height: Float,
         gridX: Int,
         gridY: Int,
+        x: Float = 0f,
+        y: Float = 0f,
+        width: Float = 2048f,
+        height: Float = fontSize.toFloat(),
         triggerSound: String? = "ok",
         runnable: (() -> Unit)? = null,
     ) : this(
         text,
+        gridX,
+        gridY,
         x,
         y,
         width,
         height,
-        gridX,
-        gridY,
         null,
         null,
         getUILabelStyle(fontSize),

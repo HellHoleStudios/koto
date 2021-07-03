@@ -27,7 +27,7 @@ package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.scenes.scene2d.Action
 
-interface GridButtonBase {
+interface GridButtonBase : GridComponent {
     var staticX: Float
     var staticY: Float
     var activeAction: (() -> Action)?

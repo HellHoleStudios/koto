@@ -32,35 +32,25 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.app.Options
 import com.hhs.koto.app.ui.ConstrainedGrid
+import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.ScrollingGrid
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
 class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
-    val grid = ConstrainedGrid(Rectangle(-2048f, 64f, 4096f, 832f))
-    val musicVolume = ScrollingGrid(0f, 0f, cycle = false)
-    val SEVolume = ScrollingGrid(0f, 0f, cycle = false, gridY = 1)
-    val Vsync = ScrollingGrid(0f, 0f, cycle = false, gridY = 2)
+    val grid = ConstrainedGrid(Rectangle(-2048f, 72f, 5536f, 936f))
+    private val musicVolume = ScrollingGrid(0f, 0f, cycle = false, gridX = 0, gridY = 0)
+    private val SEVolume = ScrollingGrid(0f, 0f, cycle = false, gridX = 0, gridY = 1)
+    private val Vsync = ScrollingGrid(0f, 0f, cycle = false, gridX = 0, gridY = 2)
     var oldOptions: Options? = null
 
     init {
         st.addActor(grid)
-        grid.add(GridButton("Music Vol", 32, 940f, 280f, 200f, 40f, 0, 0, triggerSound = null))
-        musicVolume.setPosition(1150f, 280f)
+        grid.add(GridButton("Music Vol", 36, 0, 0, triggerSound = null))
         for (i in 0..20) {
             val button: GridButton = musicVolume.add(
-                GridButton(
-                    (i * 5).toString() + "%",
-                    32,
-                    0f,
-                    0f,
-                    200f,
-                    40f,
-                    i,
-                    0,
-                    triggerSound = null,
-                )
+                GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null)
             ) as GridButton
             button.activeAction = {
                 Actions.parallel(
@@ -92,7 +82,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         input.addProcessor(musicVolume)
         grid.add(musicVolume)
 
-        val tmpButton1 = GridButton("S.E. Vol", 32, 940f, 240f, 200f, 40f, 0, 1, triggerSound = null)
+        val tmpButton1 = GridButton("S.E. Vol", 36, 0, 1, triggerSound = null)
         tmpButton1.activeAction = tmpButton1.getActivateAction({
             Actions.forever(
                 Actions.sequence(
@@ -104,21 +94,10 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             )
         })
         grid.add(tmpButton1)
-        SEVolume.setPosition(1150f, 240f)
         for (i in 0..20) {
             val tmpButton2 = SEVolume
                 .add(
-                    GridButton(
-                        (i * 5).toString() + "%",
-                        32,
-                        0f,
-                        0f,
-                        240f,
-                        40f,
-                        i,
-                        0,
-                        triggerSound = null,
-                    )
+                    GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null)
                 ) as GridButton
             tmpButton2.activeAction = {
                 Actions.parallel(
@@ -147,10 +126,9 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         input.addProcessor(SEVolume)
         grid.add(SEVolume)
 
-        grid.add(GridButton("Vsync", 32, 940f, 200f, 200f, 40f, 0, 2, triggerSound = null))
-        Vsync.setPosition(1150f, 200f)
+        grid.add(GridButton("Vsync", 36, 0, 2, triggerSound = null))
         val VsyncDisableButton: GridButton =
-            Vsync.add(GridButton("No", 32, 0f, 0f, 200f, 40f, 0, 0, triggerSound = null)) as GridButton
+            Vsync.add(GridButton("No", 36, 0, 0, triggerSound = null)) as GridButton
         VsyncDisableButton.activeAction = {
             Actions.parallel(
                 Actions.sequence(
@@ -183,7 +161,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             )
         }
         val VsyncEnableButton: GridButton =
-            Vsync.add(GridButton("Yes", 32, 0f, 0f, 200f, 40f, 1, 0, triggerSound = null)) as GridButton
+            Vsync.add(GridButton("Yes", 36, 1, 0, triggerSound = null)) as GridButton
         VsyncEnableButton.activeAction = {
             Actions.parallel(
                 Actions.sequence(
@@ -212,8 +190,8 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         input.addProcessor(Vsync)
         grid.add(Vsync)
 
-        grid.add(GridButton("Key Config", 32, 940f, 160f, 200f, 40f, 0, 2)).disable()
-        grid.add(GridButton("Default", 32, 940f, 120f, 200f, 40f, 0, 3) {
+        grid.add(GridButton("Key Config", 36, 0, 3)).disable()
+        grid.add(GridButton("Default", 36, 0, 4) {
             options = Options()
             BGM.setVolume(options.musicVolume)
             Gdx.graphics.setVSync(options.vsyncEnabled)
@@ -221,9 +199,15 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0)
             Vsync.select(if (options.vsyncEnabled) 1 else 0, 0, true)
         })
-        grid.add(GridButton("Quit", 32, 940f, 80f, 200f, 40f, 0, 4, triggerSound = null) {
+        grid.add(GridButton("Quit", 36, 0, 5, triggerSound = null) {
             onQuit()
         })
+
+        grid.arrange(1050f, 315f, 0f, -45f)
+        musicVolume.x = 1300f
+        SEVolume.x = 1300f
+        Vsync.x = 1300f
+
         grid.selectFirst()
         grid.activate()
         grid.updateComponent()
@@ -247,7 +231,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     }
 
     override fun onQuit() {
-        if (grid.selectedY == 4) {
+        if (grid.selectedY == 5) {
             super.onQuit()
             saveOptions()
             if (oldOptions!!.fpsMultiplier != options.fpsMultiplier) {
@@ -256,7 +240,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                 koto.setScreen("title", 0.5f)
             }
         } else {
-            grid.select(0, 4)
+            grid.select(0, 5)
         }
     }
 }

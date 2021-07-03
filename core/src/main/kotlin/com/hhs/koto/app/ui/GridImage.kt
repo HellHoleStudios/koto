@@ -38,15 +38,15 @@ class GridImage(
     texture: TextureRegion,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
-    x: Float,
-    y: Float,
+    x: Float = 0f,
+    y: Float = 0f,
     width: Float,
     height: Float,
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
     override var triggerSound: String? = "ok",
     override var runnable: (() -> Unit)? = null,
-) : Image(texture), GridComponent, GridButtonBase {
+) : Image(texture), GridButtonBase {
     override var active = true
         set(value) {
             field = value
@@ -67,8 +67,8 @@ class GridImage(
         texture: TextureRegion,
         gridX: Int,
         gridY: Int,
-        x: Float,
-        y: Float,
+        x: Float = 0f,
+        y: Float = 0f,
         width: Float,
         height: Float,
         triggerSound: String? = "ok",

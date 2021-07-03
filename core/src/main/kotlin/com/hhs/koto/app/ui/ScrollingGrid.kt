@@ -43,11 +43,10 @@ open class ScrollingGrid(
 ) : Grid(gridX, gridY, cycle, activeAction, inactiveAction) {
 
     override fun act(delta: Float) {
-        for (component in grid.safeIterator()) {
-            if (component.active && component is Actor) {
-                val actor = component as Actor
-                val dx = actor.x + offsetX - centerX
-                val dy = actor.y + offsetY - centerY
+        for (i in grid.safeIterator()) {
+            if (i.active && i is Actor) {
+                val dx = i.x + offsetX - centerX
+                val dy = i.y + offsetY - centerY
                 if (dx == 0f && dy == 0f) continue
                 offsetX -= dx
                 offsetY -= dy
@@ -60,7 +59,6 @@ open class ScrollingGrid(
     override fun draw(batch: Batch, parentAlpha: Float) {
         val tmpX1 = x
         val tmpY1 = y
-        val cullingArea = cullingArea
         if (cullingArea != null) {
             val tmpX2 = cullingArea.getX()
             val tmpY2 = cullingArea.getY()

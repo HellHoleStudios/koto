@@ -338,5 +338,17 @@ open class Grid(
         }
     }
 
+    fun arrange(rootX: Float, rootY: Float, offsetX: Float, offsetY: Float) {
+        for (i in grid.safeIterator()) {
+            if (i is Actor) {
+                i.setPosition(rootX + offsetX * i.gridX, rootY + offsetY * i.gridY)
+            }
+            if (i is GridButtonBase) {
+                i.staticX = rootX + offsetX * i.gridX
+                i.staticY = rootY + offsetY * i.gridY
+            }
+        }
+    }
+
     operator fun get(i: Int) = getChild(i) as GridComponent
 }
