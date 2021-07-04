@@ -32,14 +32,13 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.app.Options
 import com.hhs.koto.app.ui.ConstrainedGrid
-import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.ScrollingGrid
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
 class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
-    val grid = ConstrainedGrid(Rectangle(-2048f, 72f, 5536f, 936f))
+    private val grid = ConstrainedGrid(Rectangle(-2048f, 72f, 5536f, 936f))
     private val musicVolume = ScrollingGrid(0f, 0f, cycle = false, gridX = 0, gridY = 0)
     private val SEVolume = ScrollingGrid(0f, 0f, cycle = false, gridX = 0, gridY = 1)
     private val Vsync = ScrollingGrid(0f, 0f, cycle = false, gridX = 0, gridY = 2)

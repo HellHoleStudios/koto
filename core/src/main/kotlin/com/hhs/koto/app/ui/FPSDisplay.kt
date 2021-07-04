@@ -50,6 +50,6 @@ class FPSDisplay : Actor() {
     }
 
     init {
-        setBounds(Config.screenWidth - 100, 0f, 100f, 16f)
+        setBounds(Config.screenWidth - 144, 0f, 144f, 24f)
     }
 }

@@ -26,9 +26,9 @@
 package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.koto
-import com.hhs.koto.util.SystemFlag
 
 class BlankScreen : BasicScreen(null, getRegion("bg/blank.png")) {
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {

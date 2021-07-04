@@ -31,24 +31,25 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.stg.GameMode
+import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.koto
-import com.hhs.koto.util.SystemFlag
 
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val grid: Grid = Grid()
     private val title: Label = Label(
-        "Koto Test Game",
-        LabelStyle(getFont(Config.UIFont, 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
+        "Koto Demonstration",
+        LabelStyle(getFont("font/SourceHanSerifSC-Bold.otf", 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
     )
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont("font/SSP-Italic.ttf", 36), Color.BLACK),
+        LabelStyle(getFont("font/SourceSerifPro-Italic.ttf", 36), Color.BLACK),
     )
     private val titles: Group = Group()
 

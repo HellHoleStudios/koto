@@ -31,9 +31,9 @@ import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridImage
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
+import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.koto
-import com.hhs.koto.util.SystemFlag
 
 class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png")) {
     val grid = Grid()
