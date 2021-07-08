@@ -46,6 +46,7 @@ class GridButton(
     override var inactiveAction: (() -> Action)? = null,
     activeStyle: LabelStyle,
     inactiveStyle: LabelStyle? = null,
+    override var enabled: Boolean = true,
     override var triggerSound: String? = "ok",
     override var runnable: (() -> Unit)? = null,
 ) : Label(text, activeStyle), GridButtonBase {
@@ -59,19 +60,16 @@ class GridButton(
             field = value
             update()
         }
-    override var active = true
+    override var active = false
         set(value) {
             field = value
             update()
         }
-    override var enabled = true
     override var parent: Grid? = null
-    override var staticX = 0f
-    override var staticY = 0f
+    override var staticX = x
+    override var staticY = y
 
     init {
-        staticX = x
-        staticY = y
         setBounds(x, y, width, height)
     }
 
@@ -85,6 +83,7 @@ class GridButton(
         width: Float = 2048f,
         height: Float = fontSize.toFloat(),
         triggerSound: String? = "ok",
+        enabled: Boolean = true,
         runnable: (() -> Unit)? = null,
     ) : this(
         text,
@@ -98,6 +97,7 @@ class GridButton(
         null,
         getUILabelStyle(fontSize),
         getUILabelStyle(fontSize),
+        enabled,
         triggerSound,
         runnable,
     ) {

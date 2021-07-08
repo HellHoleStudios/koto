@@ -26,6 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
@@ -36,6 +37,7 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.graphics.copy
 
 var global = GdxMap<String, Any>()
 
@@ -87,3 +89,21 @@ fun <K, V> GdxMap<K, V>.safeEntries() = ObjectMap.Entries(this)
 fun <K, V> GdxMap<K, V>.safeKeys() = ObjectMap.Keys(this)
 
 fun <K, V> GdxMap<K, V>.safeValues() = ObjectMap.Values(this)
+
+operator fun Color.plus(other: Color): Color = this.copy().add(other)
+
+operator fun Color.plusAssign(other: Color) {
+    add(other)
+}
+
+operator fun Color.minus(other: Color): Color = this.copy().sub(other)
+
+operator fun Color.minusAssign(other: Color) {
+    sub(other)
+}
+
+operator fun Color.times(other: Color): Color = this.copy().mul(other)
+
+operator fun Color.timesAssign(other: Color) {
+    mul(other)
+}

@@ -26,60 +26,62 @@
 package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.util.safeIterator
+import java.lang.Float.min
 
 open class ConstrainedGrid(
     val region: Rectangle,
-    var offsetX: Float = 0f,
-    var offsetY: Float = 0f,
     gridX: Int = 0,
     gridY: Int = 0,
     cycle: Boolean = true,
+    animationDuration: Float = 0f,
+    interpolation: Interpolation = Interpolation.linear,
+    staticX: Float = 0f,
+    staticY: Float = 0f,
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
-) : Grid(gridX, gridY, cycle, activeAction, inactiveAction) {
-
+) : ScrollingGrid(
+    gridX,
+    gridY,
+    cycle,
+    animationDuration,
+    interpolation,
+    staticX,
+    staticY,
+    activeAction,
+    inactiveAction
+) {
     override fun act(delta: Float) {
         for (i in grid.safeIterator()) {
             if (i.active && i is Actor) {
-                val dx = calculateDelta(i.x + offsetX, i.width, region.getX(), region.getWidth())
-                val dy = calculateDelta(i.y + offsetY, i.height, region.getY(), region.getHeight())
-                if (dx == 0f && dy == 0f) continue
-                offsetX -= dx
-                offsetY -= dy
+                if (targetX == i.staticX && targetY == i.staticY) {
+                    if (t < animationDuration) {
+                        t = min(animationDuration, t + delta)
+                    }
+                } else {
+                    startX = getCurrentX()
+                    startY = getCurrentY()
+                    t = 0f
+                    targetX = calculateTarget(i.staticX, i.width, region.x, region.width)
+                    targetY = calculateTarget(i.staticY, i.height, region.y, region.height)
+                }
                 break
             }
         }
         super.act(delta)
     }
 
-    override fun draw(batch: Batch?, parentAlpha: Float) {
-        val tmpX1 = x
-        val tmpY1 = y
-        if (cullingArea != null) {
-            val tmpX2 = cullingArea.getX()
-            val tmpY2 = cullingArea.getY()
-            setPosition(tmpX1 + offsetX, tmpY1 + offsetY)
-            cullingArea.setPosition(tmpX2 - offsetX, tmpY2 - offsetY)
-            super.draw(batch, parentAlpha)
-            setPosition(tmpX1, tmpY1)
-            cullingArea.setPosition(tmpX2, tmpY2)
-        } else {
-            setPosition(tmpX1 + offsetX, tmpY1 + offsetY)
-            super.draw(batch, parentAlpha)
-            setPosition(tmpX1, tmpY1)
-        }
-    }
-
-    private fun calculateDelta(x: Float, width: Float, x2: Float, width2: Float): Float {
+    private fun calculateTarget(x: Float, width: Float, x2: Float, width2: Float): Float {
         if (x < x2) {
-            return x - x2
+            return x2
         }
-        return if (x + width > x2 + width2) {
-            x + width - x2 - width2
-        } else 0f
+        if (x + width > x2 + width2) {
+            return x2 + width2 - width
+        }
+        return x
     }
 }

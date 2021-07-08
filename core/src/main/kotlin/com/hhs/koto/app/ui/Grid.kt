@@ -36,49 +36,19 @@ import com.hhs.koto.util.safeIterator
 import ktx.collections.GdxArray
 import kotlin.math.abs
 
-interface GridComponent {
-    var parent: Grid?
-
-    var active: Boolean
-    var enabled: Boolean
-
-    fun update()
-    val gridX: Int
-    val gridY: Int
-
-    fun trigger()
-
-    fun activate(): GridComponent {
-        active = true
-        return this
-    }
-
-    fun deactivate(): GridComponent {
-        active = false
-        return this
-    }
-
-    fun enable(): GridComponent {
-        enabled = true
-        return this
-    }
-
-    fun disable(): GridComponent {
-        enabled = false
-        return this
-    }
-}
-
 open class Grid(
     override val gridX: Int = 0,
     override val gridY: Int = 0,
     var cycle: Boolean = true,
+    final override var staticX: Float = 0f,
+    final override var staticY: Float = 0f,
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
 ) : Group(), GridComponent, InputProcessor {
     val grid = GdxArray<GridComponent>()
     var selectedX: Int = 0
     var selectedY: Int = 0
+
     override var parent: Grid? = null
     override var active: Boolean = true
         set(value) {
@@ -90,6 +60,14 @@ open class Grid(
     private var minY = Int.MAX_VALUE
     private var maxX = Int.MIN_VALUE
     private var maxY = Int.MIN_VALUE
+
+    init {
+        setPosition(staticX, staticY)
+    }
+
+    final override fun setPosition(x: Float, y: Float) {
+        super.setPosition(x, y)
+    }
 
     override fun update() {
         clearActions()

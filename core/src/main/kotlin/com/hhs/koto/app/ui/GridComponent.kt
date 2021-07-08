@@ -25,11 +25,35 @@
 
 package com.hhs.koto.app.ui
 
-import com.badlogic.gdx.scenes.scene2d.Action
+interface GridComponent {
+    var parent: Grid?
+    var staticX: Float
+    var staticY: Float
+    var active: Boolean
+    var enabled: Boolean
+    fun update()
+    val gridX: Int
+    val gridY: Int
 
-interface GridButtonBase : GridComponent {
-    var activeAction: (() -> Action)?
-    var inactiveAction: (() -> Action)?
-    var triggerSound: String?
-    var runnable: (() -> Unit)?
+    fun trigger()
+
+    fun activate(): GridComponent {
+        active = true
+        return this
+    }
+
+    fun deactivate(): GridComponent {
+        active = false
+        return this
+    }
+
+    fun enable(): GridComponent {
+        enabled = true
+        return this
+    }
+
+    fun disable(): GridComponent {
+        enabled = false
+        return this
+    }
 }

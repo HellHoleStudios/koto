@@ -35,8 +35,8 @@ class GridLabel(
     fontSize: Int,
     override val gridX: Int,
     override val gridY: Int,
-    x: Float,
-    y: Float,
+    override var staticX: Float,
+    override var staticY: Float,
     width: Float = 2048f,
     height: Float = 2048f,
     var activeAction: (() -> Action)? = null,
@@ -64,13 +64,9 @@ class GridLabel(
     override var enabled = false
         set(value) = Unit
     override var parent: Grid? = null
-    var staticX = 0f
-    var staticY = 0f
 
     init {
-        staticX = x
-        staticY = y
-        setBounds(x, y, width, height)
+        setBounds(staticX, staticY, width, height)
     }
 
     constructor(

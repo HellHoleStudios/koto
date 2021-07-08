@@ -33,6 +33,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.SE
+import com.hhs.koto.util.times
+import ktx.graphics.copy
 
 class GridImage(
     texture: TextureRegion,
@@ -42,24 +44,23 @@ class GridImage(
     y: Float = 0f,
     width: Float,
     height: Float,
+    val tint: Color = Color.WHITE,
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
+    override var enabled: Boolean = true,
     override var triggerSound: String? = "ok",
     override var runnable: (() -> Unit)? = null,
 ) : Image(texture), GridButtonBase {
-    override var active = true
+    override var active = false
         set(value) {
             field = value
             update()
         }
-    override var enabled = true
     override var parent: Grid? = null
-    override var staticX = 0f
-    override var staticY = 0f
+    override var staticX = x
+    override var staticY = y
 
     init {
-        staticX = x
-        staticY = y
         setBounds(x, y, width, height)
     }
 
@@ -71,7 +72,9 @@ class GridImage(
         y: Float = 0f,
         width: Float,
         height: Float,
+        tint: Color = Color.WHITE,
         triggerSound: String? = "ok",
+        enabled: Boolean = true,
         runnable: (() -> Unit)? = null,
     ) : this(
         texture,
@@ -81,8 +84,10 @@ class GridImage(
         y,
         width,
         height,
+        tint,
         null,
         null,
+        enabled,
         triggerSound,
         runnable,
     ) {
@@ -93,9 +98,9 @@ class GridImage(
 
     override fun update() {
         color = if (enabled) {
-            Color.WHITE
+            tint
         } else {
-            Color.GRAY
+            Color.GRAY * tint
         }
         if (active && enabled) {
             actions.clear()
@@ -126,7 +131,7 @@ class GridImage(
                 Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
             )
             ret.addAction(
-                Actions.color(Color.WHITE, 0.5f)
+                Actions.color(tint, 0.5f)
             )
             for (action in actions) {
                 ret.addAction(action())
@@ -139,7 +144,7 @@ class GridImage(
         return {
             val ret = ParallelAction()
             ret.addAction(
-                Actions.color(Color.GRAY)
+                Actions.color(Color.GRAY * tint)
             )
             ret.addAction(
                 Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),

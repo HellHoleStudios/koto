@@ -75,7 +75,7 @@ fun getTexture(fileName: String): Texture {
 fun getRegion(fileName: String): TextureRegion {
     return when (val tmp: Any = A[fileName]) {
         is TextureRegion -> tmp
-        is Texture -> TextureRegion(tmp as Texture)
+        is Texture -> TextureRegion(tmp)
         else -> {
             A.logger.error("getRegion() requires a Texture-like asset!")
             tmp as TextureRegion
@@ -230,7 +230,7 @@ fun getUILabelStyle(fontSize: Int): LabelStyle {
 
 fun loadAssetIndex(file: FileHandle) {
     A.logger.debug("Loading asset index from file $file")
-    for (i in json.fromJson<Array<String>>(file)) {
+    for (i in json.fromJson<GdxArray<String>>(file).safeIterator()) {
         loadSmart(i)
     }
 }
