@@ -34,7 +34,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.times
-import ktx.graphics.copy
 
 class GridImage(
     texture: TextureRegion,
@@ -66,10 +65,10 @@ class GridImage(
 
     constructor(
         texture: TextureRegion,
-        gridX: Int,
-        gridY: Int,
-        x: Float = 0f,
-        y: Float = 0f,
+        gridX: Int=0,
+        gridY: Int=0,
+        staticX: Float = 0f,
+        staticY: Float = 0f,
         width: Float,
         height: Float,
         tint: Color = Color.WHITE,
@@ -80,8 +79,8 @@ class GridImage(
         texture,
         gridX,
         gridY,
-        x,
-        y,
+        staticX,
+        staticY,
         width,
         height,
         tint,

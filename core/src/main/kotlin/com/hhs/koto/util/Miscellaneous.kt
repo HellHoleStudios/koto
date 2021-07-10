@@ -54,17 +54,17 @@ val json = Json().apply {
 }
 lateinit var options: Options
 
-lateinit var koto: KotoApp
+lateinit var app: KotoApp
 
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
 
 fun exitApp() {
-    koto.callbacks.restartCallback(false)
+    app.callbacks.restartCallback(false)
     Gdx.app.exit()
 }
 
 fun restartApp() {
-    koto.callbacks.restartCallback(true)
+    app.callbacks.restartCallback(true)
     Gdx.app.exit()
 }
 
@@ -75,11 +75,11 @@ fun initAll() {
 }
 
 fun loadOptions() {
-    options = koto.callbacks.getOptions()
+    options = app.callbacks.getOptions()
 }
 
 fun saveOptions() {
-    koto.callbacks.saveOptions(options)
+    app.callbacks.saveOptions(options)
 }
 
 fun <Type> GdxArray<Type>.safeIterator() = Array.ArrayIterator(this)

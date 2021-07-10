@@ -38,7 +38,7 @@ open class BasicScreen(
     private val backgroundMusic: String?,
     backgroundTexture: TextureRegion,
 ) : KotoScreen {
-    var st = Stage(koto.viewport).apply {
+    var st = Stage(app.viewport).apply {
         isDebugAll = Config.debugActorLayout
     }
     var input = InputMultiplexer().apply {
@@ -53,20 +53,20 @@ open class BasicScreen(
     override var state: ScreenState = ScreenState.HIDDEN
 
     override fun render(delta: Float) {
-        koto.batch.begin()
+        app.batch.begin()
         st.act(delta)
         st.draw()
-        koto.batch.end()
+        app.batch.end()
     }
 
     override fun show() {
         BGM.play(backgroundMusic)
 
-        koto.input.addProcessor(input)
+        app.input.addProcessor(input)
     }
 
     override fun hide() {
-        koto.input.removeProcessor(input)
+        app.input.removeProcessor(input)
         state = ScreenState.HIDDEN;
     }
 

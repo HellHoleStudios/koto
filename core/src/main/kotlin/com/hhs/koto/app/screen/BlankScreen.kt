@@ -27,8 +27,8 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.util.SystemFlag
+import com.hhs.koto.util.app
 import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.koto
 
 class BlankScreen : BasicScreen(null, getRegion("bg/blank.png")) {
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
@@ -39,10 +39,10 @@ class BlankScreen : BasicScreen(null, getRegion("bg/blank.png")) {
             state = ScreenState.SHOWN
             if (SystemFlag.redirect != null) {
                 if (SystemFlag.redirectDuration != null) {
-                    koto.setScreen(SystemFlag.redirect!!, SystemFlag.redirectDuration!!)
+                    app.setScreen(SystemFlag.redirect!!, SystemFlag.redirectDuration!!)
                     SystemFlag.redirectDuration = null
                 } else {
-                    koto.setScreen(SystemFlag.redirect!!)
+                    app.setScreen(SystemFlag.redirect!!)
                 }
                 SystemFlag.redirect = null
             }

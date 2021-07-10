@@ -27,61 +27,117 @@ package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.util.safeIterator
 import java.lang.Float.min
 
 open class ConstrainedGrid(
-    val region: Rectangle,
+    protected var constraintX: Float = 0f,
+    protected var constraintY: Float = 0f,
+    protected val constraintWidth: Float,
+    protected val constraintHeight: Float,
     gridX: Int = 0,
     gridY: Int = 0,
     cycle: Boolean = true,
-    animationDuration: Float = 0f,
-    interpolation: Interpolation = Interpolation.linear,
+    protected val animationDuration: Float = 0f,
+    protected val interpolation: Interpolation = Interpolation.linear,
     staticX: Float = 0f,
     staticY: Float = 0f,
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
-) : ScrollingGrid(
-    gridX,
-    gridY,
-    cycle,
-    animationDuration,
-    interpolation,
-    staticX,
-    staticY,
-    activeAction,
-    inactiveAction
-) {
+) : Grid(gridX, gridY, cycle, staticX, staticY, activeAction, inactiveAction) {
+    protected var startX: Float = 0f
+    protected var startY: Float = 0f
+    protected var targetX: Float = 0f
+    protected var targetY: Float = 0f
+    protected var t: Float = 0f
+
+    fun getCurrentX() = if (animationDuration == 0f) {
+        targetX
+    } else {
+        interpolation.apply(startX, targetX, t / animationDuration)
+    }
+
+    fun getCurrentY() = if (animationDuration == 0f) {
+        targetY
+    } else {
+        interpolation.apply(startY, targetY, t / animationDuration)
+    }
+
     override fun act(delta: Float) {
-        for (i in grid.safeIterator()) {
-            if (i.active && i is Actor) {
-                if (targetX == i.staticX && targetY == i.staticY) {
-                    if (t < animationDuration) {
-                        t = min(animationDuration, t + delta)
-                    }
-                } else {
-                    startX = getCurrentX()
-                    startY = getCurrentY()
-                    t = 0f
-                    targetX = calculateTarget(i.staticX, i.width, region.x, region.width)
-                    targetY = calculateTarget(i.staticY, i.height, region.y, region.height)
-                }
-                break
-            }
-        }
+        updateTarget(delta)
         super.act(delta)
     }
 
-    private fun calculateTarget(x: Float, width: Float, x2: Float, width2: Float): Float {
+    override fun updateComponent(): Grid {
+        for (i in grid.safeIterator()) {
+            if (i.active && i is Actor) {
+                targetX = calculateTarget(i.staticX, i.width, constraintX, constraintWidth)
+                targetY = calculateTarget(i.staticY, i.height, constraintY, constraintHeight)
+                startX = targetX
+                startY = targetY
+                break
+            }
+        }
+        return super.updateComponent()
+    }
+
+    open fun updateTarget(delta: Float) {
+        var x: Float? = null
+        var y: Float? = null
+        var width = 0f
+        var height = 0f
+        for (i in grid.safeIterator()) {
+            if (i.active && i is Actor) {
+                x = i.staticX
+                y = i.staticY
+                width = width.coerceAtLeast(i.width)
+                height = height.coerceAtLeast(i.height)
+            }
+        }
+        if (x != null && y != null) {
+            if (targetX <= x && targetX + constraintWidth >= x + width && targetY <= y && targetY + constraintHeight >= y + height) {
+                if (t < animationDuration) {
+                    t = min(animationDuration, t + delta)
+                }
+            } else {
+                startX = getCurrentX()
+                startY = getCurrentY()
+                t = 0f
+                targetX = calculateTarget(x, width, constraintX, constraintWidth)
+                targetY = calculateTarget(y, height, constraintY, constraintHeight)
+            }
+        }
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float) {
+        val tmpX1 = x
+        val tmpY1 = y
+        val currentX = getCurrentX()
+        val currentY = getCurrentY()
+        if (cullingArea != null) {
+            val tmpX2 = cullingArea.getX()
+            val tmpY2 = cullingArea.getY()
+            setPosition(tmpX1 + constraintX - currentX, tmpY1 + constraintY - currentY)
+            cullingArea.setPosition(tmpX2 + currentX, tmpY2 + currentY)
+            super.draw(batch, parentAlpha)
+            setPosition(tmpX1, tmpY1)
+            cullingArea.setPosition(tmpX2, tmpY2)
+        } else {
+            setPosition(tmpX1 + constraintX - currentX, tmpY1 + constraintY - currentY)
+            super.draw(batch, parentAlpha)
+            setPosition(tmpX1, tmpY1)
+        }
+    }
+
+    protected open fun calculateTarget(x: Float, width: Float, x2: Float, width2: Float): Float {
         if (x < x2) {
-            return x2
+            return x
         }
         if (x + width > x2 + width2) {
-            return x2 + width2 - width
+            return x + width - width2
         }
-        return x
+        return x2
     }
 }

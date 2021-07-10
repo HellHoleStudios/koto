@@ -25,7 +25,6 @@
 
 package com.hhs.koto.app.ui
 
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -33,48 +32,33 @@ import com.hhs.koto.util.safeIterator
 import java.lang.Float.min
 
 open class ScrollingGrid(
+    centerX: Float = 0f,
+    centerY: Float = 0f,
     gridX: Int = 0,
     gridY: Int = 0,
     cycle: Boolean = true,
-    protected val animationDuration: Float = 0f,
-    protected val interpolation: Interpolation = Interpolation.linear,
+    animationDuration: Float = 0f,
+    interpolation: Interpolation = Interpolation.linear,
     staticX: Float = 0f,
     staticY: Float = 0f,
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
-) : Grid(gridX, gridY, cycle, staticX, staticY, activeAction, inactiveAction) {
-    protected var startX: Float = 0f
-    protected var startY: Float = 0f
-    protected var targetX: Float = 0f
-    protected var targetY: Float = 0f
-    protected var t: Float = 0f
-
-    fun getCurrentX() = if (animationDuration == 0f) {
-        targetX
-    } else {
-        interpolation.apply(startX, targetX, t / animationDuration)
-    }
-
-    fun getCurrentY() = if (animationDuration == 0f) {
-        targetY
-    } else {
-        interpolation.apply(startY, targetY, t / animationDuration)
-    }
-
-    override fun updateComponent() {
-        for (i in grid.safeIterator()) {
-            if (i.active && i is Actor) {
-                startX = i.staticX
-                startY = i.staticY
-                targetX = i.staticX
-                targetY = i.staticY
-                break
-            }
-        }
-        super.updateComponent()
-    }
-
-    override fun act(delta: Float) {
+) : ConstrainedGrid(
+    centerX,
+    centerY,
+    0f,
+    0f,
+    gridX,
+    gridY,
+    cycle,
+    animationDuration,
+    interpolation,
+    staticX,
+    staticY,
+    activeAction,
+    inactiveAction
+) {
+    override fun updateTarget(delta: Float) {
         for (i in grid.safeIterator()) {
             if (i.active && i is Actor) {
                 if (targetX == i.staticX && targetY == i.staticY) {
@@ -90,27 +74,6 @@ open class ScrollingGrid(
                 }
                 break
             }
-        }
-        super.act(delta)
-    }
-
-    override fun draw(batch: Batch, parentAlpha: Float) {
-        val tmpX1 = x
-        val tmpY1 = y
-        val currentX = getCurrentX()
-        val currentY = getCurrentY()
-        if (cullingArea != null) {
-            val tmpX2 = cullingArea.getX()
-            val tmpY2 = cullingArea.getY()
-            setPosition(tmpX1 - currentX, tmpY1 - currentY)
-            cullingArea.setPosition(tmpX2 + currentX, tmpY2 + currentY)
-            super.draw(batch, parentAlpha)
-            setPosition(tmpX1, tmpY1)
-            cullingArea.setPosition(tmpX2, tmpY2)
-        } else {
-            setPosition(tmpX1 - currentX, tmpY1 - currentY)
-            super.draw(batch, parentAlpha)
-            setPosition(tmpX1, tmpY1)
         }
     }
 }

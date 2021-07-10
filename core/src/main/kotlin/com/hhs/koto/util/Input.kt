@@ -69,12 +69,12 @@ class KeyListener(private val keycodes: GdxArray<Int>, private var f: () -> Unit
 }
 
 fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
-    if (koto.blocker.isBlocking) return false
+    if (app.blocker.isBlocking) return false
     return keycode in key
 }
 
 fun keyPressed(key: GdxArray<Int>): Boolean {
-    if (koto.blocker.isBlocking) return false
+    if (app.blocker.isBlocking) return false
     for (i in key.safeIterator()) {
         if (Gdx.input.isKeyPressed(i)) return true
     }
@@ -82,7 +82,7 @@ fun keyPressed(key: GdxArray<Int>): Boolean {
 }
 
 fun keyJustPressed(key: GdxArray<Int>): Boolean {
-    if (koto.blocker.isBlocking) return false
+    if (app.blocker.isBlocking) return false
     for (i in key.safeIterator()) {
         if (Gdx.input.isKeyJustPressed(i)) return true
     }

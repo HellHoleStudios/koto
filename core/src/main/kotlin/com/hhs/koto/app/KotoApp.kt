@@ -55,7 +55,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     val logger = Logger("Main", Config.logLevel)
 
     override fun create() {
-        koto = this
+        app = this
 
         loadOptions()
         initAll()

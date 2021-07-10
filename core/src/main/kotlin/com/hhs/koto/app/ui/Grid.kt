@@ -82,7 +82,7 @@ open class Grid(
         }
     }
 
-    open fun updateComponent() {
+    open fun updateComponent(): Grid {
         for (component in grid.safeIterator()) {
             if (component is Grid) {
                 component.updateComponent()
@@ -90,6 +90,7 @@ open class Grid(
                 component.update()
             }
         }
+        return this
     }
 
     override fun trigger() = Unit
@@ -140,7 +141,7 @@ open class Grid(
         return flag
     }
 
-    open fun add(component: GridComponent): GridComponent {
+    open fun add(component: GridComponent): Grid {
         grid.add(component)
         component.parent = this
         minX = minX.coerceAtMost(component.gridX)
@@ -150,26 +151,28 @@ open class Grid(
         if (component is Actor) {
             addActor(component as Actor)
         }
-        return component
+        return this
     }
 
-    open fun selectFirst() {
-        if (grid.size == 0) return
+    open fun selectFirst(): Grid {
+        if (grid.size == 0) return this
         val component = grid.first { it.enabled }
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY)
+        return this
     }
 
-    open fun selectLast() {
-        if (grid.size == 0) return
+    open fun selectLast(): Grid {
+        if (grid.size == 0) return this
         val component = grid.last { it.enabled }
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY)
+        return this
     }
 
-    open fun select(nx: Int, ny: Int, dx: Int, dy: Int, silent: Boolean = false) {
+    open fun select(nx: Int, ny: Int, dx: Int, dy: Int, silent: Boolean = false): Grid {
         var closest: GridComponent? = null
         var dist = Int.MAX_VALUE
         for (i in grid.safeIterator()) {
@@ -188,7 +191,7 @@ open class Grid(
             }
         }
         if (closest == null) {
-            return
+            return this
         }
         if (!silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
             SE.play("select")
@@ -203,9 +206,10 @@ open class Grid(
                 i.active = true
             }
         }
+        return this
     }
 
-    open fun select(nx: Int, ny: Int, silent: Boolean = false) {
+    open fun select(nx: Int, ny: Int, silent: Boolean = false): Grid {
         var closest: GridComponent? = null
         var dist = Int.MAX_VALUE
         for (i in grid.safeIterator()) {
@@ -217,7 +221,7 @@ open class Grid(
             }
         }
         if (closest == null) {
-            return
+            return this
         }
         if (!silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
             SE.play("select")
@@ -232,6 +236,7 @@ open class Grid(
                 i.active = true
             }
         }
+        return this
     }
 
     private fun distance(x1: Int, y1: Int, x2: Int, y2: Int): Int {
@@ -316,7 +321,7 @@ open class Grid(
         }
     }
 
-    fun arrange(rootX: Float, rootY: Float, offsetX: Float, offsetY: Float) {
+    open fun arrange(rootX: Float, rootY: Float, offsetX: Float, offsetY: Float): Grid {
         for (i in grid.safeIterator()) {
             if (i is Actor) {
                 i.setPosition(rootX + offsetX * i.gridX, rootY + offsetY * i.gridY)
@@ -326,6 +331,7 @@ open class Grid(
                 i.staticY = rootY + offsetY * i.gridY
             }
         }
+        return this
     }
 
     operator fun get(i: Int) = getChild(i) as GridComponent

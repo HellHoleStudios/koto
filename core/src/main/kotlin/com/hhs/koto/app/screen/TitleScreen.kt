@@ -31,16 +31,13 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
-import com.badlogic.gdx.utils.Align
-import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
-import com.hhs.koto.app.ui.ScrollingGrid
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.SystemFlag
+import com.hhs.koto.util.app
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.koto
 
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val grid = Grid().apply {
@@ -66,27 +63,27 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     init {
         grid.add(GridButton("Game Start", 36, 0, -8) {
             SystemFlag.gamemode = GameMode.STORY
-            koto.setScreen("difficultySelect", 0.5f)
+            app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Extra Start", 36, 0, -7) {
             SystemFlag.gamemode = GameMode.EXTRA
-            koto.setScreen("difficultySelect", 0.5f)
+            app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Stage Practice", 36, 0, -6) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE
-            koto.setScreen("difficultySelect", 0.5f)
+            app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Spell Practice", 36, 0, -5) {
             SystemFlag.gamemode = GameMode.SPELL_PRACTICE
-            koto.setScreen("difficultySelect", 0.5f)
+            app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton("Replay", 36, 0, -4, enabled = false))
         grid.add(GridButton("Player Data", 36, 0, -3, enabled = false))
         grid.add(GridButton("Music Room", 36, 0, -2) {
-            koto.setScreen("musicRoom", 0.5f)
+            app.setScreen("musicRoom", 0.5f)
         })
         grid.add(GridButton("Options", 36, 0, -1) {
-            koto.setScreen("options", 0.5f)
+            app.setScreen("options", 0.5f)
         })
         grid.add(GridButton("Quit", 36, 0, 0, triggerSound = null) {
             onQuit()
@@ -117,7 +114,7 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     override fun onQuit() {
         if (grid.selectedY == 0) {
             super.onQuit()
-            koto.setScreen("", 1f)
+            app.setScreen("", 1f)
         } else {
             grid.select(0, 0)
         }

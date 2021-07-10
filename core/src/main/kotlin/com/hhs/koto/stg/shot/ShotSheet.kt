@@ -34,8 +34,8 @@ import com.hhs.koto.stg.AABBCollision
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.NoCollision
+import com.hhs.koto.util.app
 import com.hhs.koto.util.json
-import com.hhs.koto.util.koto
 import com.hhs.koto.util.safeIterator
 import ktx.collections.GdxMap
 import ktx.json.fromJson
@@ -62,7 +62,7 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     fun getId(name: String): Int {
         val tmp = nameToId[name]
         if (tmp == null) {
-            koto.logger.error("Shot data of name\"$name\" not found!")
+            app.logger.error("Shot data of name\"$name\" not found!")
         }
         return tmp
     }

@@ -30,7 +30,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.A
-import com.hhs.koto.util.koto
+import com.hhs.koto.util.app
 
 
 class FPSDisplay : Actor() {
@@ -41,8 +41,8 @@ class FPSDisplay : Actor() {
     override fun draw(batch: Batch, parentAlpha: Float) {
         counter++
         if (counter >= 4) {
-            if (koto.fpsCounter.hasEnoughData()) {
-                text = java.lang.String.format("%.2f fps", 1 / koto.fpsCounter.mean)
+            if (app.fpsCounter.hasEnoughData()) {
+                text = java.lang.String.format("%.2f fps", 1 / app.fpsCounter.mean)
             }
             counter = 0
         }
