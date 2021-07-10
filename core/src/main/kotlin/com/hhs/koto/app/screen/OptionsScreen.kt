@@ -41,7 +41,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         -2048f,
         72f,
         5536f,
-        936f,
+        880f,
         animationDuration = 0.5f,
         interpolation = Interpolation.sine
     ).apply {
@@ -63,7 +63,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     var oldOptions: Options? = null
 
     init {
-//        grid.add(musicVolume)
+        grid.add(musicVolume)
         grid.add(GridButton("Music Vol", 36, 0, -6, triggerSound = null))
         for (i in 0..20) {
             val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null)
@@ -96,7 +96,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
         musicVolume.update()
 
-//        grid.add(SEVolume)
+        grid.add(SEVolume)
         val tmpButton1 = GridButton("S.E. Vol", 36, 0, -5, triggerSound = null)
         tmpButton1.activeAction = tmpButton1.getActivateAction({
             Actions.forever(
@@ -137,7 +137,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0, true)
         SEVolume.update()
 
-//        grid.add(Vsync)
+        grid.add(Vsync)
         grid.add(GridButton("Vsync", 36, 0, -4, triggerSound = null))
         val VsyncDisableButton = GridButton("No", 36, 0, 0, triggerSound = null)
         Vsync.add(VsyncDisableButton)
@@ -224,7 +224,6 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         SEVolume.x = 1300f
         Vsync.x = 1300f
 
-//        grid.putInFrame(grid[grid.grid.size - 1])
         grid.selectFirst()
         grid.updateComponent()
     }

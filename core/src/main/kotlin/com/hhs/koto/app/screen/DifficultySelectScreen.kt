@@ -50,7 +50,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             else -> "playerSelect"
         }
         grid.add(
-            Grid(staticX = 120f, staticY = 740f).add(
+            Grid(staticX = 120f, staticY = 740f, width = 720f, height = 360f).add(
                 GridImage(
                     getRegion("ui/diff_bg.png"),
                     width = 720f,
@@ -59,10 +59,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
                 ) {
                     SystemFlag.difficulty = GameDifficulty.EASY
                     app.setScreen(switchTarget, 0.5f)
-                }).selectFirst().apply {
-                width = 720f
-                height = 360f
-            }
+                }).selectFirst()
         )
         grid.add(GridImage(getRegion("ui/normal.png"), 0, 1, 120f, 560f, 720f, 360f) {
             SystemFlag.difficulty = GameDifficulty.NORMAL

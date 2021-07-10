@@ -44,9 +44,11 @@ open class ConstrainedGrid(
     protected val interpolation: Interpolation = Interpolation.linear,
     staticX: Float = 0f,
     staticY: Float = 0f,
+    height: Float = 0f,
+    width: Float = 0f,
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
-) : Grid(gridX, gridY, cycle, staticX, staticY, activeAction, inactiveAction) {
+) : Grid(gridX, gridY, cycle, staticX, staticY, width, height, activeAction, inactiveAction) {
     protected var startX: Float = 0f
     protected var startY: Float = 0f
     protected var targetX: Float = 0f
@@ -73,8 +75,8 @@ open class ConstrainedGrid(
     override fun updateComponent(): Grid {
         for (i in grid.safeIterator()) {
             if (i.active && i is Actor) {
-                targetX = calculateTarget(i.staticX, i.width, constraintX, constraintWidth)
-                targetY = calculateTarget(i.staticY, i.height, constraintY, constraintHeight)
+                targetX = calculateTarget(i.staticX, i.width, constraintX, constraintWidth, targetX)
+                targetY = calculateTarget(i.staticY, i.height, constraintY, constraintHeight, targetY)
                 startX = targetX
                 startY = targetY
                 break
@@ -97,7 +99,11 @@ open class ConstrainedGrid(
             }
         }
         if (x != null && y != null) {
-            if (targetX <= x && targetX + constraintWidth >= x + width && targetY <= y && targetY + constraintHeight >= y + height) {
+            if (targetX + constraintX <= x &&
+                targetX + constraintX + constraintWidth >= x + width &&
+                targetY + constraintY <= y &&
+                targetY + constraintY + constraintHeight >= y + height
+            ) {
                 if (t < animationDuration) {
                     t = min(animationDuration, t + delta)
                 }
@@ -105,8 +111,8 @@ open class ConstrainedGrid(
                 startX = getCurrentX()
                 startY = getCurrentY()
                 t = 0f
-                targetX = calculateTarget(x, width, constraintX, constraintWidth)
-                targetY = calculateTarget(y, height, constraintY, constraintHeight)
+                targetX = calculateTarget(x, width, constraintX, constraintWidth, targetX)
+                targetY = calculateTarget(y, height, constraintY, constraintHeight, targetY)
             }
         }
     }
@@ -119,25 +125,25 @@ open class ConstrainedGrid(
         if (cullingArea != null) {
             val tmpX2 = cullingArea.getX()
             val tmpY2 = cullingArea.getY()
-            setPosition(tmpX1 + constraintX - currentX, tmpY1 + constraintY - currentY)
+            setPosition(tmpX1 - currentX, tmpY1 - currentY)
             cullingArea.setPosition(tmpX2 + currentX, tmpY2 + currentY)
             super.draw(batch, parentAlpha)
             setPosition(tmpX1, tmpY1)
             cullingArea.setPosition(tmpX2, tmpY2)
         } else {
-            setPosition(tmpX1 + constraintX - currentX, tmpY1 + constraintY - currentY)
+            setPosition(tmpX1 - currentX, tmpY1 - currentY)
             super.draw(batch, parentAlpha)
             setPosition(tmpX1, tmpY1)
         }
     }
 
-    protected open fun calculateTarget(x: Float, width: Float, x2: Float, width2: Float): Float {
-        if (x < x2) {
-            return x
+    protected open fun calculateTarget(x: Float, width: Float, x2: Float, width2: Float, target: Float): Float {
+        if (x < target + x2) {
+            return x - x2
         }
-        if (x + width > x2 + width2) {
-            return x + width - width2
+        if (x + width > target + x2 + width2) {
+            return x + width - x2 - width2
         }
-        return x2
+        return target
     }
 }

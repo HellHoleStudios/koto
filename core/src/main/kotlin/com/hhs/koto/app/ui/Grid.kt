@@ -42,6 +42,8 @@ open class Grid(
     var cycle: Boolean = true,
     final override var staticX: Float = 0f,
     final override var staticY: Float = 0f,
+    height: Float = 0f,
+    width: Float = 0f,
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
 ) : Group(), GridComponent, InputProcessor {
@@ -62,7 +64,7 @@ open class Grid(
     private var maxY = Int.MIN_VALUE
 
     init {
-        setPosition(staticX, staticY)
+        setBounds(staticX, staticY, width, height)
     }
 
     final override fun setPosition(x: Float, y: Float) {
@@ -326,7 +328,7 @@ open class Grid(
             if (i is Actor) {
                 i.setPosition(rootX + offsetX * i.gridX, rootY + offsetY * i.gridY)
             }
-            if (i is GridButtonBase) {
+            if (i is GridComponent) {
                 i.staticX = rootX + offsetX * i.gridX
                 i.staticY = rootY + offsetY * i.gridY
             }

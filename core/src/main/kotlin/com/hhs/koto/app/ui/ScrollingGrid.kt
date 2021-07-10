@@ -41,6 +41,8 @@ open class ScrollingGrid(
     interpolation: Interpolation = Interpolation.linear,
     staticX: Float = 0f,
     staticY: Float = 0f,
+    height: Float = 0f,
+    width: Float = 0f,
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
 ) : ConstrainedGrid(
@@ -55,6 +57,8 @@ open class ScrollingGrid(
     interpolation,
     staticX,
     staticY,
+    width,
+    height,
     activeAction,
     inactiveAction
 ) {
