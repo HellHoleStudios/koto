@@ -27,9 +27,12 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.github.tommyettinger.colorful.Shaders
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.*
 
@@ -38,7 +41,7 @@ open class BasicScreen(
     private val backgroundMusic: String?,
     backgroundTexture: TextureRegion,
 ) : KotoScreen {
-    var st = Stage(app.viewport).apply {
+    var st = Stage(app.viewport, app.batch).apply {
         isDebugAll = Config.debugActorLayout
     }
     var input = InputMultiplexer().apply {
@@ -53,10 +56,8 @@ open class BasicScreen(
     override var state: ScreenState = ScreenState.HIDDEN
 
     override fun render(delta: Float) {
-        app.batch.begin()
         st.act(delta)
         st.draw()
-        app.batch.end()
     }
 
     override fun show() {

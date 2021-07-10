@@ -29,11 +29,14 @@ import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.WindowedMean
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.github.tommyettinger.colorful.Shaders
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
@@ -67,7 +70,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         batch = SpriteBatch()
         fpsCounter = WindowedMean(10);
         viewport = ScalingViewport(Config.windowScaling, Config.screenWidth, Config.screenHeight)
-        st = Stage(viewport);
+        st = Stage(viewport, batch);
         st.isDebugAll = Config.debugActorLayout
 
         input.addProcessor(blocker)
