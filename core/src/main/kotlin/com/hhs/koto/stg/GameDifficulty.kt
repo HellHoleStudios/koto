@@ -27,15 +27,4 @@ package com.hhs.koto.stg
 
 enum class GameDifficulty {
     EASY, NORMAL, HARD, LUNATIC, EXTRA, PHANTASM;
-
-    fun toInt(): Int {
-        return when (this) {
-            EASY -> 1
-            NORMAL -> 2
-            HARD -> 3
-            LUNATIC -> 4
-            EXTRA -> 5
-            PHANTASM -> 6
-        }
-    }
 }

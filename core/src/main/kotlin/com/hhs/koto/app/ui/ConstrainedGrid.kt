@@ -72,6 +72,10 @@ open class ConstrainedGrid(
         super.act(delta)
     }
 
+    fun finishAnimation() {
+        t = animationDuration
+    }
+
     override fun updateComponent(): Grid {
         for (i in grid.safeIterator()) {
             if (i.active && i is Actor) {

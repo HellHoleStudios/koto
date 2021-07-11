@@ -27,6 +27,7 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -70,7 +71,7 @@ open class BasicScreen(
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         state = ScreenState.FADING_OUT
-        st.root.addAction(Actions.sequence(Actions.fadeOut(duration), Actions.run { hide() }))
+        st.root.addAction(Actions.sequence(Actions.fadeOut(duration, Interpolation.pow3Out), Actions.run { hide() }))
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
