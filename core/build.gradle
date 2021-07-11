@@ -24,5 +24,4 @@ dependencies {
     api "io.github.libktx:ktx-inject:$ktxVersion"
     api "io.github.libktx:ktx-preferences:$ktxVersion"
     api "io.github.libktx:ktx-assets-async:$ktxVersion"
-    api "com.github.tommyettinger:colorful:$colorfulVersion"
 }

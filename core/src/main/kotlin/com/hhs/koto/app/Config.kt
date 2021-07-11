@@ -59,6 +59,7 @@ data class Options(
 
 object Config {
     var logLevel = Logger.DEBUG
+    const val useHSVShader = true
     val textureMinFilter = TextureFilter.MipMapLinearLinear
     val textureMagFilter = TextureFilter.Linear
     const val genMipMaps = true

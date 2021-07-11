@@ -33,6 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.SE
+import com.hhs.koto.util.darken
 import com.hhs.koto.util.times
 
 class GridImage(
@@ -99,7 +100,7 @@ class GridImage(
         color = if (enabled) {
             tint
         } else {
-            Color.GRAY * tint
+            darken(tint)
         }
         if (active && enabled) {
             actions.clear()
@@ -143,7 +144,7 @@ class GridImage(
         return {
             val ret = ParallelAction()
             ret.addAction(
-                Actions.color(Color.GRAY * tint)
+                Actions.color(darken(tint))
             )
             ret.addAction(
                 Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),

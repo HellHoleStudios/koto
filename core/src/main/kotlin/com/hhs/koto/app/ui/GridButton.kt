@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.util.SE
+import com.hhs.koto.util.darken
 import com.hhs.koto.util.getUILabelStyle
 
 class GridButton(
@@ -129,7 +130,7 @@ class GridButton(
             }
         }
         if (!enabled) {
-            style = LabelStyle(inactiveStyle.font, inactiveStyle.fontColor.cpy().mul(0.5f, 0.5f, 0.5f, 1f))
+            style = LabelStyle(inactiveStyle.font, darken(inactiveStyle.fontColor))
         }
     }
 
@@ -145,7 +146,7 @@ class GridButton(
             ret.addAction(
                 Actions.forever(
                     Actions.sequence(
-                        Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
+                        Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
                         Actions.color(Color.WHITE, 0.5f),
                     )
                 )
@@ -167,7 +168,7 @@ class GridButton(
                 Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
             )
             ret.addAction(
-                Actions.color(Color(0.7f, 0.7f, 0.7f, 1f))
+                Actions.color(darken(Color.WHITE, 0.7f))
             )
             for (action in actions) {
                 ret.addAction(action())

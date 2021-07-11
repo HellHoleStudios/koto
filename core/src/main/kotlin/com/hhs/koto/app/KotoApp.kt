@@ -30,13 +30,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.WindowedMean
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.github.tommyettinger.colorful.Shaders
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
@@ -63,11 +61,22 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         loadOptions()
         initAll()
 
+        KtxAsync.initiate()
+        loadAssetIndex(Gdx.files.internal(".assets.json"))
+        A.finishLoading()
+
         Gdx.app.logLevel = Config.logLevel
 
         logger.info("Game start.")
 
-        batch = SpriteBatch()
+        batch = if (Config.useHSVShader) {
+            SpriteBatch(
+                1000,
+                ShaderProgram(A.get<String>("shader/koto_hsv.vert.glsl"), A.get("shader/koto_hsv.frag.glsl"))
+            )
+        } else {
+            SpriteBatch()
+        }
         fpsCounter = WindowedMean(10);
         viewport = ScalingViewport(Config.windowScaling, Config.screenWidth, Config.screenHeight)
         st = Stage(viewport, batch);
@@ -75,11 +84,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         input.addProcessor(blocker)
         Gdx.input.inputProcessor = input
-
-        KtxAsync.initiate()
-
-        loadAssetIndex(Gdx.files.internal(".assets.json"))
-        A.finishLoading()
 
         fps = FPSDisplay()
         st.addActor(fps)

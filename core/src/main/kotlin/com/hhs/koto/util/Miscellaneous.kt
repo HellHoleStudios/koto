@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
 import com.badlogic.gdx.utils.ObjectMap
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import com.hhs.koto.stg.GameDifficulty
@@ -106,4 +107,10 @@ operator fun Color.times(other: Color): Color = this.copy().mul(other)
 
 operator fun Color.timesAssign(other: Color) {
     mul(other)
+}
+
+fun darken(color: Color, factor: Float = 0.5f) = if (Config.useHSVShader) {
+    color.cpy().mul(1.0f, 1.0f, factor, 1.0f)
+} else {
+    color.cpy().mul(factor, factor, factor, 1.0f)
 }

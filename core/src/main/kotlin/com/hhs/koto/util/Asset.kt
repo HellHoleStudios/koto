@@ -45,6 +45,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.shot.ShotSheet
 import com.hhs.koto.stg.shot.ShotSheetLoader
+import ktx.assets.TextAssetLoader
 import ktx.assets.load
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
@@ -62,6 +63,7 @@ fun initA() {
     fontCache = GdxMap()
     A = AssetManager()
     A.setLoader(ShotSheet::class.java, ShotSheetLoader(A.fileHandleResolver))
+    A.setLoader(String::class.java, TextAssetLoader(A.fileHandleResolver))
     A.registerFreeTypeFontLoaders()
     A.logger.level = Config.logLevel
     for (i in json.fromJson<GdxArray<String>>(Gdx.files.internal(".charset.json")).safeIterator()) {
@@ -251,6 +253,7 @@ fun loadSmart(fileName: String) {
             "ttf", "otf" -> load<FreeTypeFontGenerator>(fileName)
             "shot" -> load<ShotSheet>(fileName)
             "p" -> load<ParticleEffect>(fileName)
+            "glsl", "vert", "frag" -> load<String>(fileName)
             else -> Unit
         }
     }
