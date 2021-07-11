@@ -54,7 +54,7 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     }
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont("font/SourceSerifPro-Italic.ttf", 36), Color.BLACK),
+        LabelStyle(getFont("font/SourceSerifPro-Italic.ttf", 36, Color.WHITE, borderColor = null), Color.BLACK),
     ).apply {
         setPosition(100f, 820f)
         titles.addActor(this)

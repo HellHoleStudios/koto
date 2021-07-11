@@ -82,12 +82,15 @@ open class Grid(
                 addAction(inactiveAction!!())
             }
         }
+        updateComponent()
     }
 
     open fun updateComponent(): Grid {
         for (component in grid.safeIterator()) {
             if (component is Grid) {
                 component.updateComponent()
+            } else if (component is GridButtonBase) {
+                if (!component.ignoreParent) component.update()
             } else {
                 component.update()
             }
@@ -231,10 +234,10 @@ open class Grid(
         selectedX = closest.gridX
         selectedY = closest.gridY
         for (i in grid.safeIterator()) {
-            if (i.active && i.enabled && (i.gridX != selectedX || i.gridY != selectedY)) {
+            if (i.enabled && (i.gridX != selectedX || i.gridY != selectedY)) {
                 i.active = false
             }
-            if (!i.active && i.enabled && i.gridX == selectedX && i.gridY == selectedY) {
+            if (i.enabled && i.gridX == selectedX && i.gridY == selectedY) {
                 i.active = true
             }
         }

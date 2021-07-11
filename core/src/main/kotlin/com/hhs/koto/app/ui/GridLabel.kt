@@ -107,9 +107,6 @@ class GridLabel(
                 addAction(inactiveAction!!())
             }
         }
-        if (!enabled) {
-            style = LabelStyle(inactiveStyle.font, inactiveStyle.fontColor.cpy().mul(0.5f, 0.5f, 0.5f, 1f))
-        }
     }
 
     override fun trigger() = Unit

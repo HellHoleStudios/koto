@@ -34,14 +34,13 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.darken
-import com.hhs.koto.util.times
 
 class GridImage(
     texture: TextureRegion,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
-    x: Float = 0f,
-    y: Float = 0f,
+    override var staticX: Float = 0f,
+    override var staticY: Float = 0f,
     width: Float,
     height: Float,
     val tint: Color = Color.WHITE,
@@ -49,6 +48,7 @@ class GridImage(
     override var inactiveAction: (() -> Action)? = null,
     override var enabled: Boolean = true,
     override var triggerSound: String? = "ok",
+    override var ignoreParent: Boolean = false,
     override var runnable: (() -> Unit)? = null,
 ) : Image(texture), GridButtonBase {
     override var active = false
@@ -57,23 +57,22 @@ class GridImage(
             update()
         }
     override var parent: Grid? = null
-    override var staticX = x
-    override var staticY = y
 
     init {
-        setBounds(x, y, width, height)
+        setBounds(staticX, staticY, width, height)
     }
 
     constructor(
         texture: TextureRegion,
-        gridX: Int=0,
-        gridY: Int=0,
+        gridX: Int = 0,
+        gridY: Int = 0,
         staticX: Float = 0f,
         staticY: Float = 0f,
         width: Float,
         height: Float,
         tint: Color = Color.WHITE,
         triggerSound: String? = "ok",
+        ignoreParent: Boolean = false,
         enabled: Boolean = true,
         runnable: (() -> Unit)? = null,
     ) : this(
@@ -89,10 +88,11 @@ class GridImage(
         null,
         enabled,
         triggerSound,
+        ignoreParent,
         runnable,
     ) {
-        activeAction = getActivateAction()
-        inactiveAction = getDeactivateAction()
+        activeAction = getActiveAction()
+        inactiveAction = getInactiveAction()
     }
 
 
@@ -102,7 +102,7 @@ class GridImage(
         } else {
             darken(tint)
         }
-        if (active && enabled) {
+        if ((parent?.active != false || ignoreParent) && active && enabled) {
             actions.clear()
             if (activeAction != null) {
                 addAction(activeAction!!())
@@ -124,7 +124,7 @@ class GridImage(
         }
     }
 
-    fun getActivateAction(vararg actions: () -> Action): () -> Action {
+    fun getActiveAction(vararg actions: () -> Action): () -> Action {
         return {
             val ret = ParallelAction()
             ret.addAction(
@@ -140,7 +140,7 @@ class GridImage(
         }
     }
 
-    fun getDeactivateAction(vararg actions: () -> Action): () -> Action {
+    fun getInactiveAction(vararg actions: () -> Action): () -> Action {
         return {
             val ret = ParallelAction()
             ret.addAction(

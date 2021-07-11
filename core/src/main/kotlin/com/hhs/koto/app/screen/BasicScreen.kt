@@ -27,12 +27,9 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.graphics.glutils.ShaderProgram
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.github.tommyettinger.colorful.Shaders
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.*
 

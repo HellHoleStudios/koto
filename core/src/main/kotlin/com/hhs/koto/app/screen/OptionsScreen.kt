@@ -66,7 +66,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         grid.add(musicVolume)
         grid.add(GridButton("Music Vol", 36, 0, -6, triggerSound = null))
         for (i in 0..20) {
-            val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null)
+            val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null, ignoreParent = true)
             musicVolume.add(button)
             button.activeAction = {
                 Actions.parallel(
@@ -79,7 +79,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                     ),
                     Actions.forever(
                         Actions.sequence(
-                            Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
+                            Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
                             Actions.color(Color.WHITE, 0.5f),
                         )
                     ),
@@ -94,11 +94,10 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             }
         }
         musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
-        musicVolume.update()
 
         grid.add(SEVolume)
         val tmpButton1 = GridButton("S.E. Vol", 36, 0, -5, triggerSound = null)
-        tmpButton1.activeAction = tmpButton1.getActivateAction({
+        tmpButton1.activeAction = tmpButton1.getActiveAction({
             Actions.forever(
                 Actions.sequence(
                     Actions.delay(1.5f),
@@ -110,7 +109,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         })
         grid.add(tmpButton1)
         for (i in 0..20) {
-            val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null)
+            val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null, ignoreParent = true)
             SEVolume.add(button)
             button.activeAction = {
                 Actions.parallel(
@@ -123,7 +122,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                     ),
                     Actions.forever(
                         Actions.sequence(
-                            Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
+                            Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
                             Actions.color(Color.WHITE, 0.5f),
                         )
                     ),
@@ -135,11 +134,10 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             button.inactiveAction = { Actions.hide() }
         }
         SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0, true)
-        SEVolume.update()
 
         grid.add(Vsync)
         grid.add(GridButton("Vsync", 36, 0, -4, triggerSound = null))
-        val VsyncDisableButton = GridButton("No", 36, 0, 0, triggerSound = null)
+        val VsyncDisableButton = GridButton("No", 36, 0, 0, triggerSound = null, ignoreParent = true)
         Vsync.add(VsyncDisableButton)
         VsyncDisableButton.activeAction = {
             Actions.parallel(
@@ -162,7 +160,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                 ),
                 Actions.forever(
                     Actions.sequence(
-                        Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
+                        Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
                         Actions.color(Color.WHITE, 0.5f),
                     )
                 ),
@@ -173,8 +171,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
             )
         }
 
-
-        val VsyncEnableButton = GridButton("Yes", 36, 1, -4, triggerSound = null)
+        val VsyncEnableButton = GridButton("Yes", 36, 1, 0, triggerSound = null, ignoreParent = true)
         Vsync.add(VsyncEnableButton)
         VsyncEnableButton.activeAction = {
             Actions.parallel(
@@ -187,7 +184,7 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
                 ),
                 Actions.forever(
                     Actions.sequence(
-                        Actions.color(Color(0.9f, 0.9f, 0.9f, 1f), 0.5f),
+                        Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
                         Actions.color(Color.WHITE, 0.5f),
                     )
                 ),
@@ -200,7 +197,6 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         VsyncEnableButton.inactiveAction = { Actions.hide() }
         VsyncDisableButton.inactiveAction = { Actions.hide() }
         Vsync.select(if (options.vsyncEnabled) 1 else 0, 0, true)
-        Vsync.update()
 
         grid.add(GridButton("Key Config", 36, 0, -3, enabled = false))
         grid.add(GridButton("Reset", 36, 0, -2) {

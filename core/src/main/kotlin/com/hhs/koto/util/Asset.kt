@@ -89,9 +89,9 @@ fun getRegion(fileName: String): TextureRegion {
 fun getFont(
     name: String,
     size: Int,
-    color: Color = Color.BLACK,
-    borderWidth: Float = 0f,
-    borderColor: Color? = null,
+    color: Color = Config.UIFontColor,
+    borderWidth: Float = Config.UIFontBorderWidth,
+    borderColor: Color? = Config.UIFontColor,
     borderOutside: Boolean = true
 ): BitmapFont {
     val parameter = FreeTypeFontParameter()

@@ -39,8 +39,8 @@ class GridButton(
     text: CharSequence,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
-    x: Float = 0f,
-    y: Float = 0f,
+    override var staticX: Float = 0f,
+    override var staticY: Float = 0f,
     width: Float = 512f,
     height: Float = 512f,
     override var activeAction: (() -> Action)? = null,
@@ -49,8 +49,9 @@ class GridButton(
     inactiveStyle: LabelStyle? = null,
     override var enabled: Boolean = true,
     override var triggerSound: String? = "ok",
+    override var ignoreParent: Boolean = false,
     override var runnable: (() -> Unit)? = null,
-) : Label(text, activeStyle), GridButtonBase {
+) : Label(text, inactiveStyle ?: activeStyle), GridButtonBase {
     var activeStyle: LabelStyle = activeStyle
         set(value) {
             field = value
@@ -67,23 +68,22 @@ class GridButton(
             update()
         }
     override var parent: Grid? = null
-    override var staticX = x
-    override var staticY = y
 
     init {
-        setBounds(x, y, width, height)
+        setBounds(staticX, staticY, width, height)
     }
 
     constructor(
         text: CharSequence,
         fontSize: Int,
-        gridX: Int,
-        gridY: Int,
+        gridX: Int = 0,
+        gridY: Int = 0,
         staticX: Float = 0f,
         staticY: Float = 0f,
         width: Float = 512f,
         height: Float = fontSize.toFloat(),
         triggerSound: String? = "ok",
+        ignoreParent: Boolean = false,
         enabled: Boolean = true,
         runnable: (() -> Unit)? = null,
     ) : this(
@@ -100,10 +100,11 @@ class GridButton(
         getUILabelStyle(fontSize),
         enabled,
         triggerSound,
+        ignoreParent,
         runnable,
     ) {
-        activeAction = getActivateAction()
-        inactiveAction = getDeactivateAction()
+        activeAction = getActiveAction()
+        inactiveAction = getInactiveAction()
     }
 
     override fun trigger() {
@@ -116,7 +117,7 @@ class GridButton(
     }
 
     override fun update() {
-        if (active && enabled) {
+        if ((parent?.active != false || ignoreParent) && active && enabled) {
             style = activeStyle
             actions.clear()
             if (activeAction != null) {
@@ -134,7 +135,7 @@ class GridButton(
         }
     }
 
-    fun getActivateAction(vararg actions: () -> Action): () -> Action {
+    fun getActiveAction(vararg actions: () -> Action): () -> Action {
         return {
             val ret = ParallelAction()
             ret.addAction(
@@ -158,7 +159,7 @@ class GridButton(
         }
     }
 
-    fun getDeactivateAction(vararg actions: () -> Action): () -> Action {
+    fun getInactiveAction(vararg actions: () -> Action): () -> Action {
         return {
             val ret = ParallelAction()
             ret.addAction(

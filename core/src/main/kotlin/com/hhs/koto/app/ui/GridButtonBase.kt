@@ -32,4 +32,5 @@ interface GridButtonBase : GridComponent {
     var inactiveAction: (() -> Action)?
     var triggerSound: String?
     var runnable: (() -> Unit)?
+    var ignoreParent: Boolean
 }
