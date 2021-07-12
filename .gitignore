@@ -70,3 +70,6 @@ nb-configuration.xml
 *~
 *.*#
 *#*#
+
+## Generated Files
+assets/.*
