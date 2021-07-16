@@ -28,10 +28,12 @@ package com.hhs.koto.app
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.assets.loaders.I18NBundleLoader
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.WindowedMean
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.I18NBundle
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -39,9 +41,11 @@ import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
+import ktx.assets.load
 import ktx.async.KtxAsync
 import ktx.collections.GdxMap
 import ktx.collections.set
+import java.util.*
 
 class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     lateinit var batch: SpriteBatch
@@ -63,11 +67,12 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         KtxAsync.initiate()
         loadAssetIndex(Gdx.files.internal(".assets.json"))
+        A.load<I18NBundle>("locale/locale", I18NBundleLoader.I18NBundleParameter(options.locale, "UTF-8"))
         A.finishLoading()
 
         Gdx.app.logLevel = Config.logLevel
-
         logger.info("Game start.")
+        bundle = A["locale/locale"]
 
         batch = if (Config.useHSVShader) {
             SpriteBatch(
@@ -104,6 +109,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()
         screens["difficultySelect"] = DifficultySelectScreen()
+        screens["musicRoom"] = MusicRoomScreen()
         screens["options"] = OptionsScreen()
         setScreen("blank")
         setScreen("title", 1f)

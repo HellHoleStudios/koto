@@ -27,10 +27,8 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.Json
-import com.badlogic.gdx.utils.JsonWriter
-import com.badlogic.gdx.utils.ObjectMap
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
@@ -39,6 +37,7 @@ import com.hhs.koto.stg.GameMode
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.graphics.copy
+import java.util.*
 
 var global = GdxMap<String, Any>()
 
@@ -52,6 +51,23 @@ object SystemFlag {
 val json = Json().apply {
     setUsePrototypes(false)
     setOutputType(JsonWriter.OutputType.json)
+    setSerializer(Locale::class.java, object : Json.Serializer<Locale> {
+        override fun write(json: Json, obj: Locale, knownType: Class<*>?) {
+            json.writeArrayStart()
+            json.writeValue(obj.language)
+            json.writeValue(obj.country)
+            json.writeValue(obj.variant)
+            json.writeArrayEnd()
+        }
+
+        override fun read(json: Json, jsonData: JsonValue, type: Class<*>?): Locale {
+            return Locale(
+                jsonData[0].asString(),
+                jsonData[1].asString(),
+                jsonData[2].asString(),
+            )
+        }
+    })
 }
 lateinit var options: Options
 

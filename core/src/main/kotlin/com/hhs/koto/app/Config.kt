@@ -31,6 +31,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
 import ktx.collections.GdxArray
+import java.util.*
 
 data class Options(
     var fpsMultiplier: Int = 0,
@@ -55,6 +56,13 @@ data class Options(
     var keyPause: GdxArray<Int> = GdxArray.with(Keys.ESCAPE),
     var keyCustom: GdxArray<Int> = GdxArray.with(Keys.C),
     var keyFullScreen: GdxArray<Int> = GdxArray.with(Keys.F4),
+    var locale: Locale = Locale(""),
+    var locales: GdxArray<Locale> = GdxArray.with(
+        Locale(""),
+        Locale("en", "US"),
+        Locale("jp"),
+        Locale("zh", "CN"),
+    ),
 )
 
 object Config {

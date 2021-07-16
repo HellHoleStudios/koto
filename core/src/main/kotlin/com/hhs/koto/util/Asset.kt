@@ -42,6 +42,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.badlogic.gdx.utils.I18NBundle
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.shot.ShotSheet
 import com.hhs.koto.stg.shot.ShotSheetLoader
@@ -57,6 +58,7 @@ lateinit var A: AssetManager
 private lateinit var textureReflect: GdxMap<Texture, String>
 private lateinit var fontCache: GdxMap<FreeTypeFontParameterWrapper, BitmapFont>
 private var charset: String = ""
+lateinit var bundle: I18NBundle
 
 fun initA() {
     textureReflect = GdxMap()

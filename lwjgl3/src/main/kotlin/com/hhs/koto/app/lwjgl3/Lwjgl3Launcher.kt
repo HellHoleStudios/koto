@@ -58,7 +58,7 @@ object Lwjgl3Launcher {
                 Gdx.app.log("Main", "Writing options to file")
                 if (!optionsFile.exists()) {
                     optionsFile.parent().mkdirs()
-                } 
+                }
                 json.toJson(options, optionsFile)
             }
         }

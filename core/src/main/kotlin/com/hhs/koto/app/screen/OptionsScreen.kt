@@ -221,7 +221,6 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         Vsync.x = 1300f
 
         grid.selectFirst()
-        grid.updateComponent()
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {

@@ -165,6 +165,7 @@ open class Grid(
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY)
+        updateComponent()
         return this
     }
 
@@ -174,6 +175,7 @@ open class Grid(
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY)
+        updateComponent()
         return this
     }
 

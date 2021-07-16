@@ -160,7 +160,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         )
         grid.arrange(0f, 0f, 0f, -250f)
         grid.selectFirst()
-        grid.updateComponent()
+        grid.finishAnimation()
         input.addProcessor(grid)
     }
 

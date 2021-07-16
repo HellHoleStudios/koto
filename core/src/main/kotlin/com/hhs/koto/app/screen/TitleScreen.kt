@@ -90,7 +90,6 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         })
         grid.arrange(1050f, 100f, 0f, -45f)
         grid.selectFirst()
-        grid.updateComponent()
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {

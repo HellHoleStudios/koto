@@ -73,6 +73,7 @@ open class ConstrainedGrid(
     }
 
     fun finishAnimation() {
+        updateTarget(0f)
         t = animationDuration
     }
 
