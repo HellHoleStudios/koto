@@ -31,13 +31,11 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.stg.GameMode
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.app
-import com.hhs.koto.util.getFont
-import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.*
 
 class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val grid = Grid().apply {
@@ -47,45 +45,45 @@ class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
     private val titles = Group().apply { st.addActor(this) }
     private val title = Label(
         "Koto Demonstration",
-        LabelStyle(getFont("font/SourceHanSerifSC-Bold.otf", 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
+        LabelStyle(getFont(bundle["font.boldRegular"], 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
     ).apply {
         setPosition(80f, 860f)
         titles.addActor(this)
     }
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont("font/SourceSerifPro-Italic.ttf", 36, Color.WHITE, borderColor = null), Color.BLACK),
+        LabelStyle(getFont(bundle["font.regularItalic"], 36, Color.WHITE, borderColor = null), Color.BLACK),
     ).apply {
         setPosition(100f, 820f)
         titles.addActor(this)
     }
 
     init {
-        grid.add(GridButton("Game Start", 36, 0, -8) {
+        grid.add(GridButton(bundle["ui.title.startStory"], 36, 0, -8) {
             SystemFlag.gamemode = GameMode.STORY
             app.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Extra Start", 36, 0, -7) {
+        grid.add(GridButton(bundle["ui.title.startExtra"], 36, 0, -7) {
             SystemFlag.gamemode = GameMode.EXTRA
             app.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Stage Practice", 36, 0, -6) {
+        grid.add(GridButton(bundle["ui.title.startStagePractice"], 36, 0, -6) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE
             app.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Spell Practice", 36, 0, -5) {
+        grid.add(GridButton(bundle["ui.title.startSpellPractice"], 36, 0, -5) {
             SystemFlag.gamemode = GameMode.SPELL_PRACTICE
             app.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton("Replay", 36, 0, -4, enabled = false))
-        grid.add(GridButton("Player Data", 36, 0, -3, enabled = false))
-        grid.add(GridButton("Music Room", 36, 0, -2) {
+        grid.add(GridButton(bundle["ui.title.replay"], 36, 0, -4, enabled = false))
+        grid.add(GridButton(bundle["ui.title.playerData"], 36, 0, -3, enabled = false))
+        grid.add(GridButton(bundle["ui.title.musicRoom"], 36, 0, -2) {
             app.setScreen("musicRoom", 0.5f)
         })
-        grid.add(GridButton("Options", 36, 0, -1) {
+        grid.add(GridButton(bundle["ui.title.options"], 36, 0, -1) {
             app.setScreen("options", 0.5f)
         })
-        grid.add(GridButton("Quit", 36, 0, 0, triggerSound = null) {
+        grid.add(GridButton(bundle["ui.title.quit"], 36, 0, 0, triggerSound = null) {
             onQuit()
         })
         grid.arrange(1050f, 100f, 0f, -45f)

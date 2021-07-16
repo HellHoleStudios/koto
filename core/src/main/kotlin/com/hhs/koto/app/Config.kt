@@ -56,12 +56,13 @@ data class Options(
     var keyPause: GdxArray<Int> = GdxArray.with(Keys.ESCAPE),
     var keyCustom: GdxArray<Int> = GdxArray.with(Keys.C),
     var keyFullScreen: GdxArray<Int> = GdxArray.with(Keys.F4),
-    var locale: Locale = Locale(""),
+    var locale: Locale = Locale.getDefault(),
     var locales: GdxArray<Locale> = GdxArray.with(
-        Locale(""),
-        Locale("en", "US"),
-        Locale("jp"),
-        Locale("zh", "CN"),
+        Locale.ROOT,
+        Locale.ENGLISH,
+        Locale.JAPANESE,
+        Locale.SIMPLIFIED_CHINESE,
+        Locale.TRADITIONAL_CHINESE,
     ),
 )
 
@@ -94,7 +95,7 @@ object Config {
     const val defaultShotSheet = "default_shot.shot"
     const val allowSpeedUpOutOfReplay = true
     const val wavMusic = false
-    const val UIFont = "font/SourceHanSerifSC-Bold.otf"
+    lateinit var UIFont: String
     val UIFontColor: Color = Color.WHITE
     const val UIFontBorderWidth = 3f
     val UIFontBorderColor: Color = Color.BLACK

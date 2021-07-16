@@ -67,12 +67,13 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         KtxAsync.initiate()
         loadAssetIndex(Gdx.files.internal(".assets.json"))
-        A.load<I18NBundle>("locale/locale", I18NBundleLoader.I18NBundleParameter(options.locale, "UTF-8"))
         A.finishLoading()
 
         Gdx.app.logLevel = Config.logLevel
         logger.info("Game start.")
-        bundle = A["locale/locale"]
+        Locale.setDefault(Locale.ROOT)
+        bundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locale, "UTF-8")
+        Config.UIFont = bundle["font.boldRegular"]
 
         batch = if (Config.useHSVShader) {
             SpriteBatch(
@@ -124,7 +125,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         BGM.update()
 
         if (Config.allowFullScreen && keyJustPressed(options.keyFullScreen)) {
-            println(Gdx.graphics.supportsDisplayModeChange())
             if (Gdx.graphics.isFullscreen) {
                 Gdx.graphics.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
             } else {

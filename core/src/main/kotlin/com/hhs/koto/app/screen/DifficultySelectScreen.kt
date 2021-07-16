@@ -38,10 +38,7 @@ import com.hhs.koto.app.ui.GridImage
 import com.hhs.koto.app.ui.ScrollingGrid
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.app
-import com.hhs.koto.util.getFont
-import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.*
 
 class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png")) {
     val grid = ScrollingGrid(
@@ -81,7 +78,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
                 width = 720f,
                 height = 130f,
                 activeStyle = Label.LabelStyle(
-                    getFont("font/SourceSerifPro-BoldItalic.ttf", 48, borderColor = null), Color.WHITE
+                    getFont(bundle["font.boldItalic"], 48, borderColor = null), Color.WHITE
                 )
             ).apply {
                 activeAction = getActiveAction()
@@ -107,8 +104,8 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             generateButton(
                 switchTarget,
                 GameDifficulty.EASY,
-                "EASY",
-                "Only kids play in EASY MODO!!",
+                bundle["ui.difficultySelect.easy.text"],
+                bundle["ui.difficultySelect.easy.description"],
                 Color(0.29f, 1f, 0.72f, 1f),
                 0,
                 -4,
@@ -118,8 +115,8 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             generateButton(
                 switchTarget,
                 GameDifficulty.NORMAL,
-                "NORMAL",
-                "Average Touhou Enjoyer",
+                bundle["ui.difficultySelect.normal.text"],
+                bundle["ui.difficultySelect.normal.description"],
                 Color(0.46f, 1f, 0.72f, 1f),
                 0,
                 -3,
@@ -129,8 +126,8 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             generateButton(
                 switchTarget,
                 GameDifficulty.HARD,
-                "HARD",
-                "It's big brain time",
+                bundle["ui.difficultySelect.hard.text"],
+                bundle["ui.difficultySelect.hard.description"],
                 Color(0.6f, 1f, 0.72f, 1f),
                 0,
                 -2,
@@ -140,8 +137,8 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             generateButton(
                 switchTarget,
                 GameDifficulty.LUNATIC,
-                "LUNATIC",
-                "My goals are beyond\nyour understanding",
+                bundle["ui.difficultySelect.lunatic.text"],
+                bundle["ui.difficultySelect.lunatic.description"],
                 Color(0.74f, 1f, 0.72f, 1f),
                 0,
                 -1,
@@ -151,8 +148,8 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             generateButton(
                 switchTarget,
                 GameDifficulty.EXTRA,
-                "EXTRA",
-                "But wait\nThere's more",
+                bundle["ui.difficultySelect.extra.text"],
+                bundle["ui.difficultySelect.extra.description"],
                 Color(0f, 1f, 0.72f, 1f),
                 0,
                 0,
