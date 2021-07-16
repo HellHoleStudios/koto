@@ -107,7 +107,7 @@ open class Grid(
             matchKey(keycode, options.keyDown) -> select(selectedX, selectedY + 1, 0, 1)
             matchKey(keycode, options.keyLeft) -> select(selectedX - 1, selectedY, -1, 0)
             matchKey(keycode, options.keyRight) -> select(selectedX + 1, selectedY, 1, 0)
-            matchKey(keycode, options.keySelect) -> return triggerButton()
+            matchKey(keycode, options.keySelect) -> triggerButton()
             matchKey(keycode, options.keyCancel) -> exit()
         }
         return false

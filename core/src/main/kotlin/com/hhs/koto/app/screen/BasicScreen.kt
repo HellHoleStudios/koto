@@ -39,10 +39,12 @@ open class BasicScreen(
     private val backgroundMusic: String?,
     backgroundTexture: TextureRegion,
 ) : KotoScreen {
+    private val blocker = InputBlocker()
     var st = Stage(app.viewport, app.batch).apply {
         isDebugAll = Config.debugActorLayout
     }
     var input = InputMultiplexer().apply {
+        addProcessor(blocker)
         addProcessor(st)
         addProcessor(KeyListener(options.keyCancel) { onQuit() })
     }
@@ -60,23 +62,26 @@ open class BasicScreen(
 
     override fun show() {
         BGM.play(backgroundMusic)
-
-        app.input.addProcessor(input)
     }
 
     override fun hide() {
-        app.input.removeProcessor(input)
         state = ScreenState.HIDDEN;
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
+        app.input.removeProcessor(input)
+        blocker.isBlocking = true
         state = ScreenState.FADING_OUT
+        st.root.clearActions()
         st.root.addAction(Actions.sequence(Actions.fadeOut(duration, Interpolation.pow3Out), Actions.run { hide() }))
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
+        app.input.addProcessor(input)
+        blocker.isBlocking = false
         state = ScreenState.FADING_IN
         show()
+        st.root.clearActions()
         st.root.color.a = 1f
         st.root.addAction(Actions.sequence(Actions.delay(duration), Actions.run {
             state = ScreenState.SHOWN

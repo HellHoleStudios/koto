@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenLocal()
+        maven { url "https://maven.aliyun.com/repository/public/" }
         mavenCentral()
         google()
         gradlePluginPortal()
@@ -30,6 +31,7 @@ subprojects {
     ext.appName = 'koto'
     repositories {
         mavenLocal()
+        maven { url "https://maven.aliyun.com/repository/public/" }
         mavenCentral()
         gradlePluginPortal()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }

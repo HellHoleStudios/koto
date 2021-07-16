@@ -56,7 +56,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     val screens = GdxMap<String, KotoScreen>()
     var input = InputMultiplexer()
-    var blocker = InputBlocker()
     val logger = Logger("Main", Config.logLevel)
 
     override fun create() {
@@ -88,7 +87,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         st = Stage(viewport, batch);
         st.isDebugAll = Config.debugActorLayout
 
-        input.addProcessor(blocker)
         Gdx.input.inputProcessor = input
 
         fps = FPSDisplay()
@@ -135,22 +133,20 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         fpsCounter.addValue(Gdx.graphics.deltaTime)
 
         clearScreen(0f, 0f, 0f, 1f)
-        var flag1 = false
-        var flag2 = false
+        var flag = false
         screens.safeValues().filter { it.state == ScreenState.FADING_IN }.forEach {
-            flag1 = true
+            flag = true
             it.render(safeDeltaTime())
         }
         screens.safeValues().filter { it.state == ScreenState.SHOWN }.forEach {
-            flag2 = true
+            flag = true
             it.render(safeDeltaTime())
         }
         screens.safeValues().filter { it.state == ScreenState.FADING_OUT }.forEach {
-            flag1 = true
+            flag = true
             it.render(safeDeltaTime())
         }
-        blocker.isBlocking = flag1
-        if (!flag1 && !flag2) {
+        if (!flag) {
             exitApp()
         }
         st.act(safeDeltaTime())
@@ -173,7 +169,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     fun setScreen(name: String?) {
         val scr: KotoScreen? = screens[name]
-        blocker.isBlocking = true
         screens.safeValues().filter { it.state.isRendered() }.forEach {
             it.hide()
             it.state = ScreenState.HIDDEN
@@ -190,7 +185,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     fun setScreen(name: String?, duration: Float) {
         val scr: KotoScreen? = screens[name]
-        blocker.isBlocking = true
         var oldScreen: KotoScreen? = null
         screens.safeValues().filter { it.state.isRendered() }.forEach {
             it.fadeOut(scr, duration)

@@ -35,7 +35,7 @@ import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.util.*
 import ktx.actors.txt
 
-class MusicRoomScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/music_room.png")) {
+class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
     private val titles = ConstrainedGrid(
         120f,
         400f,
