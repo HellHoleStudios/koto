@@ -34,6 +34,7 @@ import com.hhs.koto.app.Options
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
+import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
@@ -45,26 +46,11 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         880f,
         animationDuration = 0.5f,
         interpolation = Interpolation.sine
-    ).apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
-    private val language = Grid(0, -7, false).apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
-    private val musicVolume = Grid(0, -6, false).apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
-    private val SEVolume = Grid(0, -5, false).apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
-    private val Vsync = Grid(0, -4, false).apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
+    ).register(st, input)
+    private val language = Grid(0, -7, false).register(st, input)
+    private val musicVolume = Grid(0, -6, false).register(st, input)
+    private val SEVolume = Grid(0, -5, false).register(st, input)
+    private val Vsync = Grid(0, -4, false).register(st, input)
     var oldOptions: Options? = null
 
     init {
@@ -193,7 +179,12 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
                         0.06f,
                         Interpolation.sine,
                     ),
-                    Actions.moveTo(VsyncDisableButton.staticX, VsyncDisableButton.staticY, 0.03f, Interpolation.sine),
+                    Actions.moveTo(
+                        VsyncDisableButton.staticX,
+                        VsyncDisableButton.staticY,
+                        0.03f,
+                        Interpolation.sine,
+                    ),
                 ),
                 Actions.forever(
                     Actions.sequence(
@@ -215,9 +206,24 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
                 Actions.sequence(
                     Actions.show(),
                     Actions.color(Color.WHITE),
-                    Actions.moveTo(VsyncEnableButton.staticX + 2, VsyncEnableButton.staticY, 0.03f, Interpolation.sine),
-                    Actions.moveTo(VsyncEnableButton.staticX - 4, VsyncEnableButton.staticY, 0.06f, Interpolation.sine),
-                    Actions.moveTo(VsyncEnableButton.staticX, VsyncEnableButton.staticY, 0.03f, Interpolation.sine),
+                    Actions.moveTo(
+                        VsyncEnableButton.staticX + 2,
+                        VsyncEnableButton.staticY,
+                        0.03f,
+                        Interpolation.sine,
+                    ),
+                    Actions.moveTo(
+                        VsyncEnableButton.staticX - 4,
+                        VsyncEnableButton.staticY,
+                        0.06f,
+                        Interpolation.sine,
+                    ),
+                    Actions.moveTo(
+                        VsyncEnableButton.staticX,
+                        VsyncEnableButton.staticY,
+                        0.03f,
+                        Interpolation.sine,
+                    ),
                 ),
                 Actions.forever(
                     Actions.sequence(

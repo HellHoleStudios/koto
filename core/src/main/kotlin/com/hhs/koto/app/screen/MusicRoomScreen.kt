@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
+import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
 import ktx.actors.txt
 
@@ -43,10 +44,8 @@ class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
         600f,
         animationDuration = 0.5f,
         interpolation = Interpolation.pow5Out,
-    ).apply {
+    ).register(st, input).apply {
         cullingArea = Rectangle(120f, 450f, 1200f, 600f)
-        st.addActor(this)
-        input.addProcessor(this)
     }
     private val comment = Label("", getUILabelStyle(36)).apply {
         setAlignment(Align.topLeft)

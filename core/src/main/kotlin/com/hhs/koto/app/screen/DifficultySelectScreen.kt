@@ -32,24 +32,19 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.hhs.koto.app.ui.Grid
-import com.hhs.koto.app.ui.GridButton
-import com.hhs.koto.app.ui.GridImage
-import com.hhs.koto.app.ui.ScrollingGrid
+import com.hhs.koto.app.Config
+import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 
 class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
     val grid = ScrollingGrid(
-        staticX = 350f,
-        staticY = 300f,
+        staticX = 420f,
+        staticY = 360f,
         animationDuration = 1f,
         interpolation = Interpolation.pow5Out
-    ).apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
+    ).register(st, input)
 
     companion object {
         fun generateButton(
@@ -60,26 +55,32 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             color: Color,
             gridX: Int,
             gridY: Int,
-        ) = Grid(gridX = gridX, gridY = gridY, width = 720f, height = 360f).add(
+        ) = Grid(gridX = gridX, gridY = gridY, width = 600f, height = 240f).add(
             GridImage(
-                getRegion("ui/diff_bg.png"),
-                width = 720f,
-                height = 360f,
+                getRegion("ui/bg.png"),
+                width = 600f,
+                height = 240f,
                 tint = color,
             ) {
                 SystemFlag.difficulty = difficulty
                 app.setScreen(switchTarget, 0.5f)
             }
         ).add(
-            GridButton(text, 140, staticY = 150f, width = 720f, height = 200f).apply {
+            GridButton(
+                text,
+                140,
+                staticY = 60f,
+                width = 600f,
+                height = 180f,
+            ).apply {
                 setAlignment(Align.bottom)
             }
         ).add(
             GridButton(
                 description,
-                staticY = 50f,
-                width = 720f,
-                height = 130f,
+                staticY = 30f,
+                width = 600f,
+                height = 30f,
                 activeStyle = Label.LabelStyle(
                     getFont(bundle["font.boldItalic"], 48, borderColor = null), Color.WHITE
                 ),

@@ -34,14 +34,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
+import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 
 class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
-    private val grid = Grid().apply {
-        st.addActor(this)
-        input.addProcessor(this)
-    }
+    private val grid = Grid().register(st,input)
     private val titles = Group().apply { st.addActor(this) }
     private val title = Label(
         "Koto Demonstration",

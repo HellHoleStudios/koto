@@ -25,10 +25,12 @@
 
 package com.hhs.koto.app.ui
 
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.matchKey
 import com.hhs.koto.util.options
@@ -345,4 +347,10 @@ open class Grid(
     }
 
     operator fun get(i: Int) = getChild(i) as GridComponent
+}
+
+fun <T : Grid> T.register(st: Stage, input: InputMultiplexer): T {
+    st.addActor(this)
+    input.addProcessor(this)
+    return this
 }

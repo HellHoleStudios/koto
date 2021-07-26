@@ -32,7 +32,6 @@ import com.hhs.koto.util.getUILabelStyle
 
 class GridLabel(
     text: CharSequence,
-    fontSize: Int,
     override val gridX: Int = 0,
     override val gridY: Int = 0,
     override var staticX: Float = 0f,
@@ -40,16 +39,9 @@ class GridLabel(
     width: Float = 512f,
     height: Float = 512f,
     var activeAction: (() -> Action)? = null,
-    var inactiveAction: (() -> Action)? = null,
-    activeStyle: LabelStyle = getUILabelStyle(fontSize),
-    inactiveStyle: LabelStyle? = getUILabelStyle(fontSize),
+    activeStyle: LabelStyle,
 ) : Label(text, activeStyle), GridComponent {
     var activeStyle: LabelStyle = activeStyle
-        set(value) {
-            field = value
-            update()
-        }
-    var inactiveStyle: LabelStyle = inactiveStyle ?: activeStyle
         set(value) {
             field = value
             update()
@@ -63,10 +55,14 @@ class GridLabel(
     @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
     override var enabled = false
         set(value) = Unit
+
     override var parent: Grid? = null
 
     init {
         setBounds(staticX, staticY, width, height)
+        if (activeAction != null) {
+            addAction(activeAction!!())
+        }
     }
 
     constructor(
@@ -80,7 +76,6 @@ class GridLabel(
         height: Float = 512f,
     ) : this(
         text,
-        fontSize,
         gridX,
         gridY,
         staticX,
@@ -88,26 +83,10 @@ class GridLabel(
         width,
         height,
         null,
-        null,
-        getUILabelStyle(fontSize),
         getUILabelStyle(fontSize),
     )
 
-    override fun update() {
-        if (active && enabled) {
-            style = activeStyle
-            actions.clear()
-            if (activeAction != null) {
-                addAction(activeAction!!())
-            }
-        } else {
-            style = inactiveStyle
-            actions.clear()
-            if (inactiveAction != null) {
-                addAction(inactiveAction!!())
-            }
-        }
-    }
+    override fun update() = Unit
 
     override fun trigger() = Unit
 }

@@ -111,7 +111,7 @@ fun getFont(
     parameter.minFilter = Config.textureMinFilter
     parameter.magFilter = Config.textureMagFilter
     parameter.genMipMaps = Config.genMipMaps
-    val key = FreeTypeFontParameterWrapper(parameter)
+    val key = FreeTypeFontParameterWrapper(name, parameter)
     if (key in fontCache) {
         return fontCache[key]
     }
@@ -122,7 +122,7 @@ fun getFont(
     return font
 }
 
-private class FreeTypeFontParameterWrapper(parameter0: FreeTypeFontParameter) {
+private class FreeTypeFontParameterWrapper(val name: String, parameter0: FreeTypeFontParameter) {
     val parameter = FreeTypeFontParameter()
 
     init {
@@ -161,6 +161,7 @@ private class FreeTypeFontParameterWrapper(parameter0: FreeTypeFontParameter) {
 
         other as FreeTypeFontParameterWrapper
 
+        if (name != name) return false
         if (parameter.size != other.parameter.size) return false
         if (parameter.mono != other.parameter.mono) return false
         if (parameter.hinting != other.parameter.hinting) return false
@@ -193,7 +194,8 @@ private class FreeTypeFontParameterWrapper(parameter0: FreeTypeFontParameter) {
     }
 
     override fun hashCode(): Int {
-        var result = parameter.size
+        var result = name.hashCode()
+        result = 31 * result + parameter.size
         result = 31 * result + parameter.mono.hashCode()
         result = 31 * result + parameter.hinting.hashCode()
         result = 31 * result + (parameter.color?.hashCode() ?: 0)
