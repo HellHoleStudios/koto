@@ -48,7 +48,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
 
     companion object {
         fun generateButton(
-            switchTarget: String,
             difficulty: GameDifficulty,
             gridX: Int,
             gridY: Int,
@@ -60,7 +59,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 tint = Color.valueOf(bundle["ui.difficultySelect.${difficulty.name.lowercase()}.color"]),
             ) {
                 SystemFlag.difficulty = difficulty
-                app.setScreen(switchTarget, 0.5f)
+                app.setScreen("playerSelect", 0.5f)
             }
         ).add(
             GridButton(
@@ -96,7 +95,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
     init {
         grid.add(
             generateButton(
-                "playerSelect",
                 GameDifficulty.EASY,
                 0,
                 -4,
@@ -104,7 +102,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
         )
         grid.add(
             generateButton(
-                "playerSelect",
                 GameDifficulty.NORMAL,
                 0,
                 -3,
@@ -112,7 +109,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
         )
         grid.add(
             generateButton(
-                "playerSelect",
                 GameDifficulty.HARD,
                 0,
                 -2,
@@ -120,7 +116,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
         )
         grid.add(
             generateButton(
-                "playerSelect",
                 GameDifficulty.LUNATIC,
                 0,
                 -1,
@@ -128,7 +123,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
         )
         grid.add(
             generateButton(
-                "playerSelect",
                 GameDifficulty.EXTRA,
                 0,
                 0,

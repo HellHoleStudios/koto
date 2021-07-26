@@ -194,7 +194,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         super.fadeIn(oldScreen, duration)
 
         difficultyLabel?.remove()
-        difficultyLabel = DifficultySelectScreen.generateButton("", SystemFlag.difficulty!!, 0, 0)
+        difficultyLabel = DifficultySelectScreen.generateButton(SystemFlag.difficulty!!, 0, 0)
         st.addActor(difficultyLabel)
         difficultyLabel!!.staticX = 150f
         difficultyLabel!!.staticY = 25f
