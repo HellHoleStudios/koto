@@ -101,13 +101,14 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("graze", "snd/se_graze.wav")
         SE.register("shoot", "snd/se_plst00.wav")
 
-        BGM.register(LoopingMusic("mus/E.0120.ogg", 2f, 58f))
+        BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
 
         B.setSheet(Config.defaultShotSheet);
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()
         screens["difficultySelect"] = DifficultySelectScreen()
+        screens["playerSelect"] = PlayerSelectScreen()
         screens["musicRoom"] = MusicRoomScreen()
         screens["options"] = OptionsScreen()
         setScreen("blank")

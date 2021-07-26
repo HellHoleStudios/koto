@@ -40,13 +40,16 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 
-class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/generic.png")) {
+class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
     val grid = ScrollingGrid(
-        staticX = 120f,
+        staticX = 350f,
         staticY = 300f,
         animationDuration = 1f,
         interpolation = Interpolation.pow5Out
-    )
+    ).apply {
+        st.addActor(this)
+        input.addProcessor(this)
+    }
 
     companion object {
         fun generateButton(
@@ -56,13 +59,13 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
             description: String,
             color: Color,
             gridX: Int,
-            gridY: Int
+            gridY: Int,
         ) = Grid(gridX = gridX, gridY = gridY, width = 720f, height = 360f).add(
             GridImage(
                 getRegion("ui/diff_bg.png"),
                 width = 720f,
                 height = 360f,
-                tint = color
+                tint = color,
             ) {
                 SystemFlag.difficulty = difficulty
                 app.setScreen(switchTarget, 0.5f)
@@ -79,30 +82,23 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
                 height = 130f,
                 activeStyle = Label.LabelStyle(
                     getFont(bundle["font.boldItalic"], 48, borderColor = null), Color.WHITE
-                )
+                ),
             ).apply {
                 activeAction = getActiveAction()
                 inactiveAction = getInactiveAction()
                 setAlignment(Align.center)
             }
         ).apply {
-            setOrigin(Align.left)
+            setOrigin(Align.center)
             activeAction = { Actions.scaleTo(1f, 1f, 0.5f, Interpolation.pow5Out) }
             inactiveAction = { Actions.scaleTo(0.6f, 0.6f, 0.5f, Interpolation.pow5Out) }
         }.selectFirst()
     }
 
     init {
-        st.addActor(grid)
-        val switchTarget: String = when (SystemFlag.gamemode) {
-            GameMode.SPELL_PRACTICE -> "spellSelect"
-            GameMode.STAGE_PRACTICE -> "stageSelect"
-            else -> "playerSelect"
-        }
-
         grid.add(
             generateButton(
-                switchTarget,
+                "playerSelect",
                 GameDifficulty.EASY,
                 bundle["ui.difficultySelect.easy.text"],
                 bundle["ui.difficultySelect.easy.description"],
@@ -113,7 +109,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         )
         grid.add(
             generateButton(
-                switchTarget,
+                "playerSelect",
                 GameDifficulty.NORMAL,
                 bundle["ui.difficultySelect.normal.text"],
                 bundle["ui.difficultySelect.normal.description"],
@@ -124,7 +120,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         )
         grid.add(
             generateButton(
-                switchTarget,
+                "playerSelect",
                 GameDifficulty.HARD,
                 bundle["ui.difficultySelect.hard.text"],
                 bundle["ui.difficultySelect.hard.description"],
@@ -135,7 +131,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         )
         grid.add(
             generateButton(
-                switchTarget,
+                "playerSelect",
                 GameDifficulty.LUNATIC,
                 bundle["ui.difficultySelect.lunatic.text"],
                 bundle["ui.difficultySelect.lunatic.description"],
@@ -146,7 +142,7 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         )
         grid.add(
             generateButton(
-                switchTarget,
+                "playerSelect",
                 GameDifficulty.EXTRA,
                 bundle["ui.difficultySelect.extra.text"],
                 bundle["ui.difficultySelect.extra.description"],
@@ -158,7 +154,6 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         grid.arrange(0f, 0f, 0f, -250f)
         grid.selectFirst()
         grid.finishAnimation()
-        input.addProcessor(grid)
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
@@ -172,15 +167,13 @@ class DifficultySelectScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/gener
         grid[4].enabled = SystemFlag.gamemode!!.hasExtraDifficulty()
         (grid[4] as Actor).isVisible = SystemFlag.gamemode!!.hasExtraDifficulty()
 
-        if (SystemFlag.difficulty != null && grid[SystemFlag.difficulty!!.ordinal - 1].enabled) {
-            grid.select(0, SystemFlag.difficulty!!.ordinal - 1)
+        if (SystemFlag.difficulty != null) {
+            val buttonIndex = SystemFlag.difficulty!!.ordinal
+            if (buttonIndex < grid.grid.size && grid[buttonIndex].enabled) grid.select(grid[buttonIndex])
+            else grid.selectFirst()
         } else {
             grid.selectFirst()
         }
-    }
-
-    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
-        super.fadeOut(newScreen, duration)
     }
 
     override fun onQuit() {

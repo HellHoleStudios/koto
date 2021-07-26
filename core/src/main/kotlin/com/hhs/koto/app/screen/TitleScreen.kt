@@ -37,7 +37,7 @@ import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 
-class TitleScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
+class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
     private val grid = Grid().apply {
         st.addActor(this)
         input.addProcessor(this)

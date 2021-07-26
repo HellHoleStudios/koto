@@ -37,7 +37,7 @@ import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
-class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
+class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
     private val grid = ConstrainedGrid(
         -2048f,
         72f,
@@ -72,8 +72,6 @@ class OptionsScreen : BasicScreen("mus/E.0120.ogg", getRegion("bg/title.png")) {
         grid.add(GridButton(bundle["ui.options.language"], 36, 0, -7, triggerSound = null))
         for (i in 0 until options.locales.size) {
             val tmpBundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locales[i])
-            println(options.locales[i])
-            println(tmpBundle["locale.name"])
             val button = GridButton(tmpBundle["locale.name"], 36, i, 0, triggerSound = null, ignoreParent = true)
             language.add(button)
             button.activeAction = {

@@ -140,6 +140,7 @@ open class Grid(
         for (button in grid.safeIterator()) {
             if (button.active) {
                 button.trigger()
+                if (button is Grid) button.triggerButton()
                 flag = true
             }
         }
@@ -178,6 +179,8 @@ open class Grid(
         updateComponent()
         return this
     }
+
+    fun select(component: GridComponent, silent: Boolean = false) = select(component.gridX, component.gridY, silent)
 
     open fun select(nx: Int, ny: Int, dx: Int, dy: Int, silent: Boolean = false): Grid {
         var closest: GridComponent? = null
