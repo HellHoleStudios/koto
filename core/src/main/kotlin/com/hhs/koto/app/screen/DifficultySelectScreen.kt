@@ -50,9 +50,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
         fun generateButton(
             switchTarget: String,
             difficulty: GameDifficulty,
-            text: String,
-            description: String,
-            color: Color,
             gridX: Int,
             gridY: Int,
         ) = Grid(gridX = gridX, gridY = gridY, width = 600f, height = 240f).add(
@@ -60,14 +57,14 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 getRegion("ui/bg.png"),
                 width = 600f,
                 height = 240f,
-                tint = color,
+                tint = Color.valueOf(bundle["ui.difficultySelect.${difficulty.name.lowercase()}.color"]),
             ) {
                 SystemFlag.difficulty = difficulty
                 app.setScreen(switchTarget, 0.5f)
             }
         ).add(
             GridButton(
-                text,
+                bundle["ui.difficultySelect.${difficulty.name.lowercase()}.text"],
                 140,
                 staticY = 60f,
                 width = 600f,
@@ -77,7 +74,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             }
         ).add(
             GridButton(
-                description,
+                bundle["ui.difficultySelect.${difficulty.name.lowercase()}.description"],
                 staticY = 30f,
                 width = 600f,
                 height = 30f,
@@ -101,9 +98,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             generateButton(
                 "playerSelect",
                 GameDifficulty.EASY,
-                bundle["ui.difficultySelect.easy.text"],
-                bundle["ui.difficultySelect.easy.description"],
-                Color(0.29f, 1f, 0.72f, 1f),
                 0,
                 -4,
             )
@@ -112,9 +106,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             generateButton(
                 "playerSelect",
                 GameDifficulty.NORMAL,
-                bundle["ui.difficultySelect.normal.text"],
-                bundle["ui.difficultySelect.normal.description"],
-                Color(0.46f, 1f, 0.72f, 1f),
                 0,
                 -3,
             )
@@ -123,9 +114,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             generateButton(
                 "playerSelect",
                 GameDifficulty.HARD,
-                bundle["ui.difficultySelect.hard.text"],
-                bundle["ui.difficultySelect.hard.description"],
-                Color(0.6f, 1f, 0.72f, 1f),
                 0,
                 -2,
             )
@@ -134,9 +122,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             generateButton(
                 "playerSelect",
                 GameDifficulty.LUNATIC,
-                bundle["ui.difficultySelect.lunatic.text"],
-                bundle["ui.difficultySelect.lunatic.description"],
-                Color(0.74f, 1f, 0.72f, 1f),
                 0,
                 -1,
             )
@@ -145,9 +130,6 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             generateButton(
                 "playerSelect",
                 GameDifficulty.EXTRA,
-                bundle["ui.difficultySelect.extra.text"],
-                bundle["ui.difficultySelect.extra.description"],
-                Color(0f, 1f, 0.72f, 1f),
                 0,
                 0,
             )

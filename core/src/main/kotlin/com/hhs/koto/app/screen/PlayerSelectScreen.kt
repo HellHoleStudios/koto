@@ -31,14 +31,13 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.hhs.koto.app.ui.Grid
-import com.hhs.koto.app.ui.GridImage
-import com.hhs.koto.app.ui.GridLabel
-import com.hhs.koto.app.ui.register
+import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
+import ktx.scene2d.actors
 
 class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+    var difficultyLabel: Grid? = null
     val portraits = Grid().register(st, input)
     val descriptions = Grid().register(st, input)
 
@@ -82,17 +81,32 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         }.selectFirst()
 
         fun generateDescription(
-            title: String,
             name: String,
-            description: String,
             gridX: Int,
             gridY: Int,
-            staticX: Float,
-            staticY: Float,
-            color: Color,
+            staticX: Float = 150f,
+            staticY: Float = 250f,
         ) = Grid(staticX = staticX, staticY = staticY, gridX = gridX, gridY = gridY).add(
+            GridImage(
+                getRegion("ui/arrow.png"),
+                width = 48f,
+                staticX = -80f,
+                staticY = 425f,
+                activeAction = null,
+            )
+        ).add(
+            GridImage(
+                getRegion("ui/arrow.png"),
+                width = 48f,
+                staticX = 680f,
+                staticY = 425f,
+                activeAction = null,
+            ).apply {
+                setScale(-1f, 1f)
+            }
+        ).add(
             GridLabel(
-                title,
+                bundle["ui.playerSelect.$name.title"],
                 width = 600f,
                 height = 50f,
                 staticY = 500f,
@@ -109,7 +123,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             }
         ).add(
             GridLabel(
-                name,
+                bundle["ui.playerSelect.$name.name"],
                 width = 600f,
                 height = 100f,
                 staticY = 400f,
@@ -117,7 +131,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                     getFont(
                         bundle["font.boldRegular"],
                         72,
-                        color,
+                        Color.valueOf(bundle["ui.playerSelect.$name.color"]),
                         borderColor = Color.BLACK
                     ), Color.WHITE
                 ),
@@ -125,13 +139,13 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 setAlignment(Align.center)
             }
         ).add(
-            GridLabel(description, 24, width = 600f, height = 400f).apply {
+            GridLabel(bundle["ui.playerSelect.$name.description"], 24, width = 600f, height = 400f).apply {
                 setAlignment(Align.center)
             }
         ).apply {
             activeAction = { Actions.show() }
             inactiveAction = { Actions.hide() }
-        }
+        }.selectFirst()
     }
 
     init {
@@ -168,77 +182,40 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         )
         portraits.selectFirst()
 
-        descriptions.add(
-            generateDescription(
-                bundle["ui.playerSelect.reimu.title"],
-                bundle["ui.playerSelect.reimu.name"],
-                bundle["ui.playerSelect.reimu.description"],
-                0,
-                0,
-                150f,
-                250f,
-                Color(1f, 0f, 0f, 1f)
-            )
-        )
-        descriptions.add(
-            generateDescription(
-                bundle["ui.playerSelect.marisa.title"],
-                bundle["ui.playerSelect.marisa.name"],
-                bundle["ui.playerSelect.marisa.description"],
-                1,
-                0,
-                150f,
-                250f,
-                Color(1f, 1f, 0f, 1f)
-            )
-        )
-        descriptions.add(
-            generateDescription(
-                bundle["ui.playerSelect.sakuya.title"],
-                bundle["ui.playerSelect.sakuya.name"],
-                bundle["ui.playerSelect.sakuya.description"],
-                2,
-                0,
-                150f,
-                250f,
-                Color(1f, 1f, 1f, 1f)
-            )
-        )
-        descriptions.add(
-            generateDescription(
-                bundle["ui.playerSelect.youmu.title"],
-                bundle["ui.playerSelect.youmu.name"],
-                bundle["ui.playerSelect.youmu.description"],
-                3,
-                0,
-                150f,
-                250f,
-                Color(0.3f, 1f, 0.5f, 1f)
-            )
-        )
-        descriptions.add(
-            generateDescription(
-                bundle["ui.playerSelect.sanae.title"],
-                bundle["ui.playerSelect.sanae.name"],
-                bundle["ui.playerSelect.sanae.description"],
-                4,
-                0,
-                150f,
-                250f,
-                Color(0f, 0.5f, 1f, 1f)
-            )
-        )
+        descriptions.add(generateDescription("reimu", 0, 0))
+        descriptions.add(generateDescription("marisa", 1, 0))
+        descriptions.add(generateDescription("sakuya", 2, 0))
+        descriptions.add(generateDescription("youmu", 3, 0))
+        descriptions.add(generateDescription("sanae", 4, 0))
         descriptions.selectFirst()
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
+
+        difficultyLabel?.remove()
+        difficultyLabel = DifficultySelectScreen.generateButton("", SystemFlag.difficulty!!, 0, 0)
+        st.addActor(difficultyLabel)
+        difficultyLabel!!.staticX = 150f
+        difficultyLabel!!.staticY = 25f
+        difficultyLabel!!.setScale(0.5f)
+        difficultyLabel!!.clearActions()
+        difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 200f)
+        difficultyLabel!!.addAction(
+            Actions.moveTo(
+                difficultyLabel!!.staticX,
+                difficultyLabel!!.staticY,
+                duration,
+                Interpolation.pow5Out
+            )
+        )
+
         portraits.clearActions()
-        portraits.setPosition(portraits.staticX + 400f, portraits.staticY)
+        portraits.setPosition(portraits.staticX + 800f, portraits.staticY)
         portraits.addAction(Actions.moveTo(portraits.staticX, portraits.staticY, duration, Interpolation.pow5Out))
 
         descriptions.clearActions()
-        descriptions.setPosition(descriptions.staticX - 400f, descriptions.staticY)
+        descriptions.setPosition(descriptions.staticX - 800f, descriptions.staticY)
         descriptions.addAction(
             Actions.moveTo(
                 descriptions.staticX,
@@ -251,11 +228,21 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
+
+        difficultyLabel!!.clearActions()
+        difficultyLabel!!.addAction(
+            Actions.moveTo(
+                difficultyLabel!!.staticX,
+                difficultyLabel!!.staticY - 200f,
+                duration,
+                Interpolation.pow5Out
+            )
+        )
+
         portraits.clearActions()
-        portraits.setPosition(portraits.staticX, portraits.staticY)
         portraits.addAction(
             Actions.moveTo(
-                portraits.staticX + 400f,
+                portraits.staticX + 800f,
                 portraits.staticY,
                 duration,
                 Interpolation.pow5Out
@@ -263,10 +250,9 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         )
 
         descriptions.clearActions()
-        descriptions.setPosition(descriptions.staticX, descriptions.staticY)
         descriptions.addAction(
             Actions.moveTo(
-                descriptions.staticX - 400f,
+                descriptions.staticX - 800f,
                 descriptions.staticY,
                 duration,
                 Interpolation.pow5Out
