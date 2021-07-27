@@ -28,14 +28,11 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 
 class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
@@ -47,6 +44,15 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
     ).register(st, input)
 
     companion object {
+        fun difficultyColor(difficulty: GameDifficulty): Color = when (difficulty) {
+            GameDifficulty.EASY -> Color(0.29f, 1f, 0.72f, 1f)
+            GameDifficulty.NORMAL -> Color(0.46f, 1f, 0.72f, 1f)
+            GameDifficulty.HARD -> Color(0.6f, 1f, 0.72f, 1f)
+            GameDifficulty.LUNATIC -> Color(0.74f, 1f, 0.72f, 1f)
+            GameDifficulty.EXTRA -> Color(0f, 1f, 0.72f, 1f)
+            GameDifficulty.PHANTASM -> Color(0.88f, 0.7f, 0.9f, 1f)
+        }
+
         fun generateButton(
             difficulty: GameDifficulty,
             gridX: Int,
@@ -56,7 +62,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 getRegion("ui/bg.png"),
                 width = 600f,
                 height = 240f,
-                tint = Color.valueOf(bundle["ui.difficultySelect.${difficulty.name.lowercase()}.color"]),
+                tint = difficultyColor(difficulty),
             ) {
                 SystemFlag.difficulty = difficulty
                 app.setScreen("playerSelect", 0.5f)
@@ -68,6 +74,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 staticY = 60f,
                 width = 600f,
                 height = 180f,
+                triggerSound = null,
             ).apply {
                 setAlignment(Align.bottom)
             }
@@ -80,6 +87,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 activeStyle = Label.LabelStyle(
                     getFont(bundle["font.boldItalic"], 48, borderColor = null), Color.WHITE
                 ),
+                triggerSound = null,
             ).apply {
                 activeAction = getActiveAction()
                 inactiveAction = getInactiveAction()
@@ -128,7 +136,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 0,
             )
         )
-        grid.arrange(0f, 0f, 0f, -250f)
+        grid.arrange(0f, 0f, 0f, -220f)
         grid.selectFirst()
         grid.finishAnimation()
     }
@@ -144,12 +152,14 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
         grid[4].enabled = SystemFlag.gamemode!!.hasExtraDifficulty()
         (grid[4] as Actor).isVisible = SystemFlag.gamemode!!.hasExtraDifficulty()
 
+        if (grid[1].enabled) {
+            grid.select(grid[1], true)
+        } else {
+            grid.selectFirst()
+        }
         if (SystemFlag.difficulty != null) {
             val buttonIndex = SystemFlag.difficulty!!.ordinal
             if (buttonIndex < grid.grid.size && grid[buttonIndex].enabled) grid.select(grid[buttonIndex])
-            else grid.selectFirst()
-        } else {
-            grid.selectFirst()
         }
     }
 

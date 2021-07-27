@@ -28,7 +28,6 @@ package com.hhs.koto.app
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
-import com.badlogic.gdx.assets.loaders.I18NBundleLoader
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.WindowedMean
@@ -41,7 +40,6 @@ import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
-import ktx.assets.load
 import ktx.async.KtxAsync
 import ktx.collections.GdxMap
 import ktx.collections.set
@@ -50,7 +48,7 @@ import java.util.*
 class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     lateinit var batch: SpriteBatch
     lateinit var viewport: Viewport
-    lateinit var st: Stage
+    private lateinit var st: Stage
     private lateinit var fps: FPSDisplay
     lateinit var fpsCounter: WindowedMean
 
@@ -62,7 +60,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         app = this
 
         loadOptions()
-        initAll()
+        initA()
 
         KtxAsync.initiate()
         loadAssetIndex(Gdx.files.internal(".assets.json"))
@@ -82,9 +80,9 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         } else {
             SpriteBatch()
         }
-        fpsCounter = WindowedMean(10);
+        fpsCounter = WindowedMean(10)
         viewport = ScalingViewport(Config.windowScaling, Config.screenWidth, Config.screenHeight)
-        st = Stage(viewport, batch);
+        st = Stage(viewport, batch)
         st.isDebugAll = Config.debugActorLayout
 
         Gdx.input.inputProcessor = input
@@ -103,7 +101,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
 
-        B.setSheet(Config.defaultShotSheet);
+        B.setSheet(Config.defaultShotSheet)
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()
@@ -122,6 +120,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     override fun render() {
         BGM.update()
+        SE.update()
 
         if (Config.allowFullScreen && keyJustPressed(options.keyFullScreen)) {
             if (Gdx.graphics.isFullscreen) {

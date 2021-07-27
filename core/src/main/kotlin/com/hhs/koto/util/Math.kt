@@ -55,16 +55,16 @@ fun safeMod(x: Float, mod: Float): Float {
 }
 
 fun normalizeAngle(angle: Float): Float {
-    var angle = angle
-    angle = if (angle > 0) {
-        angle - MathUtils.round(angle / 360) * 360
+    var angle1 = angle
+    angle1 = if (angle1 > 0) {
+        angle1 - MathUtils.round(angle1 / 360) * 360
     } else {
-        angle + MathUtils.round(-angle / 360) * 360
+        angle1 + MathUtils.round(-angle1 / 360) * 360
     }
-    if (angle == -180f) {
-        angle = 180f
+    if (angle1 == -180f) {
+        angle1 = 180f
     }
-    return angle
+    return angle1
 }
 
 fun dist2(x1: Float, y1: Float, x2: Float, y2: Float) = sqr(x1 - x2) + sqr(y1 - y2)

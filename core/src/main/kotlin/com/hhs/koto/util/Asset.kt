@@ -246,11 +246,7 @@ fun loadSmart(fileName: String) {
     with(A) {
         when (fileHandleResolver.resolve(fileName).extension()) {
             "png", "jpg", "jpeg", "bmp", "gif" -> load<Texture>(fileName, defaultTextureParameter())
-            "wav" -> if (Config.wavMusic) {
-                load<Music>(fileName)
-            } else {
-                load<Sound>(fileName)
-            }
+            "wav" -> load<Sound>(fileName)
             "mp3", "ogg" -> load<Music>(fileName)
             "atlas" -> load<TextureAtlas>(fileName)
             "fnt" -> load<BitmapFont>(fileName, defaultBitmapFontParameter())

@@ -51,7 +51,7 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
     private val musicVolume = Grid(0, -6, false).register(st, input)
     private val SEVolume = Grid(0, -5, false).register(st, input)
     private val Vsync = Grid(0, -4, false).register(st, input)
-    var oldOptions: Options? = null
+    private var oldOptions: Options? = null
 
     init {
         grid.add(language)

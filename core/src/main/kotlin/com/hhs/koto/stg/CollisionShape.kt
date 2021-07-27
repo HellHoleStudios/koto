@@ -74,7 +74,7 @@ class AABBCollision(override val boundingWidth: Float, override val boundingHeig
     }
 }
 
-class NoCollision() : CollisionShape {
+class NoCollision : CollisionShape {
     override val boundingHeight = 0f
     override val boundingWidth = 0f
     override fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float) = false

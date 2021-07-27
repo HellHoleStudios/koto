@@ -32,8 +32,8 @@ import com.hhs.koto.util.safeIterator
 
 class BulletTexture(atlas: TextureAtlas, name: String, frames: Array<Int>) {
 
-    var frames: Array<out TextureRegion> = atlas.findRegions(name)
-    var frameTime: Array<Int> = Array()
+    private var frames: Array<out TextureRegion> = atlas.findRegions(name)
+    private var frameTime: Array<Int> = Array()
 
     init {
         for (i in 0 until frames.size) {

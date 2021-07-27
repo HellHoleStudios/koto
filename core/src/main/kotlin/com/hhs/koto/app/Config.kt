@@ -94,7 +94,8 @@ object Config {
     const val cleanupBlankCount = 512
     const val defaultShotSheet = "default_shot.shot"
     const val allowSpeedUpOutOfReplay = true
-    const val wavMusic = false
+    const val musicCount = 1
+    const val noDuplicateSE = true
     lateinit var UIFont: String
     val UIFontColor: Color = Color.WHITE
     const val UIFontBorderWidth = 3f

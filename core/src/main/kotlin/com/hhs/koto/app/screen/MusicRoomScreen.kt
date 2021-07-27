@@ -27,9 +27,9 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.register
@@ -56,7 +56,7 @@ class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
     }
 
     init {
-        for (i in 1..bundle["music.count"].toInt()) {
+        for (i in 1..Config.musicCount) {
             titles.add(GridButton(bundle["music.$i.title"], 36, 0, i) {
                 BGM.stop()
                 BGM.play(bundle["music.$i.file"])

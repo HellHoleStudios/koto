@@ -48,6 +48,7 @@ open class Grid(
     width: Float = 0f,
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
+    val selectSound: String? = "select",
 ) : Group(), GridComponent, InputProcessor {
     val grid = GdxArray<GridComponent>()
     var selectedX: Int = 0
@@ -162,12 +163,22 @@ open class Grid(
         return this
     }
 
+    override fun clear() {
+        super.clear()
+        grid.clear()
+    }
+
+    override fun clearChildren() {
+        super.clearChildren()
+        grid.clear()
+    }
+
     open fun selectFirst(): Grid {
         if (grid.size == 0) return this
         val component = grid.first { it.enabled }
         selectedX = component.gridX
         selectedY = component.gridY
-        select(selectedX, selectedY)
+        select(selectedX, selectedY, true)
         updateComponent()
         return this
     }
@@ -177,7 +188,7 @@ open class Grid(
         val component = grid.last { it.enabled }
         selectedX = component.gridX
         selectedY = component.gridY
-        select(selectedX, selectedY)
+        select(selectedX, selectedY, true)
         updateComponent()
         return this
     }
@@ -205,8 +216,8 @@ open class Grid(
         if (closest == null) {
             return this
         }
-        if (!silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
-            SE.play("select")
+        if (selectSound != null && !silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
+            SE.play(selectSound)
         }
         selectedX = closest.gridX
         selectedY = closest.gridY
@@ -235,8 +246,8 @@ open class Grid(
         if (closest == null) {
             return this
         }
-        if (!silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
-            SE.play("select")
+        if (selectSound != null && !silent && (closest.gridX != selectedX || closest.gridY != selectedY)) {
+            SE.play(selectSound)
         }
         selectedX = closest.gridX
         selectedY = closest.gridY
@@ -351,6 +362,12 @@ open class Grid(
 
 fun <T : Grid> T.register(st: Stage, input: InputMultiplexer): T {
     st.addActor(this)
+    input.addProcessor(this)
+    return this
+}
+
+fun <T : Grid> T.register(group: Group, input: InputMultiplexer): T {
+    group.addActor(this)
     input.addProcessor(this)
     return this
 }

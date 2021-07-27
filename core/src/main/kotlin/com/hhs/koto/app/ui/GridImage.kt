@@ -43,7 +43,7 @@ class GridImage(
     override var staticY: Float = 0f,
     width: Float,
     height: Float = width / texture.regionWidth * texture.regionHeight,
-    val tint: Color = Color.WHITE,
+    private val tint: Color = Color.WHITE,
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
     override var enabled: Boolean = true,

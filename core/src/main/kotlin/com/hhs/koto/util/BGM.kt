@@ -33,14 +33,8 @@ import ktx.collections.GdxMap
 object BGM {
 
     private var bgm: LoopingMusic? = null
-    private lateinit var bgms: GdxMap<String, LoopingMusic>
-    lateinit var logger: Logger
-
-    fun init() {
-        bgm = null
-        bgms = GdxMap()
-        logger = Logger("BGM", Config.logLevel)
-    }
+    private val bgms = GdxMap<String, LoopingMusic>()
+    val logger = Logger("BGM", Config.logLevel)
 
     fun play(name: String?) {
         if (name == null) {

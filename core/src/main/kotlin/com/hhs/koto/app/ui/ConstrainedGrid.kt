@@ -33,10 +33,10 @@ import com.hhs.koto.util.safeIterator
 import java.lang.Float.min
 
 open class ConstrainedGrid(
-    protected var constraintX: Float = 0f,
-    protected var constraintY: Float = 0f,
-    protected val constraintWidth: Float,
-    protected val constraintHeight: Float,
+    private var constraintX: Float = 0f,
+    private var constraintY: Float = 0f,
+    private val constraintWidth: Float,
+    private val constraintHeight: Float,
     gridX: Int = 0,
     gridY: Int = 0,
     cycle: Boolean = true,

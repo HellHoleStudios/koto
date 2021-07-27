@@ -28,24 +28,50 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
-import ktx.scene2d.actors
+import ktx.actors.alpha
+import ktx.collections.GdxArray
 
 class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
-    var difficultyLabel: Grid? = null
-    val portraits = Grid().register(st, input)
-    val descriptions = Grid().register(st, input)
+    private var difficultyLabel: Grid? = null
+    private val portraits = Grid(selectSound = null).register(st, input)
+    private val descriptions = Grid().register(st, input)
 
-    val selectedPlayer: String? = null
+    private val shotType = Group().apply {
+        st.addActor(this)
+        alpha = 0f
+    }
+    private val shotTypeBackground = Image(getRegion("ui/bg.png")).apply {
+        setSize(850f, 250f)
+        shotType.addActor(this)
+    }
+    private val shotTypeGrid = Grid().apply { shotType.addActor(this) }
+
+    private var switchTarget: String? = null
+    var selectedPlayer: String? = null
 
     companion object {
+        fun playerColor(name: String): Color = when (name) {
+            "reimu" -> Color(1f, 0f, 0f, 1f)
+            "marisa" -> Color(1f, 1f, 0f, 1f)
+            "sakuya" -> Color(1f, 1f, 1f, 1f)
+            "youmu" -> Color(0.3f, 0.8f, 0.4f, 1f)
+            "sanae" -> Color(0f, 0.5f, 1f, 1f)
+            else -> Color.WHITE
+        }
+
         fun generatePortrait(
+            screen: PlayerSelectScreen,
+            name: String,
             selectPortrait: TextureRegion,
+            shotTypes: GdxArray<String>,
             gridX: Int,
             gridY: Int,
             staticX: Float,
@@ -58,7 +84,15 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 width = width,
                 height = height,
                 tint = Color(1f, 1f, 0f, 0.8f),
-            ).apply {
+            ) {
+                if (shotTypes.size == 0) {
+                    SystemFlag.player = name
+                    app.setScreen("game", 1f)
+                } else {
+                    screen.selectedPlayer = name
+                    screen.showShotType(name, shotTypes)
+                }
+            }.apply {
                 activeAction = {
                     Actions.sequence(
                         Actions.moveTo(this.staticX, this.staticY),
@@ -67,7 +101,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 }
             }
         ).add(
-            GridImage(selectPortrait, width = width, height = height).apply {
+            GridImage(selectPortrait, width = width, height = height, triggerSound = null).apply {
                 activeAction = {
                     Actions.sequence(
                         Actions.moveTo(this.staticX, this.staticY),
@@ -85,7 +119,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             gridX: Int,
             gridY: Int,
             staticX: Float = 150f,
-            staticY: Float = 250f,
+            staticY: Float = 300f,
         ) = Grid(staticX = staticX, staticY = staticY, gridX = gridX, gridY = gridY).add(
             GridImage(
                 getRegion("ui/arrow.png"),
@@ -93,6 +127,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 staticX = -80f,
                 staticY = 425f,
                 activeAction = null,
+                triggerSound = null,
             )
         ).add(
             GridImage(
@@ -101,16 +136,17 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 staticX = 680f,
                 staticY = 425f,
                 activeAction = null,
+                triggerSound = null,
             ).apply {
                 setScale(-1f, 1f)
             }
         ).add(
             GridLabel(
-                bundle["ui.playerSelect.$name.title"],
+                bundle["ui.playerSelect.player.$name.title"],
                 width = 600f,
                 height = 50f,
                 staticY = 500f,
-                activeStyle = Label.LabelStyle(
+                style = Label.LabelStyle(
                     getFont(
                         bundle["font.boldItalic"],
                         36,
@@ -123,15 +159,15 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             }
         ).add(
             GridLabel(
-                bundle["ui.playerSelect.$name.name"],
+                bundle["ui.playerSelect.player.$name.name"],
                 width = 600f,
                 height = 100f,
                 staticY = 400f,
-                activeStyle = Label.LabelStyle(
+                style = Label.LabelStyle(
                     getFont(
                         bundle["font.boldRegular"],
                         72,
-                        Color.valueOf(bundle["ui.playerSelect.$name.color"]),
+                        playerColor(name),
                         borderColor = Color.BLACK
                     ), Color.WHITE
                 ),
@@ -139,7 +175,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 setAlignment(Align.center)
             }
         ).add(
-            GridLabel(bundle["ui.playerSelect.$name.description"], 24, width = 600f, height = 400f).apply {
+            GridLabel(bundle["ui.playerSelect.player.$name.description"], 24, width = 600f, height = 400f).apply {
                 setAlignment(Align.center)
             }
         ).apply {
@@ -149,7 +185,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
     }
 
     init {
-        val switchTarget: String = when (SystemFlag.gamemode) {
+        switchTarget = when (SystemFlag.gamemode) {
             GameMode.SPELL_PRACTICE -> "spellSelect"
             GameMode.STAGE_PRACTICE -> "stageSelect"
             else -> "game"
@@ -157,27 +193,32 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
         portraits.add(
             generatePortrait(
-                getRegion("portrait/reimu/select.png"), 0, 0, 830f, 50f, 560f
+                this, "reimu", getRegion("portrait/reimu/select.png"),
+                GdxArray.with("reimuA", "reimuB", "reimu"), 0, 0, 850f, 50f, 560f,
             )
         )
         portraits.add(
             generatePortrait(
-                getRegion("portrait/marisa/select.png"), 1, 0, 830f, 50f, 560f
+                this, "marisa", getRegion("portrait/marisa/select.png"),
+                GdxArray.with("marisaA", "marisaB", "marisa"), 1, 0, 850f, 50f, 560f,
             )
         )
         portraits.add(
             generatePortrait(
-                getRegion("portrait/sakuya/select.png"), 2, 0, 880f, 50f, 460f
+                this, "sakuya", getRegion("portrait/sakuya/select.png"),
+                GdxArray.with("sakuyaA", "sakuyaB", "sakuya"), 2, 0, 900f, 50f, 460f,
             )
         )
         portraits.add(
             generatePortrait(
-                getRegion("portrait/youmu/select.png"), 3, 0, 780f, 50f, 720f
+                this, "youmu", getRegion("portrait/youmu/select.png"),
+                GdxArray.with("youmuA", "youmuB", "youmu"), 3, 0, 800f, 50f, 720f,
             )
         )
         portraits.add(
             generatePortrait(
-                getRegion("portrait/sanae/select.png"), 4, 0, 750f, 50f, 680f
+                this, "sanae", getRegion("portrait/sanae/select.png"),
+                GdxArray.with("sanaeA", "sanaeB", "sanae"), 4, 0, 770f, 50f, 680f,
             )
         )
         portraits.selectFirst()
@@ -197,10 +238,10 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         difficultyLabel = DifficultySelectScreen.generateButton(SystemFlag.difficulty!!, 0, 0)
         st.addActor(difficultyLabel)
         difficultyLabel!!.staticX = 150f
-        difficultyLabel!!.staticY = 25f
+        difficultyLabel!!.staticY = 50f
         difficultyLabel!!.setScale(0.5f)
         difficultyLabel!!.clearActions()
-        difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 200f)
+        difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 300f)
         difficultyLabel!!.addAction(
             Actions.moveTo(
                 difficultyLabel!!.staticX,
@@ -233,7 +274,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         difficultyLabel!!.addAction(
             Actions.moveTo(
                 difficultyLabel!!.staticX,
-                difficultyLabel!!.staticY - 200f,
+                difficultyLabel!!.staticY - 300f,
                 duration,
                 Interpolation.pow5Out
             )
@@ -260,8 +301,87 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         )
     }
 
+    private fun showShotType(name: String, shotTypes: GdxArray<String>) {
+        shotType.clearActions()
+        shotType.addAction(Actions.fadeIn(0.5f, Interpolation.pow5Out))
+        input.addProcessor(shotTypeGrid)
+
+        descriptions.clearActions()
+        descriptions.addAction(Actions.fadeOut(0.5f, Interpolation.pow5Out))
+        input.removeProcessor(descriptions)
+        input.removeProcessor(portraits)
+
+        shotTypeGrid.clear()
+
+        val baseY = (250f * shotTypes.size - 50f) / 2f + 600f
+        shotTypeBackground.color = playerColor(name).toHSVColor()
+        shotTypeBackground.y = baseY - 180f
+
+        for (i in 0 until shotTypes.size) {
+            shotTypeGrid.add(
+                GridButton(
+                    bundle["ui.playerSelect.shotType.${shotTypes[i]}.name"],
+                    48,
+                    0,
+                    i,
+                    staticX = 100f,
+                    staticY = baseY - i * 250f,
+                ) {
+                    SystemFlag.player = shotTypes[i]
+                    app.setScreen(switchTarget, 1f)
+                }.apply {
+                    activeAction = getActiveAction({
+                        Actions.run {
+                            shotTypeBackground.clearActions()
+                            shotTypeBackground.addAction(
+                                Actions.moveTo(
+                                    0f,
+                                    baseY - i * 250f - 180f,
+                                    1f,
+                                    Interpolation.pow5Out
+                                )
+                            )
+                        }
+                    })
+                }
+            )
+            shotTypeGrid.add(
+                GridButton(
+                    bundle["ui.playerSelect.shotType.${shotTypes[i]}.description"],
+                    24,
+                    0,
+                    i,
+                    staticX = 150f,
+                    staticY = baseY - i * 250f - 170f,
+                    height = 150f,
+                    triggerSound = null,
+                ).apply {
+                    setAlignment(Align.left)
+                }
+            )
+        }
+        shotTypeGrid.selectFirst()
+    }
+
+    private fun hideShotType() {
+        shotType.clearActions()
+        shotType.addAction(Actions.fadeOut(0.5f, Interpolation.pow5Out))
+        input.removeProcessor(shotTypeGrid)
+
+        descriptions.clearActions()
+        descriptions.addAction(Actions.fadeIn(0.5f, Interpolation.pow5Out))
+        input.addProcessor(descriptions)
+        input.addProcessor(portraits)
+    }
+
     override fun onQuit() {
-        super.onQuit()
-        app.setScreen("difficultySelect", 1f)
+        if (selectedPlayer == null) {
+            super.onQuit()
+            app.setScreen("difficultySelect", 1f)
+        } else {
+            SE.play("cancel")
+            selectedPlayer = null
+            hideShotType()
+        }
     }
 }

@@ -38,19 +38,10 @@ class GridLabel(
     override var staticY: Float = 0f,
     width: Float = 512f,
     height: Float = 512f,
-    var activeAction: (() -> Action)? = null,
-    activeStyle: LabelStyle,
-) : Label(text, activeStyle), GridComponent {
-    var activeStyle: LabelStyle = activeStyle
-        set(value) {
-            field = value
-            update()
-        }
+    var action: (() -> Action)? = null,
+    style: LabelStyle,
+) : Label(text, style), GridComponent {
     override var active = true
-        set(value) {
-            field = value
-            update()
-        }
 
     @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
     override var enabled = false
@@ -60,8 +51,8 @@ class GridLabel(
 
     init {
         setBounds(staticX, staticY, width, height)
-        if (activeAction != null) {
-            addAction(activeAction!!())
+        if (action != null) {
+            addAction(action!!())
         }
     }
 

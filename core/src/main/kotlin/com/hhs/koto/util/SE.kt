@@ -29,14 +29,19 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Logger
 import com.hhs.koto.app.Config
 import ktx.collections.GdxMap
+import ktx.collections.set
 
 object SE {
-    private lateinit var ses: GdxMap<String, Sound>
-    private lateinit var logger: Logger
+    private val ses = GdxMap<String, Sound>()
+    private val fired = GdxMap<String, Boolean>()
+    private val logger = Logger("SE", Config.logLevel)
 
-    fun init() {
-        ses = GdxMap()
-        logger = Logger("SE", Config.logLevel)
+    fun update() {
+        if (Config.noDuplicateSE) {
+            for (i in fired.safeKeys()) {
+                fired[i] = false
+            }
+        }
     }
 
     fun play(name: String) {
@@ -44,6 +49,13 @@ object SE {
         if (se == null) {
             logger.error("SE with this name doesn't exist!")
         } else {
+            if (Config.noDuplicateSE) {
+                if (fired[name]) {
+                    logger.debug("Same SE played in the same frame. Cancelled.")
+                    return
+                }
+                fired[name] = true
+            }
             val id = se.play()
             se.setVolume(id, options.SEVolume)
         }
@@ -53,6 +65,7 @@ object SE {
         logger.debug("Registering sound with alias: $name path: $path")
         val snd: Sound = A[path]
         ses.put(name, snd)
+        fired.put(name, false)
         return snd
     }
 }

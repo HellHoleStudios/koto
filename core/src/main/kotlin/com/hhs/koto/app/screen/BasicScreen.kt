@@ -40,20 +40,22 @@ open class BasicScreen(
     backgroundTexture: TextureRegion,
 ) : KotoScreen {
     private val blocker = InputBlocker()
-    var st = Stage(app.viewport, app.batch).apply {
+    val st = Stage(app.viewport, app.batch).apply {
         isDebugAll = Config.debugActorLayout
     }
-    var input = InputMultiplexer().apply {
+    val input = InputMultiplexer().apply {
         addProcessor(blocker)
         addProcessor(st)
         addProcessor(KeyListener(options.keyCancel) { onQuit() })
     }
-    var background = Image(backgroundTexture).apply {
-        zIndex = 0
-        setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
-        st.addActor(this)
-    }
     override var state: ScreenState = ScreenState.HIDDEN
+
+    init {
+        val background = Image(backgroundTexture)
+        background.zIndex = 0
+        background.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
+        st.addActor(background)
+    }
 
     override fun render(delta: Float) {
         st.act(delta)
@@ -65,7 +67,7 @@ open class BasicScreen(
     }
 
     override fun hide() {
-        state = ScreenState.HIDDEN;
+        state = ScreenState.HIDDEN
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
@@ -93,7 +95,7 @@ open class BasicScreen(
     }
 
     open fun onQuit() {
-        SE.play("cancel");
+        SE.play("cancel")
     }
 
 }

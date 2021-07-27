@@ -46,6 +46,7 @@ object SystemFlag {
     var redirectDuration: Float? = null
     var gamemode: GameMode? = null
     var difficulty: GameDifficulty? = null
+    var player: String? = null
 }
 
 val json = Json().apply {
@@ -85,12 +86,6 @@ fun restartApp() {
     Gdx.app.exit()
 }
 
-fun initAll() {
-    initA()
-    BGM.init()
-    SE.init()
-}
-
 fun loadOptions() {
     options = app.callbacks.getOptions()
 }
@@ -125,8 +120,20 @@ operator fun Color.timesAssign(other: Color) {
     mul(other)
 }
 
-fun darken(color: Color, factor: Float = 0.5f) = if (Config.useHSVShader) {
+fun darken(color: Color, factor: Float = 0.5f): Color = if (Config.useHSVShader) {
     color.cpy().mul(1.0f, 1.0f, factor, 1.0f)
 } else {
     color.cpy().mul(factor, factor, factor, 1.0f)
+}
+
+val tmpHSVArray = FloatArray(3)
+
+fun Color.getHue(): Float {
+    toHsv(tmpHSVArray)
+    return tmpHSVArray[0] / 360f
+}
+
+fun Color.toHSVColor(): Color {
+    toHsv(tmpHSVArray)
+    return Color(tmpHSVArray[0] / 360f, tmpHSVArray[1], tmpHSVArray[2], a)
 }
