@@ -98,7 +98,13 @@ object Config {
     const val noDuplicateSE = true
     lateinit var UIFont: String
     val UIFontColor: Color = Color.WHITE
-    const val UIFontBorderWidth = 3f
+    val UIFontBorderWidthFunction: ((Int) -> Float) = { fontSize: Int ->
+        if (fontSize <= 36) {
+            fontSize * 0.1f
+        } else {
+            (fontSize - 36) * 0.02f + 3.6f
+        }
+    }
     val UIFontBorderColor: Color = Color.BLACK
     const val debugActorLayout = false
 }

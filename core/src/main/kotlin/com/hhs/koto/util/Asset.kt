@@ -92,7 +92,7 @@ fun getFont(
     name: String,
     size: Int,
     color: Color = Config.UIFontColor,
-    borderWidth: Float = Config.UIFontBorderWidth,
+    borderWidth: Float = Config.UIFontBorderWidthFunction(size),
     borderColor: Color? = Config.UIFontColor,
     borderOutside: Boolean = true
 ): BitmapFont {
@@ -230,7 +230,7 @@ fun getUILabelStyle(fontSize: Int): LabelStyle {
     return LabelStyle(
         getFont(
             Config.UIFont, fontSize, Config.UIFontColor,
-            Config.UIFontBorderWidth, Config.UIFontBorderColor
+            Config.UIFontBorderWidthFunction(fontSize), Config.UIFontBorderColor
         ), Color.WHITE
     )
 }
