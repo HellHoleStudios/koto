@@ -34,6 +34,7 @@ import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
+import ktx.actors.plusAssign
 import ktx.actors.txt
 
 class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
@@ -52,7 +53,7 @@ class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
         wrap = true
         txt = bundle["music.1.comment"]
         setBounds(120f, 100f, 1200f, 300f)
-        st.addActor(this)
+        st += this
     }
 
     init {

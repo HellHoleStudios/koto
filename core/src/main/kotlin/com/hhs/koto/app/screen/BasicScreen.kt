@@ -33,6 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.*
+import ktx.actors.plusAssign
 
 
 open class BasicScreen(
@@ -54,7 +55,7 @@ open class BasicScreen(
         val background = Image(backgroundTexture)
         background.zIndex = 0
         background.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
-        st.addActor(background)
+        st += background
     }
 
     override fun render(delta: Float) {

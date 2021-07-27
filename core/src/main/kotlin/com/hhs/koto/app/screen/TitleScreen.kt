@@ -36,23 +36,24 @@ import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
+import ktx.actors.plusAssign
 
 class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
-    private val grid = Grid().register(st,input)
-    private val titles = Group().apply { st.addActor(this) }
+    private val grid = Grid().register(st, input)
+    private val titles = Group().apply { st += this }
     private val title = Label(
         "Koto Demonstration",
         LabelStyle(getFont(bundle["font.boldRegular"], 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
     ).apply {
         setPosition(80f, 860f)
-        titles.addActor(this)
+        titles += this
     }
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
         LabelStyle(getFont(bundle["font.regularItalic"], 36, Color.WHITE, borderColor = null), Color.BLACK),
     ).apply {
         setPosition(100f, 820f)
-        titles.addActor(this)
+        titles += this
     }
 
     init {

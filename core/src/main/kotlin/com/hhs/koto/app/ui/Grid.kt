@@ -35,6 +35,7 @@ import com.hhs.koto.util.SE
 import com.hhs.koto.util.matchKey
 import com.hhs.koto.util.options
 import com.hhs.koto.util.safeIterator
+import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import kotlin.math.abs
 
@@ -361,13 +362,13 @@ open class Grid(
 }
 
 fun <T : Grid> T.register(st: Stage, input: InputMultiplexer): T {
-    st.addActor(this)
+    st += this
     input.addProcessor(this)
     return this
 }
 
 fun <T : Grid> T.register(group: Group, input: InputMultiplexer): T {
-    group.addActor(this)
+    group += this
     input.addProcessor(this)
     return this
 }

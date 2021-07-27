@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
+import ktx.actors.plusAssign
 import ktx.app.clearScreen
 import ktx.async.KtxAsync
 import ktx.collections.GdxMap
@@ -88,7 +89,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         Gdx.input.inputProcessor = input
 
         fps = FPSDisplay()
-        st.addActor(fps)
+        st += fps
 
         SE.register("cancel", "snd/se_cancel00.wav")
         SE.register("invalid", "snd/se_invalid.wav")

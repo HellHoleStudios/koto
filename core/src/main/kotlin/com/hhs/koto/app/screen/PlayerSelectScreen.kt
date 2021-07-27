@@ -37,6 +37,7 @@ import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 import ktx.actors.alpha
+import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 
 class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
@@ -45,14 +46,14 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
     private val descriptions = Grid().register(st, input)
 
     private val shotType = Group().apply {
-        st.addActor(this)
+        st += this
         alpha = 0f
     }
     private val shotTypeBackground = Image(getRegion("ui/bg.png")).apply {
         setSize(850f, 250f)
-        shotType.addActor(this)
+        shotType += this
     }
-    private val shotTypeGrid = Grid().apply { shotType.addActor(this) }
+    private val shotTypeGrid = Grid().apply { shotType += this }
 
     private var switchTarget: String? = null
     var selectedPlayer: String? = null
@@ -236,7 +237,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
         difficultyLabel?.remove()
         difficultyLabel = DifficultySelectScreen.generateButton(SystemFlag.difficulty!!, 0, 0)
-        st.addActor(difficultyLabel)
+        st += difficultyLabel!!
         difficultyLabel!!.staticX = 150f
         difficultyLabel!!.staticY = 50f
         difficultyLabel!!.setScale(0.5f)
