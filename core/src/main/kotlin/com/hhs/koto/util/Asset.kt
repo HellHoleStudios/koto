@@ -53,6 +53,7 @@ import ktx.collections.GdxMap
 import ktx.collections.contains
 import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.json.fromJson
+import kotlin.math.nextUp
 
 lateinit var A: AssetManager
 private lateinit var textureReflect: GdxMap<Texture, String>
@@ -93,7 +94,7 @@ fun getFont(
     size: Int,
     color: Color = Config.UIFontColor,
     borderWidth: Float = Config.UIFontBorderWidthFunction(size),
-    borderColor: Color? = Config.UIFontColor,
+    borderColor: Color? = Config.UIFontBorderColor,
     borderOutside: Boolean = true
 ): BitmapFont {
     val parameter = FreeTypeFontParameter()
@@ -103,8 +104,8 @@ fun getFont(
         parameter.borderWidth = borderWidth
         parameter.borderColor = borderColor
         if (borderOutside) {
-            parameter.spaceX = -borderWidth.toInt()
-            parameter.spaceY = -borderWidth.toInt()
+            parameter.spaceX -= borderWidth.nextUp().toInt()
+            parameter.spaceY -= borderWidth.nextUp().toInt()
         }
     }
     parameter.characters = charset

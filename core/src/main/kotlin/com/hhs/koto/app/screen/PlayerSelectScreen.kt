@@ -352,7 +352,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                     24,
                     0,
                     i,
-                    staticX = 150f,
+                    staticX = 100f,
                     staticY = baseY - i * 250f - 170f,
                     height = 150f,
                     triggerSound = null,
