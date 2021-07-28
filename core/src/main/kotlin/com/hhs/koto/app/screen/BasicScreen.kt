@@ -40,7 +40,8 @@ open class BasicScreen(
     private val backgroundMusic: String? = "",
     backgroundTexture: TextureRegion? = null,
 ) : KotoScreen {
-    private val blocker = InputBlocker()
+    val blocker = InputBlocker()
+    lateinit var background: Image
     val st = Stage(app.viewport, app.batch).apply {
         isDebugAll = Config.debugActorLayout
     }
@@ -53,7 +54,7 @@ open class BasicScreen(
 
     init {
         if (backgroundTexture != null) {
-            val background = Image(backgroundTexture)
+            background = Image(backgroundTexture)
             background.zIndex = 0
             background.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
             st += background

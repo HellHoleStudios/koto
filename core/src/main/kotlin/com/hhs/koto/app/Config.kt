@@ -67,35 +67,37 @@ data class Options(
 )
 
 object Config {
-    var logLevel = Logger.DEBUG
-    const val useHSVShader = true
-    val textureMinFilter = TextureFilter.MipMapLinearLinear
-    val textureMagFilter = TextureFilter.Linear
-    const val genMipMaps = true
-    const val windowTitle = "Koto"
-    const val screenWidth = 1440f
-    const val screenHeight = 1080f
-    const val frameWidth = 864
-    const val frameHeight = 1008
-    const val frameOffsetX = 72f
-    const val frameOffsetY = 36f
-    const val allowFullScreen = true
-    const val allowResize = true
+    var logLevel: Int = Logger.DEBUG
+    const val useHSVShader: Boolean = true
+    val textureMinFilter: TextureFilter = TextureFilter.MipMapLinearLinear
+    val textureMagFilter: TextureFilter = TextureFilter.Linear
+    const val genMipMaps: Boolean = true
+    const val windowTitle: String = "Koto"
+    const val screenWidth: Float = 1440f
+    const val screenHeight: Float = 1080f
+    const val frameWidth: Float = 864f
+    const val frameHeight: Float = 1008f
+    const val frameOffsetX: Float = 72f
+    const val frameOffsetY: Float = 36f
+    const val allowFullScreen: Boolean = true
+    const val allowResize: Boolean = true
     val windowScaling: Scaling = Scaling.fit
-    const val defaultBlending = "ALPHA"
-    const val w = 384f
-    const val h = 448f
-    const val originX = w / 2
-    const val originY = h
-    const val deleteDistance = 1024f
-    const val safeDistance = 16f
-    const val orthoCircleCollision = true
-    const val cleanupBulletCount = 8192
-    const val cleanupBlankCount = 512
-    const val defaultShotSheet = "default_shot.shot"
-    const val allowSpeedUpOutOfReplay = true
-    const val musicCount = 1
-    const val noDuplicateSE = true
+    const val defaultBlending: String = "ALPHA"
+    const val fw: Int = 864
+    const val fh: Int = 1008
+    const val w: Float = 384f
+    const val h: Float = 448f
+    const val originX: Float = w / 2
+    const val originY: Float = h / 2
+    const val deleteDistance: Float = 1024f
+    const val safeDistance: Float = 16f
+    const val orthoCircleCollision: Boolean = true
+    const val cleanupBulletCount: Int = 8192
+    const val cleanupBlankCount: Int = 512
+    const val defaultShotSheet: String = "default_shot.shot"
+    const val allowSpeedUpOutOfReplay: Boolean = true
+    const val musicCount: Int = 1
+    const val noDuplicateSE: Boolean = true
     lateinit var UIFont: String
     val UIFontColor: Color = Color.WHITE
     val UIFontBorderWidthFunction: ((Int) -> Float) = { fontSize: Int ->
@@ -106,5 +108,5 @@ object Config {
         }
     }
     val UIFontBorderColor: Color = Color.BLACK
-    const val debugActorLayout = false
+    const val debugActorLayout: Boolean = false
 }

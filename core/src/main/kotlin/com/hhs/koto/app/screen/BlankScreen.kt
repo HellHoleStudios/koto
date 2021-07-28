@@ -25,15 +25,24 @@
 
 package com.hhs.koto.app.screen
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.app
 import com.hhs.koto.util.getRegion
 
-class BlankScreen : BasicScreen(null, getRegion("bg/blank.png")) {
+class BlankScreen : BasicScreen(null, getRegion("ui/blank.png")) {
+
+    init {
+        background.color = Color.BLACK
+    }
+
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
+        app.input.addProcessor(input)
+        blocker.isBlocking = false
         state = ScreenState.FADING_IN
         show()
+        st.root.clearActions()
         st.root.color.a = 1f
         st.root.addAction(Actions.sequence(Actions.delay(duration), Actions.run {
             state = ScreenState.SHOWN
@@ -47,5 +56,9 @@ class BlankScreen : BasicScreen(null, getRegion("bg/blank.png")) {
                 SystemFlag.redirect = null
             }
         }))
+    }
+
+    override fun onQuit() {
+
     }
 }

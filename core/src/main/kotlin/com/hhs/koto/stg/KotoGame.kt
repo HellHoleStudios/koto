@@ -25,12 +25,49 @@
 
 package com.hhs.koto.stg
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.Config
+import com.hhs.koto.stg.task.ParallelTask
+import ktx.app.clearScreen
+import java.lang.Float.min
 
 class KotoGame {
-    val fbo = FrameBuffer(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight, false)
-    val fboTextureRegion = TextureRegion(fbo.colorBufferTexture)
+    val fbo = FrameBuffer(Pixmap.Format.RGBA8888, Config.fw, Config.fh, false)
+    val fboTextureRegion = TextureRegion(fbo.colorBufferTexture).apply {
+        flip(false, true)
+    }
+    val tasks = ParallelTask()
+    val cam = OrthographicCamera().apply {
+        position.x = Config.w / 2f - Config.originX
+        position.y = Config.h / 2f - Config.originY
+        zoom = min(Config.w / Config.fw, Config.h / Config.fh)
+    }
+    val stage = Stage().apply {
+        viewport.worldWidth = fbo.width.toFloat()
+        viewport.worldHeight = fbo.height.toFloat()
+        viewport.camera = cam
+        viewport.update(fbo.width, fbo.height)
+    }
+
+    fun update() {
+        tasks.update()
+        stage.act(1f)
+    }
+
+    fun draw(appViewport: Viewport) {
+        stage.viewport.apply()
+
+        fbo.begin()
+        clearScreen(0f, 0f, 0f, 1f)
+        stage.draw()
+        fbo.end()
+
+        appViewport.apply()
+    }
 }

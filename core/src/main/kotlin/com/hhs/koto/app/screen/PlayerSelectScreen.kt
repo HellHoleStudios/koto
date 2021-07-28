@@ -235,71 +235,75 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
 
-        difficultyLabel?.remove()
-        difficultyLabel = DifficultySelectScreen.generateButton(SystemFlag.difficulty!!, 0, 0)
-        st += difficultyLabel!!
-        difficultyLabel!!.staticX = 150f
-        difficultyLabel!!.staticY = 50f
-        difficultyLabel!!.setScale(0.5f)
-        difficultyLabel!!.clearActions()
-        difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 300f)
-        difficultyLabel!!.addAction(
-            Actions.moveTo(
-                difficultyLabel!!.staticX,
-                difficultyLabel!!.staticY,
-                duration,
-                Interpolation.pow5Out
+        if (selectedPlayer == null) {
+            difficultyLabel?.remove()
+            difficultyLabel = DifficultySelectScreen.generateButton(SystemFlag.difficulty!!, 0, 0)
+            st += difficultyLabel!!
+            difficultyLabel!!.staticX = 150f
+            difficultyLabel!!.staticY = 50f
+            difficultyLabel!!.setScale(0.5f)
+            difficultyLabel!!.clearActions()
+            difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 300f)
+            difficultyLabel!!.addAction(
+                Actions.moveTo(
+                    difficultyLabel!!.staticX,
+                    difficultyLabel!!.staticY,
+                    duration,
+                    Interpolation.pow5Out
+                )
             )
-        )
 
-        portraits.clearActions()
-        portraits.setPosition(portraits.staticX + 800f, portraits.staticY)
-        portraits.addAction(Actions.moveTo(portraits.staticX, portraits.staticY, duration, Interpolation.pow5Out))
+            portraits.clearActions()
+            portraits.setPosition(portraits.staticX + 800f, portraits.staticY)
+            portraits.addAction(Actions.moveTo(portraits.staticX, portraits.staticY, duration, Interpolation.pow5Out))
 
-        descriptions.clearActions()
-        descriptions.setPosition(descriptions.staticX - 800f, descriptions.staticY)
-        descriptions.addAction(
-            Actions.moveTo(
-                descriptions.staticX,
-                descriptions.staticY,
-                duration,
-                Interpolation.pow5Out
+            descriptions.clearActions()
+            descriptions.setPosition(descriptions.staticX - 800f, descriptions.staticY)
+            descriptions.addAction(
+                Actions.moveTo(
+                    descriptions.staticX,
+                    descriptions.staticY,
+                    duration,
+                    Interpolation.pow5Out
+                )
             )
-        )
+        }
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
 
-        difficultyLabel!!.clearActions()
-        difficultyLabel!!.addAction(
-            Actions.moveTo(
-                difficultyLabel!!.staticX,
-                difficultyLabel!!.staticY - 300f,
-                duration,
-                Interpolation.pow5Out
+        if (selectedPlayer == null) {
+            difficultyLabel!!.clearActions()
+            difficultyLabel!!.addAction(
+                Actions.moveTo(
+                    difficultyLabel!!.staticX,
+                    difficultyLabel!!.staticY - 300f,
+                    duration,
+                    Interpolation.pow5Out
+                )
             )
-        )
 
-        portraits.clearActions()
-        portraits.addAction(
-            Actions.moveTo(
-                portraits.staticX + 800f,
-                portraits.staticY,
-                duration,
-                Interpolation.pow5Out
+            portraits.clearActions()
+            portraits.addAction(
+                Actions.moveTo(
+                    portraits.staticX + 800f,
+                    portraits.staticY,
+                    duration,
+                    Interpolation.pow5Out
+                )
             )
-        )
 
-        descriptions.clearActions()
-        descriptions.addAction(
-            Actions.moveTo(
-                descriptions.staticX - 800f,
-                descriptions.staticY,
-                duration,
-                Interpolation.pow5Out
+            descriptions.clearActions()
+            descriptions.addAction(
+                Actions.moveTo(
+                    descriptions.staticX - 800f,
+                    descriptions.staticY,
+                    duration,
+                    Interpolation.pow5Out
+                )
             )
-        )
+        }
     }
 
     private fun showShotType(name: String, shotTypes: GdxArray<String>) {
@@ -378,8 +382,8 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
     private fun switch() {
         if (switchTarget == "game") {
             SystemFlag.redirect = switchTarget
-            SystemFlag.redirectDuration = 1f
-            app.setScreen("blank", 1f)
+            SystemFlag.redirectDuration = 0.5f
+            app.setScreen("blank", 0.5f)
         } else {
             app.setScreen(switchTarget, 1f)
         }

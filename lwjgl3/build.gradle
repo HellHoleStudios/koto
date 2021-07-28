@@ -7,10 +7,10 @@ sourceCompatibility = 8.0
 
 dependencies {
 	implementation project(':core')
-	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-	implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-	implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+	api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+	api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
 }
 
 import org.gradle.internal.os.OperatingSystem
