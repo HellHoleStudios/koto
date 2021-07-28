@@ -31,7 +31,6 @@ import com.hhs.koto.app.Config
 import ktx.collections.GdxMap
 
 object BGM {
-
     private var bgm: LoopingMusic? = null
     private val bgms = GdxMap<String, LoopingMusic>()
     val logger = Logger("BGM", Config.logLevel)

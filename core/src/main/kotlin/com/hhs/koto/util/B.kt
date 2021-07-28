@@ -28,7 +28,6 @@ package com.hhs.koto.util
 import com.hhs.koto.stg.shot.BulletData
 import com.hhs.koto.stg.shot.ShotSheet
 
-
 object B {
     var defaultSheet: ShotSheet? = null
 
@@ -48,6 +47,7 @@ object B {
     operator fun get(name: String): BulletData {
         return defaultSheet!!.findBullet(name)
     }
+}
 
 //    TODO B
 //    fun setAngleSpeed(bullet: Bullet, x: Float, y: Float, angle: Float, speed: Float): Bullet {
@@ -84,4 +84,3 @@ object B {
 //    fun towards(x: Float, y: Float, speed: Float, name: String?, tag: Int): Bullet {
 //        return towards(x, y, speed, defaultSheet!!.getId(name!!), tag)
 //    }
-}
