@@ -37,8 +37,8 @@ import ktx.actors.plusAssign
 
 
 open class BasicScreen(
-    private val backgroundMusic: String?,
-    backgroundTexture: TextureRegion,
+    private val backgroundMusic: String? = "",
+    backgroundTexture: TextureRegion? = null,
 ) : KotoScreen {
     private val blocker = InputBlocker()
     val st = Stage(app.viewport, app.batch).apply {
@@ -52,10 +52,12 @@ open class BasicScreen(
     override var state: ScreenState = ScreenState.HIDDEN
 
     init {
-        val background = Image(backgroundTexture)
-        background.zIndex = 0
-        background.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
-        st += background
+        if (backgroundTexture != null) {
+            val background = Image(backgroundTexture)
+            background.zIndex = 0
+            background.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
+            st += background
+        }
     }
 
     override fun render(delta: Float) {

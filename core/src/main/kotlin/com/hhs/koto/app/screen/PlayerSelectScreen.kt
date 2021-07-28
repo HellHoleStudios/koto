@@ -88,7 +88,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             ) {
                 if (shotTypes.size == 0) {
                     SystemFlag.player = name
-                    app.setScreen("game", 1f)
+                    screen.switch()
                 } else {
                     screen.selectedPlayer = name
                     screen.showShotType(name, shotTypes)
@@ -329,7 +329,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                     staticY = baseY - i * 250f,
                 ) {
                     SystemFlag.player = shotTypes[i]
-                    app.setScreen(switchTarget, 1f)
+                    switch()
                 }.apply {
                     activeAction = getActiveAction({
                         Actions.run {
@@ -373,6 +373,16 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         descriptions.addAction(Actions.fadeIn(0.5f, Interpolation.pow5Out))
         input.addProcessor(descriptions)
         input.addProcessor(portraits)
+    }
+
+    private fun switch() {
+        if (switchTarget == "game") {
+            SystemFlag.redirect = switchTarget
+            SystemFlag.redirectDuration = 1f
+            app.setScreen("blank", 1f)
+        } else {
+            app.setScreen(switchTarget, 1f)
+        }
     }
 
     override fun onQuit() {

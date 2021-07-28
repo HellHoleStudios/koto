@@ -25,8 +25,11 @@
 
 package com.hhs.koto.util
 
+import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.shot.BulletData
 import com.hhs.koto.stg.shot.ShotSheet
+
+lateinit var game: KotoGame
 
 object B {
     var defaultSheet: ShotSheet? = null
