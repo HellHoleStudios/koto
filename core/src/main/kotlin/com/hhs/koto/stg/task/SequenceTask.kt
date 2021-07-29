@@ -38,10 +38,11 @@ class SequenceTask(vararg task: Task) : Task {
         tasks.shrink()
     }
 
-    override fun update() {
+    override fun tick() {
         while (currentTask < tasks.size) {
-            tasks[currentTask].update()
+            tasks[currentTask].tick()
             if (tasks[currentTask].isComplete) {
+                tasks[currentTask] = null
                 currentTask++
             } else {
                 break

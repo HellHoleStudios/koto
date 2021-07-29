@@ -25,23 +25,20 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.Array.with
-import com.badlogic.gdx.utils.FloatArray.with
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.task.ParallelTask
+import com.hhs.koto.util.keyPressed
 import com.hhs.koto.util.options
 import ktx.app.clearScreen
-import ktx.collections.GdxArray
 import java.lang.Float.min
 
-class KotoGame {
+class KotoGame(private val appViewport: Viewport) {
     val fbo = FrameBuffer(Pixmap.Format.RGBA8888, Config.fw, Config.fh, false)
     val fboTextureRegion = TextureRegion(fbo.colorBufferTexture).apply {
         flip(false, true)
@@ -63,10 +60,15 @@ class KotoGame {
     private val frameScheduler = FrameScheduler(this)
 
     fun update() {
+        speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
+            options.speedUpMultiplier
+        } else {
+            1
+        }
         frameScheduler.update()
     }
 
-    fun draw(appViewport: Viewport) {
+    fun draw() {
         stage.viewport.apply()
 
         fbo.begin()

@@ -25,36 +25,59 @@
 
 package com.hhs.koto.stg.task
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
-import ktx.async.KtxAsync
+import kotlinx.coroutines.*
+import ktx.collections.GdxMap
+import ktx.collections.set
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
 class CoroutineTask(block: suspend CoroutineScope.() -> Unit) : Task {
+    companion object {
+        val scope = CoroutineScope(CoroutineTaskDispatcher)
+    }
+
+    object CoroutineTaskDispatcher : MainCoroutineDispatcher() {
+        override val immediate: MainCoroutineDispatcher = this
+        private val map = GdxMap<CoroutineContext, Runnable>()
+
+        fun tick(job: Job) {
+            map[job].run()
+        }
+
+        fun remove(job: Job) {
+            map.remove(job)
+        }
+
+        override fun dispatch(context: CoroutineContext, block: Runnable) {
+            map[context.job] = block
+        }
+    }
+
+    class FrameCounterElement : AbstractCoroutineContextElement(FrameCounterElement) {
+        companion object Key : CoroutineContext.Key<FrameCounterElement>
+
+        var frame: Int = 0
+    }
+
     private val frameCounter = FrameCounterElement()
-    private val job = KtxAsync.launch(frameCounter, block = block)
+    private val job = scope.launch(frameCounter, block = block)
     override val isComplete: Boolean
         get() = job.isCompleted
 
-    override fun update() {
-        job.start()
+    override fun tick() {
+        CoroutineTaskDispatcher.tick(job.job)
+        if (isComplete) {
+            CoroutineTaskDispatcher.remove(job.job)
+        }
         frameCounter.frame++
     }
 }
 
-class FrameCounterElement : AbstractCoroutineContextElement(FrameCounterElement) {
-    companion object Key : CoroutineContext.Key<FrameCounterElement>
-
-    var frame: Int = 0
-}
-
 val CoroutineScope.frame: Int
-    get() = coroutineContext[FrameCounterElement]!!.frame
+    get() = coroutineContext[CoroutineTask.FrameCounterElement]!!.frame
 
-suspend fun wait(frameCount:Int){
-    repeat(frameCount){
+suspend fun wait(frameCount: Int) {
+    repeat(frameCount) {
         yield()
     }
 }

@@ -37,14 +37,16 @@ class ParallelTask(vararg task: Task) : Task {
         tasks.shrink()
     }
 
-    override fun update() {
-        isComplete = true
-        tasks.forEach {
-            if (!it.isComplete) {
-                it.update()
-                if (!it.isComplete) isComplete = false
+    override fun tick() {
+        for (i in 0 until tasks.size) {
+            tasks[i].tick()
+            while (tasks[i].isComplete) {
+                tasks[i] = null
+                tasks[i] = tasks.pop()
+                tasks[i].tick()
             }
         }
+        isComplete = tasks.size > 0
     }
 
     fun addTask(vararg task: Task) {

@@ -30,13 +30,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.KotoGame
-import com.hhs.koto.util.*
+import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.util.SystemFlag
+import com.hhs.koto.util.app
+import com.hhs.koto.util.game
+import com.hhs.koto.util.getRegion
+import kotlinx.coroutines.yield
 import ktx.actors.plusAssign
 import ktx.actors.then
 
 class GameScreen : BasicScreen(null, null) {
     init {
-        game = KotoGame()
+        game = KotoGame(st.viewport)
         val gameFrame = Image(game.fboTextureRegion)
         gameFrame.setBounds(
             Config.frameOffsetX, Config.frameOffsetY,
@@ -48,24 +53,38 @@ class GameScreen : BasicScreen(null, null) {
         st += gameBackground
 
         game.stage += Image(getRegion("ui/blank.png")).apply {
-            setBounds(-10f, -10f, 20f, 20f)
+            setBounds(-10f, -150f, 20f, 20f)
             addAction(
                 Actions.forever(
-                    Actions.moveTo(-10f, 20f, 30f)
-                            then Actions.moveTo(-10f, -10f, 30f)
+                    Actions.moveTo(-10f, 150f, 30f)
+                            then Actions.moveTo(-10f, -150f, 30f)
                 )
             )
         }
+
+        game.stage += Image(getRegion("ui/blank.png")).apply {
+            setBounds(20f, -150f, 20f, 20f)
+        }
+
+        game.tasks.addTask(CoroutineTask {
+            while (true) {
+                var f = 0
+                repeat(30) {
+                    game.stage.actors[1].y = -150 + f * 10f
+                    f++
+                    yield()
+                }
+                repeat(30) {
+                    game.stage.actors[1].y = -150 + f * 10f
+                    f--
+                    yield()
+                }
+            }
+        })
     }
 
     override fun render(delta: Float) {
-        if (keyPressed(options.keySpeedUp)) {
-            game.speedUpMultiplier = options.speedUpMultiplier
-        } else {
-            game.speedUpMultiplier = 1
-        }
         game.update()
-        game.draw(st.viewport)
         super.render(delta)
     }
 

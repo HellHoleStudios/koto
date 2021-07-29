@@ -58,7 +58,5 @@ class BlankScreen : BasicScreen(null, getRegion("ui/blank.png")) {
         }))
     }
 
-    override fun onQuit() {
-
-    }
+    override fun onQuit() = Unit
 }

@@ -26,13 +26,168 @@
 package com.hhs.koto.stg
 
 import com.hhs.koto.util.options
+import ktx.collections.GdxArray
 
 class FrameScheduler(private val game: KotoGame) {
     private var subFrame: Int = 0
-    private var actUpdateFactor1: Int = 0
-    private var actUpdateFactor2: Int = 0
+    lateinit var arrangement: GdxArray<Int>
+    private var actUpdateFactor: Int = 0
+    private var actUpdateCount: Int = 0
     private var actDelta1 = Pair(1f, 0f)
     private var actDelta2 = Pair(1f, 0f)
+    private var cleanSpeedMul: Int = 0
+
+    fun update() {
+        val fpsMul = options.fpsMultiplier
+        if (fpsMul > 1) {
+            if (subFrame == 0 && game.speedUpMultiplier != cleanSpeedMul) {
+                cleanSpeedMul = game.speedUpMultiplier
+                if (cleanSpeedMul < fpsMul) {
+                    calculateA()
+                } else {
+                    calculateB()
+                }
+            }
+            if (cleanSpeedMul < fpsMul) {
+                updateA()
+            } else {
+                updateB()
+            }
+            subFrame = (subFrame + 1) % fpsMul
+        } else {
+            repeat(
+                if (fpsMul < 0) {
+                    game.speedUpMultiplier * -fpsMul
+                } else {
+                    game.speedUpMultiplier
+                } - 1
+            ) {
+                tick()
+                act(1f)
+            }
+            tick()
+            draw()
+            act(1f)
+        }
+    }
+
+    // fpsMul higher than speedMul
+    private fun calculateA() {
+        val fpsMul = options.fpsMultiplier
+        val speedMul = cleanSpeedMul
+
+        actUpdateCount = fpsMul / speedMul
+        actUpdateFactor = fpsMul % speedMul
+
+        arrangement = GdxArray()
+        arrange(actUpdateFactor, speedMul).forEach {
+            if (it) {
+                arrangement.add(0)
+                repeat(actUpdateCount) {
+                    arrangement.add(1)
+                }
+            } else {
+                arrangement.add(2)
+                repeat(actUpdateCount - 1) {
+                    arrangement.add(3)
+                }
+            }
+        }
+
+        actDelta1 = calculateDelta(actUpdateCount + 1)
+        actDelta2 = calculateDelta(actUpdateCount)
+
+        cleanSpeedMul = speedMul
+    }
+
+    private fun updateA() {
+        when (arrangement[subFrame]) {
+            0 -> {
+                tick()
+                draw()
+                act(actDelta1.first)
+            }
+            1 -> {
+                draw()
+                act(actDelta1.second)
+            }
+            2 -> {
+                tick()
+                draw()
+                act(actDelta2.first)
+            }
+            3 -> {
+                draw()
+                act(actDelta2.second)
+            }
+        }
+    }
+
+    // speedMul higher than fpsMul
+    private fun calculateB() {
+        val fpsMul = options.fpsMultiplier
+        val speedMul = cleanSpeedMul
+
+        actUpdateCount = speedMul / fpsMul
+        actUpdateFactor = speedMul % fpsMul
+
+        arrangement = GdxArray()
+        arrange(actUpdateFactor, fpsMul).forEach {
+            arrangement.add(
+                if (it) {
+                    0
+                } else {
+                    1
+                }
+            )
+        }
+    }
+
+    private fun updateB() {
+        repeat(
+            if (arrangement[subFrame] == 0) {
+                actUpdateCount
+            } else {
+                actUpdateCount - 1
+            }
+        ) {
+            tick()
+            act(1f)
+        }
+        tick()
+        draw()
+        act(1f)
+    }
+
+    // arrange [n] elements with [factor] majors
+    private fun arrange(factor: Int, n: Int): GdxArray<Boolean> {
+        if (factor <= n / 2) {
+            val result = GdxArray<Boolean>()
+            if (factor == 0) {
+                repeat(n) {
+                    result.add(false)
+                }
+                return result
+            }
+            val k = n / factor
+            repeat(factor) {
+                result.add(true)
+                repeat(k - 1) {
+                    result.add(false)
+                }
+            }
+            repeat(n - result.size) {
+                result.add(false)
+            }
+            return result
+        } else {
+            val result = arrange(n - factor, n)
+            for (i in 0 until result.size) {
+                result[i] = !result[i]
+            }
+            return result
+        }
+    }
 
     private fun calculateDelta(n: Int): Pair<Float, Float> {
         val deltaSmall: Float = 1f / n
@@ -40,67 +195,22 @@ class FrameScheduler(private val game: KotoGame) {
         repeat(n - 1) {
             sumDelta += deltaSmall
         }
-        return Pair(deltaSmall, 1f - sumDelta)
+        return Pair(1f - sumDelta + 1e-6f, deltaSmall)
     }
 
-    fun update() {
-        val fpsMul = options.fpsMultiplier
-        val speedMul = game.speedUpMultiplier
-        if (fpsMul > 1) {
-            if (speedMul < fpsMul) {
-                if (subFrame == 0) {
-                    actUpdateFactor2 = fpsMul / speedMul
-                    actUpdateFactor1 = fpsMul % speedMul + actUpdateFactor2
+    private fun tick() {
+//        print("t")
+        game.tasks.tick()
+        game.frame++
+    }
 
-                    actDelta1 = calculateDelta(actUpdateFactor1)
-                    actDelta2 = calculateDelta(actUpdateFactor2)
-                }
-                if (subFrame < actUpdateFactor1) {
-                    if (subFrame == 0) {
-                        game.tasks.update()
-                        game.stage.act(actDelta1.first)
-                        game.frame++
-                    } else {
-                        game.stage.act(actDelta1.second)
-                    }
-                } else {
-                    if ((subFrame - actUpdateFactor1) % actUpdateFactor2 == 0) {
-                        game.tasks.update()
-                        game.stage.act(actDelta2.first)
-                        game.frame++
-                    } else {
-                        game.stage.act(actDelta2.second)
-                    }
-                }
-            } else {
-                if (subFrame == 0) {
-                    actUpdateFactor1 = speedMul % fpsMul
-                    actUpdateFactor2 = speedMul / fpsMul
-                }
-                repeat(
-                    if (subFrame < actUpdateFactor1) {
-                        actUpdateFactor2 + 1
-                    } else {
-                        actUpdateFactor2
-                    }
-                ) {
-                    game.tasks.update()
-                    game.stage.act(1f)
-                    game.frame++
-                }
-            }
-            subFrame = (subFrame + 1) % fpsMul
-        } else {
-            val repeatCount = if (fpsMul < 0) {
-                speedMul * -fpsMul
-            } else {
-                speedMul
-            }
-            repeat(repeatCount) {
-                game.tasks.update()
-                game.stage.act(1f)
-                game.frame++
-            }
-        }
+    private fun act(delta: Float) {
+//        print("a($delta)")
+        game.stage.act(delta)
+    }
+
+    private fun draw() {
+//        print("d")
+        game.draw()
     }
 }

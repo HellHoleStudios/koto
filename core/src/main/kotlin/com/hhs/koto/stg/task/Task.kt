@@ -26,6 +26,6 @@
 package com.hhs.koto.stg.task
 
 interface Task {
-    fun update()
+    fun tick()
     val isComplete: Boolean
 }
