@@ -69,7 +69,7 @@ object BGM {
 
     fun stop() {
         if (bgm != null) {
-            logger.debug("Stopping \"$bgm.name\".")
+            logger.debug("Stopping \"${bgm!!.name}\".")
             bgm!!.stop()
             bgm = null
         }
