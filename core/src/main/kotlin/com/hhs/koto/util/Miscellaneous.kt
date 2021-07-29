@@ -111,6 +111,17 @@ fun saveOptions() {
     app.callbacks.saveOptions(options)
 }
 
+fun <T> GdxArray<T>.removeNull() {
+    var j = 0
+    for (i in 0 until size) {
+        if (this[i] != null) {
+            this[j] = this[i]
+            j++
+        }
+    }
+    truncate(j)
+}
+
 fun <Type> GdxArray<Type>.safeIterator() = Array.ArrayIterator(this)
 
 fun <K, V> GdxMap<K, V>.safeEntries() = ObjectMap.Entries(this)

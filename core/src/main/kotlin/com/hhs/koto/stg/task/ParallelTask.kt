@@ -26,6 +26,7 @@
 package com.hhs.koto.stg.task
 
 import com.hhs.koto.util.app
+import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
 class ParallelTask(vararg task: Task) : Task {
@@ -40,13 +41,12 @@ class ParallelTask(vararg task: Task) : Task {
     override fun tick() {
         for (i in 0 until tasks.size) {
             tasks[i].tick()
-            while (tasks[i].isComplete) {
+            if (tasks[i].isComplete) {
                 tasks[i] = null
-                tasks[i] = tasks.pop()
-                tasks[i].tick()
             }
         }
-        isComplete = tasks.size > 0
+        tasks.removeNull()
+        isComplete = tasks.size == 0
     }
 
     fun addTask(vararg task: Task) {
