@@ -44,8 +44,8 @@ open class ConstrainedGrid(
     protected val interpolation: Interpolation = Interpolation.linear,
     staticX: Float = 0f,
     staticY: Float = 0f,
-    height: Float = 0f,
     width: Float = 0f,
+    height: Float = 0f,
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
 ) : Grid(gridX, gridY, cycle, staticX, staticY, width, height, activeAction, inactiveAction) {

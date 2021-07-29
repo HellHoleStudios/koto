@@ -28,6 +28,9 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.app.Config
+import com.hhs.koto.app.ui.Grid
+import com.hhs.koto.app.ui.YesNoMenu
+import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.task.CoroutineTask
@@ -36,6 +39,7 @@ import com.hhs.koto.util.app
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 import kotlinx.coroutines.yield
+import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.actors.then
 
@@ -81,6 +85,15 @@ class GameScreen : BasicScreen(null, null) {
                 }
             }
         })
+    }
+
+    val pauseMenu = Grid(staticX = 200f, staticY = 300f).apply {
+        alpha = 0f
+        deactivate()
+    }
+    val yesNoMenu = YesNoMenu({}, {}, staticX = 650f, staticY = 400f).register(st).apply {
+        alpha = 0f
+        deactivate()
     }
 
     override fun render(delta: Float) {

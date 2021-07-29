@@ -64,7 +64,7 @@ class GridLabel(
         staticX: Float = 0f,
         staticY: Float = 0f,
         width: Float = 512f,
-        height: Float = 512f,
+        height: Float = fontSize.toFloat(),
     ) : this(
         text,
         gridX,

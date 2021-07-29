@@ -41,7 +41,6 @@ import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen
-import ktx.async.KtxAsync
 import ktx.collections.GdxMap
 import ktx.collections.set
 import java.util.*
@@ -63,7 +62,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         loadOptions()
         initA()
 
-        KtxAsync.initiate()
         loadAssetIndex(Gdx.files.internal(".assets.json"))
         A.finishLoading()
 

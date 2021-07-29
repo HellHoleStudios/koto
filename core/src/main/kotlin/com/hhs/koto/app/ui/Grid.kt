@@ -45,8 +45,8 @@ open class Grid(
     var cycle: Boolean = true,
     final override var staticX: Float = 0f,
     final override var staticY: Float = 0f,
-    height: Float = 0f,
     width: Float = 0f,
+    height: Float = 0f,
     var activeAction: (() -> Action)? = null,
     var inactiveAction: (() -> Action)? = null,
     val selectSound: String? = "select",
@@ -361,14 +361,14 @@ open class Grid(
     operator fun get(i: Int) = getChild(i) as GridComponent
 }
 
-fun <T : Grid> T.register(st: Stage, input: InputMultiplexer): T {
-    st += this
-    input.addProcessor(this)
+fun <T : Grid> T.register(st: Stage? = null, input: InputMultiplexer? = null): T {
+    st?.addActor(this)
+    input?.addProcessor(this)
     return this
 }
 
-fun <T : Grid> T.register(group: Group, input: InputMultiplexer): T {
-    group += this
-    input.addProcessor(this)
+fun <T : Grid> T.register(group: Group? = null, input: InputMultiplexer? = null): T {
+    group?.addActor(this)
+    input?.addProcessor(this)
     return this
 }
