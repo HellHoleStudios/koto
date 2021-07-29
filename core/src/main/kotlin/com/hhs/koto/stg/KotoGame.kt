@@ -31,10 +31,14 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.Array.with
+import com.badlogic.gdx.utils.FloatArray.with
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.task.ParallelTask
+import com.hhs.koto.util.options
 import ktx.app.clearScreen
+import ktx.collections.GdxArray
 import java.lang.Float.min
 
 class KotoGame {
@@ -54,10 +58,12 @@ class KotoGame {
         viewport.camera = cam
         viewport.update(fbo.width, fbo.height)
     }
+    var frame: Int = 0
+    var speedUpMultiplier: Int = 1
+    private val frameScheduler = FrameScheduler(this)
 
     fun update() {
-        tasks.update()
-        stage.act(1f)
+        frameScheduler.update()
     }
 
     fun draw(appViewport: Viewport) {

@@ -35,7 +35,9 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.KotoCallbacks
 import com.hhs.koto.app.Options
+import com.hhs.koto.util.getTrueFPSMultiplier
 import com.hhs.koto.util.json
+import com.hhs.koto.util.prettyPrintJson
 import ktx.json.fromJson
 import java.util.*
 
@@ -59,11 +61,23 @@ object Lwjgl3Launcher {
                 if (!optionsFile.exists()) {
                     optionsFile.parent().mkdirs()
                 }
-                json.toJson(options, optionsFile)
+                prettyPrintJson(optionsFile, options)
             }
         }
 
         val configuration = Lwjgl3ApplicationConfiguration()
+        configure(configuration, options)
+
+        Lwjgl3Application(KotoApp(callbacks), configuration)
+        while (restart0) {
+            restart0 = false
+            options = readOptions(optionsFile)
+            configure(configuration, options)
+            Lwjgl3Application(KotoApp(callbacks), configuration)
+        }
+    }
+
+    private fun configure(configuration: Lwjgl3ApplicationConfiguration, options: Options) {
         configuration.setResizable(Config.allowResize)
         configuration.setTitle(Config.windowTitle)
         configuration.setWindowIcon(
@@ -78,17 +92,7 @@ object Lwjgl3Launcher {
             configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
         }
         configuration.useVsync(options.vsyncEnabled)
-        configuration.setForegroundFPS(options.fpsLimit)
-
-        Lwjgl3Application(KotoApp(callbacks), configuration)
-        while (restart0) {
-            restart0 = false
-            options = readOptions(optionsFile)
-            configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
-            configuration.useVsync(options.vsyncEnabled)
-            configuration.setForegroundFPS(options.fpsLimit)
-            Lwjgl3Application(KotoApp(callbacks), configuration)
-        }
+        configuration.setForegroundFPS((Config.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
     }
 
     private fun getOptionsFile(): FileHandle {
@@ -121,7 +125,7 @@ object Lwjgl3Launcher {
         val options = Options()
         optionsFile.parent().mkdirs()
         println("Creating default options file...")
-        json.toJson(options, optionsFile)
+        prettyPrintJson(optionsFile, options)
         options
     }
 }

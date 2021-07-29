@@ -25,17 +25,14 @@
 
 package com.hhs.koto.app.screen
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.app.Config
-import com.hhs.koto.app.Config.h
-import com.hhs.koto.app.Config.w
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.KotoGame
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.app
-import com.hhs.koto.util.game
-import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.*
 import ktx.actors.plusAssign
+import ktx.actors.then
 
 class GameScreen : BasicScreen(null, null) {
     init {
@@ -49,9 +46,24 @@ class GameScreen : BasicScreen(null, null) {
         val gameBackground = Image(getRegion("bg/game.png"))
         gameBackground.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
         st += gameBackground
+
+        game.stage += Image(getRegion("ui/blank.png")).apply {
+            setBounds(-10f, -10f, 20f, 20f)
+            addAction(
+                Actions.forever(
+                    Actions.moveTo(-10f, 20f, 30f)
+                            then Actions.moveTo(-10f, -10f, 30f)
+                )
+            )
+        }
     }
 
     override fun render(delta: Float) {
+        if (keyPressed(options.keySpeedUp)) {
+            game.speedUpMultiplier = options.speedUpMultiplier
+        } else {
+            game.speedUpMultiplier = 1
+        }
         game.update()
         game.draw(st.viewport)
         super.render(delta)

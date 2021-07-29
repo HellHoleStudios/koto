@@ -26,6 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
@@ -70,6 +71,22 @@ val json = Json().apply {
         }
     })
 }
+
+private val prettyPrintSettings = JsonValue.PrettyPrintSettings().apply {
+    outputType = JsonWriter.OutputType.json
+    singleLineColumns = 80
+    wrapNumericArrays = false
+}
+
+fun prettyPrintJson(obj: Any): String {
+    return json.prettyPrint(obj, prettyPrintSettings)
+}
+
+fun prettyPrintJson(file: FileHandle, obj: Any) {
+    file.writeString(prettyPrintJson(obj), false)
+}
+
+
 lateinit var options: Options
 
 lateinit var app: KotoApp
@@ -136,4 +153,16 @@ fun Color.getHue(): Float {
 fun Color.toHSVColor(): Color {
     toHsv(tmpHSVArray)
     return Color(tmpHSVArray[0] / 360f, tmpHSVArray[1], tmpHSVArray[2], a)
+}
+
+fun getTrueFPSMultiplier(fpsMultiplier: Int): Float {
+    if (fpsMultiplier == 0) return 1f
+    if (fpsMultiplier < 0) return 1f / -fpsMultiplier
+    return fpsMultiplier.toFloat()
+}
+
+fun <T> tri(condition: Boolean, a: T, b: T) = if (condition) {
+    a
+} else {
+    b
 }
