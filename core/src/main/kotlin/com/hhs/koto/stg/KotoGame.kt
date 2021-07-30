@@ -27,37 +27,47 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.graphics.glutils.FrameBuffer
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.app.Config
+import com.hhs.koto.app.ui.VfxOutput
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.util.keyPressed
 import com.hhs.koto.util.options
 import ktx.app.clearScreen
 import java.lang.Float.min
 
-class KotoGame(private val appViewport: Viewport) {
-    val fbo = FrameBuffer(Pixmap.Format.RGBA8888, Config.fw, Config.fh, false)
-    val fboTextureRegion = TextureRegion(fbo.colorBufferTexture).apply {
-        flip(false, true)
-    }
+class KotoGame(private val appViewport: Viewport) : Disposable {
+    val vfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
+    val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
     val tasks = ParallelTask()
     val cam = OrthographicCamera().apply {
         position.x = Config.w / 2f - Config.originX
         position.y = Config.h / 2f - Config.originY
         zoom = min(Config.w / Config.fw, Config.h / Config.fh)
     }
-    val stage = Stage().apply {
-        viewport.worldWidth = fbo.width.toFloat()
-        viewport.worldHeight = fbo.height.toFloat()
+    val st = Stage().apply {
+        viewport.worldWidth = vfx.width.toFloat()
+        viewport.worldHeight = vfx.height.toFloat()
         viewport.camera = cam
-        viewport.update(fbo.width, fbo.height)
+        viewport.update(vfx.width, vfx.height)
+    }
+    val hud = Stage(
+        ScalingViewport(
+            Scaling.stretch, postVfx.width.toFloat(), postVfx.height.toFloat(), OrthographicCamera()
+        ),
+        SpriteBatch()
+    ).apply {
+        addActor(VfxOutput(vfx))
     }
     var frame: Int = 0
     var speedUpMultiplier: Int = 1
-    private val frameScheduler = FrameScheduler(this)
+    val frameScheduler = FrameScheduler(this)
 
     fun update() {
         speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
@@ -69,13 +79,25 @@ class KotoGame(private val appViewport: Viewport) {
     }
 
     fun draw() {
-        stage.viewport.apply()
+        st.viewport.apply()
 
-        fbo.begin()
+        vfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        stage.draw()
-        fbo.end()
+        st.draw()
+        vfx.endInputCapture()
+        vfx.applyEffects()
+
+        postVfx.beginInputCapture()
+        clearScreen(0f, 0f, 0f, 1f)
+        hud.draw()
+        postVfx.endInputCapture()
+        postVfx.applyEffects()
 
         appViewport.apply()
+    }
+
+    override fun dispose() {
+        vfx.dispose()
+        postVfx.dispose()
     }
 }

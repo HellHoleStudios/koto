@@ -25,38 +25,173 @@
 
 package com.hhs.koto.app.screen
 
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.crashinvaders.vfx.VfxManager
+import com.crashinvaders.vfx.effects.GaussianBlurEffect
 import com.hhs.koto.app.Config
-import com.hhs.koto.app.ui.Grid
-import com.hhs.koto.app.ui.YesNoMenu
-import com.hhs.koto.app.ui.register
+import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.app
-import com.hhs.koto.util.game
-import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.actors.then
 
 class GameScreen : BasicScreen(null, null) {
+
+    val vfxManager = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
+    val blurEffect = GaussianBlurEffect()
+    val gameFrame = VfxOutput().apply { st += this }
+    val blurredGameFrame = VfxOutput().apply { st += this }
+
     init {
-        game = KotoGame(st.viewport)
-        val gameFrame = Image(game.fboTextureRegion)
-        gameFrame.setBounds(
-            Config.frameOffsetX, Config.frameOffsetY,
-            Config.frameWidth, Config.frameHeight
-        )
-        st += gameFrame
         val gameBackground = Image(getRegion("bg/game.png"))
         gameBackground.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
         st += gameBackground
 
-        game.stage += Image(getRegion("ui/blank.png")).apply {
+        vfxManager.addEffect(blurEffect)
+        blurEffect.amount = 10f
+    }
+
+    private val confirmationMenu = ConfirmationMenu(staticX = 650f, staticY = 450f).register(st, input).apply {
+        alpha = 0f
+        deactivate()
+        noRunnable = {
+            deactivate()
+            input.addProcessor(pauseMenu)
+        }
+    }
+
+    private val pauseMenu = Grid(staticX = 150f, staticY = 400f).register(st, input).apply {
+        alpha = 0f
+        deactivate()
+        activeAction = {
+            setPosition(staticX - 200f, staticY)
+            Actions.parallel(
+                Actions.fadeIn(0.5f, Interpolation.pow5Out),
+                Actions.moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out)
+            )
+        }
+        inactiveAction = {
+            Actions.parallel(
+                Actions.fadeOut(0.5f, Interpolation.pow5Out),
+                Actions.moveTo(staticX - 200f, staticY, 0.5f, Interpolation.pow5Out)
+            )
+        }
+    }
+
+    init {
+        pauseMenu.add(GridButton("Resume Game", 36, gridX = 0, gridY = 1) {
+            blurredGameFrame.addAction(
+                Actions.fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
+            )
+            pauseMenu.deactivate()
+        })
+        pauseMenu.add(GridButton("Restart Game", 36, gridX = 0, gridY = 2) {
+            confirmationMenu.activate()
+            confirmationMenu.selectLast()
+            input.removeProcessor(pauseMenu)
+            confirmationMenu.yesRunnable = {
+                confirmationMenu.deactivate()
+                pauseMenu.deactivate()
+                blurredGameFrame.addAction(
+                    Actions.fadeOut(0.5f, Interpolation.sine)
+                            then Actions.run { reset() }
+                )
+                gameFrame.alpha = 0f
+            }
+        })
+        pauseMenu.add(GridButton("Quit", 36, gridX = 0, gridY = 3) {
+            confirmationMenu.activate()
+            confirmationMenu.selectLast()
+            input.removeProcessor(pauseMenu)
+            confirmationMenu.yesRunnable = { quit() }
+        })
+        pauseMenu.arrange(0f, 200f, 0f, -55f)
+        pauseMenu.add(GridLabel("Game Paused...", 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 200f))
+        pauseMenu.selectFirst()
+    }
+
+    private var tryPause: Boolean = false
+    private var paused: Boolean = false
+    private var passCounter: Int = 0
+
+    override fun render(delta: Float) {
+        if (state != ScreenState.SHOWN) {
+            super.render(delta)
+            return
+        }
+        if (!paused && keyJustPressed(options.keyPause)) {
+            tryPause = true
+        }
+        if (tryPause && game.frameScheduler.canPause) {
+            tryPause = false
+            paused = true
+            passCounter = 0
+            pauseMenu.activate()
+            blurredGameFrame.alpha = 1f
+        }
+        if (paused) {
+            if (passCounter < 30) {
+                if (passCounter == 0) {
+                    vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
+                } else {
+                    vfxManager.useAsInput(vfxManager.resultBuffer.texture)
+                }
+                vfxManager.applyEffects()
+                passCounter++
+            }
+        } else {
+            game.update()
+        }
+        super.render(delta)
+    }
+
+    override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
+        super.fadeIn(oldScreen, duration)
+        reset()
+    }
+
+    fun reset() {
+        pauseMenu.selectFirst()
+        pauseMenu.alpha = 0f
+        pauseMenu.setPosition(pauseMenu.staticX - 100f, pauseMenu.staticY)
+        pauseMenu.deactivate()
+        if (pauseMenu !in input.processors) input.addProcessor(pauseMenu)
+
+        confirmationMenu.alpha = 0f
+        confirmationMenu.setPosition(confirmationMenu.staticX - 200f, confirmationMenu.staticY)
+        confirmationMenu.deactivate()
+
+        game = KotoGame(st.viewport)
+
+        gameFrame.vfxManager = game.postVfx
+        gameFrame.setBounds(
+            Config.frameOffsetX, Config.frameOffsetY,
+            Config.frameWidth, Config.frameHeight
+        )
+        gameFrame.alpha = 1f
+
+        blurredGameFrame.vfxManager = vfxManager
+        blurredGameFrame.setBounds(
+            Config.frameOffsetX, Config.frameOffsetY,
+            Config.frameWidth, Config.frameHeight
+        )
+        blurredGameFrame.alpha = 0f
+
+        paused = false
+        tryPause = false
+
+        game.st += Image(getRegion("icon/koto-icon_128x.png")).apply {
+            setBounds(-150f, -200f, 128f, 128f)
+        }
+
+        game.st += Image(getRegion("ui/blank.png")).apply {
             setBounds(-10f, -150f, 20f, 20f)
             addAction(
                 Actions.forever(
@@ -66,7 +201,7 @@ class GameScreen : BasicScreen(null, null) {
             )
         }
 
-        game.stage += Image(getRegion("ui/blank.png")).apply {
+        game.st += Image(getRegion("ui/blank.png")).apply {
             setBounds(20f, -150f, 20f, 20f)
         }
 
@@ -74,12 +209,12 @@ class GameScreen : BasicScreen(null, null) {
             while (true) {
                 var f = 0
                 repeat(30) {
-                    game.stage.actors[1].y = -150 + f * 10f
+                    game.st.actors[2].y = -150 + f * 10f
                     f++
                     yield()
                 }
                 repeat(30) {
-                    game.stage.actors[1].y = -150 + f * 10f
+                    game.st.actors[2].y = -150 + f * 10f
                     f--
                     yield()
                 }
@@ -87,22 +222,7 @@ class GameScreen : BasicScreen(null, null) {
         })
     }
 
-    val pauseMenu = Grid(staticX = 200f, staticY = 300f).apply {
-        alpha = 0f
-        deactivate()
-    }
-    val yesNoMenu = YesNoMenu({}, {}, staticX = 650f, staticY = 400f).register(st).apply {
-        alpha = 0f
-        deactivate()
-    }
-
-    override fun render(delta: Float) {
-        game.update()
-        super.render(delta)
-    }
-
-    override fun onQuit() {
-        super.onQuit()
+    private fun quit() {
         SystemFlag.redirect = when (SystemFlag.gamemode!!) {
             GameMode.STAGE_PRACTICE -> "stageSelect"
             GameMode.SPELL_PRACTICE -> "spellSelect"
@@ -110,5 +230,13 @@ class GameScreen : BasicScreen(null, null) {
         }
         SystemFlag.redirectDuration = 0.5f
         app.setScreen("blank", 0.5f)
+    }
+
+    override fun onQuit() = Unit
+
+    override fun dispose() {
+        super.dispose()
+        vfxManager.dispose()
+        blurEffect.dispose()
     }
 }

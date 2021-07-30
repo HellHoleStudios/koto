@@ -27,17 +27,14 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
-import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
-import ktx.graphics.copy
 import java.util.*
 
 var global = GdxMap<String, Any>()
@@ -129,42 +126,6 @@ fun <K, V> GdxMap<K, V>.safeEntries() = ObjectMap.Entries(this)
 fun <K, V> GdxMap<K, V>.safeKeys() = ObjectMap.Keys(this)
 
 fun <K, V> GdxMap<K, V>.safeValues() = ObjectMap.Values(this)
-
-operator fun Color.plus(other: Color): Color = this.copy().add(other)
-
-operator fun Color.plusAssign(other: Color) {
-    add(other)
-}
-
-operator fun Color.minus(other: Color): Color = this.copy().sub(other)
-
-operator fun Color.minusAssign(other: Color) {
-    sub(other)
-}
-
-operator fun Color.times(other: Color): Color = this.copy().mul(other)
-
-operator fun Color.timesAssign(other: Color) {
-    mul(other)
-}
-
-fun darken(color: Color, factor: Float = 0.5f): Color = if (Config.useHSVShader) {
-    color.cpy().mul(1.0f, 1.0f, factor, 1.0f)
-} else {
-    color.cpy().mul(factor, factor, factor, 1.0f)
-}
-
-val tmpHSVArray = FloatArray(3)
-
-fun Color.getHue(): Float {
-    toHsv(tmpHSVArray)
-    return tmpHSVArray[0] / 360f
-}
-
-fun Color.toHSVColor(): Color {
-    toHsv(tmpHSVArray)
-    return Color(tmpHSVArray[0] / 360f, tmpHSVArray[1], tmpHSVArray[2], a)
-}
 
 fun getTrueFPSMultiplier(fpsMultiplier: Int): Float {
     if (fpsMultiplier == 0) return 1f

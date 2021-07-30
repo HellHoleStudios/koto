@@ -36,8 +36,11 @@ class FrameScheduler(private val game: KotoGame) {
     private var actDelta1 = Pair(1f, 0f)
     private var actDelta2 = Pair(1f, 0f)
     private var cleanSpeedMul: Int = 0
+    var canPause: Boolean = true
+        private set
 
     fun update() {
+        canPause = true
         val fpsMul = options.fpsMultiplier
         if (fpsMul > 1) {
             if (subFrame == 0 && game.speedUpMultiplier != cleanSpeedMul) {
@@ -121,6 +124,8 @@ class FrameScheduler(private val game: KotoGame) {
                 act(actDelta2.second)
             }
         }
+        val nextType = arrangement[(subFrame + 1) % arrangement.size]
+        canPause = nextType == 0 || nextType == 2
     }
 
     // speedMul higher than fpsMul
@@ -206,7 +211,7 @@ class FrameScheduler(private val game: KotoGame) {
 
     private fun act(delta: Float) {
 //        print("a($delta)")
-        game.stage.act(delta)
+        game.st.act(delta)
     }
 
     private fun draw() {

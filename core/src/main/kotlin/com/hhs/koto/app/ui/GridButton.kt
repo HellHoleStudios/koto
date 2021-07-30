@@ -135,46 +135,42 @@ class GridButton(
         }
     }
 
-    fun getActiveAction(vararg actions: () -> Action): () -> Action {
-        return {
-            val ret = ParallelAction()
-            ret.addAction(
+    fun getActiveAction(vararg actions: () -> Action): () -> Action = {
+        val ret = ParallelAction()
+        ret.addAction(
+            Actions.sequence(
+                Actions.color(Color.WHITE),
+                Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out),
+            )
+        )
+        ret.addAction(
+            Actions.forever(
                 Actions.sequence(
-                    Actions.color(Color.WHITE),
-                    Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out),
+                    Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
+                    Actions.color(Color.WHITE, 0.5f),
                 )
             )
-            ret.addAction(
-                Actions.forever(
-                    Actions.sequence(
-                        Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f),
-                    )
-                )
-            )
-            for (action in actions) {
-                ret.addAction(action())
-            }
-            ret
+        )
+        for (action in actions) {
+            ret.addAction(action())
         }
+        ret
     }
 
-    fun getInactiveAction(vararg actions: () -> Action): () -> Action {
-        return {
-            val ret = ParallelAction()
-            ret.addAction(
-                Actions.alpha(1f)
-            )
-            ret.addAction(
-                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
-            )
-            ret.addAction(
-                Actions.color(darken(Color.WHITE, 0.7f))
-            )
-            for (action in actions) {
-                ret.addAction(action())
-            }
-            ret
+    fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
+        val ret = ParallelAction()
+        ret.addAction(
+            Actions.alpha(1f)
+        )
+        ret.addAction(
+            Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
+        )
+        ret.addAction(
+            Actions.color(darken(Color.WHITE, 0.7f))
+        )
+        for (action in actions) {
+            ret.addAction(action())
         }
+        ret
     }
 }

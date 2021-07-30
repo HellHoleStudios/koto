@@ -28,14 +28,14 @@ package com.hhs.koto.app.ui
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 
-class YesNoMenu(
-    var yesRunnable: () -> Unit,
-    var noRunnable: () -> Unit,
+class ConfirmationMenu(
+    yesRunnable: (() -> Unit)? = null,
+    noRunnable: (() -> Unit)? = null,
     text: String = "Really?",
     yesText: String = "Yes!",
     noText: String = "No!",
-    defaultNo: Boolean = false,
     gridX: Int = 0,
     gridY: Int = 0,
     cycle: Boolean = true,
@@ -47,33 +47,47 @@ class YesNoMenu(
     inactiveAction: (() -> Action)? = null,
     selectSound: String? = "select",
 ) : Grid(gridX, gridY, cycle, staticX, staticY, width, height, selectSound = selectSound) {
-
-    val label = GridLabel(text, 48, gridX = 0, gridY = 0, staticY = 130f)
-    val yesButton = GridButton(yesText, 36, gridX = 0, gridY = 1, staticY = 50f, runnable = yesRunnable)
+    val label = GridLabel(text, 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 120f)
+    val yesButton = GridButton(yesText, 36, gridX = 0, gridY = 1, staticY = 55f, runnable = yesRunnable)
     val noButton = GridButton(noText, 36, gridX = 0, gridY = 2, staticY = 0f, runnable = noRunnable)
 
+    var yesRunnable
+        get() = yesButton.runnable
+        set(value) {
+            yesButton.runnable = value
+        }
+    var noRunnable
+        get() = noButton.runnable
+        set(value) {
+            noButton.runnable = value
+        }
+
     init {
-        this.activeAction = activeAction ?: {
-            clearActions()
-            Actions.parallel(
-                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
-                Actions.fadeIn(1f, Interpolation.pow5Out),
-            )
-        }
-        this.inactiveAction = inactiveAction ?: {
-            clearActions()
-            Actions.parallel(
-                Actions.moveTo(staticX + 100f, staticY, 1f, Interpolation.pow5Out),
-                Actions.fadeOut(1f, Interpolation.pow5Out),
-            )
-        }
+        this.activeAction = activeAction ?: getActiveAction()
+        this.inactiveAction = inactiveAction ?: getInactiveAction()
         add(label)
         add(yesButton)
         add(noButton)
-        if (defaultNo) {
-            selectLast()
-        } else {
-            selectFirst()
+        selectLast()
+    }
+
+    fun getActiveAction(vararg actions: () -> Action): () -> Action = {
+        val ret = ParallelAction()
+        ret.addAction(Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out))
+        ret.addAction(Actions.fadeIn(1f, Interpolation.pow5Out))
+        for (action in actions) {
+            ret.addAction(action())
         }
+        ret
+    }
+
+    fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
+        val ret = ParallelAction()
+        ret.addAction(Actions.moveTo(staticX - 100f, staticY, 1f, Interpolation.pow5Out))
+        ret.addAction(Actions.fadeOut(1f, Interpolation.pow5Out))
+        for (action in actions) {
+            ret.addAction(action())
+        }
+        ret
     }
 }

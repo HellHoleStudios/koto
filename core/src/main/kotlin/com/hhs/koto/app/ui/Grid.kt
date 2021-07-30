@@ -35,7 +35,6 @@ import com.hhs.koto.util.SE
 import com.hhs.koto.util.matchKey
 import com.hhs.koto.util.options
 import com.hhs.koto.util.safeIterator
-import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import kotlin.math.abs
 

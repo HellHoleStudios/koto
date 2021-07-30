@@ -124,35 +124,32 @@ class GridImage(
         }
     }
 
-    fun getActiveAction(vararg actions: () -> Action): () -> Action {
-        return {
-            val ret = ParallelAction()
-            ret.addAction(
-                Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
-            )
-            ret.addAction(
-                Actions.color(tint, 0.5f)
-            )
-            for (action in actions) {
-                ret.addAction(action())
-            }
-            ret
+    fun getActiveAction(vararg actions: () -> Action): () -> Action = {
+        val ret = ParallelAction()
+        ret.addAction(
+            Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
+        )
+        ret.addAction(
+            Actions.color(tint, 0.5f)
+        )
+        for (action in actions) {
+            ret.addAction(action())
         }
+        ret
     }
 
-    fun getInactiveAction(vararg actions: () -> Action): () -> Action {
-        return {
-            val ret = ParallelAction()
-            ret.addAction(
-                Actions.color(darken(tint))
-            )
-            ret.addAction(
-                Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
-            )
-            for (action in actions) {
-                ret.addAction(action())
-            }
-            ret
+    fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
+        val ret = ParallelAction()
+        ret.addAction(
+            Actions.color(darken(tint))
+        )
+        ret.addAction(
+            Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
+        )
+        for (action in actions) {
+            ret.addAction(action())
         }
+        ret
     }
+
 }
