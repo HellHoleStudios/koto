@@ -100,8 +100,13 @@ class GameScreen : BasicScreen(null, null) {
                 confirmationMenu.deactivate()
                 pauseMenu.deactivate()
                 blurredGameFrame.addAction(
-                    Actions.fadeOut(0.5f, Interpolation.sine)
-                            then Actions.run { reset() }
+                    Actions.sequence(
+                        Actions.fadeOut(0.5f, Interpolation.sine),
+                        Actions.run {
+                            game.dispose()
+                            reset()
+                        },
+                    )
                 )
                 gameFrame.alpha = 0f
             }
@@ -223,6 +228,7 @@ class GameScreen : BasicScreen(null, null) {
     }
 
     private fun quit() {
+        game.dispose()
         SystemFlag.redirect = when (SystemFlag.gamemode!!) {
             GameMode.STAGE_PRACTICE -> "stageSelect"
             GameMode.SPELL_PRACTICE -> "spellSelect"

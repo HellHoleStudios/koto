@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -68,6 +69,11 @@ class KotoGame(private val appViewport: Viewport) : Disposable {
     var frame: Int = 0
     var speedUpMultiplier: Int = 1
     val frameScheduler = FrameScheduler(this)
+    val logger = Logger("Game", Config.logLevel)
+
+    init {
+        logger.info("Game instance created.")
+    }
 
     fun update() {
         speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
@@ -99,5 +105,6 @@ class KotoGame(private val appViewport: Viewport) : Disposable {
     override fun dispose() {
         vfx.dispose()
         postVfx.dispose()
+        logger.info("Game instance disposed.")
     }
 }

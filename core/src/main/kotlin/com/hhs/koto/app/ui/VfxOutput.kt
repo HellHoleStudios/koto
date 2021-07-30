@@ -45,6 +45,7 @@ class VfxOutput() : Image() {
     }
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
+        if (vfxManager.resultBuffer == null) return
         setSize(vfxManager.width.toFloat(), vfxManager.height.toFloat())
         vfxOutput.region.setRegion(vfxManager.resultBuffer.texture)
         vfxOutput.region.flip(false, true)

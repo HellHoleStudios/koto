@@ -374,6 +374,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         input.removeProcessor(shotTypeGrid)
 
         descriptions.clearActions()
+        descriptions.setPosition(descriptions.staticX, descriptions.staticY)
         descriptions.addAction(Actions.fadeIn(0.5f, Interpolation.pow5Out))
         input.addProcessor(descriptions)
         input.addProcessor(portraits)
