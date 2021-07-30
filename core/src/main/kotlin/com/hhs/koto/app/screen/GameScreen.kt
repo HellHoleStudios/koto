@@ -86,13 +86,13 @@ class GameScreen : BasicScreen(null, null) {
     }
 
     init {
-        pauseMenu.add(GridButton("Resume Game", 36, gridX = 0, gridY = 1) {
+        pauseMenu.add(GridButton(bundle["ui.game.resume"], 36, gridX = 0, gridY = 1) {
             blurredGameFrame.addAction(
                 Actions.fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
             )
             pauseMenu.deactivate()
         })
-        pauseMenu.add(GridButton("Restart Game", 36, gridX = 0, gridY = 2) {
+        pauseMenu.add(GridButton(bundle["ui.game.restart"], 36, gridX = 0, gridY = 2) {
             confirmationMenu.activate()
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
@@ -106,14 +106,14 @@ class GameScreen : BasicScreen(null, null) {
                 gameFrame.alpha = 0f
             }
         })
-        pauseMenu.add(GridButton("Quit", 36, gridX = 0, gridY = 3) {
+        pauseMenu.add(GridButton(bundle["ui.game.quit"], 36, gridX = 0, gridY = 3) {
             confirmationMenu.activate()
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
             confirmationMenu.yesRunnable = { quit() }
         })
         pauseMenu.arrange(0f, 200f, 0f, -55f)
-        pauseMenu.add(GridLabel("Game Paused...", 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 200f))
+        pauseMenu.add(GridLabel(bundle["ui.game.paused"], 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 200f))
         pauseMenu.selectFirst()
     }
 
@@ -160,7 +160,7 @@ class GameScreen : BasicScreen(null, null) {
     fun reset() {
         pauseMenu.selectFirst()
         pauseMenu.alpha = 0f
-        pauseMenu.setPosition(pauseMenu.staticX - 100f, pauseMenu.staticY)
+        pauseMenu.setPosition(pauseMenu.staticX - 200f, pauseMenu.staticY)
         pauseMenu.deactivate()
         if (pauseMenu !in input.processors) input.addProcessor(pauseMenu)
 

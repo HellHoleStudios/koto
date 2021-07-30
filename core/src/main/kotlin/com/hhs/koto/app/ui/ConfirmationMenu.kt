@@ -29,13 +29,14 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
+import com.hhs.koto.util.bundle
 
 class ConfirmationMenu(
     yesRunnable: (() -> Unit)? = null,
     noRunnable: (() -> Unit)? = null,
-    text: String = "Really?",
-    yesText: String = "Yes!",
-    noText: String = "No!",
+    text: String = bundle["ui.confirmation"],
+    yesText: String = bundle["ui.yes"],
+    noText: String = bundle["ui.no"],
     gridX: Int = 0,
     gridY: Int = 0,
     cycle: Boolean = true,
@@ -83,7 +84,7 @@ class ConfirmationMenu(
 
     fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
-        ret.addAction(Actions.moveTo(staticX - 100f, staticY, 1f, Interpolation.pow5Out))
+        ret.addAction(Actions.moveTo(staticX - 200f, staticY, 1f, Interpolation.pow5Out))
         ret.addAction(Actions.fadeOut(1f, Interpolation.pow5Out))
         for (action in actions) {
             ret.addAction(action())
