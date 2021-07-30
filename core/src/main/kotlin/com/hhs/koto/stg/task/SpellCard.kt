@@ -25,10 +25,9 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.GameDifficulty
-import ktx.collections.GdxArray
-
-interface StageBuilder : TaskBuilder {
-    val availableDifficulties: GdxArray<GameDifficulty>
-    val name: String
+interface SpellCard {
+    val maxTime: Int
+    val health: Int
+    val invulnerable: Boolean
+    fun getSpellCardBonus(): Long
 }

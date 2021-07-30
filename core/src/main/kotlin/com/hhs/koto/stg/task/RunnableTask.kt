@@ -25,10 +25,11 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.GameDifficulty
-import ktx.collections.GdxArray
+class RunnableTask(val runnable: Runnable) : Task {
+    override var isComplete = false
 
-interface StageBuilder : TaskBuilder {
-    val availableDifficulties: GdxArray<GameDifficulty>
-    val name: String
+    override fun tick() {
+        runnable.run()
+        isComplete = true
+    }
 }

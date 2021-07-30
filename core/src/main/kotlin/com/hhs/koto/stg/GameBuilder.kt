@@ -26,6 +26,7 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.utils.GdxRuntimeException
+import com.hhs.koto.stg.task.SpellCardBuilder
 import com.hhs.koto.stg.task.StageBuilder
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.TaskBuilder
@@ -37,18 +38,20 @@ object GameBuilder {
     lateinit var regularGame: TaskBuilder
     lateinit var extraGame: TaskBuilder
     val stages = GdxArray<StageBuilder>()
+    val spellCards = GdxArray<SpellCardBuilder>()
 
     fun build(): KotoGame =
         when (SystemFlag.gamemode) {
             GameMode.STORY -> buildRegularGame()
             GameMode.EXTRA -> buildExtraGame()
-            GameMode.STAGE_PRACTICE -> {
-                buildStagePractice(
-                    SystemFlag.stageName ?: throw GdxRuntimeException("stageName flag is null!"),
-                    SystemFlag.difficulty ?: throw GdxRuntimeException("difficulty flag is null!"),
-                )
-            }
-            GameMode.SPELL_PRACTICE -> TODO()
+            GameMode.STAGE_PRACTICE -> buildStagePractice(
+                SystemFlag.name ?: throw GdxRuntimeException("name flag is null!"),
+                SystemFlag.difficulty ?: throw GdxRuntimeException("difficulty flag is null!"),
+            )
+            GameMode.SPELL_PRACTICE -> buildStagePractice(
+                SystemFlag.name ?: throw GdxRuntimeException("name flag is null!"),
+                SystemFlag.difficulty ?: throw GdxRuntimeException("difficulty flag is null!"),
+            )
             null -> throw GdxRuntimeException("gameMode flag is null!")
         }
 
@@ -57,14 +60,23 @@ object GameBuilder {
     fun buildExtraGame(): KotoGame = buildGameWithTask(extraGame.build())
 
     fun getAvailableStages(difficulty: GameDifficulty): GdxArray<StageBuilder> =
-        stages.filter { difficulty in it.availableDifficulty }
+        stages.filter { difficulty in it.availableDifficulties }
 
     fun buildStagePractice(name: String, difficulty: GameDifficulty): KotoGame {
         val stageBuilder = stages.find { it.name == name } ?: throw GdxRuntimeException("Stage \"$name\" not found!")
-        if (difficulty !in stageBuilder.availableDifficulty) {
+        if (difficulty !in stageBuilder.availableDifficulties) {
             throw GdxRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
         }
         return buildGameWithTask(stageBuilder.build())
+    }
+
+    fun buildSpellPractice(name: String, difficulty: GameDifficulty): KotoGame {
+        val spellCardBuilder =
+            spellCards.find { it.name == name } ?: throw GdxRuntimeException("SpellCard \"$name\" not found!")
+        if (difficulty !in spellCardBuilder.availableDifficulties) {
+            throw GdxRuntimeException("SpellCard \"$name\" does not support difficulty \"$difficulty\"")
+        }
+        return buildGameWithTask(spellCardBuilder.build())
     }
 
     fun buildGameWithTask(task: Task): KotoGame {
