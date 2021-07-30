@@ -23,16 +23,12 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.demo
 
-import ktx.collections.GdxArray
+import com.hhs.koto.demo.stage.Stage1
+import com.hhs.koto.stg.task.SequenceTask
+import com.hhs.koto.stg.task.TaskBuilder
 
-enum class GameDifficulty {
-    EASY, NORMAL, HARD, LUNATIC, EXTRA, PHANTASM;
-
-    companion object {
-        val REGULAR_AVAILABLE = GdxArray.with(EASY, NORMAL, HARD, LUNATIC)
-        val EXTRA_AVAILABLE = GdxArray.with(EXTRA)
-        val PHANTASM_AVAILABLE = GdxArray.with(PHANTASM)
-    }
+class RegularGame : TaskBuilder {
+    override fun build() = SequenceTask(Stage1().build())
 }

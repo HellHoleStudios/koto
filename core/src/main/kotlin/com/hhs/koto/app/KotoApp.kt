@@ -38,6 +38,9 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
+import com.hhs.koto.demo.RegularGame
+import com.hhs.koto.demo.stage.Stage1
+import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen
@@ -99,8 +102,10 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("shoot", "snd/se_plst00.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
-
         B.setSheet(Config.defaultShotSheet)
+
+        GameBuilder.regularGame = RegularGame()
+        GameBuilder.stages.add(Stage1())
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()

@@ -33,11 +33,9 @@ import com.crashinvaders.vfx.VfxManager
 import com.crashinvaders.vfx.effects.GaussianBlurEffect
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
+import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameMode
-import com.hhs.koto.stg.KotoGame
-import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.util.*
-import kotlinx.coroutines.yield
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.actors.then
@@ -173,7 +171,7 @@ class GameScreen : BasicScreen(null, null) {
         confirmationMenu.setPosition(confirmationMenu.staticX - 200f, confirmationMenu.staticY)
         confirmationMenu.deactivate()
 
-        game = KotoGame(st.viewport)
+        game = GameBuilder.build()
 
         gameFrame.vfxManager = game.postVfx
         gameFrame.setBounds(
@@ -191,40 +189,6 @@ class GameScreen : BasicScreen(null, null) {
 
         paused = false
         tryPause = false
-
-        game.st += Image(getRegion("icon/koto-icon_128x.png")).apply {
-            setBounds(-150f, -200f, 128f, 128f)
-        }
-
-        game.st += Image(getRegion("ui/blank.png")).apply {
-            setBounds(-10f, -150f, 20f, 20f)
-            addAction(
-                Actions.forever(
-                    Actions.moveTo(-10f, 150f, 30f)
-                            then Actions.moveTo(-10f, -150f, 30f)
-                )
-            )
-        }
-
-        game.st += Image(getRegion("ui/blank.png")).apply {
-            setBounds(20f, -150f, 20f, 20f)
-        }
-
-        game.tasks.addTask(CoroutineTask {
-            while (true) {
-                var f = 0
-                repeat(30) {
-                    game.st.actors[2].y = -150 + f * 10f
-                    f++
-                    yield()
-                }
-                repeat(30) {
-                    game.st.actors[2].y = -150 + f * 10f
-                    f--
-                    yield()
-                }
-            }
-        })
     }
 
     private fun quit() {

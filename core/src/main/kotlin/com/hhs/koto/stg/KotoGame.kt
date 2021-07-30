@@ -33,17 +33,17 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
-import com.badlogic.gdx.utils.viewport.Viewport
 import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutput
 import com.hhs.koto.stg.task.ParallelTask
+import com.hhs.koto.util.app
 import com.hhs.koto.util.keyPressed
 import com.hhs.koto.util.options
 import ktx.app.clearScreen
 import java.lang.Float.min
 
-class KotoGame(private val appViewport: Viewport) : Disposable {
+class KotoGame() : Disposable {
     val vfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
     val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
     val tasks = ParallelTask()
@@ -99,7 +99,7 @@ class KotoGame(private val appViewport: Viewport) : Disposable {
         postVfx.endInputCapture()
         postVfx.applyEffects()
 
-        appViewport.apply()
+        app.viewport.apply()
     }
 
     override fun dispose() {
