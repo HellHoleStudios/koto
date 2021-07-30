@@ -25,7 +25,11 @@
 
 package com.hhs.koto.app.ui
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.app.screen.BasicScreen
 import com.hhs.koto.app.screen.KotoScreen
@@ -34,6 +38,15 @@ import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 
 class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+    private val titleBackground = Image(getRegion("ui/blank.png")).apply {
+        color = Color(0f, 0.5f, 1f, 0.5f)
+        setSize(1440f, 60f)
+        st += this
+    }
+    private val title = Label(bundle["ui.stageSelect.title"], getUILabelStyle(72)).apply {
+        setPosition(80f, 900f)
+        st += this
+    }
     private val grid = ConstrainedGrid(
         120f,
         200f,
@@ -42,26 +55,42 @@ class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
         animationDuration = 0.5f,
         interpolation = Interpolation.pow5Out,
     ).setCullingToConstraint().register(st, input)
-    private val title = Label(bundle["ui.stageSelect.title"], getUILabelStyle(72)).apply {
-        setPosition(80f, 900f)
-        st += this
-    }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
         val stages = GameBuilder.getAvailableStages()
         grid.clear()
         for (i in 0 until stages.size) {
-            grid.add(GridButton(bundle["game.stage.${stages[i].name}.name"], 36, 0, i) {
+            grid.add(GridButton(bundle["game.stage.${stages[i].name}.name"], 48, 0, i) {
                 SystemFlag.name = stages[i].name
                 SystemFlag.redirect = "game"
                 SystemFlag.redirectDuration = 0.5f
                 app.setScreen("blank", 0.5f)
+            }.apply {
+                activeAction = getActiveAction({
+                    Actions.forever(Actions.run {
+                        titleBackground.clearActions()
+                        titleBackground.addAction(
+                            Actions.parallel(
+                                Actions.color(
+                                    Color(i.toFloat() / stages.size, 0.5f, 1f, 0.5f),
+                                    0.5f,
+                                ),
+                                Actions.moveTo(
+                                    0f, y - grid.targetY - 7.5f,
+                                    1f,
+                                    Interpolation.pow5Out,
+                                ),
+                            )
+                        )
+                    })
+                })
             })
         }
-        grid.arrange(0f, 1000f, 0f, -45f)
+        grid.arrange(0f, 1000f, 0f, -60f)
         grid.selectFirst()
         grid.finishAnimation()
+        titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 7.5f)
     }
 
     override fun onQuit() {

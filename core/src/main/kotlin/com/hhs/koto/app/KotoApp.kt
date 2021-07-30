@@ -108,8 +108,12 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         B.setSheet(Config.defaultShotSheet)
 
         GameBuilder.regularGame = RegularGame()
-        GameBuilder.stages.add(Stage1())
-        GameBuilder.spells.add(TestSpell())
+        repeat(7) {
+            GameBuilder.stages.add(Stage1())
+        }
+        repeat(100) {
+            GameBuilder.spells.add(TestSpell())
+        }
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()

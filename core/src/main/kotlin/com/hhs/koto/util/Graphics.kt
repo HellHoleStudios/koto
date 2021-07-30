@@ -59,6 +59,13 @@ fun Color.getHue(): Float {
     return tmpHSVArray[0] / 360f
 }
 
+fun fromHsv(h: Float, s: Float, v: Float, a: Float): Color {
+    val color = Color()
+    color.fromHsv(h * 360f, s, v)
+    color.a = a
+    return color
+}
+
 fun Color.toHSVColor(): Color {
     toHsv(tmpHSVArray)
     return Color(tmpHSVArray[0] / 360f, tmpHSVArray[1], tmpHSVArray[2], a)

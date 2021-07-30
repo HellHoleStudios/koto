@@ -50,10 +50,10 @@ open class ConstrainedGrid(
     activeAction: (() -> Action)? = null,
     inactiveAction: (() -> Action)? = null,
 ) : Grid(gridX, gridY, cycle, staticX, staticY, width, height, activeAction, inactiveAction) {
-    protected var startX: Float = 0f
-    protected var startY: Float = 0f
-    protected var targetX: Float = 0f
-    protected var targetY: Float = 0f
+    var startX: Float = 0f
+    var startY: Float = 0f
+    var targetX: Float = 0f
+    var targetY: Float = 0f
     protected var t: Float = 0f
 
     fun getCurrentX() = if (animationDuration == 0f) {
