@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.util.game
 import kotlinx.coroutines.*
 import ktx.collections.GdxMap
 import ktx.collections.set
@@ -80,4 +81,16 @@ suspend fun wait(frameCount: Int) {
     repeat(frameCount) {
         yield()
     }
+}
+
+suspend fun Task.waitForFinish() {
+    while (!isComplete) {
+        yield()
+    }
+}
+
+fun task(block: suspend CoroutineScope.() -> Unit): Task {
+    val task = CoroutineTask(block)
+    game.tasks.addTask(task)
+    return task
 }

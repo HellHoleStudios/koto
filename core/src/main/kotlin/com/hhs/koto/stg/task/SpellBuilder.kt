@@ -23,12 +23,12 @@
  *
  */
 
-package com.hhs.koto.demo
+package com.hhs.koto.stg.task
 
-import com.hhs.koto.demo.stage1.Stage1
-import com.hhs.koto.stg.task.SequenceTask
-import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.stg.GameDifficulty
+import ktx.collections.GdxArray
 
-class RegularGame : TaskBuilder {
-    override fun build() = SequenceTask(Stage1().build())
+interface SpellBuilder : TaskBuilder {
+    val name: String
+    val availableDifficulties: GdxArray<GameDifficulty>
 }

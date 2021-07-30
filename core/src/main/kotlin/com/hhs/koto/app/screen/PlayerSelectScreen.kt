@@ -186,12 +186,6 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
     }
 
     init {
-        switchTarget = when (SystemFlag.gamemode) {
-            GameMode.SPELL_PRACTICE -> "spellSelect"
-            GameMode.STAGE_PRACTICE -> "stageSelect"
-            else -> "game"
-        }
-
         portraits.add(
             generatePortrait(
                 this, "reimu", getRegion("portrait/reimu/select.png"),
@@ -234,6 +228,12 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
+
+        switchTarget = when (SystemFlag.gamemode) {
+            GameMode.SPELL_PRACTICE -> "spellSelect"
+            GameMode.STAGE_PRACTICE -> "stageSelect"
+            else -> "game"
+        }
 
         if (selectedPlayer == null) {
             difficultyLabel?.remove()
@@ -386,7 +386,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             SystemFlag.redirectDuration = 0.5f
             app.setScreen("blank", 0.5f)
         } else {
-            app.setScreen(switchTarget, 1f)
+            app.setScreen(switchTarget, 0.5f)
         }
     }
 

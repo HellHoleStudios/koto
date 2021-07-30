@@ -38,8 +38,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
+import com.hhs.koto.app.ui.SpellSelectScreen
+import com.hhs.koto.app.ui.StageSelectScreen
 import com.hhs.koto.demo.RegularGame
-import com.hhs.koto.demo.stage.Stage1
+import com.hhs.koto.demo.stage1.Stage1
+import com.hhs.koto.demo.stage1.TestSpell
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
@@ -106,12 +109,15 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         GameBuilder.regularGame = RegularGame()
         GameBuilder.stages.add(Stage1())
+        GameBuilder.spells.add(TestSpell())
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()
         screens["game"] = GameScreen()
         screens["difficultySelect"] = DifficultySelectScreen()
         screens["playerSelect"] = PlayerSelectScreen()
+        screens["stageSelect"] = StageSelectScreen()
+        screens["spellSelect"] = SpellSelectScreen()
         screens["musicRoom"] = MusicRoomScreen()
         screens["options"] = OptionsScreen()
         setScreen("blank")

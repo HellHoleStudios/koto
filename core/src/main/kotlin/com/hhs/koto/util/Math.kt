@@ -79,6 +79,7 @@ fun sin(degrees: Float) = MathUtils.sinDeg(degrees)
 
 fun cos(degrees: Float) = MathUtils.cosDeg(degrees)
 
-fun tan(degrees: Float) = MathUtils.radiansToDegrees * kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble())
+fun tan(degrees: Float) =
+    MathUtils.radiansToDegrees * kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble())
 
 fun sqr(x: Float) = x * x

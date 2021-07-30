@@ -25,9 +25,9 @@
 
 package com.hhs.koto.stg.task
 
-interface SpellCard {
+interface Spell {
     val maxTime: Int
     val health: Int
     val invulnerable: Boolean
-    fun getSpellCardBonus(): Long
+    fun getSpellBonus(): Long
 }

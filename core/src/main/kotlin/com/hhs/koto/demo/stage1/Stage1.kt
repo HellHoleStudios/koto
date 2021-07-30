@@ -23,60 +23,36 @@
  *
  */
 
-package com.hhs.koto.demo.stage
+package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.RunnableTask
-import com.hhs.koto.stg.task.SequenceTask
 import com.hhs.koto.stg.task.StageBuilder
+import com.hhs.koto.stg.task.waitForFinish
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
-import kotlinx.coroutines.yield
 import ktx.actors.plusAssign
 import ktx.actors.then
 
 class Stage1 : StageBuilder {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
-    override val canPractice = true
-    override val canContinue = true
     override val name = "stage1"
 
-    override fun build() = SequenceTask(
-        RunnableTask {
-            game.st += Image(getRegion("icon/koto-icon_128x.png")).apply {
-                setBounds(-150f, -200f, 128f, 128f)
-            }
-            game.st += Image(getRegion("ui/blank.png")).apply {
-                setBounds(-10f, -150f, 20f, 20f)
-                addAction(
-                    Actions.forever(
-                        Actions.moveTo(-10f, 150f, 30f)
-                                then Actions.moveTo(-10f, -150f, 30f)
-                    )
+    override fun build() = CoroutineTask {
+        game.st += Image(getRegion("icon/koto-icon_128x.png")).apply {
+            setBounds(-150f, -200f, 128f, 128f)
+        }
+        game.st += Image(getRegion("ui/blank.png")).apply {
+            setBounds(-10f, -150f, 20f, 20f)
+            addAction(
+                Actions.forever(
+                    Actions.moveTo(-10f, 150f, 30f)
+                            then Actions.moveTo(-10f, -150f, 30f)
                 )
-            }
-            game.st += Image(getRegion("ui/blank.png")).apply {
-                setBounds(20f, -150f, 20f, 20f)
-            }
-        },
-        CoroutineTask {
-            while (true) {
-                var f = 0
-                repeat(30) {
-                    game.st.actors[2].y = -150 + f * 10f
-                    f++
-                    yield()
-                }
-                repeat(30) {
-                    game.st.actors[2].y = -150 + f * 10f
-                    f--
-                    yield()
-                }
-            }
-        },
-    )
-
+            )
+        }
+        TestSpell().build().waitForFinish()
+    }
 }

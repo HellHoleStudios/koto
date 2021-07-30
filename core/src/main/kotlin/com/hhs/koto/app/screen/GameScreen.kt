@@ -63,6 +63,7 @@ class GameScreen : BasicScreen(null, null) {
             deactivate()
             input.addProcessor(pauseMenu)
         }
+        exitRunnable = noRunnable
     }
 
     private val pauseMenu = Grid(staticX = 150f, staticY = 400f).register(st, input).apply {

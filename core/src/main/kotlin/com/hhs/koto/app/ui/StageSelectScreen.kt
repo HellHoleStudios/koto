@@ -23,51 +23,49 @@
  *
  */
 
-package com.hhs.koto.app.screen
+package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.utils.Align
-import com.hhs.koto.app.Config
-import com.hhs.koto.app.ui.ConstrainedGrid
-import com.hhs.koto.app.ui.GridButton
-import com.hhs.koto.app.ui.register
+import com.hhs.koto.app.screen.BasicScreen
+import com.hhs.koto.app.screen.KotoScreen
+import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
-import ktx.actors.txt
 
-class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
-    private val titles = ConstrainedGrid(
+class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+    private val grid = ConstrainedGrid(
         120f,
-        400f,
+        200f,
         1200f,
-        600f,
+        630f,
         animationDuration = 0.5f,
         interpolation = Interpolation.pow5Out,
     ).setCullingToConstraint().register(st, input)
-    private val comment = Label("", getUILabelStyle(36)).apply {
-        setAlignment(Align.topLeft)
-        wrap = true
-        txt = bundle["music.1.comment"]
-        setBounds(120f, 100f, 1200f, 300f)
+    private val title = Label(bundle["ui.stageSelect.title"], getUILabelStyle(72)).apply {
+        setPosition(80f, 900f)
         st += this
     }
 
-    init {
-        for (i in 1..Config.musicCount) {
-            titles.add(GridButton(bundle["music.$i.title"], 36, 0, i) {
-                BGM.stop()
-                BGM.play(bundle["music.$i.file"])
-                comment.txt = bundle["music.$i.comment"]
+    override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
+        super.fadeIn(oldScreen, duration)
+        val stages = GameBuilder.getAvailableStages()
+        grid.clear()
+        for (i in 0 until stages.size) {
+            grid.add(GridButton(bundle["game.stage.${stages[i].name}.name"], 36, 0, i) {
+                SystemFlag.name = stages[i].name
+                SystemFlag.redirect = "game"
+                SystemFlag.redirectDuration = 0.5f
+                app.setScreen("blank", 0.5f)
             })
         }
-        titles.arrange(0f, 1000f, 0f, -45f)
-        titles.selectFirst()
-        titles.finishAnimation()
+        grid.arrange(0f, 1000f, 0f, -45f)
+        grid.selectFirst()
+        grid.finishAnimation()
     }
 
     override fun onQuit() {
         super.onQuit()
-        app.setScreen("title", 1f)
+        app.setScreen("playerSelect", 0.5f)
     }
 }

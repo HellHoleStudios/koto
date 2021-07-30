@@ -27,6 +27,7 @@ package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.util.safeIterator
@@ -75,6 +76,11 @@ open class ConstrainedGrid(
     fun finishAnimation() {
         updateTarget(0f)
         t = animationDuration
+    }
+
+    fun setCullingToConstraint(): ConstrainedGrid {
+        cullingArea = Rectangle(constraintX, constraintY, constraintWidth, constraintHeight)
+        return this
     }
 
     override fun updateComponent(): Grid {

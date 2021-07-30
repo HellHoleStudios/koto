@@ -29,11 +29,13 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
+import com.hhs.koto.util.SE
 import com.hhs.koto.util.bundle
 
 class ConfirmationMenu(
     yesRunnable: (() -> Unit)? = null,
     noRunnable: (() -> Unit)? = null,
+    var exitRunnable: (() -> Unit)? = null,
     text: String = bundle["ui.confirmation"],
     yesText: String = bundle["ui.yes"],
     noText: String = bundle["ui.no"],
@@ -50,7 +52,10 @@ class ConfirmationMenu(
 ) : Grid(gridX, gridY, cycle, staticX, staticY, width, height, selectSound = selectSound) {
     val label = GridLabel(text, 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 120f)
     val yesButton = GridButton(yesText, 36, gridX = 0, gridY = 1, staticY = 55f, runnable = yesRunnable)
-    val noButton = GridButton(noText, 36, gridX = 0, gridY = 2, staticY = 0f, runnable = noRunnable)
+    val noButton = GridButton(
+        noText, 36, gridX = 0, gridY = 2, staticY = 0f, runnable = noRunnable,
+        triggerSound = "cancel"
+    )
 
     var yesRunnable
         get() = yesButton.runnable
@@ -70,6 +75,12 @@ class ConfirmationMenu(
         add(yesButton)
         add(noButton)
         selectLast()
+    }
+
+    override fun exit() {
+        super.exit()
+        SE.play("cancel")
+        if (exitRunnable != null) exitRunnable!!()
     }
 
     fun getActiveAction(vararg actions: () -> Action): () -> Action = {
