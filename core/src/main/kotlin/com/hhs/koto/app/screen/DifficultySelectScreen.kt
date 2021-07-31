@@ -85,7 +85,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
                 width = 600f,
                 height = 30f,
                 activeStyle = Label.LabelStyle(
-                    getFont(bundle["font.boldItalic"], 48, borderColor = null), Color.WHITE
+                    getFont(bundle["font.subtitle"], 48, borderColor = null), Color.WHITE
                 ),
                 triggerSound = null,
             ).apply {

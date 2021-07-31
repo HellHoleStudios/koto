@@ -100,12 +100,13 @@ object Config {
     const val musicCount: Int = 1
     const val noDuplicateSE: Boolean = true
     lateinit var UIFont: String
+    lateinit var UIFontSmall: String
     val UIFontColor: Color = Color.WHITE
-    val UIFontBorderWidthFunction: ((Int) -> Float) = { fontSize: Int ->
-        if (fontSize <= 36) {
+    val UIFontBorderWidthFunction: (Int) -> Float = { fontSize: Int ->
+        if (fontSize <= 48) {
             fontSize * 0.1f
         } else {
-            (fontSize - 36) * 0.02f + 3.6f
+            (fontSize - 48) * 0.02f + 3.6f
         }
     }
     val UIFontBorderColor: Color = Color.BLACK

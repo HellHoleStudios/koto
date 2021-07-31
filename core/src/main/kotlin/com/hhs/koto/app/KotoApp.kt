@@ -75,12 +75,13 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         logger.info("Game start.")
         Locale.setDefault(Locale.ROOT)
         bundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locale, "UTF-8")
-        Config.UIFont = bundle["font.boldRegular"]
+        Config.UIFont = bundle["font.ui"]
+        Config.UIFontSmall = bundle["font.uiSmall"]
 
         batch = if (Config.useHSVShader) {
             SpriteBatch(
                 1000,
-                ShaderProgram(A.get<String>("shader/koto_hsv.vert.glsl"), A.get("shader/koto_hsv.frag.glsl"))
+                ShaderProgram(A.get<String>("shader/koto_hsv.vert.glsl"), A.get("shader/koto_hsv.frag.glsl")),
             )
         } else {
             SpriteBatch()
@@ -179,7 +180,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     override fun dispose() {
         batch.dispose()
         BGM.dispose()
-        A.dispose()
+        disposeA()
     }
 
     fun setScreen(name: String?) {

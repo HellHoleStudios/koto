@@ -43,14 +43,14 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
     private val titles = Group().apply { st += this }
     private val title = Label(
         "Koto Demonstration",
-        LabelStyle(getFont(bundle["font.boldRegular"], 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
+        LabelStyle(getFont(bundle["font.title"], 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
     ).apply {
         setPosition(80f, 860f)
         titles += this
     }
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont(bundle["font.regularItalic"], 36, Color.WHITE, borderColor = null), Color.BLACK),
+        LabelStyle(getFont(bundle["font.subtitle"], 40, Color.WHITE, borderColor = null), Color.BLACK),
     ).apply {
         setPosition(100f, 820f)
         titles += this
@@ -81,7 +81,7 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         grid.add(GridButton(bundle["ui.title.options"], 36, 0, -1) {
             app.setScreen("options", 0.5f)
         })
-        grid.add(GridButton(bundle["ui.title.quit"], 36, 0, 0, triggerSound = null) {
+        grid.add(GridButton(bundle["ui.title.quit"], 38, 0, 0, triggerSound = null) {
             onQuit()
         })
         grid.arrange(1050f, 100f, 0f, -45f)

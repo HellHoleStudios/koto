@@ -149,7 +149,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 staticY = 500f,
                 style = Label.LabelStyle(
                     getFont(
-                        bundle["font.boldItalic"],
+                        bundle["font.subtitle"],
                         36,
                         Color.WHITE,
                         borderColor = Color.BLACK
@@ -166,7 +166,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 staticY = 400f,
                 style = Label.LabelStyle(
                     getFont(
-                        bundle["font.boldRegular"],
+                        bundle["font.title"],
                         72,
                         playerColor(name),
                         borderColor = Color.BLACK
@@ -353,7 +353,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             shotTypeGrid.add(
                 GridButton(
                     bundle["ui.playerSelect.shotType.${shotTypes[i]}.description"],
-                    24,
+                    28,
                     0,
                     i,
                     staticX = 100f,

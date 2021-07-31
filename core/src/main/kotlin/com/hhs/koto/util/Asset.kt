@@ -34,11 +34,9 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.ParticleEffect
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.g2d.*
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
@@ -56,6 +54,7 @@ import ktx.json.fromJson
 import kotlin.math.nextUp
 
 lateinit var A: AssetManager
+lateinit var packer: PixmapPacker
 private lateinit var textureReflect: GdxMap<Texture, String>
 private lateinit var fontCache: GdxMap<FreeTypeFontParameterWrapper, BitmapFont>
 private var charset: String = ""
@@ -72,6 +71,13 @@ fun initA() {
     for (i in json.fromJson<GdxArray<String>>(Gdx.files.internal(".charset.json")).safeIterator()) {
         charset += i
     }
+    // this seems to fix FreeTypeFontGenerator glitch
+    packer = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 1, false)
+}
+
+fun disposeA() {
+    A.dispose()
+    packer.dispose()
 }
 
 fun getTexture(fileName: String): Texture {
@@ -91,14 +97,14 @@ fun getRegion(fileName: String): TextureRegion {
 
 fun getFont(
     name: String,
-    size: Int,
+    fontSize: Int,
     color: Color = Config.UIFontColor,
-    borderWidth: Float = Config.UIFontBorderWidthFunction(size),
+    borderWidth: Float = Config.UIFontBorderWidthFunction(fontSize),
     borderColor: Color? = Config.UIFontBorderColor,
     borderOutside: Boolean = true
 ): BitmapFont {
     val parameter = FreeTypeFontParameter()
-    parameter.size = size
+    parameter.size = fontSize
     parameter.color = color
     if (borderWidth != 0f && borderColor != null) {
         parameter.borderWidth = borderWidth
@@ -108,6 +114,7 @@ fun getFont(
             parameter.spaceY -= borderWidth.nextUp().toInt()
         }
     }
+    parameter.packer = packer
     parameter.characters = charset
     parameter.minFilter = Config.textureMinFilter
     parameter.magFilter = Config.textureMagFilter
@@ -162,7 +169,7 @@ private class FreeTypeFontParameterWrapper(val name: String, parameter0: FreeTyp
 
         other as FreeTypeFontParameterWrapper
 
-        if (name != name) return false
+        if (name != other.name) return false
         if (parameter.size != other.parameter.size) return false
         if (parameter.mono != other.parameter.mono) return false
         if (parameter.hinting != other.parameter.hinting) return false
@@ -230,8 +237,15 @@ private class FreeTypeFontParameterWrapper(val name: String, parameter0: FreeTyp
 fun getUILabelStyle(fontSize: Int): LabelStyle {
     return LabelStyle(
         getFont(
-            Config.UIFont, fontSize, Config.UIFontColor,
-            Config.UIFontBorderWidthFunction(fontSize), Config.UIFontBorderColor
+            if (fontSize <= 28) {
+                Config.UIFontSmall
+            } else {
+                Config.UIFont
+            },
+            fontSize,
+            Config.UIFontColor,
+            Config.UIFontBorderWidthFunction(fontSize),
+            Config.UIFontBorderColor
         ), Color.WHITE
     )
 }
