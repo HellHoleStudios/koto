@@ -28,7 +28,7 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.ui.*
@@ -95,8 +95,8 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
             }
         ).apply {
             setOrigin(Align.center)
-            activeAction = { Actions.scaleTo(1f, 1f, 0.5f, Interpolation.pow5Out) }
-            inactiveAction = { Actions.scaleTo(0.6f, 0.6f, 0.5f, Interpolation.pow5Out) }
+            activeAction = { scaleTo(1f, 1f, 0.5f, Interpolation.pow5Out) }
+            inactiveAction = { scaleTo(0.6f, 0.6f, 0.5f, Interpolation.pow5Out) }
         }.selectFirst()
     }
 

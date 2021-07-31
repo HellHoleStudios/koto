@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -95,24 +96,24 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 }
             }.apply {
                 activeAction = {
-                    Actions.sequence(
-                        Actions.moveTo(this.staticX, this.staticY),
-                        Actions.moveTo(this.staticX + 30f, this.staticY, 1f, Interpolation.pow5Out),
+                    sequence(
+                        moveTo(this.staticX, this.staticY),
+                        moveTo(this.staticX + 30f, this.staticY, 1f, Interpolation.pow5Out),
                     )
                 }
             }
         ).add(
             GridImage(selectPortrait, width = width, height = height, triggerSound = null).apply {
                 activeAction = {
-                    Actions.sequence(
-                        Actions.moveTo(this.staticX, this.staticY),
-                        Actions.moveTo(this.staticX - 30f, this.staticY, 1f, Interpolation.pow5Out),
+                    sequence(
+                        moveTo(this.staticX, this.staticY),
+                        moveTo(this.staticX - 30f, this.staticY, 1f, Interpolation.pow5Out),
                     )
                 }
             }
         ).apply {
-            activeAction = { Actions.show() }
-            inactiveAction = { Actions.hide() }
+            activeAction = { show() }
+            inactiveAction = { hide() }
         }.selectFirst()
 
         fun generateDescription(
@@ -180,8 +181,8 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 setAlignment(Align.center)
             }
         ).apply {
-            activeAction = { Actions.show() }
-            inactiveAction = { Actions.hide() }
+            activeAction = { show() }
+            inactiveAction = { hide() }
         }.selectFirst()
     }
 
@@ -245,7 +246,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
             difficultyLabel!!.clearActions()
             difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 300f)
             difficultyLabel!!.addAction(
-                Actions.moveTo(
+                moveTo(
                     difficultyLabel!!.staticX,
                     difficultyLabel!!.staticY,
                     duration,
@@ -255,12 +256,12 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
             portraits.clearActions()
             portraits.setPosition(portraits.staticX + 800f, portraits.staticY)
-            portraits.addAction(Actions.moveTo(portraits.staticX, portraits.staticY, duration, Interpolation.pow5Out))
+            portraits.addAction(moveTo(portraits.staticX, portraits.staticY, duration, Interpolation.pow5Out))
 
             descriptions.clearActions()
             descriptions.setPosition(descriptions.staticX - 800f, descriptions.staticY)
             descriptions.addAction(
-                Actions.moveTo(
+                moveTo(
                     descriptions.staticX,
                     descriptions.staticY,
                     duration,
@@ -276,7 +277,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         if (selectedPlayer == null) {
             difficultyLabel!!.clearActions()
             difficultyLabel!!.addAction(
-                Actions.moveTo(
+                moveTo(
                     difficultyLabel!!.staticX,
                     difficultyLabel!!.staticY - 300f,
                     duration,
@@ -286,7 +287,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
             portraits.clearActions()
             portraits.addAction(
-                Actions.moveTo(
+                moveTo(
                     portraits.staticX + 800f,
                     portraits.staticY,
                     duration,
@@ -296,7 +297,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
             descriptions.clearActions()
             descriptions.addAction(
-                Actions.moveTo(
+                moveTo(
                     descriptions.staticX - 800f,
                     descriptions.staticY,
                     duration,
@@ -308,11 +309,11 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
     private fun showShotType(name: String, shotTypes: GdxArray<String>) {
         shotType.clearActions()
-        shotType.addAction(Actions.fadeIn(0.5f, Interpolation.pow5Out))
+        shotType.addAction(fadeIn(0.5f, Interpolation.pow5Out))
         input.addProcessor(shotTypeGrid)
 
         descriptions.clearActions()
-        descriptions.addAction(Actions.fadeOut(0.5f, Interpolation.pow5Out))
+        descriptions.addAction(fadeOut(0.5f, Interpolation.pow5Out))
         input.removeProcessor(descriptions)
         input.removeProcessor(portraits)
 
@@ -339,7 +340,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                         Actions.run {
                             shotTypeBackground.clearActions()
                             shotTypeBackground.addAction(
-                                Actions.moveTo(
+                                moveTo(
                                     0f,
                                     baseY - i * 250f - 180f,
                                     1f,
@@ -370,12 +371,12 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
 
     private fun hideShotType() {
         shotType.clearActions()
-        shotType.addAction(Actions.fadeOut(0.5f, Interpolation.pow5Out))
+        shotType.addAction(fadeOut(0.5f, Interpolation.pow5Out))
         input.removeProcessor(shotTypeGrid)
 
         descriptions.clearActions()
         descriptions.setPosition(descriptions.staticX, descriptions.staticY)
-        descriptions.addAction(Actions.fadeIn(0.5f, Interpolation.pow5Out))
+        descriptions.addAction(fadeIn(0.5f, Interpolation.pow5Out))
         input.addProcessor(descriptions)
         input.addProcessor(portraits)
     }

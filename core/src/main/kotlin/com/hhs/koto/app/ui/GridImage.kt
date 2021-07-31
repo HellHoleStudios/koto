@@ -29,7 +29,8 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.color
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.SE
@@ -127,10 +128,10 @@ class GridImage(
     fun getActiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(
-            Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
+            moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out)
         )
         ret.addAction(
-            Actions.color(tint, 0.5f)
+            color(tint, 0.5f)
         )
         for (action in actions) {
             ret.addAction(action())
@@ -141,10 +142,10 @@ class GridImage(
     fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(
-            Actions.color(darken(tint))
+            color(darken(tint))
         )
         ret.addAction(
-            Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
+            moveTo(staticX, staticY, 1f, Interpolation.pow5Out),
         )
         for (action in actions) {
             ret.addAction(action())

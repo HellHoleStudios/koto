@@ -23,28 +23,30 @@
  *
  */
 
-package com.hhs.koto.app.ui
+package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.hhs.koto.app.screen.BasicScreen
-import com.hhs.koto.app.screen.KotoScreen
+import com.hhs.koto.app.ui.ConstrainedGrid
+import com.hhs.koto.app.ui.GridButton
+import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 
-class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
-    private val title = Label(bundle["ui.spellSelect.title"], getUILabelStyle(72)).apply {
-        setPosition(80f, 900f)
+class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+    private val titleBackground = Image(getRegion("ui/blank.png")).apply {
+        color = Color(0f, 0.5f, 1f, 0.5f)
+        setSize(1440f, 60f)
         st += this
     }
-    private val titleBackground = Image(getRegion("ui/blank.png")).apply {
-        color = Color(0f, 0f, 1f, 0.5f)
-        setSize(1440f, 45f)
+    private val title = Label(bundle["ui.stageSelect.title"], getUILabelStyle(72)).apply {
+        setPosition(80f, 900f)
         st += this
     }
     private val grid = ConstrainedGrid(
@@ -58,28 +60,26 @@ class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
-        title.addAction(Actions.moveTo(80f, 900f, 0.5f, Interpolation.pow5Out))
-
-        val spells = GameBuilder.getAvailableSpells()
+        val stages = GameBuilder.getAvailableStages()
         grid.clear()
-        for (i in 0 until spells.size) {
-            grid.add(GridButton(bundle["game.spell.${spells[i].name}.name"], 36, 0, i) {
-                SystemFlag.name = spells[i].name
+        for (i in 0 until stages.size) {
+            grid.add(GridButton(bundle["game.stage.${stages[i].name}.name"], 48, 0, i) {
+                SystemFlag.name = stages[i].name
                 SystemFlag.redirect = "game"
                 SystemFlag.redirectDuration = 0.5f
                 app.setScreen("blank", 0.5f)
             }.apply {
                 activeAction = getActiveAction({
-                    Actions.forever(Actions.run {
+                    forever(Actions.run {
                         titleBackground.clearActions()
                         titleBackground.addAction(
-                            Actions.parallel(
-                                Actions.color(
-                                    Color(i.toFloat() / spells.size, 0.5f, 1f, 0.5f),
+                            parallel(
+                                color(
+                                    Color(i.toFloat() / stages.size, 0.5f, 1f, 0.5f),
                                     0.5f,
                                 ),
-                                Actions.moveTo(
-                                    0f, y - grid.targetY - 2.5f,
+                                moveTo(
+                                    0f, y - grid.targetY - 7.5f,
                                     1f,
                                     Interpolation.pow5Out,
                                 ),
@@ -89,15 +89,10 @@ class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
                 })
             })
         }
-        grid.arrange(0f, 1000f, 0f, -45f)
+        grid.arrange(0f, 1000f, 0f, -60f)
         grid.selectFirst()
         grid.finishAnimation()
-        titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
-    }
-
-    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
-        super.fadeOut(newScreen, duration)
-        title.addAction(Actions.moveTo(80f, 1100f, 0.5f, Interpolation.pow5Out))
+        titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 7.5f)
     }
 
     override fun onQuit() {

@@ -28,6 +28,7 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.crashinvaders.vfx.VfxManager
 import com.crashinvaders.vfx.effects.GaussianBlurEffect
@@ -71,15 +72,15 @@ class GameScreen : BasicScreen(null, null) {
         deactivate()
         activeAction = {
             setPosition(staticX - 200f, staticY)
-            Actions.parallel(
-                Actions.fadeIn(0.5f, Interpolation.pow5Out),
-                Actions.moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out)
+            parallel(
+                fadeIn(0.5f, Interpolation.pow5Out),
+                moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out)
             )
         }
         inactiveAction = {
-            Actions.parallel(
-                Actions.fadeOut(0.5f, Interpolation.pow5Out),
-                Actions.moveTo(staticX - 200f, staticY, 0.5f, Interpolation.pow5Out)
+            parallel(
+                fadeOut(0.5f, Interpolation.pow5Out),
+                moveTo(staticX - 200f, staticY, 0.5f, Interpolation.pow5Out)
             )
         }
     }
@@ -87,7 +88,7 @@ class GameScreen : BasicScreen(null, null) {
     init {
         pauseMenu.add(GridButton(bundle["ui.game.resume"], 36, gridX = 0, gridY = 1) {
             blurredGameFrame.addAction(
-                Actions.fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
+                fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
             )
             pauseMenu.deactivate()
         })
@@ -99,8 +100,8 @@ class GameScreen : BasicScreen(null, null) {
                 confirmationMenu.deactivate()
                 pauseMenu.deactivate()
                 blurredGameFrame.addAction(
-                    Actions.sequence(
-                        Actions.fadeOut(0.5f, Interpolation.sine),
+                    sequence(
+                        fadeOut(0.5f, Interpolation.sine),
                         Actions.run {
                             game.dispose()
                             reset()

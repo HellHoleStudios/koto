@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.*
@@ -79,7 +80,7 @@ open class BasicScreen(
         blocker.isBlocking = true
         state = ScreenState.FADING_OUT
         st.root.clearActions()
-        st.root.addAction(Actions.sequence(Actions.fadeOut(duration, Interpolation.pow3Out), Actions.run { hide() }))
+        st.root.addAction(sequence(fadeOut(duration, Interpolation.pow3Out), Actions.run { hide() }))
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
@@ -89,7 +90,7 @@ open class BasicScreen(
         show()
         st.root.clearActions()
         st.root.color.a = 1f
-        st.root.addAction(Actions.sequence(Actions.delay(duration), Actions.run {
+        st.root.addAction(sequence(delay(duration), Actions.run {
             state = ScreenState.SHOWN
         }))
     }

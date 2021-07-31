@@ -38,8 +38,6 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
-import com.hhs.koto.app.ui.SpellSelectScreen
-import com.hhs.koto.app.ui.StageSelectScreen
 import com.hhs.koto.demo.RegularGame
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.demo.stage1.TestSpell

@@ -28,7 +28,7 @@ package com.hhs.koto.app.screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.hhs.koto.app.ui.Grid
@@ -92,18 +92,18 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         super.fadeIn(oldScreen, duration)
         grid.clearActions()
         grid.setPosition(grid.staticX + 400f, grid.staticY)
-        grid.addAction(Actions.moveTo(grid.staticX, grid.staticY, duration, Interpolation.pow5Out))
+        grid.addAction(moveTo(grid.staticX, grid.staticY, duration, Interpolation.pow5Out))
         titles.clearActions()
         titles.setPosition(0f, 400f)
-        titles.addAction(Actions.moveTo(0f, 0f, duration, Interpolation.pow5Out))
+        titles.addAction(moveTo(0f, 0f, duration, Interpolation.pow5Out))
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
         grid.clearActions()
-        grid.addAction(Actions.moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.sineOut))
+        grid.addAction(moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.sineOut))
         titles.clearActions()
-        titles.addAction(Actions.moveTo(0f, 400f, duration, Interpolation.sineOut))
+        titles.addAction(moveTo(0f, 400f, duration, Interpolation.sineOut))
     }
 
     override fun onQuit() {

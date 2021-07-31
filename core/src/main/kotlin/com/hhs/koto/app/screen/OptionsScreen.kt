@@ -29,6 +29,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.utils.I18NBundle
 import com.hhs.koto.app.Options
 import com.hhs.koto.app.ui.ConstrainedGrid
@@ -61,18 +62,18 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
             val button = GridButton(tmpBundle["locale.name"], 36, i, 0, triggerSound = null, ignoreParent = true)
             language.add(button)
             button.activeAction = {
-                Actions.parallel(
-                    Actions.sequence(
+                parallel(
+                    sequence(
                         Actions.show(),
-                        Actions.color(Color.WHITE),
-                        Actions.moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
-                        Actions.moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
-                        Actions.moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
+                        color(Color.WHITE),
+                        moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
+                        moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
+                        moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
                     ),
-                    Actions.forever(
-                        Actions.sequence(
-                            Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                            Actions.color(Color.WHITE, 0.5f),
+                    forever(
+                        sequence(
+                            color(darken(Color.WHITE, 0.9f), 0.5f),
+                            color(Color.WHITE, 0.5f),
                         )
                     ),
                     Actions.run {
@@ -92,18 +93,18 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
             val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null, ignoreParent = true)
             musicVolume.add(button)
             button.activeAction = {
-                Actions.parallel(
-                    Actions.sequence(
+                parallel(
+                    sequence(
                         Actions.show(),
-                        Actions.color(Color.WHITE),
-                        Actions.moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
-                        Actions.moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
-                        Actions.moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
+                        color(Color.WHITE),
+                        moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
+                        moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
+                        moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
                     ),
-                    Actions.forever(
-                        Actions.sequence(
-                            Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                            Actions.color(Color.WHITE, 0.5f),
+                    forever(
+                        sequence(
+                            color(darken(Color.WHITE, 0.9f), 0.5f),
+                            color(Color.WHITE, 0.5f),
                         )
                     ),
                     Actions.run {
@@ -121,9 +122,9 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         grid.add(SEVolume)
         val tmpButton1 = GridButton(bundle["ui.options.SEVolume"], 36, 0, -5, triggerSound = null)
         tmpButton1.activeAction = tmpButton1.getActiveAction({
-            Actions.forever(
-                Actions.sequence(
-                    Actions.delay(1.5f),
+            forever(
+                sequence(
+                    delay(1.5f),
                     Actions.run {
                         SE.play("pldead")
                     },
@@ -135,18 +136,18 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
             val button = GridButton((i * 5).toString() + "%", 36, i, 0, triggerSound = null, ignoreParent = true)
             SEVolume.add(button)
             button.activeAction = {
-                Actions.parallel(
-                    Actions.sequence(
+                parallel(
+                    sequence(
                         Actions.show(),
-                        Actions.color(Color.WHITE),
-                        Actions.moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
-                        Actions.moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
-                        Actions.moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
+                        color(Color.WHITE),
+                        moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
+                        moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
+                        moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
                     ),
-                    Actions.forever(
-                        Actions.sequence(
-                            Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                            Actions.color(Color.WHITE, 0.5f),
+                    forever(
+                        sequence(
+                            color(darken(Color.WHITE, 0.9f), 0.5f),
+                            color(Color.WHITE, 0.5f),
                         )
                     ),
                     Actions.run {
@@ -163,33 +164,33 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         val VsyncDisableButton = GridButton(bundle["ui.no"], 36, 0, 0, triggerSound = null, ignoreParent = true)
         Vsync.add(VsyncDisableButton)
         VsyncDisableButton.activeAction = {
-            Actions.parallel(
-                Actions.sequence(
+            parallel(
+                sequence(
                     Actions.show(),
-                    Actions.color(Color.WHITE),
-                    Actions.moveTo(
+                    color(Color.WHITE),
+                    moveTo(
                         VsyncDisableButton.staticX + 2,
                         VsyncDisableButton.staticY,
                         0.03f,
                         Interpolation.sine,
                     ),
-                    Actions.moveTo(
+                    moveTo(
                         VsyncDisableButton.staticX - 4,
                         VsyncDisableButton.staticY,
                         0.06f,
                         Interpolation.sine,
                     ),
-                    Actions.moveTo(
+                    moveTo(
                         VsyncDisableButton.staticX,
                         VsyncDisableButton.staticY,
                         0.03f,
                         Interpolation.sine,
                     ),
                 ),
-                Actions.forever(
-                    Actions.sequence(
-                        Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f),
+                forever(
+                    sequence(
+                        color(darken(Color.WHITE, 0.9f), 0.5f),
+                        color(Color.WHITE, 0.5f),
                     )
                 ),
                 Actions.run {
@@ -202,33 +203,33 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         val VsyncEnableButton = GridButton(bundle["ui.yes"], 36, 1, 0, triggerSound = null, ignoreParent = true)
         Vsync.add(VsyncEnableButton)
         VsyncEnableButton.activeAction = {
-            Actions.parallel(
-                Actions.sequence(
+            parallel(
+                sequence(
                     Actions.show(),
-                    Actions.color(Color.WHITE),
-                    Actions.moveTo(
+                    color(Color.WHITE),
+                    moveTo(
                         VsyncEnableButton.staticX + 2,
                         VsyncEnableButton.staticY,
                         0.03f,
                         Interpolation.sine,
                     ),
-                    Actions.moveTo(
+                    moveTo(
                         VsyncEnableButton.staticX - 4,
                         VsyncEnableButton.staticY,
                         0.06f,
                         Interpolation.sine,
                     ),
-                    Actions.moveTo(
+                    moveTo(
                         VsyncEnableButton.staticX,
                         VsyncEnableButton.staticY,
                         0.03f,
                         Interpolation.sine,
                     ),
                 ),
-                Actions.forever(
-                    Actions.sequence(
-                        Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                        Actions.color(Color.WHITE, 0.5f),
+                forever(
+                    sequence(
+                        color(darken(Color.WHITE, 0.9f), 0.5f),
+                        color(Color.WHITE, 0.5f),
                     )
                 ),
                 Actions.run {
@@ -272,13 +273,13 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
         oldOptions = options.copy()
         grid.clearActions()
         grid.setPosition(grid.staticX + 400f, grid.staticY)
-        grid.addAction(Actions.moveTo(grid.staticX, grid.staticY, duration, Interpolation.pow5Out))
+        grid.addAction(moveTo(grid.staticX, grid.staticY, duration, Interpolation.pow5Out))
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
         grid.clearActions()
-        grid.addAction(Actions.moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.sineOut))
+        grid.addAction(moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.sineOut))
     }
 
     override fun onQuit() {

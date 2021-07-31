@@ -25,7 +25,8 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.forever
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.task.RunnableTask
@@ -48,9 +49,9 @@ class Stage1 : StageBuilder {
             game.st += Image(getRegion("ui/blank.png")).apply {
                 setBounds(-10f, -150f, 20f, 20f)
                 addAction(
-                    Actions.forever(
-                        Actions.moveTo(-10f, 150f, 30f)
-                                then Actions.moveTo(-10f, -150f, 30f)
+                    forever(
+                        moveTo(-10f, 150f, 30f)
+                                then moveTo(-10f, -150f, 30f)
                     )
                 )
             }

@@ -28,7 +28,7 @@ package com.hhs.koto.app.ui
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.util.SE
@@ -138,16 +138,16 @@ class GridButton(
     fun getActiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(
-            Actions.sequence(
-                Actions.color(Color.WHITE),
-                Actions.moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out),
+            sequence(
+                color(Color.WHITE),
+                moveTo(staticX - 10, staticY, 1f, Interpolation.pow5Out),
             )
         )
         ret.addAction(
-            Actions.forever(
-                Actions.sequence(
-                    Actions.color(darken(Color.WHITE, 0.9f), 0.5f),
-                    Actions.color(Color.WHITE, 0.5f),
+            forever(
+                sequence(
+                    color(darken(Color.WHITE, 0.9f), 0.5f),
+                    color(Color.WHITE, 0.5f),
                 )
             )
         )
@@ -160,13 +160,13 @@ class GridButton(
     fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(
-            Actions.alpha(1f)
+            alpha(1f)
         )
         ret.addAction(
-            Actions.moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
+            moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
         )
         ret.addAction(
-            Actions.color(darken(Color.WHITE, 0.7f))
+            color(darken(Color.WHITE, 0.7f))
         )
         for (action in actions) {
             ret.addAction(action())

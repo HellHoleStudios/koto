@@ -27,6 +27,8 @@ package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.delay
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.app
 import com.hhs.koto.util.getRegion
@@ -44,7 +46,7 @@ class BlankScreen : BasicScreen(null, getRegion("ui/blank.png")) {
         show()
         st.root.clearActions()
         st.root.color.a = 1f
-        st.root.addAction(Actions.sequence(Actions.delay(duration), Actions.run {
+        st.root.addAction(sequence(delay(duration), Actions.run {
             state = ScreenState.SHOWN
             if (SystemFlag.redirect != null) {
                 if (SystemFlag.redirectDuration != null) {
