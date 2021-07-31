@@ -74,7 +74,7 @@ class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
                         titleBackground.clearActions()
                         titleBackground.addAction(
                             parallel(
-                                color(
+                                hsvColor(
                                     Color(i.toFloat() / stages.size, 0.5f, 1f, 0.5f),
                                     0.5f,
                                 ),

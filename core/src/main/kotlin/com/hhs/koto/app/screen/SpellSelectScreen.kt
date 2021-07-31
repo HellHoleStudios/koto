@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
+import com.hhs.koto.app.ui.HSVColorAction
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
@@ -76,7 +77,7 @@ class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
                         titleBackground.clearActions()
                         titleBackground.addAction(
                             parallel(
-                                color(
+                                hsvColor(
                                     Color(i.toFloat() / spells.size, 0.5f, 1f, 0.5f),
                                     0.5f,
                                 ),

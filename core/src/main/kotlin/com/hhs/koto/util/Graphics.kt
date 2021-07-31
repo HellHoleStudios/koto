@@ -26,7 +26,10 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.app.Config
+import com.hhs.koto.app.ui.HSVColorAction
 import ktx.graphics.copy
 
 operator fun Color.plus(other: Color): Color = this.copy().add(other)
@@ -69,4 +72,20 @@ fun fromHsv(h: Float, s: Float, v: Float, a: Float): Color {
 fun Color.toHSVColor(): Color {
     toHsv(tmpHSVArray)
     return Color(tmpHSVArray[0] / 360f, tmpHSVArray[1], tmpHSVArray[2], a)
+}
+
+fun hsvColor(color: Color): HSVColorAction {
+    return hsvColor(color, 0f, null)
+}
+
+fun hsvColor(color: Color, duration: Float): HSVColorAction {
+    return hsvColor(color, duration, null)
+}
+
+fun hsvColor(color: Color, duration: Float, interpolation: Interpolation?): HSVColorAction {
+    val action = Actions.action(HSVColorAction::class.java)
+    action.endColor = color
+    action.duration = duration
+    action.interpolation = interpolation
+    return action
 }
