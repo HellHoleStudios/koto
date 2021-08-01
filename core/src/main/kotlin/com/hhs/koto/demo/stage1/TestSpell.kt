@@ -26,9 +26,14 @@
 package com.hhs.koto.demo.stage1
 
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.task.*
+import com.hhs.koto.stg.pattern.accelerate
+import com.hhs.koto.stg.pattern.angularVel
+import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.SpellBuilder
+import com.hhs.koto.stg.task.Task
+import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.B
-import com.hhs.koto.util.create
+import com.hhs.koto.util.ring
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -37,14 +42,8 @@ class TestSpell : SpellBuilder {
 
     override fun build(): Task = CoroutineTask {
         while (true) {
-            for (i in 0 until 360 step 15) {
-                create(B["DS_BALL_S_RED"], 0f, 0f, i.toFloat(), 2f).task {
-                    while (true) {
-                        bullet.angle += 0.5f
-                        wait()
-                    }
-                }
-            }
+            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 0 until 360 step 15)
+                .accelerate(0.2f, 20).angularVel(3f)
             wait(10)
         }
     }

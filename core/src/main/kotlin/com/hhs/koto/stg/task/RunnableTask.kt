@@ -32,4 +32,6 @@ class RunnableTask(val runnable: Runnable) : Task {
         runnable.run()
         isComplete = true
     }
+
+    override fun kill() = Unit
 }

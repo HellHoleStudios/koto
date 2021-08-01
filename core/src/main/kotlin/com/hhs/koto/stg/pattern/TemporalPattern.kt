@@ -23,44 +23,27 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.addTask
-import com.hhs.koto.stg.task.CoroutineTask
-import kotlinx.coroutines.CoroutineScope
-import ktx.collections.GdxArray
+import com.hhs.koto.stg.task.Task
 
-class BulletGroup {
-    val bullets = GdxArray<Bullet>()
+abstract class TemporalPattern(val duration: Int = Int.MAX_VALUE) : Task {
+    var t: Int = 0
+    override var isComplete: Boolean = false
 
-    fun addBullet(bullet: Bullet) {
-        bullets.add(bullet)
-    }
+    abstract fun action()
 
-    fun task(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        val task = CoroutineTask(bulletGroup = this, block = block)
-        addTask(task)
-        return this
-    }
-
-    inline fun forEach(action: (Bullet) -> Unit) {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                action(bullets[i])
-            } else {
-                bullets[i] = null
-            }
+    override fun tick() {
+        if (isComplete) return
+        t++
+        if (t >= duration) {
+            isComplete = true
+        } else {
+            action()
         }
     }
 
-    fun taskEach(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                bullets[i].task(i, block)
-            } else {
-                bullets[i] = null
-            }
-        }
-        return this
+    override fun kill() {
+        isComplete = true
     }
 }

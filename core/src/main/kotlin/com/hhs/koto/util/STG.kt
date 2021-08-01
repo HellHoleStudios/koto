@@ -28,8 +28,10 @@ package com.hhs.koto.util
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
+import com.hhs.koto.stg.addBullet
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletData
+import com.hhs.koto.stg.bullet.BulletGroup
 import com.hhs.koto.stg.bullet.ShotSheet
 
 lateinit var game: KotoGame
@@ -62,41 +64,63 @@ fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     return false
 }
 
-fun create(bulletData: BulletData, x: Float, y: Float, angle: Float, speed: Float, color: Color = Color.WHITE): Bullet =
-    game.bullets.addBullet(Bullet(x, y, speed, angle, bulletData, color = color))
+fun create(
+    data: BulletData,
+    x: Float,
+    y: Float,
+    angle: Float = 0f,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+): Bullet =
+    addBullet(Bullet(x, y, speed, angle, data, color = color))
 
-//    TODO B
-//    fun setAngleSpeed(bullet: Bullet, x: Float, y: Float, angle: Float, speed: Float): Bullet {
-//        var angle = angle
-//        angle = M.normalizeAngle(angle)
-//        bullet.sprite.setRotation(angle - bullet.data.rotation)
-//        bullet.setXY(x, y)
-//        bullet.setSpeed(speed)
-//        bullet.setAngle(angle)
-//        J.add(bullet)
-//        return bullet
-//    }
-//
-//    fun create(x: Float, y: Float, angle: Float, speed: Float, id: Int, tag: Int): Bullet {
-//        return setAngleSpeed(EnemyBullet(B[id], tag), x, y, angle, speed)
-//    }
-//
-//    fun towards(x: Float, y: Float, angle: Float, speed: Float, name: String?, tag: Int): Bullet {
-//        return create(x, y, angle, speed, defaultSheet!!.getId(name!!), tag)
-//    }
-//
-//    fun towards(x: Float, y: Float, targetX: Float, targetY: Float, speed: Float, id: Int, tag: Int): Bullet {
-//        return create(x, y, atan2(x, y, targetX, targetY), speed, id, tag)
-//    }
-//
-//    fun towards(x: Float, y: Float, targetX: Float, targetY: Float, speed: Float, name: String?, tag: Int): Bullet {
-//        return towards(x, y, targetX, targetY, speed, defaultSheet!!.getId(name!!), tag)
-//    }
-//
-//    fun towards(x: Float, y: Float, speed: Float, id: Int, tag: Int): Bullet {
-//        return towards(x, y, J.playerX(), J.playerY(), speed, id, tag)
-//    }
-//
-//    fun towards(x: Float, y: Float, speed: Float, name: String?, tag: Int): Bullet {
-//        return towards(x, y, speed, defaultSheet!!.getId(name!!), tag)
-//    }
+fun towards(
+    data: BulletData,
+    x: Float,
+    y: Float,
+    targetX: Float,
+    targetY: Float,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+): Bullet =
+    addBullet(Bullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color))
+
+fun ring(
+    data: BulletData,
+    x: Float,
+    y: Float,
+    radius: Float,
+    offsetAngle: Float,
+    count: Int,
+    startAngle: Float = 0f,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+): BulletGroup {
+    val ret = BulletGroup()
+    for (i in 0 until count) {
+        val angle = i * offsetAngle + startAngle
+        val bullet = Bullet(x + cos(angle) * radius, y + sin(angle) * radius, speed, angle, data, color = color)
+        addBullet(bullet)
+        ret.addBullet(bullet)
+    }
+    return ret
+}
+
+fun ring(
+    data: BulletData,
+    x: Float,
+    y: Float,
+    radius: Float,
+    progression: IntProgression,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+): BulletGroup {
+    val ret = BulletGroup()
+    progression.forEach {
+        val angle = it.toFloat()
+        val bullet = Bullet(x + cos(angle) * radius, y + sin(angle) * radius, speed, angle, data, color = color)
+        addBullet(bullet)
+        ret.addBullet(bullet)
+    }
+    return ret
+}

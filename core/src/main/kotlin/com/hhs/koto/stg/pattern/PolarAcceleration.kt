@@ -23,44 +23,45 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg.pattern
 
 import com.hhs.koto.stg.addTask
-import com.hhs.koto.stg.task.CoroutineTask
-import kotlinx.coroutines.CoroutineScope
-import ktx.collections.GdxArray
+import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.BulletGroup
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.sin
 
-class BulletGroup {
-    val bullets = GdxArray<Bullet>()
-
-    fun addBullet(bullet: Bullet) {
-        bullets.add(bullet)
-    }
-
-    fun task(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        val task = CoroutineTask(bulletGroup = this, block = block)
-        addTask(task)
-        return this
-    }
-
-    inline fun forEach(action: (Bullet) -> Unit) {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                action(bullets[i])
-            } else {
-                bullets[i] = null
-            }
+class PolarAcceleration(
+    bullet: Bullet,
+    accAngle: Float,
+    accSpeed: Float,
+    duration: Int = Int.MAX_VALUE,
+) : CartesianAcceleration(bullet, cos(accAngle) * accSpeed, sin(accAngle) * accSpeed, duration) {
+    var accAngle: Float = accAngle
+        set(value) {
+            field = value
+            calculateDelta()
         }
-    }
-
-    fun taskEach(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                bullets[i].task(i, block)
-            } else {
-                bullets[i] = null
-            }
+    var accSpeed: Float = accSpeed
+        set(value) {
+            field = value
+            calculateDelta()
         }
-        return this
+
+    fun calculateDelta() {
+        deltaX = cos(accAngle) * accSpeed
+        deltaY = sin(accAngle) * accSpeed
     }
+}
+
+fun <T : Bullet> T.polarAcceleration(accAngle: Float, accSpeed: Float, duration: Int = Int.MAX_VALUE): T {
+    addTask(PolarAcceleration(this, accAngle, accSpeed, duration))
+    return this
+}
+
+fun BulletGroup.polarAcceleration(accAngle: Float, accSpeed: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
+    forEach {
+        addTask(PolarAcceleration(it, accAngle, accSpeed, duration))
+    }
+    return this
 }

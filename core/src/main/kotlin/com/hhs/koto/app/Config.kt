@@ -93,7 +93,6 @@ object Config {
     const val deleteDistance: Float = 1024f
     const val safeDistance: Float = 16f
     const val orthoCircleCollision: Boolean = true
-    const val cleanupBulletCount: Int = 8192
     const val cleanupBlankCount: Int = 512
     const val defaultShotSheet: String = "danmakufu_shot.shot"
     const val allowSpeedUpOutOfReplay: Boolean = true

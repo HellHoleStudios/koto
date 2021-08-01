@@ -23,44 +23,32 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg.pattern
 
 import com.hhs.koto.stg.addTask
-import com.hhs.koto.stg.task.CoroutineTask
-import kotlinx.coroutines.CoroutineScope
-import ktx.collections.GdxArray
+import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.BulletGroup
 
-class BulletGroup {
-    val bullets = GdxArray<Bullet>()
+class AngularVelocity(
+    val bullet: Bullet,
+    var omega: Float = 0f,
+    duration: Int = Int.MAX_VALUE,
+) : TemporalPattern(duration) {
+    override var isComplete: Boolean = false
 
-    fun addBullet(bullet: Bullet) {
-        bullets.add(bullet)
+    override fun action() {
+        bullet.angle += omega
     }
+}
 
-    fun task(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        val task = CoroutineTask(bulletGroup = this, block = block)
-        addTask(task)
-        return this
-    }
+fun <T : Bullet> T.angularVel(omega: Float = 0f, duration: Int = Int.MAX_VALUE): T {
+    addTask(AngularVelocity(this, omega, duration))
+    return this
+}
 
-    inline fun forEach(action: (Bullet) -> Unit) {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                action(bullets[i])
-            } else {
-                bullets[i] = null
-            }
-        }
+fun BulletGroup.angularVel(omega: Float = 0f, duration: Int = Int.MAX_VALUE): BulletGroup {
+    forEach {
+        addTask(AngularVelocity(it, omega, duration))
     }
-
-    fun taskEach(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                bullets[i].task(i, block)
-            } else {
-                bullets[i] = null
-            }
-        }
-        return this
-    }
+    return this
 }

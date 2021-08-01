@@ -54,6 +54,14 @@ class SequenceTask(vararg task: Task) : Task {
         }
     }
 
+    override fun kill() {
+        tasks.forEach {
+            if (!it.isComplete) it.kill()
+        }
+        tasks.clear()
+        isComplete = true
+    }
+
     fun addTask(vararg task: Task) {
         if (isComplete) {
             app.logger.error("Cannot add task to a completed SequenceTask!")
