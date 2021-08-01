@@ -133,15 +133,7 @@ class GameScreen : BasicScreen(null, null) {
         }
         if (tryPause && game.frameScheduler.canPause) {
             tryPause = false
-<<<<<<< Updated upstream
-            paused = true
-            passCounter = 0
-            pauseMenu.activate()
-            SE.play("pause")
-            blurredGameFrame.alpha = 1f
-=======
             pauseGame()
->>>>>>> Stashed changes
         }
         if (paused) {
             if (passCounter > 0 && keyJustPressed(options.keyPause)) {
