@@ -99,16 +99,6 @@ open class Bullet(
         t++
     }
 
-    fun maxSpeed(speed: Float): Bullet {
-        speed.coerceAtMost(speed)
-        return this
-    }
-
-    fun minSpeed(speed: Float): Bullet {
-        speed.coerceAtLeast(speed)
-        return this
-    }
-
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
             val texture = data.texture.getFrame(t)
