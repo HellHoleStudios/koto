@@ -139,6 +139,7 @@ class GameScreen : BasicScreen(null, null) {
             paused = true
             passCounter = 0
             pauseMenu.activate()
+            SE.play("pause")
             blurredGameFrame.alpha = 1f
         }
         if (paused) {
