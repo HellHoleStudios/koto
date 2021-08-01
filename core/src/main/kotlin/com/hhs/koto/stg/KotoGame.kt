@@ -35,12 +35,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutput
+import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletLayer
 import com.hhs.koto.stg.task.ParallelTask
-import com.hhs.koto.util.app
-import com.hhs.koto.util.disposeRegisteredEffects
-import com.hhs.koto.util.keyPressed
-import com.hhs.koto.util.options
+import com.hhs.koto.stg.task.Task
+import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen
 import java.lang.Float.min
@@ -134,4 +133,14 @@ class KotoGame() : Disposable {
         disposeRegisteredEffects()
         logger.info("Game instance disposed.")
     }
+}
+
+fun <T : Task> addTask(task: T): T {
+    game.tasks.addTask(task)
+    return task
+}
+
+fun <T : Bullet> addBullet(bullet: T): T {
+    game.bullets.addBullet(bullet)
+    return bullet
 }

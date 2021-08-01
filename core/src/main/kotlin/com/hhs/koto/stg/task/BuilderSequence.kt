@@ -58,6 +58,11 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
         }
     }
 
+    override fun kill() {
+        builders.clear()
+        isComplete = true
+    }
+
     fun addBuilder(vararg builder: TaskBuilder) {
         if (isComplete) {
             app.logger.error("Cannot add builder to a completed BuilderSequence!")

@@ -50,11 +50,13 @@ class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
                 if (outOfWorld(bullets[i].x, bullets[i].y, bullets[i].boundingWidth, bullets[i].boundingHeight)) {
                     bullets[i].alive = false
                     bullets[i] = null
+                    count--
+                    blankCount++
                 }
             }
         }
-        if (count <= Config.cleanupBulletCount && blankCount >= Config.cleanupBlankCount || bullets.size >= 1048576) {
-            game.logger.info("Cleaning up blanks in bullet array: bulletCount=$count blankCount=$blankCount")
+        if (blankCount >= Config.cleanupBlankCount || bullets.size >= 262144) {
+            game.logger.debug("Cleaning up blanks in bullet array: bulletCount=$count blankCount=$blankCount")
             bullets.removeNull()
             blankCount = 0
         }

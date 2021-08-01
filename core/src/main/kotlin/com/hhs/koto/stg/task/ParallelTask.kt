@@ -49,6 +49,14 @@ class ParallelTask(vararg task: Task) : Task {
         isComplete = tasks.size == 0
     }
 
+    override fun kill() {
+        tasks.forEach {
+            if (!it.isComplete) it.kill()
+        }
+        tasks.clear()
+        isComplete = true
+    }
+
     fun addTask(vararg task: Task) {
         if (isComplete) {
             app.logger.error("Cannot add task to a completed ParallelTask!")

@@ -23,44 +23,30 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg.pattern
 
 import com.hhs.koto.stg.addTask
-import com.hhs.koto.stg.task.CoroutineTask
-import kotlinx.coroutines.CoroutineScope
-import ktx.collections.GdxArray
+import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.BulletGroup
 
-class BulletGroup {
-    val bullets = GdxArray<Bullet>()
-
-    fun addBullet(bullet: Bullet) {
-        bullets.add(bullet)
+class Accelerate(
+    val bullet: Bullet,
+    var acc: Float = 0f,
+    duration: Int = Int.MAX_VALUE,
+) : TemporalPattern(duration) {
+    override fun action() {
+        bullet.speed += acc
     }
+}
 
-    fun task(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        val task = CoroutineTask(bulletGroup = this, block = block)
-        addTask(task)
-        return this
-    }
+fun <T : Bullet> T.accelerate(acc: Float = 0f, duration: Int = Int.MAX_VALUE): T {
+    addTask(Accelerate(this, acc, duration))
+    return this
+}
 
-    inline fun forEach(action: (Bullet) -> Unit) {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                action(bullets[i])
-            } else {
-                bullets[i] = null
-            }
-        }
+fun BulletGroup.accelerate(acc: Float = 0f, duration: Int = Int.MAX_VALUE): BulletGroup {
+    forEach {
+        addTask(Accelerate(it, acc, duration))
     }
-
-    fun taskEach(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        for (i in 0 until bullets.size) {
-            if (bullets[i].alive) {
-                bullets[i].task(i, block)
-            } else {
-                bullets[i] = null
-            }
-        }
-        return this
-    }
+    return this
 }

@@ -25,9 +25,9 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
-import com.hhs.koto.util.game
 import kotlinx.coroutines.*
 import ktx.collections.GdxMap
 import ktx.collections.set
@@ -86,6 +86,11 @@ class CoroutineTask(
         }
         element.frame++
     }
+
+    override fun kill() {
+        job.cancel()
+        CoroutineTaskDispatcher.remove(job.job)
+    }
 }
 
 val CoroutineScope.frame: Int
@@ -116,6 +121,6 @@ fun task(
     block: suspend CoroutineScope.() -> Unit
 ): Task {
     val task = CoroutineTask(index, bullet, bulletGroup, block)
-    game.tasks.addTask(task)
+    addTask(task)
     return task
 }

@@ -67,13 +67,29 @@ fun normalizeAngle(angle: Float): Float {
     return angle1
 }
 
-fun dist2(x1: Float, y1: Float, x2: Float, y2: Float) = sqr(x1 - x2) + sqr(y1 - y2)
+fun sqr(x: Float): Float =
+    x * x
 
-fun dist(x1: Float, y1: Float, x2: Float, y2: Float) = sqrt((sqr(x1 - x2) + sqr(y1 - y2)).toDouble()).toFloat()
+fun sqrt(x: Float): Float =
+    sqrt(x.toDouble()).toFloat()
 
-fun atan2(x: Float, y: Float) = MathUtils.atan2(y, x) * MathUtils.radiansToDegrees
+fun dist2(x: Float, y: Float): Float =
+    x * x + y * y
 
-fun atan2(x1: Float, y1: Float, x2: Float, y2: Float) = MathUtils.atan2(y2 - y1, x2 - x1) * MathUtils.radiansToDegrees
+fun dist(x: Float, y: Float): Float =
+    sqrt(x * x + y * y)
+
+fun dist2(x1: Float, y1: Float, x2: Float, y2: Float): Float =
+    sqr(x1 - x2) + sqr(y1 - y2)
+
+fun dist(x1: Float, y1: Float, x2: Float, y2: Float): Float =
+    sqrt(sqr(x1 - x2) + sqr(y1 - y2))
+
+fun atan2(x: Float, y: Float): Float =
+    MathUtils.atan2(y, x) * MathUtils.radiansToDegrees
+
+fun atan2(x1: Float, y1: Float, x2: Float, y2: Float): Float =
+    MathUtils.atan2(y2 - y1, x2 - x1) * MathUtils.radiansToDegrees
 
 fun sin(degrees: Float) = MathUtils.sinDeg(degrees)
 
@@ -81,5 +97,3 @@ fun cos(degrees: Float) = MathUtils.cosDeg(degrees)
 
 fun tan(degrees: Float) =
     MathUtils.radiansToDegrees * kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble())
-
-fun sqr(x: Float) = x * x

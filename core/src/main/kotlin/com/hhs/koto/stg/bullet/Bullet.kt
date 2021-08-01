@@ -27,18 +27,16 @@ package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.util.cos
-import com.hhs.koto.util.game
-import com.hhs.koto.util.outOfFrame
-import com.hhs.koto.util.sin
+import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
 
-class Bullet(
+open class Bullet(
     var x: Float,
     var y: Float,
-    var speed: Float = 0f,
-    var angle: Float = 0f,
+    speed: Float = 0f,
+    angle: Float = 0f,
     val data: BulletData,
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
@@ -49,6 +47,19 @@ class Bullet(
         val tempColor: Color = Color()
     }
 
+    var speed: Float = speed
+        set(value) {
+            field = value
+            calculateDelta()
+        }
+    var angle: Float = angle
+        set(value) {
+            field = value
+            calculateDelta()
+        }
+
+    var deltaX: Float = 0f
+    var deltaY: Float = 0f
     var alive: Boolean = true
     var t: Int = 0
     val boundingWidth
@@ -56,16 +67,46 @@ class Bullet(
     val boundingHeight
         get() = data.texture.maxHeight * scaleY
 
-    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): CoroutineTask {
+    init {
+        calculateDelta()
+    }
+
+    fun setDeltas(deltaX: Float, deltaY: Float) {
+        this.deltaX = deltaX
+        this.deltaY = deltaY
+        calculateAngleSpeed()
+    }
+
+    fun calculateDelta() {
+        deltaX = cos(angle) * speed
+        deltaY = sin(angle) * speed
+    }
+
+    fun calculateAngleSpeed() {
+        angle = atan2(deltaX, deltaY)
+        speed = dist(deltaX, deltaY)
+    }
+
+    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): Bullet {
         val task = CoroutineTask(index = index, bullet = this, block = block)
-        game.tasks.addTask(task)
-        return task
+        addTask(task)
+        return this
     }
 
     fun tick() {
-        x += cos(angle) * speed
-        y += sin(angle) * speed
+        x += deltaX
+        y += deltaY
         t++
+    }
+
+    fun maxSpeed(speed: Float): Bullet {
+        speed.coerceAtMost(speed)
+        return this
+    }
+
+    fun minSpeed(speed: Float): Bullet {
+        speed.coerceAtLeast(speed)
+        return this
     }
 
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
@@ -77,8 +118,8 @@ class Bullet(
             var tmpX = x
             var tmpY = y
             if (subFrameTime != 0f) {
-                tmpX += cos(angle) * speed * subFrameTime
-                tmpY += sin(angle) * speed * subFrameTime
+                tmpX += deltaX * subFrameTime
+                tmpY += deltaY * subFrameTime
             }
             batch.draw(
                 texture,
