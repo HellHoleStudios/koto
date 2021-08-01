@@ -87,10 +87,7 @@ class GameScreen : BasicScreen(null, null) {
 
     init {
         pauseMenu.add(GridButton(bundle["ui.game.resume"], 36, gridX = 0, gridY = 1) {
-            blurredGameFrame.addAction(
-                fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
-            )
-            pauseMenu.deactivate()
+            resumeGame()
         })
         pauseMenu.add(GridButton(bundle["ui.game.restart"], 36, gridX = 0, gridY = 2) {
             confirmationMenu.activate()
@@ -136,21 +133,29 @@ class GameScreen : BasicScreen(null, null) {
         }
         if (tryPause && game.frameScheduler.canPause) {
             tryPause = false
+<<<<<<< Updated upstream
             paused = true
             passCounter = 0
             pauseMenu.activate()
             SE.play("pause")
             blurredGameFrame.alpha = 1f
+=======
+            pauseGame()
+>>>>>>> Stashed changes
         }
         if (paused) {
-            if (passCounter < 30) {
-                if (passCounter == 0) {
-                    vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
-                } else {
-                    vfxManager.useAsInput(vfxManager.resultBuffer.texture)
+            if (passCounter > 0 && keyJustPressed(options.keyPause)) {
+                resumeGame()
+            } else {
+                if (passCounter < 30) {
+                    if (passCounter == 0) {
+                        vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
+                    } else {
+                        vfxManager.useAsInput(vfxManager.resultBuffer.texture)
+                    }
+                    vfxManager.applyEffects()
+                    passCounter++
                 }
-                vfxManager.applyEffects()
-                passCounter++
             }
         } else {
             game.update(delta)
@@ -161,6 +166,21 @@ class GameScreen : BasicScreen(null, null) {
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
         reset()
+    }
+
+    fun resumeGame() {
+        blurredGameFrame.addAction(
+            fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
+        )
+        pauseMenu.deactivate()
+    }
+
+    fun pauseGame() {
+        SE.play("pause")
+        paused = true
+        passCounter = 0
+        pauseMenu.activate()
+        blurredGameFrame.alpha = 1f
     }
 
     fun reset() {
