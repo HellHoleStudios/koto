@@ -23,12 +23,39 @@
  *
  */
 
-package com.hhs.koto.demo
+package com.hhs.koto.stg.bullet
 
-import com.hhs.koto.demo.stage1.Stage1
-import com.hhs.koto.stg.task.BuilderSequence
-import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.util.game
+import kotlinx.coroutines.CoroutineScope
+import ktx.collections.GdxArray
 
-class RegularGame : TaskBuilder {
-    override fun build() = BuilderSequence(Stage1())
+class BulletGroup {
+    val bullets = GdxArray<Bullet>()
+
+    fun task(block: suspend CoroutineScope.() -> Unit): CoroutineTask {
+        val task = CoroutineTask(bulletGroup = this, block = block)
+        game.tasks.addTask(task)
+        return task
+    }
+
+    inline fun forEach(action: (Bullet) -> Unit) {
+        for (i in 0 until bullets.size) {
+            if (bullets[i].alive) {
+                action(bullets[i])
+            } else {
+                bullets[i] = null
+            }
+        }
+    }
+
+    fun taskEach(block: suspend CoroutineScope.() -> Unit) {
+        for (i in 0 until bullets.size) {
+            if (bullets[i].alive) {
+                bullets[i].task(i, block)
+            } else {
+                bullets[i] = null
+            }
+        }
+    }
 }

@@ -26,54 +26,63 @@
 package com.hhs.koto.stg.task
 
 import com.hhs.koto.util.app
-import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
-class ParallelTask(vararg task: Task) : Task {
-    val tasks = GdxArray<Task>(8)
+class BuilderSequence(vararg builder: TaskBuilder) : Task {
+    val builders = GdxArray<TaskBuilder>(8)
+    private var currentIndex: Int = 0
+    private var currentTask: Task? = null
     override var isComplete: Boolean = false
 
     init {
-        task.forEach { tasks.add(it) }
-        tasks.shrink()
+        builder.forEach { builders.add(it) }
+        builders.shrink()
     }
 
     override fun tick() {
-        for (i in 0 until tasks.size) {
-            tasks[i].tick()
-            if (tasks[i].isComplete) {
-                tasks[i] = null
+        while (currentIndex < builders.size) {
+            if (currentTask == null) {
+                currentTask = builders[currentIndex].build()
+            }
+            currentTask!!.tick()
+            if (currentTask!!.isComplete) {
+                currentTask = null
+                currentIndex++
+            } else {
+                break
             }
         }
-        tasks.removeNull()
-        isComplete = tasks.size == 0
+        if (currentIndex >= builders.size) {
+            isComplete = true
+            return
+        }
     }
 
-    fun addTask(vararg task: Task) {
+    fun addBuilder(vararg builder: TaskBuilder) {
         if (isComplete) {
-            app.logger.error("Cannot add task to a completed ParallelTask!")
+            app.logger.error("Cannot add builder to a completed BuilderSequence!")
             return
         }
 
-        task.forEach {
-            tasks.add(it)
+        builder.forEach {
+            builders.add(it)
         }
     }
 
-    fun addTask(task: Task) {
+    fun addBuilder(builder: TaskBuilder) {
         if (isComplete) {
-            app.logger.error("Cannot add task to a completed ParallelTask!")
+            app.logger.error("Cannot add builder to a completed BuilderSequence!")
             return
         }
-        tasks.add(task)
+        builders.add(builder)
     }
 
-    operator fun plusAssign(task: Task) = addTask(task)
+    operator fun plusAssign(builder: TaskBuilder) = addBuilder(builder)
 
-    operator fun plus(other: ParallelTask): ParallelTask {
-        val tmp = ParallelTask()
-        tasks.forEach { tmp += it }
-        other.tasks.forEach { tmp += it }
+    operator fun plus(other: BuilderSequence): BuilderSequence {
+        val tmp = BuilderSequence()
+        builders.forEach { tmp += it }
+        other.builders.forEach { tmp += it }
         return tmp
     }
 }

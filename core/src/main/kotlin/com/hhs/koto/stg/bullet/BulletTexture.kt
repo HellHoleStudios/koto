@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.shot
+package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -45,7 +45,7 @@ class BulletTexture(atlas: TextureAtlas, name: String, frames: Array<Int>) {
         }
     }
 
-    fun getFrame(frame: Int): TextureRegion? {
+    fun getFrame(frame: Int): TextureRegion {
         val tmp = frame % frameTime[frameTime.size - 1]
         for (i in 0 until frameTime.size) {
             if (tmp < frameTime[i]) {

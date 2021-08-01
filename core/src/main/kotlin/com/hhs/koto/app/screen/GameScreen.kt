@@ -152,7 +152,7 @@ class GameScreen : BasicScreen(null, null) {
                 passCounter++
             }
         } else {
-            game.update()
+            game.update(delta)
         }
         super.render(delta)
     }

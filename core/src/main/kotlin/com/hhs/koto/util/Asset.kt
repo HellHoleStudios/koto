@@ -42,8 +42,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.utils.I18NBundle
 import com.hhs.koto.app.Config
-import com.hhs.koto.stg.shot.ShotSheet
-import com.hhs.koto.stg.shot.ShotSheetLoader
+import com.hhs.koto.stg.bullet.ShotSheet
+import com.hhs.koto.stg.bullet.ShotSheetLoader
 import ktx.assets.TextAssetLoader
 import ktx.assets.load
 import ktx.collections.GdxArray

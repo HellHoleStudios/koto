@@ -28,8 +28,11 @@ package com.hhs.koto.util
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.crashinvaders.vfx.VfxManager
+import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.HSVColorAction
+import ktx.collections.GdxSet
 import ktx.graphics.copy
 
 operator fun Color.plus(other: Color): Color = this.copy().add(other)
@@ -88,4 +91,17 @@ fun hsvColor(color: Color, duration: Float, interpolation: Interpolation?): HSVC
     action.duration = duration
     action.interpolation = interpolation
     return action
+}
+
+val registeredEffects = GdxSet<ChainVfxEffect>()
+
+fun VfxManager.addEffectRegistered(effect: ChainVfxEffect, priority: Int) {
+    addEffect(effect, priority)
+    registeredEffects.add(effect)
+}
+
+fun disposeRegisteredEffects() {
+    registeredEffects.forEach {
+        it.dispose()
+    }
 }

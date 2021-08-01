@@ -23,12 +23,34 @@
  *
  */
 
-package com.hhs.koto.demo
+package com.hhs.koto.stg
 
-import com.hhs.koto.demo.stage1.Stage1
-import com.hhs.koto.stg.task.BuilderSequence
-import com.hhs.koto.stg.task.TaskBuilder
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.viewport.Viewport
 
-class RegularGame : TaskBuilder {
-    override fun build() = BuilderSequence(Stage1())
+class IndexedStage : Stage {
+    constructor() : super()
+    constructor(viewport: Viewport) : super(viewport)
+    constructor(viewport: Viewport, batch: Batch) : super(viewport, batch)
+
+    override fun addActor(actor: Actor) {
+        if (actor is IndexedActor) {
+            for (i in 0 until root.children.size) {
+                val currentActor = root.children[i]
+                if (currentActor is IndexedActor && currentActor.z > actor.z) {
+                    root.addActorAt(i, actor)
+                    return
+                }
+            }
+            root.addActor(actor)
+        } else {
+            super.addActor(actor)
+        }
+    }
+}
+
+interface IndexedActor {
+    val z: Int
 }

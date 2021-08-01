@@ -25,6 +25,8 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.BulletGroup
 import com.hhs.koto.util.game
 import kotlinx.coroutines.*
 import ktx.collections.GdxMap
@@ -32,7 +34,12 @@ import ktx.collections.set
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
-class CoroutineTask(block: suspend CoroutineScope.() -> Unit) : Task {
+class CoroutineTask(
+    index: Int = 0,
+    bullet: Bullet? = null,
+    bulletGroup: BulletGroup? = null,
+    block: suspend CoroutineScope.() -> Unit
+) : Task {
     companion object {
         val scope = CoroutineScope(CoroutineTaskDispatcher)
     }
@@ -54,14 +61,21 @@ class CoroutineTask(block: suspend CoroutineScope.() -> Unit) : Task {
         }
     }
 
-    class FrameCounterElement : AbstractCoroutineContextElement(FrameCounterElement) {
-        companion object Key : CoroutineContext.Key<FrameCounterElement>
+    class CouroutineTaskElement(
+        var frame: Int = 0,
+        val index: Int = 0,
+    ) : AbstractCoroutineContextElement(CouroutineTaskElement) {
+        companion object Key : CoroutineContext.Key<CouroutineTaskElement>
 
-        var frame: Int = 0
+        lateinit var bullet: Bullet
+        lateinit var group: BulletGroup
     }
 
-    private val frameCounter = FrameCounterElement()
-    private val job = scope.launch(frameCounter, block = block)
+    private val element = CouroutineTaskElement(index = index).apply {
+        if (bullet != null) this.bullet = bullet
+        if (bulletGroup != null) group = bulletGroup
+    }
+    private val job = scope.launch(element, block = block)
     override val isComplete: Boolean
         get() = job.isCompleted
 
@@ -70,12 +84,18 @@ class CoroutineTask(block: suspend CoroutineScope.() -> Unit) : Task {
         if (isComplete) {
             CoroutineTaskDispatcher.remove(job.job)
         }
-        frameCounter.frame++
+        element.frame++
     }
 }
 
 val CoroutineScope.frame: Int
-    get() = coroutineContext[CoroutineTask.FrameCounterElement]!!.frame
+    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.frame
+val CoroutineScope.index: Int
+    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.index
+val CoroutineScope.bullet: Bullet
+    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.bullet
+val CoroutineScope.group: BulletGroup
+    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.group
 
 suspend fun wait(frameCount: Int) {
     repeat(frameCount) {
@@ -89,8 +109,13 @@ suspend fun Task.waitForFinish() {
     }
 }
 
-fun task(block: suspend CoroutineScope.() -> Unit): Task {
-    val task = CoroutineTask(block)
+fun task(
+    index: Int = 0,
+    bullet: Bullet? = null,
+    bulletGroup: BulletGroup? = null,
+    block: suspend CoroutineScope.() -> Unit
+): Task {
+    val task = CoroutineTask(index, bullet, bulletGroup, block)
     game.tasks.addTask(task)
     return task
 }

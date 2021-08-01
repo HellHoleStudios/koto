@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.shot
+package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
@@ -81,8 +81,8 @@ class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletD
     var name: String = raw.name!!
     var render: String = raw.render
     var texture: BulletTexture = BulletTexture(parent.atlas, name, raw.frames)
-    var originX = raw.originX ?: texture.maxWidth / 2f
-    var originY = raw.originY ?: texture.maxWidth / 2f
+    var originX = raw.originX ?: (texture.maxWidth / 2f)
+    var originY = raw.originY ?: (texture.maxWidth / 2f)
     var delayTexture: TextureRegion = parent.atlas.findRegion(raw.delaySrc!!)
     var delayColor: Color = Color.valueOf(raw.delayColor!!)
     var spinVelocity = raw.spinVelocity

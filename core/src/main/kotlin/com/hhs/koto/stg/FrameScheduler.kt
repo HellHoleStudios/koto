@@ -72,6 +72,7 @@ class FrameScheduler(private val game: KotoGame) {
             draw()
             act(1f)
         }
+        println()
     }
 
     // fpsMul higher than speedMul
@@ -113,6 +114,7 @@ class FrameScheduler(private val game: KotoGame) {
             1 -> {
                 draw()
                 act(actDelta1.second)
+                canPause = false
             }
             2 -> {
                 tick()
@@ -122,10 +124,9 @@ class FrameScheduler(private val game: KotoGame) {
             3 -> {
                 draw()
                 act(actDelta2.second)
+                canPause = false
             }
         }
-        val nextType = arrangement[(subFrame + 1) % arrangement.size]
-        canPause = nextType == 0 || nextType == 2
     }
 
     // speedMul higher than fpsMul
@@ -204,18 +205,18 @@ class FrameScheduler(private val game: KotoGame) {
     }
 
     private fun tick() {
-//        print("t")
+        print("t")
         game.tasks.tick()
         game.frame++
     }
 
     private fun act(delta: Float) {
-//        print("a($delta)")
+        print("a($delta)")
         game.st.act(delta)
     }
 
     private fun draw() {
-//        print("d")
+        print("d")
         game.draw()
     }
 }

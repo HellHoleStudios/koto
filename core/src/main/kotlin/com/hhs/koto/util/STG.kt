@@ -26,8 +26,8 @@
 package com.hhs.koto.util
 
 import com.hhs.koto.stg.KotoGame
-import com.hhs.koto.stg.shot.BulletData
-import com.hhs.koto.stg.shot.ShotSheet
+import com.hhs.koto.stg.bullet.BulletData
+import com.hhs.koto.stg.bullet.ShotSheet
 
 lateinit var game: KotoGame
 

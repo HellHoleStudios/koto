@@ -30,7 +30,7 @@ import ktx.collections.GdxArray
 
 class SequenceTask(vararg task: Task) : Task {
     val tasks = GdxArray<Task>(8)
-    var currentTask: Int = 0
+    private var currentIndex: Int = 0
     override var isComplete: Boolean = false
 
     init {
@@ -39,16 +39,16 @@ class SequenceTask(vararg task: Task) : Task {
     }
 
     override fun tick() {
-        while (currentTask < tasks.size) {
-            tasks[currentTask].tick()
-            if (tasks[currentTask].isComplete) {
-                tasks[currentTask] = null
-                currentTask++
+        while (currentIndex < tasks.size) {
+            tasks[currentIndex].tick()
+            if (tasks[currentIndex].isComplete) {
+                tasks[currentIndex] = null
+                currentIndex++
             } else {
                 break
             }
         }
-        if (currentTask >= tasks.size) {
+        if (currentIndex >= tasks.size) {
             isComplete = true
             return
         }
@@ -59,9 +59,6 @@ class SequenceTask(vararg task: Task) : Task {
             app.logger.error("Cannot add task to a completed SequenceTask!")
             return
         }
-
-        val zjs = SequenceTask()
-        zjs + SequenceTask()
 
         task.forEach {
             tasks.add(it)
