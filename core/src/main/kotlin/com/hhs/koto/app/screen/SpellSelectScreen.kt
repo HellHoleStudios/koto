@@ -34,7 +34,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
-import com.hhs.koto.app.ui.HSVColorAction
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*

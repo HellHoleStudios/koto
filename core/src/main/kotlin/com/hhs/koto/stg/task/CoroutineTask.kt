@@ -97,7 +97,7 @@ val CoroutineScope.bullet: Bullet
 val CoroutineScope.group: BulletGroup
     get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.group
 
-suspend fun wait(frameCount: Int) {
+suspend fun wait(frameCount: Int = 1) {
     repeat(frameCount) {
         yield()
     }

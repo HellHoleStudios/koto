@@ -28,7 +28,10 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.util.*
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.game
+import com.hhs.koto.util.outOfFrame
+import com.hhs.koto.util.sin
 import kotlinx.coroutines.CoroutineScope
 
 class Bullet(

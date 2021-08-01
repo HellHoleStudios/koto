@@ -29,7 +29,6 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.B
 import com.hhs.koto.util.create
-import kotlinx.coroutines.yield
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -42,7 +41,7 @@ class TestSpell : SpellBuilder {
                 create(B["DS_BALL_S_RED"], 0f, 0f, i.toFloat(), 2f).task {
                     while (true) {
                         bullet.angle += 0.5f
-                        yield()
+                        wait()
                     }
                 }
             }
