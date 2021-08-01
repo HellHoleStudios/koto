@@ -92,7 +92,7 @@ object Lwjgl3Launcher {
             configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
         }
         configuration.useVsync(options.vsyncEnabled)
-        configuration.setForegroundFPS((Config.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
+        configuration.setForegroundFPS((options.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
     }
 
     private fun getOptionsFile(): FileHandle {

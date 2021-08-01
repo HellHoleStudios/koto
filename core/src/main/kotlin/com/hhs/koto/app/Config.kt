@@ -34,6 +34,7 @@ import ktx.collections.GdxArray
 import java.util.*
 
 data class Options(
+    var fps: Int = 60,
     var fpsMultiplier: Int = 1,
     var vsyncEnabled: Boolean = false,
     var startupWindowWidth: Int = 960,
@@ -67,7 +68,6 @@ data class Options(
 )
 
 object Config {
-    const val fps: Int = 60
     var logLevel: Int = Logger.DEBUG
     const val useHSVShader: Boolean = true
     val textureMinFilter: TextureFilter = TextureFilter.MipMapLinearLinear
@@ -95,7 +95,7 @@ object Config {
     const val orthoCircleCollision: Boolean = true
     const val cleanupBulletCount: Int = 8192
     const val cleanupBlankCount: Int = 512
-    const val defaultShotSheet: String = "default_shot.shot"
+    const val defaultShotSheet: String = "danmakufu_shot.shot"
     const val allowSpeedUpOutOfReplay: Boolean = true
     const val musicCount: Int = 1
     const val noDuplicateSE: Boolean = true

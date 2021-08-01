@@ -25,15 +25,11 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.SpellBuilder
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.util.game
-import com.hhs.koto.util.getRegion
+import com.hhs.koto.stg.task.*
+import com.hhs.koto.util.B
+import com.hhs.koto.util.create
 import kotlinx.coroutines.yield
-import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -41,22 +37,16 @@ class TestSpell : SpellBuilder {
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
 
     override fun build(): Task = CoroutineTask {
-        val actor = Image(getRegion("ui/blank.png")).apply {
-            setBounds(20f, -150f, 20f, 20f)
-        }
-        game.st += actor
         while (true) {
-            var f = 0
-            repeat(30) {
-                actor.y = -150 + f * 10f
-                f++
-                yield()
+            for (i in 0 until 360 step 15) {
+                create(B["DS_BALL_S_RED"], 0f, 0f, i.toFloat(), 2f).task {
+                    while (true) {
+                        bullet.angle += 0.5f
+                        yield()
+                    }
+                }
             }
-            repeat(30) {
-                actor.y = -150 + f * 10f
-                f--
-                yield()
-            }
+            wait(10)
         }
     }
 }

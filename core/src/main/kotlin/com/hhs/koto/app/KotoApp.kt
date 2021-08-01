@@ -104,15 +104,11 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("shoot", "snd/se_plst00.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
-        B.setSheet(Config.defaultShotSheet)
+        B.defaultSheet = A[Config.defaultShotSheet]
 
         GameBuilder.regularGame = RegularGame()
-        repeat(7) {
-            GameBuilder.stages.add(Stage1())
-        }
-        repeat(100) {
-            GameBuilder.spells.add(TestSpell())
-        }
+        GameBuilder.stages.add(Stage1())
+        GameBuilder.spells.add(TestSpell())
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()

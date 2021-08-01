@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.IndexedActor
 import com.hhs.koto.util.game
+import com.hhs.koto.util.outOfWorld
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
@@ -46,6 +47,10 @@ class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
         for (i in 0 until bullets.size) {
             if (bullets[i] != null) {
                 bullets[i].tick()
+                if (outOfWorld(bullets[i].x, bullets[i].y, bullets[i].boundingWidth, bullets[i].boundingHeight)) {
+                    bullets[i].alive = false
+                    bullets[i] = null
+                }
             }
         }
         if (count <= Config.cleanupBulletCount && blankCount >= Config.cleanupBlankCount || bullets.size >= 1048576) {
@@ -60,9 +65,10 @@ class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
         super.act(delta)
     }
 
-    fun addBullet(bullet: Bullet) {
+    fun addBullet(bullet: Bullet): Bullet {
         bullets.add(bullet)
         count++
+        return bullet
     }
 
     fun removeBullet(bullet: Bullet) {

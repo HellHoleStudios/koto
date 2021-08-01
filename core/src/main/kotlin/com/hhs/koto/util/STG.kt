@@ -25,32 +25,45 @@
 
 package com.hhs.koto.util
 
+import com.badlogic.gdx.graphics.Color
+import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
+import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletData
 import com.hhs.koto.stg.bullet.ShotSheet
 
 lateinit var game: KotoGame
 
 object B {
-    var defaultSheet: ShotSheet? = null
-
-    fun setSheet(sheet: ShotSheet): ShotSheet {
-        defaultSheet = sheet
-        return sheet
-    }
-
-    fun setSheet(sheet: String?) {
-        defaultSheet = A[sheet]
-    }
+    lateinit var defaultSheet: ShotSheet
 
     operator fun get(id: Int): BulletData {
-        return defaultSheet!!.findBullet(id)
+        return defaultSheet.findBullet(id)
     }
 
     operator fun get(name: String): BulletData {
-        return defaultSheet!!.findBullet(name)
+        return defaultSheet.findBullet(name)
     }
 }
+
+fun outOfWorld(x: Float, y: Float, rx: Float, ry: Float): Boolean {
+    if (x + rx < -Config.originX - Config.deleteDistance) return true
+    if (x - rx > Config.w + Config.deleteDistance - Config.originX) return true
+    if (y + ry < -Config.originY - Config.deleteDistance) return true
+    if (y - ry > Config.h + Config.deleteDistance - Config.originY) return true
+    return false
+}
+
+fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
+    if (x + rx < -Config.originX) return true
+    if (x - rx > Config.w - Config.originX) return true
+    if (y + ry < -Config.originY) return true
+    if (y - ry > Config.h - Config.originY) return true
+    return false
+}
+
+fun create(bulletData: BulletData, x: Float, y: Float, angle: Float, speed: Float, color: Color = Color.WHITE): Bullet =
+    game.bullets.addBullet(Bullet(x, y, speed, angle, bulletData, color = color))
 
 //    TODO B
 //    fun setAngleSpeed(bullet: Bullet, x: Float, y: Float, angle: Float, speed: Float): Bullet {

@@ -28,9 +28,7 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.util.cos
-import com.hhs.koto.util.game
-import com.hhs.koto.util.sin
+import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
 
 class Bullet(
@@ -50,8 +48,10 @@ class Bullet(
 
     var alive: Boolean = true
     var t: Int = 0
-    val textureBoundingWidth = data.texture.maxWidth
-    val textureBoundingHeight = data.texture.maxHeight
+    val boundingWidth
+        get() = data.texture.maxWidth * scaleX
+    val boundingHeight
+        get() = data.texture.maxHeight * scaleY
 
     fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): CoroutineTask {
         val task = CoroutineTask(index = index, bullet = this, block = block)
@@ -66,28 +66,30 @@ class Bullet(
     }
 
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val texture = data.texture.getFrame(t)
-        tempColor.set(batch.color)
-        batch.color = color
-        batch.color.a *= parentAlpha
-        var tmpX = x
-        var tmpY = y
-        if (subFrameTime != 0f) {
-            tmpX += cos(angle) * speed * subFrameTime
-            tmpY += sin(angle) * speed * subFrameTime
+        if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
+            val texture = data.texture.getFrame(t)
+            tempColor.set(batch.color)
+            batch.color = color
+            batch.color.a *= parentAlpha
+            var tmpX = x
+            var tmpY = y
+            if (subFrameTime != 0f) {
+                tmpX += cos(angle) * speed * subFrameTime
+                tmpY += sin(angle) * speed * subFrameTime
+            }
+            batch.draw(
+                texture,
+                tmpX,
+                tmpY,
+                data.originX,
+                data.originY,
+                texture.regionWidth.toFloat(),
+                texture.regionHeight.toFloat(),
+                scaleX,
+                scaleY,
+                rotation + data.rotation
+            )
+            batch.color = tempColor
         }
-        batch.draw(
-            texture,
-            tmpX,
-            tmpY,
-            data.originX,
-            data.originY,
-            texture.regionWidth.toFloat(),
-            texture.regionHeight.toFloat(),
-            scaleX,
-            scaleY,
-            rotation + data.rotation
-        )
-        batch.color = tempColor
     }
 }

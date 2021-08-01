@@ -72,7 +72,7 @@ class FrameScheduler(private val game: KotoGame) {
             draw()
             act(1f)
         }
-        println()
+//        println()
     }
 
     // fpsMul higher than speedMul
@@ -205,18 +205,19 @@ class FrameScheduler(private val game: KotoGame) {
     }
 
     private fun tick() {
-        print("t")
+//        print("t")
+        game.bullets.tick()
         game.tasks.tick()
         game.frame++
     }
 
     private fun act(delta: Float) {
-        print("a($delta)")
+//        print("a($delta)")
         game.st.act(delta)
     }
 
     private fun draw() {
-        print("d")
+//        print("d")
         game.draw()
     }
 }
