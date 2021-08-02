@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.demo.RegularGame
+import com.hhs.koto.demo.player.Reimu
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.demo.stage1.TestSpell
 import com.hhs.koto.stg.GameBuilder
@@ -51,6 +52,7 @@ import java.util.*
 
 class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     lateinit var batch: SpriteBatch
+    lateinit var normalBatch: SpriteBatch
     lateinit var viewport: Viewport
     private lateinit var st: Stage
     private lateinit var fps: FPSDisplay
@@ -76,14 +78,17 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         Config.UIFont = bundle["font.ui"]
         Config.UIFontSmall = bundle["font.uiSmall"]
 
-        batch = if (Config.useHSVShader) {
-            SpriteBatch(
+        if (Config.useHSVShader) {
+            batch = SpriteBatch(
                 1000,
                 ShaderProgram(A.get<String>("shader/koto_hsv.vert.glsl"), A.get("shader/koto_hsv.frag.glsl")),
             )
+            normalBatch = SpriteBatch()
         } else {
-            SpriteBatch()
+            batch = SpriteBatch()
+            normalBatch = batch
         }
+
         fpsCounter = WindowedMean(10)
         viewport = ScalingViewport(Config.windowScaling, Config.screenWidth, Config.screenHeight)
         st = Stage(viewport, batch)
@@ -103,9 +108,13 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("graze", "snd/se_graze.wav")
         SE.register("shoot", "snd/se_plst00.wav")
         SE.register("pause", "snd/se_pause.wav")
+        SE.register("bomb", "snd/se_nep00.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
         B.defaultSheet = A[Config.defaultShotSheet]
+
+        GameBuilder.players["reimuA"] = { Reimu() }
+        GameBuilder.players["reimu"] = { Reimu() }
 
         GameBuilder.regularGame = RegularGame()
         GameBuilder.stages.add(Stage1())
@@ -176,6 +185,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         batch.dispose()
         BGM.dispose()
         disposeA()
+        screens.safeValues().forEach { it.dispose() }
     }
 
     fun setScreen(name: String?) {

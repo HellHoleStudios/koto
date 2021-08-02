@@ -23,36 +23,25 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.util
 
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.Viewport
+import ktx.collections.GdxMap
 
-class IndexedStage : Stage {
-    constructor() : super()
-    constructor(viewport: Viewport) : super(viewport)
-    constructor(viewport: Viewport, batch: Batch) : super(viewport, batch)
+class StateMachine<State, Condition>(var state: State) {
+    var currentCondition: Condition? = null
+    var currentCounter: Int = 0
+    val states = GdxMap<State, (Condition) -> Pair<State, Int>>()
 
-    override fun addActor(actor: Actor) {
-        if (actor is IndexedActor) {
-            for (i in 0 until root.children.size) {
-                val currentActor = root.children[i]
-                if (currentActor is IndexedActor && currentActor.z > actor.z) {
-                    root.addActorAt(i, actor)
-                    return
-                }
-            }
-            root.addActor(actor)
-        } else {
-            super.addActor(actor)
+    fun update(condition: Condition) {
+        if (condition != currentCondition) {
+            currentCondition = condition
+            currentCounter = 0
+        }
+        currentCounter++
+        val (nextState, threshold) = states[state](currentCondition!!)
+        if (currentCounter >= threshold) {
+            state = nextState
+            currentCounter = 0
         }
     }
-
-    operator fun plusAssign(actor: Actor) = addActor(actor)
-}
-
-interface IndexedActor {
-    val z: Int
 }

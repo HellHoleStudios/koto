@@ -26,12 +26,15 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.utils.GdxRuntimeException
+import com.hhs.koto.stg.player.Player
 import com.hhs.koto.stg.task.SpellBuilder
 import com.hhs.koto.stg.task.StageBuilder
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.TaskBuilder
 import com.hhs.koto.util.SystemFlag
+import com.hhs.koto.util.game
 import ktx.collections.GdxArray
+import ktx.collections.GdxMap
 import ktx.collections.filter
 
 object GameBuilder {
@@ -39,9 +42,10 @@ object GameBuilder {
     lateinit var extraGame: TaskBuilder
     val stages = GdxArray<StageBuilder>()
     val spells = GdxArray<SpellBuilder>()
+    val players = GdxMap<String, () -> Player>()
 
-    fun build(): KotoGame =
-        when (SystemFlag.gamemode) {
+    fun build(): KotoGame {
+        game = when (SystemFlag.gamemode) {
             GameMode.STORY -> buildRegularGame()
             GameMode.EXTRA -> buildExtraGame()
             GameMode.STAGE_PRACTICE -> buildStagePractice(
@@ -54,6 +58,10 @@ object GameBuilder {
             )
             null -> throw GdxRuntimeException("gameMode flag is null!")
         }
+        val playerName = SystemFlag.player ?: throw GdxRuntimeException("player flag is null!")
+        game.player = (players[playerName] ?: throw GdxRuntimeException("player \"$playerName\" not found!"))()
+        return game
+    }
 
     fun buildRegularGame(): KotoGame = buildGameWithTask(regularGame.build())
 

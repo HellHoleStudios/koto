@@ -30,8 +30,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.crashinvaders.vfx.VfxManager
+import com.hhs.koto.stg.IndexedActor
 
-class VfxOutput() : Image() {
+class VfxOutput() : Image(), IndexedActor {
+    override val z: Int = Int.MIN_VALUE
+
     constructor(vfxManager: VfxManager) : this() {
         this.vfxManager = vfxManager
     }

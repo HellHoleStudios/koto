@@ -23,36 +23,14 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.player
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.Viewport
 
-class IndexedStage : Stage {
-    constructor() : super()
-    constructor(viewport: Viewport) : super(viewport)
-    constructor(viewport: Viewport, batch: Batch) : super(viewport, batch)
-
-    override fun addActor(actor: Actor) {
-        if (actor is IndexedActor) {
-            for (i in 0 until root.children.size) {
-                val currentActor = root.children[i]
-                if (currentActor is IndexedActor && currentActor.z > actor.z) {
-                    root.addActorAt(i, actor)
-                    return
-                }
-            }
-            root.addActor(actor)
-        } else {
-            super.addActor(actor)
-        }
-    }
-
-    operator fun plusAssign(actor: Actor) = addActor(actor)
-}
-
-interface IndexedActor {
-    val z: Int
+interface Player {
+    fun getX(): Float
+    fun getY(): Float
+    fun tick()
+    fun draw(batch: Batch, parentAlpha: Float)
+    fun act(delta: Float)
 }

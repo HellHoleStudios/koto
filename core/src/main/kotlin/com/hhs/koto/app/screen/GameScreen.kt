@@ -186,7 +186,7 @@ class GameScreen : BasicScreen(null, null) {
         confirmationMenu.setPosition(confirmationMenu.staticX - 200f, confirmationMenu.staticY)
         confirmationMenu.deactivate()
 
-        game = GameBuilder.build()
+        GameBuilder.build()
 
         gameFrame.vfxManager = game.postVfx
         gameFrame.setBounds(

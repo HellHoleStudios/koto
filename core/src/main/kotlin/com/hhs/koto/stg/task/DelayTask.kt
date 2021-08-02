@@ -23,36 +23,22 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.task
 
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.Viewport
+class DelayTask(val duration: Int) : Task {
+    var counter: Int = 0
 
-class IndexedStage : Stage {
-    constructor() : super()
-    constructor(viewport: Viewport) : super(viewport)
-    constructor(viewport: Viewport, batch: Batch) : super(viewport, batch)
+    override var isComplete: Boolean = false
 
-    override fun addActor(actor: Actor) {
-        if (actor is IndexedActor) {
-            for (i in 0 until root.children.size) {
-                val currentActor = root.children[i]
-                if (currentActor is IndexedActor && currentActor.z > actor.z) {
-                    root.addActorAt(i, actor)
-                    return
-                }
-            }
-            root.addActor(actor)
-        } else {
-            super.addActor(actor)
+    override fun tick() {
+        if (isComplete) return
+        counter++
+        if (counter >= duration) {
+            isComplete = true
         }
     }
 
-    operator fun plusAssign(actor: Actor) = addActor(actor)
-}
-
-interface IndexedActor {
-    val z: Int
+    override fun kill() {
+        isComplete = true
+    }
 }

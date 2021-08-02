@@ -27,14 +27,16 @@ package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.stg.CollisionShape
+import com.hhs.koto.stg.Entity
 import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
 
 open class Bullet(
-    var x: Float,
-    var y: Float,
+    override var x: Float,
+    override var y: Float,
     speed: Float = 0f,
     angle: Float = 0f,
     val data: BulletData,
@@ -42,10 +44,13 @@ open class Bullet(
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
-) {
+) : Entity {
     companion object {
         val tempColor: Color = Color()
     }
+
+    override val collision: CollisionShape
+        get() = data.collision
 
     var speed: Float = speed
         set(value) {
@@ -111,18 +116,28 @@ open class Bullet(
                 tmpX += deltaX * subFrameTime
                 tmpY += deltaY * subFrameTime
             }
-            batch.draw(
-                texture,
-                tmpX,
-                tmpY,
-                data.originX,
-                data.originY,
-                texture.regionWidth.toFloat(),
-                texture.regionHeight.toFloat(),
-                scaleX,
-                scaleY,
-                rotation + data.rotation
-            )
+            if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
+                batch.draw(
+                    texture,
+                    tmpX - data.originX,
+                    tmpY - data.originY,
+                    data.originX,
+                    data.originY,
+                    texture.regionWidth.toFloat(),
+                    texture.regionHeight.toFloat(),
+                    scaleX,
+                    scaleY,
+                    rotation,
+                )
+            } else {
+                batch.draw(
+                    texture,
+                    tmpX - data.originX,
+                    tmpY - data.originY,
+                    texture.regionWidth.toFloat(),
+                    texture.regionHeight.toFloat(),
+                )
+            }
             batch.color = tempColor
         }
     }

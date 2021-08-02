@@ -27,7 +27,6 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
@@ -37,47 +36,47 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutput
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletLayer
+import com.hhs.koto.stg.player.Player
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
-import ktx.actors.plusAssign
 import ktx.app.clearScreen
 import java.lang.Float.min
 
-class KotoGame() : Disposable {
+class KotoGame : Disposable {
     val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
     val vfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
     val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
 
     val tasks = ParallelTask()
 
-    val cam = OrthographicCamera().apply {
-        position.x = Config.w / 2f - Config.originX
-        position.y = Config.h / 2f - Config.originY
-        zoom = min(Config.w / Config.fw, Config.h / Config.fh)
-    }
-
     val background = IndexedStage(
         ScalingViewport(
             Scaling.stretch, backgroundVfx.width.toFloat(), backgroundVfx.height.toFloat(), OrthographicCamera()
         ),
-        SpriteBatch()
+        app.batch,
     )
-    val st = IndexedStage().apply {
-        viewport.worldWidth = vfx.width.toFloat()
-        viewport.worldHeight = vfx.height.toFloat()
-        viewport.camera = cam
+    val st = IndexedStage(
+        ScalingViewport(Scaling.stretch, vfx.width.toFloat(), vfx.height.toFloat(), OrthographicCamera()),
+        app.batch,
+    ).apply {
+        (viewport.camera as OrthographicCamera).apply {
+            position.x = Config.w / 2f - Config.originX
+            position.y = Config.h / 2f - Config.originY
+            zoom = min(Config.w / Config.fw, Config.h / Config.fh)
+        }
         viewport.update(vfx.width, vfx.height)
-        addActor(VfxOutput(backgroundVfx))
+//        addActor(VfxOutput(backgroundVfx))
     }
     val hud = IndexedStage(
         ScalingViewport(
             Scaling.stretch, postVfx.width.toFloat(), postVfx.height.toFloat(), OrthographicCamera()
         ),
-        SpriteBatch()
+        app.batch,
     ).apply {
         addActor(VfxOutput(vfx))
     }
+
     var frame: Int = 0
     var speedUpMultiplier: Int = 1
     val frameScheduler = FrameScheduler(this)
@@ -85,6 +84,7 @@ class KotoGame() : Disposable {
     val bullets = BulletLayer().apply {
         st += this
     }
+    lateinit var player: Player
 
     init {
         logger.info("Game instance created.")
@@ -127,6 +127,9 @@ class KotoGame() : Disposable {
     }
 
     override fun dispose() {
+        background.dispose()
+        st.dispose()
+        hud.dispose()
         backgroundVfx.dispose()
         vfx.dispose()
         postVfx.dispose()

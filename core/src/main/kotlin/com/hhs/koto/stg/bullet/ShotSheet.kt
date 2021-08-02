@@ -87,9 +87,9 @@ class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletD
     var delayColor: Color = Color.valueOf(raw.delayColor!!)
     var spinVelocity = raw.spinVelocity
     var collision: CollisionShape = when (raw.collisionMethod) {
-        null -> NoCollision()
-        "Circle" -> CircleCollision(raw.collisionData!![0])
-        "Rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
+        "none" -> NoCollision()
+        "circle" -> CircleCollision(raw.collisionData!![0])
+        "rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
         else -> CircleCollision(raw.collisionData!![0]) // use circle as default
     }
     var rotation = raw.rotation

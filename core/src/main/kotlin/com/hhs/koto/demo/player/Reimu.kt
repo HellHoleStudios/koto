@@ -23,36 +23,18 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.demo.player
 
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.Viewport
+import com.hhs.koto.stg.player.StandardPlayer
+import com.hhs.koto.stg.player.StandardPlayerTexture
+import com.hhs.koto.util.A
 
-class IndexedStage : Stage {
-    constructor() : super()
-    constructor(viewport: Viewport) : super(viewport)
-    constructor(viewport: Viewport, batch: Batch) : super(viewport, batch)
+class Reimu : StandardPlayer(
+    StandardPlayerTexture(A["th10_reimu.atlas"], "th10_reimu"),
+    2f,
+    4.5f,
+    2f,
+    8,
+) {
 
-    override fun addActor(actor: Actor) {
-        if (actor is IndexedActor) {
-            for (i in 0 until root.children.size) {
-                val currentActor = root.children[i]
-                if (currentActor is IndexedActor && currentActor.z > actor.z) {
-                    root.addActorAt(i, actor)
-                    return
-                }
-            }
-            root.addActor(actor)
-        } else {
-            super.addActor(actor)
-        }
-    }
-
-    operator fun plusAssign(actor: Actor) = addActor(actor)
-}
-
-interface IndexedActor {
-    val z: Int
 }

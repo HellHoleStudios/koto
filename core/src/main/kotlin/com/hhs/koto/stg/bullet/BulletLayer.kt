@@ -67,6 +67,14 @@ class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
         super.act(delta)
     }
 
+    inline fun forEach(action: (Bullet) -> Unit) {
+        for (i in 0 until bullets.size) {
+            if (bullets[i] != null && bullets[i].alive) {
+                action(bullets[i])
+            }
+        }
+    }
+
     fun addBullet(bullet: Bullet): Bullet {
         bullets.add(bullet)
         count++
