@@ -191,6 +191,12 @@ open class StandardPlayer(
     open fun bomb(isDeathBomb: Boolean) {
         invulnerable = true
         SE.play("bomb")
+        task {
+            game.bullets.clear()
+            wait(290)
+            playerState = PlayerState.NORMAL
+            invulnerable = false
+        }
     }
 
     open fun hit() {

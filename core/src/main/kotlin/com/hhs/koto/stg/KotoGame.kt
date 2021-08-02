@@ -66,7 +66,7 @@ class KotoGame : Disposable {
             zoom = min(Config.w / Config.fw, Config.h / Config.fh)
         }
         viewport.update(vfx.width, vfx.height)
-//        addActor(VfxOutput(backgroundVfx))
+        addActor(VfxOutput(backgroundVfx))
     }
     val hud = IndexedStage(
         ScalingViewport(
