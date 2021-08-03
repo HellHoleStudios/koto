@@ -64,6 +64,7 @@ class PlayerDeathEffect : ShaderVfxEffect(
 
     fun end() {
         enabled = false
+        rebind()
     }
 
     override fun update(delta: Float) {

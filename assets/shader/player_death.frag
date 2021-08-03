@@ -15,13 +15,16 @@ uniform float u_time;
 void main() {
     gl_FragColor = texture2D(u_texture, v_texCoords);
     vec2 pos = v_texCoords * u_screenSize;
+    float r1 = 0.3 * u_time * u_time;
+    float r2 = 0.1 * u_time * u_time + 3.5 * u_time - 40.0;
+    float r3 = r2 - 100.0;
     bool invert = distance(pos, u_playerPosition) < 1.5;
-    invert = invert ^^ (distance(pos, u_playerPosition) < u_time * 10.0);
-    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x - 30.0, u_playerPosition.y)) < (u_time - 8.0) * 8.0);
-    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x + 30.0, u_playerPosition.y)) < (u_time - 8.0) * 8.0);
-    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y - 30.0)) < (u_time - 8.0) * 8.0);
-    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y + 30.0)) < (u_time - 8.0) * 8.0);
-    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y)) < (u_time - 30.0) * 8.0);
+    invert = invert ^^ (distance(pos, u_playerPosition) < r1);
+    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x - 30.0, u_playerPosition.y)) < r2);
+    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x + 30.0, u_playerPosition.y)) < r2);
+    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y - 30.0)) < r2);
+    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y + 30.0)) < r2);
+    invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y)) < r3);
     if (invert) {
         gl_FragColor.rgb = 1 - gl_FragColor.rgb;
     }

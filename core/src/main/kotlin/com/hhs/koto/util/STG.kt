@@ -64,6 +64,11 @@ fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     return false
 }
 
+val playerX: Float
+    get() = game.player.getX()
+val playerY: Float
+    get() = game.player.getY()
+
 fun create(
     data: BulletData,
     x: Float,
