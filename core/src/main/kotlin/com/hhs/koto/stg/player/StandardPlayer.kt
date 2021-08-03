@@ -27,6 +27,8 @@ package com.hhs.koto.stg.player
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
@@ -38,10 +40,12 @@ import com.hhs.koto.stg.task.task
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
+import ktx.actors.alpha
 import kotlin.math.absoluteValue
 
 open class StandardPlayer(
     val texture: StandardPlayerTexture,
+    hitboxTexture: TextureRegion,
     hitRadius: Float,
     val speedHigh: Float,
     val speedLow: Float,
@@ -65,9 +69,15 @@ open class StandardPlayer(
     var dx: Int = 0
     var dy: Int = 0
     var speed: Float = 0f
-    var subFrameTime: Float = 0f
     var invulnerable: Boolean = false
+    protected var subFrameTime: Float = 0f
+    protected var respawnAnimationPercentage: Float = 0f
     protected var counter: Int = 0
+    protected var hitbox = Sprite(hitboxTexture).apply {
+        setOriginCenter()
+        setSize(64f, 64f)
+        alpha = 0f
+    }
 
     companion object {
         val tempColor: Color = Color()
@@ -84,6 +94,8 @@ open class StandardPlayer(
 
     override fun act(delta: Float) {
         subFrameTime += delta
+        hitbox.rotate(4f * delta)
+        if (hitbox.rotation >= 360f) hitbox.rotation -= 360f
         super.act(delta)
     }
 
@@ -96,11 +108,18 @@ open class StandardPlayer(
         tempColor.set(app.normalBatch.color)
         app.normalBatch.color = color
         app.normalBatch.color.a *= parentAlpha
+
+        val tmpX: Float = clampX(x + speed * dx * subFrameTime)
+        val tmpY: Float = if (playerState == PlayerState.RESPAWNING) {
+            Interpolation.sine.apply(spawnY - 80f, spawnY, respawnAnimationPercentage)
+        } else {
+            clampY(y + speed * dy * subFrameTime)
+        }
         if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
             app.normalBatch.draw(
                 texture.texture,
-                clampX(x + speed * dx * subFrameTime) - textureOriginX,
-                clampY(y + speed * dy * subFrameTime) - textureOriginX,
+                tmpX - textureOriginX,
+                tmpY - textureOriginY,
                 textureOriginX,
                 textureOriginY,
                 texture.texture.regionWidth.toFloat(),
@@ -112,13 +131,22 @@ open class StandardPlayer(
         } else {
             app.normalBatch.draw(
                 texture.texture,
-                clampX(x + speed * dx * subFrameTime) - textureOriginX,
-                clampY(y + speed * dy * subFrameTime) - textureOriginX,
+                tmpX - textureOriginX,
+                tmpY - textureOriginY,
                 texture.texture.regionWidth.toFloat(),
                 texture.texture.regionHeight.toFloat(),
             )
         }
         app.normalBatch.color = tempColor
+
+        hitbox.setPosition(
+            clampX(x + speed * dx * subFrameTime) - hitbox.width / 2,
+            clampY(y + speed * dy * subFrameTime) - hitbox.height / 2,
+        )
+        hitbox.draw(app.normalBatch, parentAlpha)
+        hitbox.rotation = -hitbox.rotation
+        hitbox.draw(app.normalBatch, parentAlpha)
+        hitbox.rotation = -hitbox.rotation
 
         app.normalBatch.end()
         batch.begin()
@@ -126,6 +154,13 @@ open class StandardPlayer(
 
     override fun tick() {
         subFrameTime = 0f
+        if (playerState != PlayerState.RESPAWNING) {
+            if (keyPressed(options.keySlow)) {
+                hitbox.alpha = clamp(hitbox.alpha + 0.1f, 0f, 1f)
+            } else {
+                hitbox.alpha = clamp(hitbox.alpha - 0.1f, 0f, 1f)
+            }
+        }
         if (playerState != PlayerState.RESPAWNING) {
             move()
         }
@@ -211,19 +246,17 @@ open class StandardPlayer(
     open fun death() {
         invulnerable = true
         task {
-            wait(18)
-            x = spawnX
-            var percentage = 0f
-            repeat(32) {
-                percentage += 1f / 32f
-                y = Interpolation.sine.apply(spawnY - 80f, spawnY, percentage)
+            // TODO death animation
+            respawnAnimationPercentage = 0f
+            wait(30)
+            repeat(70) {
+                respawnAnimationPercentage += 1 / 70f
                 yield()
             }
+            x = spawnX
+            y = spawnY
             playerState = PlayerState.RESPAWNED
-        }
-        task {
-            // TODO death animation
-            repeat(290) {
+            repeat(190) {
                 color = if (frame % 6 <= 1) {
                     Color.BLUE
                 } else {

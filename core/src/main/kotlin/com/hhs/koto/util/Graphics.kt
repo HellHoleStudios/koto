@@ -26,7 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.crashinvaders.vfx.VfxManager
@@ -53,6 +53,12 @@ operator fun Color.times(other: Color): Color = this.copy().mul(other)
 operator fun Color.timesAssign(other: Color) {
     mul(other)
 }
+
+inline var Sprite.alpha: Float
+    get() = this.color.a
+    set(value) {
+        this.setAlpha(value)
+    }
 
 fun darken(color: Color, factor: Float = 0.5f): Color = if (Config.useHSVShader) {
     color.cpy().mul(1.0f, 1.0f, factor, 1.0f)

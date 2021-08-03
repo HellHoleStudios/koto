@@ -165,9 +165,11 @@ class GameScreen : BasicScreen(null, null) {
             fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
         )
         pauseMenu.deactivate()
+        SE.resume()
     }
 
     fun pauseGame() {
+        SE.pause()
         SE.play("pause")
         paused = true
         passCounter = 0
@@ -176,6 +178,7 @@ class GameScreen : BasicScreen(null, null) {
     }
 
     fun reset() {
+        SE.stop()
         pauseMenu.selectFirst()
         pauseMenu.alpha = 0f
         pauseMenu.setPosition(pauseMenu.staticX - 200f, pauseMenu.staticY)
@@ -207,6 +210,8 @@ class GameScreen : BasicScreen(null, null) {
     }
 
     private fun quit() {
+        SE.stop()
+        SE.play("cancel")
         game.dispose()
         SystemFlag.redirect = when (SystemFlag.gamemode!!) {
             GameMode.STAGE_PRACTICE -> "stageSelect"

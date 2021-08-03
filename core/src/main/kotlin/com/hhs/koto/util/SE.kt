@@ -32,7 +32,7 @@ import ktx.collections.GdxMap
 import ktx.collections.set
 
 object SE {
-    private val ses = GdxMap<String, Sound>()
+    private val sounds = GdxMap<String, Sound>()
     private val fired = GdxMap<String, Boolean>()
     private val logger = Logger("SE", Config.logLevel)
 
@@ -45,8 +45,8 @@ object SE {
     }
 
     fun play(name: String) {
-        val se = ses[name]
-        if (se == null) {
+        val sound = sounds[name]
+        if (sound == null) {
             logger.error("SE with this name doesn't exist!")
         } else {
             if (Config.noDuplicateSE) {
@@ -56,15 +56,33 @@ object SE {
                 }
                 fired[name] = true
             }
-            val id = se.play()
-            se.setVolume(id, options.SEVolume)
+            val id = sound.play()
+            sound.setVolume(id, options.SEVolume)
+        }
+    }
+
+    fun pause() {
+        sounds.safeValues().forEach {
+            it.pause()
+        }
+    }
+
+    fun resume() {
+        sounds.safeValues().forEach {
+            it.resume()
+        }
+    }
+
+    fun stop() {
+        sounds.safeValues().forEach {
+            it.stop()
         }
     }
 
     fun register(name: String, path: String): Sound {
         logger.debug("Registering sound with alias: $name path: $path")
         val snd: Sound = A[path]
-        ses.put(name, snd)
+        sounds.put(name, snd)
         fired.put(name, false)
         return snd
     }
