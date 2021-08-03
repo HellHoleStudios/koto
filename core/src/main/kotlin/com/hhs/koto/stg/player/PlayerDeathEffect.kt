@@ -42,7 +42,7 @@ class PlayerDeathEffect : ShaderVfxEffect(
 ), ChainVfxEffect {
     var playerPositionX: Float = 0f
     var playerPositionY: Float = 0f
-    var time: Float = 1000f
+    var time: Float = 0f
     var enabled: Boolean = false
 
     init {
@@ -54,6 +54,12 @@ class PlayerDeathEffect : ShaderVfxEffect(
         playerPositionY = playerY
         time = 0f
         enabled = true
+        program.bind()
+        program.setUniformf(
+            "u_playerPosition",
+            playerPositionX + Config.originX,
+            playerPositionY + Config.originY,
+        )
     }
 
     fun end() {
@@ -61,20 +67,19 @@ class PlayerDeathEffect : ShaderVfxEffect(
     }
 
     override fun update(delta: Float) {
-        time += delta
-        program.bind()
-        program.setUniformf(
-            "u_playerPosition",
-            playerPositionX + Config.originX,
-            playerPositionY + Config.originY,
-        )
-        program.setUniformf("u_time", time)
+        if (enabled) {
+            time += delta
+            program.bind()
+            program.setUniformf("u_time", time)
+        }
     }
 
     override fun rebind() {
         program.bind()
         program.setUniformi("u_texture", TEXTURE_HANDLE0)
         program.setUniformf("u_screenSize", Config.w, Config.h)
+        program.setUniformf("u_playerPosition", 2048f, 2048f)
+        program.setUniformf("u_time", 0f)
     }
 
     override fun render(context: VfxRenderContext, buffers: VfxPingPongWrapper) {
