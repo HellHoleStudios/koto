@@ -31,8 +31,10 @@ import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.Entity
 import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
+import ktx.collections.GdxArray
 
 open class Bullet(
     override var x: Float,
@@ -49,6 +51,7 @@ open class Bullet(
         val tempColor: Color = Color()
     }
 
+    var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
         get() = data.collision
 
@@ -95,6 +98,10 @@ open class Bullet(
     fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): Bullet {
         val task = CoroutineTask(index = index, bullet = this, block = block)
         addTask(task)
+        if (attachedTasks == null) {
+            attachedTasks = GdxArray()
+        }
+        attachedTasks!!.add(task)
         return this
     }
 
@@ -102,6 +109,12 @@ open class Bullet(
         x += deltaX
         y += deltaY
         t++
+    }
+
+    fun destroy() {
+        alive = false
+        attachedTasks?.forEach { it.kill() }
+        // TODO particle&animation
     }
 
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {

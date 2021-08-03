@@ -46,13 +46,20 @@ class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
         subFrameTime = 0f
         for (i in 0 until bullets.size) {
             if (bullets[i] != null) {
-                bullets[i].tick()
-                if (outOfWorld(bullets[i].x, bullets[i].y, bullets[i].boundingWidth, bullets[i].boundingHeight)) {
-                    bullets[i].alive = false
+                if (!bullets[i].alive) {
                     bullets[i] = null
                     count--
                     blankCount++
+                } else {
+                    bullets[i].tick()
+                    if (outOfWorld(bullets[i].x, bullets[i].y, bullets[i].boundingWidth, bullets[i].boundingHeight)) {
+                        bullets[i].alive = false
+                        bullets[i] = null
+                        count--
+                        blankCount++
+                    }
                 }
+
             }
         }
         if (blankCount >= Config.cleanupBlankCount || bullets.size >= 262144) {

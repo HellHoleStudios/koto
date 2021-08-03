@@ -26,6 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.crashinvaders.vfx.VfxManager
@@ -95,9 +96,14 @@ fun hsvColor(color: Color, duration: Float, interpolation: Interpolation?): HSVC
 
 val registeredEffects = GdxSet<ChainVfxEffect>()
 
-fun VfxManager.addEffectRegistered(effect: ChainVfxEffect, priority: Int) {
+fun VfxManager.addEffectRegistered(effect: ChainVfxEffect, priority: Int = 0) {
     addEffect(effect, priority)
     registeredEffects.add(effect)
+}
+
+fun VfxManager.removeEffectRegistered(effect: ChainVfxEffect) {
+    removeEffect(effect)
+    registeredEffects.remove(effect)
 }
 
 fun disposeRegisteredEffects() {

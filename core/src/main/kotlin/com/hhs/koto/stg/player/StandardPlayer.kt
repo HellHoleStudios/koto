@@ -74,13 +74,11 @@ open class StandardPlayer(
     }
 
     enum class PlayerState {
-        NORMAL, DEATHBOMBING, RESPAWNING, RESPAWNED
+        NORMAL, DEATHBOMBING, BOMBING, RESPAWNING, RESPAWNED
     }
 
     init {
         setPosition(spawnX, spawnY)
-        println(spawnX)
-        println(spawnY)
         game.st += this
     }
 
@@ -128,7 +126,7 @@ open class StandardPlayer(
 
     override fun tick() {
         subFrameTime = 0f
-        if (playerState == PlayerState.NORMAL || playerState == PlayerState.DEATHBOMBING) {
+        if (playerState != PlayerState.RESPAWNING) {
             move()
         }
         if (playerState == PlayerState.NORMAL) {
@@ -152,7 +150,12 @@ open class StandardPlayer(
                 death()
             } else if (keyPressed(options.keyBomb)) {
                 bomb(true)
-                playerState = PlayerState.NORMAL
+                playerState = PlayerState.BOMBING
+            }
+        } else if (playerState == PlayerState.NORMAL) {
+            if (keyPressed(options.keyBomb)) {
+                bomb(false)
+                playerState = PlayerState.BOMBING
             }
         }
         if (counter > 0) counter--
@@ -192,6 +195,9 @@ open class StandardPlayer(
         invulnerable = true
         SE.play("bomb")
         task {
+            game.bullets.forEach {
+                it.destroy()
+            }
             wait(290)
             playerState = PlayerState.NORMAL
             invulnerable = false
@@ -205,9 +211,8 @@ open class StandardPlayer(
     open fun death() {
         invulnerable = true
         task {
-            // TODO death animation
+            wait(18)
             x = spawnX
-            wait(8)
             var percentage = 0f
             repeat(32) {
                 percentage += 1f / 32f
@@ -215,12 +220,16 @@ open class StandardPlayer(
                 yield()
             }
             playerState = PlayerState.RESPAWNED
-            repeat(130) {
-                color = if (frame % 3 == 0) {
-                    Color(0.1f, 0.1f, 1f, 1f)
+        }
+        task {
+            // TODO death animation
+            repeat(290) {
+                color = if (frame % 6 <= 1) {
+                    Color.BLUE
                 } else {
                     Color.WHITE
                 }
+                yield()
             }
             color = Color.WHITE
             invulnerable = false
