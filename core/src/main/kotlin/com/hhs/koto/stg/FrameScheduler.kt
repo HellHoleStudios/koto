@@ -211,6 +211,9 @@ class FrameScheduler(private val game: KotoGame) {
     }
 
     private fun act(delta: Float) {
+        game.backgroundVfx.update(delta)
+        game.vfx.update(delta)
+        game.postVfx.update(delta)
         game.player.act(delta)
         game.bullets.act(delta)
         game.st.act(delta)

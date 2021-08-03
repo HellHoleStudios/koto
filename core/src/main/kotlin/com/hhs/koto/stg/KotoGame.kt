@@ -91,9 +91,6 @@ class KotoGame : Disposable {
     }
 
     fun update(delta: Float) {
-        backgroundVfx.update(delta)
-        vfx.update(delta)
-        postVfx.update(delta)
         speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
             options.speedUpMultiplier
         } else {

@@ -69,6 +69,7 @@ open class Bullet(
     var deltaX: Float = 0f
     var deltaY: Float = 0f
     var alive: Boolean = true
+    var grazed: Boolean = false
     var t: Int = 0
     val boundingWidth
         get() = data.texture.maxWidth * scaleX

@@ -81,7 +81,10 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         if (Config.useHSVShader) {
             batch = SpriteBatch(
                 1000,
-                ShaderProgram(A.get<String>("shader/koto_hsv.vert.glsl"), A.get("shader/koto_hsv.frag.glsl")),
+                ShaderProgram(
+                    Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
+                    A["shader/koto_hsv.frag"],
+                ),
             )
             normalBatch = SpriteBatch()
         } else {
@@ -113,6 +116,9 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
         B.defaultSheet = A[Config.defaultShotSheet]
 
+        // TODO variants
+        GameBuilder.players["reimuA"] = { Reimu() }
+        GameBuilder.players["reimuB"] = { Reimu() }
         GameBuilder.players["reimu"] = { Reimu() }
 
         GameBuilder.regularGame = RegularGame()

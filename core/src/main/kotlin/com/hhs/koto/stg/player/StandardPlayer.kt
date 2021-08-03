@@ -40,7 +40,6 @@ import com.hhs.koto.stg.task.task
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
-import ktx.actors.alpha
 import kotlin.math.absoluteValue
 
 open class StandardPlayer(
@@ -70,6 +69,9 @@ open class StandardPlayer(
     var dy: Int = 0
     var speed: Float = 0f
     var invulnerable: Boolean = false
+    protected val effect = PlayerDeathEffect().apply {
+        game.vfx.addEffectRegistered(this)
+    }
     protected var subFrameTime: Float = 0f
     protected var respawnAnimationPercentage: Float = 0f
     protected var counter: Int = 0
@@ -109,7 +111,11 @@ open class StandardPlayer(
         app.normalBatch.color = color
         app.normalBatch.color.a *= parentAlpha
 
-        val tmpX: Float = clampX(x + speed * dx * subFrameTime)
+        val tmpX: Float = if (playerState == PlayerState.RESPAWNING) {
+            Interpolation.sine.apply(spawnX, spawnX, respawnAnimationPercentage)
+        } else {
+            clampX(x + speed * dx * subFrameTime)
+        }
         val tmpY: Float = if (playerState == PlayerState.RESPAWNING) {
             Interpolation.sine.apply(spawnY - 80f, spawnY, respawnAnimationPercentage)
         } else {
@@ -246,15 +252,17 @@ open class StandardPlayer(
     open fun death() {
         invulnerable = true
         task {
-            // TODO death animation
             respawnAnimationPercentage = 0f
+            effect.start(x, y)
             wait(30)
             repeat(70) {
                 respawnAnimationPercentage += 1 / 70f
                 yield()
             }
+            effect.end()
             x = spawnX
             y = spawnY
+            respawnAnimationPercentage = 0f
             playerState = PlayerState.RESPAWNED
             repeat(190) {
                 color = if (frame % 6 <= 1) {
