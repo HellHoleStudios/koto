@@ -28,27 +28,26 @@ package com.hhs.koto.stg.item
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.bullet.Bullet
-import com.hhs.koto.util.cos
-import com.hhs.koto.util.outOfFrame
-import com.hhs.koto.util.sin
+import com.hhs.koto.util.*
 import kotlin.math.absoluteValue
 
-class BasicItem(
+open class BasicItem(
     override var x: Float,
     override var y: Float,
     val texture: TextureRegion,
     speed: Float = 0f,
     angle: Float = 90f,
     radius: Float = 10f,
-    val gravity: Float = 0.05f,
-    val xDamping: Float = 0.05f,
-    val xDampingLimit: Float = 0.05f,
-    val maxSpeed: Float = 2f,
-    val originX: Float = texture.regionWidth.toFloat() / 2f,
-    val originY: Float = texture.regionHeight.toFloat() / 2f,
+    var gravity: Float = 0.05f,
+    var xDamping: Float = 0.05f,
+    var xDampingLimit: Float = 0.05f,
+    var maxSpeed: Float = 2f,
+    var originX: Float = texture.regionWidth.toFloat() / 2f,
+    var originY: Float = texture.regionHeight.toFloat() / 2f,
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
@@ -66,24 +65,46 @@ class BasicItem(
     override val boundingHeight
         get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
     override val collision: CollisionShape = CircleCollision(radius)
+    var collected: Boolean = false
+    protected var counter: Int = 0
+    protected var collectedPositionX: Float = 0f
+    protected var collectedPositionY: Float = 0f
 
     override fun tick() {
-        deltaY = (deltaY - gravity).coerceAtLeast(-maxSpeed)
-        deltaX = if (deltaX > 0) {
-            (deltaX - xDamping).coerceAtLeast(0f)
+        if (collected) {
+            counter++
+            x = Interpolation.linear.apply(collectedPositionX, playerX, counter.toFloat() / 40f)
+            y = Interpolation.linear.apply(collectedPositionY, playerY, counter.toFloat() / 40f)
+            if (counter >= 40) {
+                collected()
+                destroy()
+            }
         } else {
-            (deltaX + xDamping).coerceAtMost(0f)
+            deltaY = (deltaY - gravity).coerceAtLeast(-maxSpeed)
+            deltaX = if (deltaX > 0) {
+                (deltaX - xDamping).coerceAtLeast(0f)
+            } else {
+                (deltaX + xDamping).coerceAtMost(0f)
+            }
+            if (deltaX.absoluteValue <= xDampingLimit) {
+                deltaX = 0f
+            }
+            x += deltaX
+            y += deltaY
         }
-        if (deltaX.absoluteValue <= xDampingLimit) {
-            deltaX = 0f
-        }
-        x += deltaX
-        y += deltaY
+    }
+
+    fun destroy() {
+        alive = false
     }
 
     override fun collect() {
-        alive = false
+        collectedPositionX = x
+        collectedPositionY = y
+        collected = true
     }
+
+    open fun collected() = Unit
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {

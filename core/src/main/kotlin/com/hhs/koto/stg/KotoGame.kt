@@ -91,6 +91,7 @@ class KotoGame : Disposable {
     val score: Long = 0
     val life = FragmentCounter()
     val bomb = FragmentCounter()
+    var power: Float = 1f
 
     init {
         logger.info("Game instance created.")
@@ -150,3 +151,9 @@ fun <T : Bullet> addBullet(bullet: T): T {
     game.bullets.add(bullet)
     return bullet
 }
+
+fun <T : Item> addItem(item: T): T {
+    game.items.add(item)
+    return item
+}
+

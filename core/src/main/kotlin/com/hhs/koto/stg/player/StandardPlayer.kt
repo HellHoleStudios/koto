@@ -46,19 +46,19 @@ open class StandardPlayer(
     val texture: StandardPlayerTexture,
     hitboxTexture: TextureRegion,
     hitRadius: Float,
-    val speedHigh: Float,
-    val speedLow: Float,
-    val deathbombTime: Int,
+    var speedHigh: Float,
+    var speedLow: Float,
+    var deathbombTime: Int,
     grazeRadius: Float = hitRadius * 10f,
     itemRadius: Float = hitRadius * 15f,
-    val textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
-    val textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
-    val leftMargin: Float = 10f,
-    val rightMargin: Float = 10f,
-    val bottomMargin: Float = 20f,
-    val topMargin: Float = 20f,
-    val spawnX: Float = Config.w / 2 - Config.originX,
-    val spawnY: Float = -Config.originY + 30f,
+    var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
+    var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
+    var leftMargin: Float = 10f,
+    var rightMargin: Float = 10f,
+    var bottomMargin: Float = 20f,
+    var topMargin: Float = 20f,
+    var spawnX: Float = Config.w / 2 - Config.originX,
+    var spawnY: Float = -Config.originY + 30f,
     override val z: Int = -300,
 ) : Player, Actor(), IndexedActor {
     val hitCollision = CircleCollision(hitRadius)
@@ -170,6 +170,13 @@ open class StandardPlayer(
         if (playerState != PlayerState.RESPAWNING) {
             move()
         }
+        if (playerState != PlayerState.RESPAWNING) {
+            game.items.forEach {
+                if (Collision.collide(it.collision, it.x, it.y, itemCollision, x, y)) {
+                    it.collect()
+                }
+            }
+        }
         if (playerState == PlayerState.NORMAL) {
             if (!invulnerable) {
                 var hit = false
@@ -238,6 +245,9 @@ open class StandardPlayer(
         task {
             game.bullets.forEach {
                 it.destroy()
+            }
+            game.items.forEach {
+                it.collect()
             }
             wait(290)
             playerState = PlayerState.NORMAL
