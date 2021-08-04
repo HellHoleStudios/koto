@@ -26,6 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.addBullet
@@ -128,4 +129,21 @@ fun ring(
         ret.addBullet(bullet)
     }
     return ret
+}
+
+inline fun ringCloud(
+    x: Float,
+    y: Float,
+    count: Int,
+    radius: Float = 30f,
+    thickness: Float = 15f,
+    action: (Float, Float) -> Unit,
+) {
+    repeat(count) {
+        val r = random(radius - thickness / 2, radius + thickness / 2)
+        val a = random(0f, 360f)
+        val tmpX = cos(a) * r + x
+        val tmpY = sin(a) * r + y
+        action(tmpX, tmpY)
+    }
 }

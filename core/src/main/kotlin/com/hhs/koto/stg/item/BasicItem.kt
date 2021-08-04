@@ -23,124 +23,86 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
-import com.hhs.koto.stg.Drawable
-import com.hhs.koto.stg.Entity
-import com.hhs.koto.stg.addTask
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.util.*
-import kotlinx.coroutines.CoroutineScope
-import ktx.collections.GdxArray
+import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.outOfFrame
+import com.hhs.koto.util.sin
+import kotlin.math.absoluteValue
 
-open class Bullet(
+class BasicItem(
     override var x: Float,
     override var y: Float,
+    val texture: TextureRegion,
     speed: Float = 0f,
-    angle: Float = 0f,
-    val data: BulletData,
+    angle: Float = 90f,
+    radius: Float = 10f,
+    val gravity: Float = 0.05f,
+    val xDamping: Float = 0.05f,
+    val xDampingLimit: Float = 0.05f,
+    val maxSpeed: Float = 2f,
+    val originX: Float = texture.regionWidth.toFloat() / 2f,
+    val originY: Float = texture.regionHeight.toFloat() / 2f,
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
-) : Entity, Drawable {
+) : Item {
     companion object {
         val tempColor: Color = Color()
     }
 
-    var attachedTasks: GdxArray<Task>? = null
-    override val collision: CollisionShape
-        get() = data.collision
-
-    var speed: Float = speed
-        set(value) {
-            field = value
-            calculateDelta()
-        }
-    var angle: Float = angle
-        set(value) {
-            field = value
-            calculateDelta()
-        }
-
-    val sprite = Sprite()
-    var deltaX: Float = 0f
-    var deltaY: Float = 0f
+    var deltaX: Float = cos(angle) * speed
+    var deltaY: Float = sin(angle) * speed
     override var alive: Boolean = true
-    var grazed: Boolean = false
-    var t: Int = 0
     override val boundingWidth
-        get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
+        get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
     override val boundingHeight
-        get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
-
-    init {
-        calculateDelta()
-        sprite.setOriginCenter()
-    }
-
-    fun setDeltas(deltaX: Float, deltaY: Float) {
-        this.deltaX = deltaX
-        this.deltaY = deltaY
-        calculateAngleSpeed()
-    }
-
-    fun calculateDelta() {
-        deltaX = cos(angle) * speed
-        deltaY = sin(angle) * speed
-    }
-
-    fun calculateAngleSpeed() {
-        angle = atan2(deltaX, deltaY)
-        speed = dist(deltaX, deltaY)
-    }
-
-    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): Bullet {
-        val task = CoroutineTask(index = index, bullet = this, block = block)
-        addTask(task)
-        if (attachedTasks == null) {
-            attachedTasks = GdxArray()
-        }
-        attachedTasks!!.add(task)
-        return this
-    }
+        get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
+    override val collision: CollisionShape = CircleCollision(radius)
 
     override fun tick() {
+        deltaY = (deltaY - gravity).coerceAtLeast(-maxSpeed)
+        deltaX = if (deltaX > 0) {
+            (deltaX - xDamping).coerceAtLeast(0f)
+        } else {
+            (deltaX + xDamping).coerceAtMost(0f)
+        }
+        if (deltaX.absoluteValue <= xDampingLimit) {
+            deltaX = 0f
+        }
         x += deltaX
         y += deltaY
-        t++
     }
 
-    fun destroy() {
+    override fun collect() {
         alive = false
-        attachedTasks?.forEach { it.kill() }
-        // TODO particle&animation
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
-            val texture = data.texture.getFrame(t)
+            Bullet.tempColor.set(batch.color)
+            batch.color = color
+            batch.color.a *= parentAlpha
             var tmpX = x
             var tmpY = y
             if (subFrameTime != 0f) {
                 tmpX += deltaX * subFrameTime
                 tmpY += deltaY * subFrameTime
             }
-            tempColor.set(batch.color)
-            batch.color = color
-            batch.color.a *= parentAlpha
             if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
                 batch.draw(
                     texture,
-                    tmpX - data.originX,
-                    tmpY - data.originY,
-                    data.originX,
-                    data.originY,
+                    tmpX - originX,
+                    tmpY - originY,
+                    originX,
+                    originY,
                     texture.regionWidth.toFloat(),
                     texture.regionHeight.toFloat(),
                     scaleX,
@@ -150,13 +112,13 @@ open class Bullet(
             } else {
                 batch.draw(
                     texture,
-                    tmpX - data.originX,
-                    tmpY - data.originY,
+                    tmpX - originX,
+                    tmpY - originY,
                     texture.regionWidth.toFloat(),
                     texture.regionHeight.toFloat(),
                 )
             }
-            batch.color = tempColor
+            batch.color = Bullet.tempColor
         }
     }
 }

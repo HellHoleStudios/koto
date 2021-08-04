@@ -23,30 +23,16 @@
  *
  */
 
-package com.hhs.koto.demo.stage1
+package com.hhs.koto.stg
 
-import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.item.BasicItem
-import com.hhs.koto.stg.pattern.accelerate
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.SpellBuilder
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.stg.task.wait
-import com.hhs.koto.util.*
-import ktx.collections.GdxArray
+import com.badlogic.gdx.graphics.g2d.Batch
 
-class TestSpell : SpellBuilder {
-    override val name = "stage1.spell1"
-    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
-
-    override fun build(): Task = CoroutineTask {
-        ringCloud(0f, 0f, 100) { x, y ->
-            game.items.add(BasicItem(x, y, getRegion("item/power.png"), 3f))
-        }
-        while (true) {
-            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
-                .accelerate(0.2f, 20)
-            wait(10)
-        }
-    }
+interface Drawable {
+    val x: Float
+    val y: Float
+    val boundingWidth: Float
+    val boundingHeight: Float
+    var alive: Boolean
+    fun tick()
+    fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
 }

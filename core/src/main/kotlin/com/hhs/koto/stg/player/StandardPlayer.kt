@@ -171,7 +171,7 @@ open class StandardPlayer(
             move()
         }
         if (playerState == PlayerState.NORMAL) {
-            if (!invulnerable && !options.invulnerable) {
+            if (!invulnerable) {
                 var hit = false
                 game.bullets.forEach {
                     if (Collision.collide(it.collision, it.x, it.y, hitCollision, x, y)) {

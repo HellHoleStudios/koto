@@ -23,48 +23,52 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
-import com.hhs.koto.stg.IndexedActor
 import com.hhs.koto.util.game
 import com.hhs.koto.util.outOfWorld
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
-class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
-    val bullets = GdxArray<Bullet>()
+open class DrawableLayer<T : Drawable>(override val z: Int) : Actor(), IndexedActor {
+    val drawables = GdxArray<T>()
     var count: Int = 0
-        private set
+        protected set
     var blankCount: Int = 0
-        private set
+        protected set
     var subFrameTime: Float = 0f
 
     fun tick() {
         subFrameTime = 0f
-        for (i in 0 until bullets.size) {
-            if (bullets[i] != null) {
-                if (!bullets[i].alive) {
-                    bullets[i] = null
+        for (i in 0 until drawables.size) {
+            if (drawables[i] != null) {
+                if (!drawables[i].alive) {
+                    drawables[i] = null
                     count--
                     blankCount++
                 } else {
-                    bullets[i].tick()
-                    if (outOfWorld(bullets[i].x, bullets[i].y, bullets[i].boundingWidth, bullets[i].boundingHeight)) {
-                        bullets[i].alive = false
-                        bullets[i] = null
+                    drawables[i].tick()
+                    if (outOfWorld(
+                            drawables[i].x,
+                            drawables[i].y,
+                            drawables[i].boundingWidth,
+                            drawables[i].boundingHeight
+                        )
+                    ) {
+                        drawables[i].alive = false
+                        drawables[i] = null
                         count--
                         blankCount++
                     }
                 }
-
             }
         }
-        if (blankCount >= Config.cleanupBlankCount || bullets.size >= 262144) {
-            game.logger.debug("Cleaning up blanks in bullet array: bulletCount=$count blankCount=$blankCount")
-            bullets.removeNull()
+        if (blankCount >= Config.cleanupBlankCount || drawables.size >= 262144) {
+            game.logger.debug("Cleaning up drawable layer: count=$count blankCount=$blankCount")
+            drawables.removeNull()
             blankCount = 0
         }
     }
@@ -74,33 +78,33 @@ class BulletLayer(override val z: Int = 0) : Actor(), IndexedActor {
         super.act(delta)
     }
 
-    inline fun forEach(action: (Bullet) -> Unit) {
-        for (i in 0 until bullets.size) {
-            if (bullets[i] != null && bullets[i].alive) {
-                action(bullets[i])
+    inline fun forEach(action: (T) -> Unit) {
+        for (i in 0 until drawables.size) {
+            if (drawables[i] != null && drawables[i].alive) {
+                action(drawables[i])
             }
         }
     }
 
-    fun addBullet(bullet: Bullet): Bullet {
-        bullets.add(bullet)
+    fun add(drawable: T): T {
+        drawables.add(drawable)
         count++
-        return bullet
+        return drawable
     }
 
-    fun removeBullet(bullet: Bullet) {
-        val index = bullets.indexOf(bullet)
+    fun remove(drawable: T) {
+        val index = drawables.indexOf(drawable)
         if (index != -1) {
-            bullets[index] = null
+            drawables[index] = null
             blankCount++
             count--
         }
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        for (i in 0 until bullets.size) {
-            if (bullets[i] != null) {
-                bullets[i].draw(batch, parentAlpha, subFrameTime)
+        for (i in 0 until drawables.size) {
+            if (drawables[i] != null) {
+                drawables[i].draw(batch, parentAlpha, subFrameTime)
             }
         }
     }

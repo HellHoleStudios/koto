@@ -35,7 +35,7 @@ import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutput
 import com.hhs.koto.stg.bullet.Bullet
-import com.hhs.koto.stg.bullet.BulletLayer
+import com.hhs.koto.stg.item.Item
 import com.hhs.koto.stg.player.Player
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
@@ -81,16 +81,22 @@ class KotoGame : Disposable {
     var speedUpMultiplier: Int = 1
     val frameScheduler = FrameScheduler(this)
     val logger = Logger("Game", Config.logLevel)
-    val bullets = BulletLayer().apply {
+    val bullets = DrawableLayer<Bullet>(0).apply {
+        st += this
+    }
+    val items = DrawableLayer<Item>(-400).apply {
         st += this
     }
     lateinit var player: Player
+    val score: Long = 0
+    val life = FragmentCounter()
+    val bomb = FragmentCounter()
 
     init {
         logger.info("Game instance created.")
     }
 
-    fun update(delta: Float) {
+    fun update() {
         speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
             options.speedUpMultiplier
         } else {
@@ -141,6 +147,6 @@ fun <T : Task> addTask(task: T): T {
 }
 
 fun <T : Bullet> addBullet(bullet: T): T {
-    game.bullets.addBullet(bullet)
+    game.bullets.add(bullet)
     return bullet
 }

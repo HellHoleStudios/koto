@@ -150,7 +150,7 @@ class GameScreen : BasicScreen(null, null) {
                 }
             }
         } else {
-            game.update(delta)
+            game.update()
         }
         super.render(delta)
     }

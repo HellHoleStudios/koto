@@ -40,7 +40,6 @@ data class Options(
     var startupWindowWidth: Int = 960,
     var startupWindowHeight: Int = 720,
     var startupFullScreen: Boolean = false,
-    var invulnerable: Boolean = false,
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
     var SEVolume: Float = 0.5f,
