@@ -122,6 +122,7 @@ class GameScreen : BasicScreen(null, null) {
     private var tryPause: Boolean = false
     private var paused: Boolean = false
     private var passCounter: Int = 0
+    private var deltaTimeCounter: Float = 0f
 
     override fun render(delta: Float) {
         if (state != ScreenState.SHOWN) {
@@ -136,17 +137,21 @@ class GameScreen : BasicScreen(null, null) {
             pauseGame()
         }
         if (paused) {
+            deltaTimeCounter += delta
             if (passCounter >= 30 && keyJustPressed(options.keyPause) && blurredGameFrame.actions.isEmpty) {
                 resumeGame()
             } else {
-                if (passCounter < 30) {
-                    if (passCounter == 0) {
-                        vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
-                    } else {
-                        vfxManager.useAsInput(vfxManager.resultBuffer.texture)
+                if (deltaTimeCounter >= 1 / 60f) {
+                    if (passCounter < 30) {
+                        if (passCounter == 0) {
+                            vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
+                        } else {
+                            vfxManager.useAsInput(vfxManager.resultBuffer.texture)
+                        }
+                        vfxManager.applyEffects()
+                        passCounter++
                     }
-                    vfxManager.applyEffects()
-                    passCounter++
+                    deltaTimeCounter = 0f
                 }
             }
         } else {
@@ -173,6 +178,7 @@ class GameScreen : BasicScreen(null, null) {
         SE.play("pause")
         paused = true
         passCounter = 0
+        deltaTimeCounter = 0f
         pauseMenu.activate()
         blurredGameFrame.alpha = 1f
     }
