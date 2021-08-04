@@ -28,7 +28,6 @@ package com.hhs.koto.stg
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
-import com.hhs.koto.util.game
 import com.hhs.koto.util.outOfWorld
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
@@ -67,7 +66,6 @@ open class DrawableLayer<T : Drawable>(override val z: Int) : Actor(), IndexedAc
             }
         }
         if (blankCount >= Config.cleanupBlankCount || drawables.size >= 262144) {
-            game.logger.debug("Cleaning up drawable layer: count=$count blankCount=$blankCount")
             drawables.removeNull()
             blankCount = 0
         }

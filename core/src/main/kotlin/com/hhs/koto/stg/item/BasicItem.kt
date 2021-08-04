@@ -28,7 +28,6 @@ package com.hhs.koto.stg.item
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.bullet.Bullet
@@ -67,16 +66,13 @@ open class BasicItem(
     override val collision: CollisionShape = CircleCollision(radius)
     var collected: Boolean = false
     protected var counter: Int = 0
-    protected var collectedPositionX: Float = 0f
-    protected var collectedPositionY: Float = 0f
 
     override fun tick() {
         if (collected) {
-            counter++
-            x = Interpolation.linear.apply(collectedPositionX, playerX, counter.toFloat() / 40f)
-            y = Interpolation.linear.apply(collectedPositionY, playerY, counter.toFloat() / 40f)
-            if (counter >= 40) {
-                collected()
+            val angle = atan2(x, y, playerX, playerY)
+            deltaX = cos(angle) * 8f
+            deltaY = sin(angle) * 8f
+            if (dist(x, y, playerX, playerY) <= 5f) {
                 destroy()
             }
         } else {
@@ -89,9 +85,9 @@ open class BasicItem(
             if (deltaX.absoluteValue <= xDampingLimit) {
                 deltaX = 0f
             }
-            x += deltaX
-            y += deltaY
         }
+        x += deltaX
+        y += deltaY
     }
 
     fun destroy() {
@@ -99,8 +95,6 @@ open class BasicItem(
     }
 
     override fun collect() {
-        collectedPositionX = x
-        collectedPositionY = y
         collected = true
     }
 

@@ -23,35 +23,34 @@
  *
  */
 
-package com.hhs.koto.demo.stage1
+package com.hhs.koto.stg.item
 
-import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.addItem
-import com.hhs.koto.stg.item.PointItem
-import com.hhs.koto.stg.item.PowerItem
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.SpellBuilder
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.stg.task.wait
-import com.hhs.koto.util.ringCloud
-import ktx.collections.GdxArray
+import com.badlogic.gdx.graphics.Color
+import com.hhs.koto.util.game
+import com.hhs.koto.util.getRegion
 
-class TestSpell : SpellBuilder {
-    override val name = "stage1.spell1"
-    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
-
-    override fun build(): Task = CoroutineTask {
-        while (true) {
-            ringCloud(random(-100f, 100f), 100f, 10) { x, y ->
-                addItem(PowerItem(x, y, 1f))
-            }
-            ringCloud(random(-100f, 100f), 100f, 10) { x, y ->
-                addItem(PointItem(x, y, 1000))
-            }
-//            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
-//                .accelerate(0.2f, 20)
-            wait(10)
-        }
+class PointItem(
+    x: Float,
+    y: Float,
+    val amount: Long,
+    speed: Float = 0f,
+    angle: Float = 90f,
+    radius: Float = 10f,
+    scaleX: Float = 1f,
+    scaleY: Float = 1f,
+    color: Color = Color.WHITE,
+) : BasicItem(
+    x,
+    y,
+    getRegion("item/point.png"),
+    speed,
+    angle,
+    radius,
+    scaleX = scaleX,
+    scaleY = scaleY,
+    color = color,
+) {
+    override fun collected() {
+        game.score += amount
     }
 }

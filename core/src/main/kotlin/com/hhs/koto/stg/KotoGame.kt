@@ -88,7 +88,7 @@ class KotoGame : Disposable {
         st += this
     }
     lateinit var player: Player
-    val score: Long = 0
+    var score: Long = 0
     val life = FragmentCounter()
     val bomb = FragmentCounter()
     var power: Float = 1f

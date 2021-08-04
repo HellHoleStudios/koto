@@ -97,7 +97,7 @@ open class Bullet(
 
     fun calculateAngleSpeed() {
         angle = atan2(deltaX, deltaY)
-        speed = dist(deltaX, deltaY)
+        speed = len(deltaX, deltaY)
     }
 
     fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): Bullet {

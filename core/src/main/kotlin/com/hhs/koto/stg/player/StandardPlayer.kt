@@ -51,6 +51,7 @@ open class StandardPlayer(
     var deathbombTime: Int,
     grazeRadius: Float = hitRadius * 10f,
     itemRadius: Float = hitRadius * 15f,
+    var itemCollectLineHeight: Float = Config.h / 4f * 3f - Config.originY,
     var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
     var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
     var leftMargin: Float = 10f,
@@ -171,9 +172,15 @@ open class StandardPlayer(
             move()
         }
         if (playerState != PlayerState.RESPAWNING) {
-            game.items.forEach {
-                if (Collision.collide(it.collision, it.x, it.y, itemCollision, x, y)) {
+            if (y >= itemCollectLineHeight) {
+                game.items.forEach {
                     it.collect()
+                }
+            } else {
+                game.items.forEach {
+                    if (Collision.collide(it.collision, it.x, it.y, itemCollision, x, y)) {
+                        it.collect()
+                    }
                 }
             }
         }
