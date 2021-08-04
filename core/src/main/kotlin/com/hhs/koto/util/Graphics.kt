@@ -66,7 +66,7 @@ fun darken(color: Color, factor: Float = 0.5f): Color = if (Config.useHSVShader)
     color.cpy().mul(factor, factor, factor, 1.0f)
 }
 
-val tmpHSVArray = FloatArray(3)
+private val tmpHSVArray = FloatArray(3)
 fun Color.getHue(): Float {
     toHsv(tmpHSVArray)
     return tmpHSVArray[0] / 360f

@@ -26,13 +26,14 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
-import com.hhs.koto.util.outOfWorld
+import com.hhs.koto.util.contains
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
-open class DrawableLayer<T : Drawable>(override val z: Int) : Actor(), IndexedActor {
+open class DrawableLayer<T : Drawable>(override val z: Int, val world: Rectangle) : Actor(), IndexedActor {
     val drawables = GdxArray<T>()
     var count: Int = 0
         protected set
@@ -50,11 +51,11 @@ open class DrawableLayer<T : Drawable>(override val z: Int) : Actor(), IndexedAc
                     blankCount++
                 } else {
                     drawables[i].tick()
-                    if (outOfWorld(
+                    if (!world.contains(
                             drawables[i].x,
                             drawables[i].y,
                             drawables[i].boundingWidth,
-                            drawables[i].boundingHeight
+                            drawables[i].boundingHeight,
                         )
                     ) {
                         drawables[i].alive = false

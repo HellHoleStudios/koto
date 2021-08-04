@@ -75,10 +75,6 @@ object Config {
     const val windowTitle: String = "Koto"
     const val screenWidth: Float = 1440f
     const val screenHeight: Float = 1080f
-    const val frameWidth: Float = 864f
-    const val frameHeight: Float = 1008f
-    const val frameOffsetX: Float = 72f
-    const val frameOffsetY: Float = 36f
     const val allowFullScreen: Boolean = true
     const val allowResize: Boolean = true
     val windowScaling: Scaling = Scaling.fit
@@ -89,7 +85,7 @@ object Config {
     const val h: Float = 448f
     const val originX: Float = w / 2
     const val originY: Float = h / 2
-    const val deleteDistance: Float = 1024f
+    const val bulletDeleteDistance: Float = 1024f
     const val safeDistance: Float = 16f
     const val orthoCircleCollision: Boolean = true
     const val cleanupBlankCount: Int = 512

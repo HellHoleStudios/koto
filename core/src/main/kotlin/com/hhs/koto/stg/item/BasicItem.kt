@@ -95,6 +95,7 @@ open class BasicItem(
     }
 
     override fun collect() {
+        SE.play("item")
         collected = true
     }
 

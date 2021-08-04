@@ -45,8 +45,14 @@ class GameScreen : BasicScreen(null, null) {
 
     val vfxManager = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
     val blurEffect = GaussianBlurEffect()
-    val gameFrame = VfxOutput().apply { st += this }
-    val blurredGameFrame = VfxOutput().apply { st += this }
+    val gameFrame = VfxOutput().apply {
+        setBounds(72f, 36f, 864f, 1008f)
+        st += this
+    }
+    val blurredGameFrame = VfxOutput().apply {
+        setBounds(72f, 36f, 864f, 1008f)
+        st += this
+    }
 
     init {
         val gameBackground = Image(getRegion("bg/game.png"))
@@ -198,17 +204,9 @@ class GameScreen : BasicScreen(null, null) {
         GameBuilder.build()
 
         gameFrame.vfxManager = game.postVfx
-        gameFrame.setBounds(
-            Config.frameOffsetX, Config.frameOffsetY,
-            Config.frameWidth, Config.frameHeight
-        )
         gameFrame.alpha = 1f
 
         blurredGameFrame.vfxManager = vfxManager
-        blurredGameFrame.setBounds(
-            Config.frameOffsetX, Config.frameOffsetY,
-            Config.frameWidth, Config.frameHeight
-        )
         blurredGameFrame.alpha = 0f
 
         paused = false

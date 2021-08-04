@@ -27,6 +27,7 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
+import com.badlogic.gdx.math.Rectangle
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.addBullet
@@ -49,12 +50,10 @@ object B {
     }
 }
 
-fun outOfWorld(x: Float, y: Float, rx: Float, ry: Float): Boolean {
-    if (x + rx < -Config.originX - Config.deleteDistance) return true
-    if (x - rx > Config.w + Config.deleteDistance - Config.originX) return true
-    if (y + ry < -Config.originY - Config.deleteDistance) return true
-    if (y - ry > Config.h + Config.deleteDistance - Config.originY) return true
-    return false
+private val tempRectangle = Rectangle()
+fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {
+    tempRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
+    return contains(tempRectangle)
 }
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {

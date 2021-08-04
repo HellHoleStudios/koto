@@ -27,6 +27,7 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
@@ -81,10 +82,24 @@ class KotoGame : Disposable {
     var speedUpMultiplier: Int = 1
     val frameScheduler = FrameScheduler(this)
     val logger = Logger("Game", Config.logLevel)
-    val bullets = DrawableLayer<Bullet>(0).apply {
+    val bullets = DrawableLayer<Bullet>(
+        0, Rectangle(
+            -Config.bulletDeleteDistance - Config.originX,
+            -Config.bulletDeleteDistance - Config.originY,
+            Config.bulletDeleteDistance * 2 + Config.w,
+            Config.bulletDeleteDistance * 2 + Config.h,
+        )
+    ).apply {
         st += this
     }
-    val items = DrawableLayer<Item>(-400).apply {
+    val items = DrawableLayer<Item>(
+        -400, Rectangle(
+            -32768f,
+            -32f - Config.originY,
+            65536f,
+            32768f,
+        )
+    ).apply {
         st += this
     }
     lateinit var player: Player
