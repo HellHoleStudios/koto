@@ -74,13 +74,13 @@ class GameScreen : BasicScreen(null, null) {
             setPosition(staticX - 200f, staticY)
             parallel(
                 fadeIn(0.5f, Interpolation.pow5Out),
-                moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out)
+                moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out),
             )
         }
         inactiveAction = {
             parallel(
                 fadeOut(0.5f, Interpolation.pow5Out),
-                moveTo(staticX - 200f, staticY, 0.5f, Interpolation.pow5Out)
+                moveTo(staticX - 200f, staticY, 0.5f, Interpolation.pow5Out),
             )
         }
     }
@@ -136,7 +136,7 @@ class GameScreen : BasicScreen(null, null) {
             pauseGame()
         }
         if (paused) {
-            if (passCounter > 0 && keyJustPressed(options.keyPause)) {
+            if (passCounter >= 30 && keyJustPressed(options.keyPause) && blurredGameFrame.actions.isEmpty) {
                 resumeGame()
             } else {
                 if (passCounter < 30) {

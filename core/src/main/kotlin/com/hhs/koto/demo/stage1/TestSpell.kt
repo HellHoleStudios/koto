@@ -47,7 +47,7 @@ class TestSpell : SpellBuilder {
                 addItem(PowerItem(x, y, 1f))
             }
             ringCloud(random(-100f, 100f), 100f, 10) { x, y ->
-                addItem(PointItem(x, y, 1000))
+                addItem(PointItem(x, y, 1000,))
             }
 //            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
 //                .accelerate(0.2f, 20)

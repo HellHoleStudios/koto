@@ -33,7 +33,7 @@ class PowerItem(
     x: Float,
     y: Float,
     val amount: Float,
-    speed: Float = 0f,
+    speed: Float = 2f,
     angle: Float = 90f,
     radius: Float = 10f,
     scaleX: Float = 1f,

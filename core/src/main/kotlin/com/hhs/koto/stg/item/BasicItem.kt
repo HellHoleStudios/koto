@@ -38,7 +38,7 @@ open class BasicItem(
     override var x: Float,
     override var y: Float,
     val texture: TextureRegion,
-    speed: Float = 0f,
+    speed: Float = 2f,
     angle: Float = 90f,
     radius: Float = 10f,
     var gravity: Float = 0.05f,
