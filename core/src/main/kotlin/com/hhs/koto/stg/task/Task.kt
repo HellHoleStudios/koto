@@ -28,5 +28,5 @@ package com.hhs.koto.stg.task
 interface Task {
     fun tick()
     val isComplete: Boolean
-    fun kill()
+    fun kill(): Boolean
 }

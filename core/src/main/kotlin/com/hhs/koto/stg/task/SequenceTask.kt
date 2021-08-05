@@ -54,12 +54,13 @@ class SequenceTask(vararg task: Task) : Task {
         }
     }
 
-    override fun kill() {
+    override fun kill(): Boolean {
         tasks.forEach {
             if (!it.isComplete) it.kill()
         }
         tasks.clear()
         isComplete = true
+        return true
     }
 
     fun addTask(vararg task: Task) {

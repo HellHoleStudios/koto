@@ -38,7 +38,8 @@ class DelayTask(val duration: Int) : Task {
         }
     }
 
-    override fun kill() {
+    override fun kill(): Boolean {
         isComplete = true
+        return true
     }
 }

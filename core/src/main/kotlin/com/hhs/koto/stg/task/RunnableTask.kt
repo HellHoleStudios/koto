@@ -33,5 +33,5 @@ class RunnableTask(val runnable: Runnable) : Task {
         isComplete = true
     }
 
-    override fun kill() = Unit
+    override fun kill(): Boolean = true
 }

@@ -26,96 +26,37 @@
 package com.hhs.koto.stg.player
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.util.StateMachine
+import com.hhs.koto.stg.StarGraphStateMachineTexture
 import ktx.collections.set
 
 class BasicPlayerTexture(
     atlas: TextureAtlas,
     baseName: String,
-    centerName: String = "_center",
-    leftName: String = "_left",
-    rightName: String = "_right",
-    movingLeftName: String = "_movingLeft",
-    movingRightName: String = "_movingRight",
-    centerTransitionTime: Int = 5,
+    override val centerRegionName: String = "_center",
+    leftRegionName: String = "_left",
+    rightRegionName: String = "_right",
+    movingLeftRegionName: String = "_movingLeft",
+    movingRightRegionName: String = "_movingRight",
+    override val centerTransitionTime: Int = 5,
     leftTransitionTime: Int = 5,
     rightTransitionTime: Int = 5,
     movingLeftTransitionTime: Int = 2,
     movingRightTransitionTime: Int = 2,
-) {
-    private val stateMachine: StateMachine<TextureRegion, Int>
+) : StarGraphStateMachineTexture(atlas, baseName) {
 
     init {
-        val center = atlas.findRegions(baseName + centerName)
-        val left = atlas.findRegions(baseName + leftName)
-        val right = atlas.findRegions(baseName + rightName)
-        val movingLeft = atlas.findRegions(baseName + movingLeftName)
-        val movingRight = atlas.findRegions(baseName + movingRightName)
-        stateMachine = StateMachine(center[0])
-        for (i in 0 until center.size) {
-            stateMachine.states[center[i]] = {
-                when (it) {
-                    -1 -> Pair(left[0], movingLeftTransitionTime)
-                    1 -> Pair(right[0], movingRightTransitionTime)
-                    else -> Pair(center[(i + 1) % center.size], centerTransitionTime)
-                }
-            }
-        }
-        for (i in 0 until left.size) {
-            stateMachine.states[left[i]] = {
-                when (it) {
-                    -1 -> Pair(left[(i + 1) % left.size], leftTransitionTime)
-                    else -> Pair(movingLeft.last(), movingLeftTransitionTime)
-                }
-            }
-        }
-        for (i in 0 until right.size) {
-            stateMachine.states[right[i]] = {
-                when (it) {
-                    1 -> Pair(right[(i + 1) % right.size], rightTransitionTime)
-                    else -> Pair(movingRight.last(), movingRightTransitionTime)
-                }
-            }
-        }
-        for (i in 0 until movingLeft.size) {
-            stateMachine.states[movingLeft[i]] = {
-                when (it) {
-                    -1 -> if (i == movingLeft.size - 1) {
-                        Pair(left[0], movingLeftTransitionTime)
-                    } else {
-                        Pair(movingLeft[i + 1], movingLeftTransitionTime)
-                    }
-                    else -> if (i == 0) {
-                        Pair(center[0], movingLeftTransitionTime)
-                    } else {
-                        Pair(movingLeft[i - 1], movingLeftTransitionTime)
-                    }
-                }
-            }
-        }
-        for (i in 0 until movingRight.size) {
-            stateMachine.states[movingRight[i]] = {
-                when (it) {
-                    1 -> if (i == movingRight.size - 1) {
-                        Pair(right[0], movingRightTransitionTime)
-                    } else {
-                        Pair(movingRight[i + 1], movingRightTransitionTime)
-                    }
-                    else -> if (i == 0) {
-                        Pair(center[0], movingRightTransitionTime)
-                    } else {
-                        Pair(movingRight[i - 1], movingRightTransitionTime)
-                    }
-                }
-            }
-        }
+        branches["left"] =
+            Branch(leftRegionName, leftTransitionTime, movingLeftRegionName, movingLeftTransitionTime)
+        branches["right"] =
+            Branch(rightRegionName, rightTransitionTime, movingRightRegionName, movingRightTransitionTime)
+        build()
     }
 
     fun update(condition: Int) {
-        stateMachine.update(condition)
+        when (condition) {
+            0 -> super.update("")
+            -1 -> super.update("left")
+            1 -> super.update("right")
+        }
     }
-
-    val texture: TextureRegion
-        get() = stateMachine.state
 }

@@ -49,12 +49,13 @@ class ParallelTask(vararg task: Task) : Task {
         isComplete = tasks.size == 0
     }
 
-    override fun kill() {
+    override fun kill(): Boolean {
         tasks.forEach {
             if (!it.isComplete) it.kill()
         }
         tasks.clear()
         isComplete = true
+        return true
     }
 
     fun addTask(vararg task: Task) {

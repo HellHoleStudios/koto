@@ -84,9 +84,10 @@ class CoroutineTask(
         element.frame++
     }
 
-    override fun kill() {
+    override fun kill(): Boolean {
         job.cancel()
         CoroutineTaskDispatcher.remove(job.job)
+        return true
     }
 }
 

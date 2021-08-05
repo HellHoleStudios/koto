@@ -58,9 +58,10 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
         }
     }
 
-    override fun kill() {
+    override fun kill(): Boolean {
         builders.clear()
         isComplete = true
+        return true
     }
 
     fun addBuilder(vararg builder: TaskBuilder) {

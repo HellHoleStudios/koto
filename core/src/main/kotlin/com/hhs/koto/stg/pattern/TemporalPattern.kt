@@ -43,7 +43,8 @@ abstract class TemporalPattern(val duration: Int = Int.MAX_VALUE) : Task {
         }
     }
 
-    override fun kill() {
+    override fun kill(): Boolean {
         isComplete = true
+        return true
     }
 }
