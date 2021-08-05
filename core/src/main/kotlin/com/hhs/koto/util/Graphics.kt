@@ -36,6 +36,8 @@ import com.hhs.koto.app.ui.HSVColorAction
 import ktx.collections.GdxSet
 import ktx.graphics.copy
 
+var tmpColor: Color = Color.WHITE
+
 operator fun Color.plus(other: Color): Color = this.copy().add(other)
 
 operator fun Color.plusAssign(other: Color) {

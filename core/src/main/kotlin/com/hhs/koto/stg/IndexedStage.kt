@@ -27,6 +27,7 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 
@@ -56,3 +57,5 @@ class IndexedStage : Stage {
 interface IndexedActor {
     val z: Int
 }
+
+class IndexedGroup(override val z: Int) : IndexedActor, Group()

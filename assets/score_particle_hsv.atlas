@@ -1,0 +1,426 @@
+
+score_particle_hsv.png
+size: 512, 64
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+0_arabic
+  rotate: false
+  xy: 212, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+0_arabic
+  rotate: false
+  xy: 292, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+0_arabic
+  rotate: false
+  xy: 327, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+0_kanji
+  rotate: false
+  xy: 22, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+0_kanji
+  rotate: false
+  xy: 82, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+0_kanji
+  rotate: false
+  xy: 142, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+1_arabic
+  rotate: false
+  xy: 232, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+1_arabic
+  rotate: false
+  xy: 242, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+1_arabic
+  rotate: false
+  xy: 322, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+1_kanji
+  rotate: false
+  xy: 42, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+1_kanji
+  rotate: false
+  xy: 82, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+1_kanji
+  rotate: false
+  xy: 182, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+2_arabic
+  rotate: false
+  xy: 222, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+2_arabic
+  rotate: false
+  xy: 257, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+2_arabic
+  rotate: false
+  xy: 357, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+2_kanji
+  rotate: false
+  xy: 2, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+2_kanji
+  rotate: false
+  xy: 102, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+2_kanji
+  rotate: false
+  xy: 162, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+3_arabic
+  rotate: false
+  xy: 237, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+3_arabic
+  rotate: false
+  xy: 272, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+3_arabic
+  rotate: false
+  xy: 307, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+3_kanji
+  rotate: false
+  xy: 62, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+3_kanji
+  rotate: false
+  xy: 102, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+3_kanji
+  rotate: false
+  xy: 202, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+4_arabic
+  rotate: false
+  xy: 252, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+4_arabic
+  rotate: false
+  xy: 267, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+4_arabic
+  rotate: false
+  xy: 302, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+4_kanji
+  rotate: false
+  xy: 22, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+4_kanji
+  rotate: false
+  xy: 122, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+4_kanji
+  rotate: false
+  xy: 142, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+5_arabic
+  rotate: false
+  xy: 202, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+5_arabic
+  rotate: false
+  xy: 282, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+5_arabic
+  rotate: false
+  xy: 337, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+5_kanji
+  rotate: false
+  xy: 62, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+5_kanji
+  rotate: false
+  xy: 102, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+5_kanji
+  rotate: false
+  xy: 162, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+6_arabic
+  rotate: false
+  xy: 217, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+6_arabic
+  rotate: false
+  xy: 297, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+6_arabic
+  rotate: false
+  xy: 287, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+6_kanji
+  rotate: false
+  xy: 2, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+6_kanji
+  rotate: false
+  xy: 22, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+6_kanji
+  rotate: false
+  xy: 122, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+7_arabic
+  rotate: false
+  xy: 227, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+7_arabic
+  rotate: false
+  xy: 247, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+7_arabic
+  rotate: false
+  xy: 342, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+7_kanji
+  rotate: false
+  xy: 42, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+7_kanji
+  rotate: false
+  xy: 122, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+7_kanji
+  rotate: false
+  xy: 182, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+8_arabic
+  rotate: false
+  xy: 182, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+8_arabic
+  rotate: false
+  xy: 262, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+8_arabic
+  rotate: false
+  xy: 317, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+8_kanji
+  rotate: false
+  xy: 2, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+8_kanji
+  rotate: false
+  xy: 42, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+8_kanji
+  rotate: false
+  xy: 142, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+9_arabic
+  rotate: false
+  xy: 197, 2
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 1
+9_arabic
+  rotate: false
+  xy: 277, 22
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 0
+9_arabic
+  rotate: false
+  xy: 312, 42
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: 2
+9_kanji
+  rotate: false
+  xy: 82, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+9_kanji
+  rotate: false
+  xy: 62, 2
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+9_kanji
+  rotate: false
+  xy: 162, 22
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1

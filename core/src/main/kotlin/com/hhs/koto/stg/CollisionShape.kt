@@ -30,7 +30,7 @@ import com.hhs.koto.app.Config
 interface CollisionShape {
     val boundingHeight: Float
     val boundingWidth: Float
-    fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float): Boolean
+    fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float): Boolean?
 }
 
 class CircleCollision(var radius: Float) : CollisionShape {
@@ -40,7 +40,7 @@ class CircleCollision(var radius: Float) : CollisionShape {
     override val boundingHeight: Float
         get() = radius * 2
 
-    override fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float): Boolean {
+    override fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float): Boolean? {
         return when (other) {
             is CircleCollision -> {
                 if (Config.orthoCircleCollision) {
@@ -50,13 +50,13 @@ class CircleCollision(var radius: Float) : CollisionShape {
                 }
             }
             is AABBCollision -> Collision.circleRect(x1, y1, radius, x2, y2, other.boundingWidth, other.boundingHeight)
-            else -> false
+            else -> null
         }
     }
 }
 
 class AABBCollision(override val boundingWidth: Float, override val boundingHeight: Float) : CollisionShape {
-    override fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float): Boolean {
+    override fun collide(other: CollisionShape, x1: Float, y1: Float, x2: Float, y2: Float): Boolean? {
         return when (other) {
             is AABBCollision -> Collision.rectRect(
                 x1,
@@ -69,7 +69,7 @@ class AABBCollision(override val boundingWidth: Float, override val boundingHeig
                 other.boundingHeight
             )
             is CircleCollision -> other.collide(this, x2, y2, x1, y1)
-            else -> false
+            else -> null
         }
     }
 }

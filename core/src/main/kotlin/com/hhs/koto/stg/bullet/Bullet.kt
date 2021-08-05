@@ -49,10 +49,6 @@ open class Bullet(
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
 ) : Entity, Drawable {
-    companion object {
-        val tempColor: Color = Color()
-    }
-
     var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
         get() = data.collision
@@ -131,7 +127,7 @@ open class Bullet(
                 tmpX += deltaX * subFrameTime
                 tmpY += deltaY * subFrameTime
             }
-            tempColor.set(batch.color)
+            tmpColor.set(batch.color)
             batch.color = color
             batch.color.a *= parentAlpha
             if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
@@ -156,7 +152,7 @@ open class Bullet(
                     texture.regionHeight.toFloat(),
                 )
             }
-            batch.color = tempColor
+            batch.color = tmpColor
         }
     }
 }

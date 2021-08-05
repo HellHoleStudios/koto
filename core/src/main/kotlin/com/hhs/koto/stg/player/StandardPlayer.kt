@@ -82,10 +82,6 @@ open class StandardPlayer(
         alpha = 0f
     }
 
-    companion object {
-        val tempColor: Color = Color()
-    }
-
     enum class PlayerState {
         NORMAL, DEATHBOMBING, BOMBING, RESPAWNING, RESPAWNED
     }
@@ -108,7 +104,7 @@ open class StandardPlayer(
         app.normalBatch.projectionMatrix = batch.projectionMatrix
         app.normalBatch.begin()
 
-        tempColor.set(app.normalBatch.color)
+        tmpColor.set(app.normalBatch.color)
         app.normalBatch.color = color
         app.normalBatch.color.a *= parentAlpha
 
@@ -144,7 +140,7 @@ open class StandardPlayer(
                 texture.texture.regionHeight.toFloat(),
             )
         }
-        app.normalBatch.color = tempColor
+        app.normalBatch.color = tmpColor
 
         hitbox.setPosition(
             clampX(x + speed * dx * subFrameTime) - hitbox.width / 2,
@@ -163,9 +159,11 @@ open class StandardPlayer(
         subFrameTime = 0f
         if (playerState != PlayerState.RESPAWNING) {
             if (keyPressed(options.keySlow)) {
-                hitbox.alpha = clamp(hitbox.alpha + 0.1f, 0f, 1f)
+                hitbox.alpha = 1f
+                hitbox.setScale((hitbox.scaleX - 0.02f).coerceAtLeast(1f))
             } else {
-                hitbox.alpha = clamp(hitbox.alpha - 0.1f, 0f, 1f)
+                hitbox.alpha = 0f
+                hitbox.setScale(1.3f)
             }
         }
         if (playerState != PlayerState.RESPAWNING) {

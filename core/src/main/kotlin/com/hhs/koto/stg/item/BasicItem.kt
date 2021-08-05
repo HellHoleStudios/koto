@@ -52,10 +52,6 @@ open class BasicItem(
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
 ) : Item {
-    companion object {
-        val tempColor: Color = Color()
-    }
-
     var deltaX: Float = cos(angle) * speed
     var deltaY: Float = sin(angle) * speed
     override var alive: Boolean = true
@@ -73,6 +69,7 @@ open class BasicItem(
             deltaX = cos(angle) * 8f
             deltaY = sin(angle) * 8f
             if (dist(x, y, playerX, playerY) <= 5f) {
+                collected()
                 destroy()
             }
         } else {
@@ -103,7 +100,7 @@ open class BasicItem(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
-            Bullet.tempColor.set(batch.color)
+            tmpColor.set(batch.color)
             batch.color = color
             batch.color.a *= parentAlpha
             var tmpX = x
@@ -134,7 +131,7 @@ open class BasicItem(
                     texture.regionHeight.toFloat(),
                 )
             }
-            batch.color = Bullet.tempColor
+            batch.color = tmpColor
         }
     }
 }

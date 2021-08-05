@@ -102,6 +102,9 @@ class KotoGame : Disposable {
     ).apply {
         st += this
     }
+    val particles = DrawableLayer<Drawable>(200).apply {
+        st += this
+    }
     lateinit var player: Player
     var score: Long = 0
     val life = FragmentCounter()
@@ -170,5 +173,10 @@ fun <T : Bullet> addBullet(bullet: T): T {
 fun <T : Item> addItem(item: T): T {
     game.items.add(item)
     return item
+}
+
+fun <T : Drawable> addParticle(particle: T): T {
+    game.particles.add(particle)
+    return particle
 }
 

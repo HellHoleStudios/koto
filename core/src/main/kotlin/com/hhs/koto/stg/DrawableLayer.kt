@@ -33,7 +33,10 @@ import com.hhs.koto.util.contains
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
-open class DrawableLayer<T : Drawable>(override val z: Int, val world: Rectangle) : Actor(), IndexedActor {
+open class DrawableLayer<T : Drawable>(
+    override val z: Int,
+    val world: Rectangle = Rectangle(-32768f, -32768f, 65536f, 65536f),
+) : Actor(), IndexedActor {
     val drawables = GdxArray<T>()
     var count: Int = 0
         protected set

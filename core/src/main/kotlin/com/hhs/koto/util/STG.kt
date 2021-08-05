@@ -50,10 +50,10 @@ object B {
     }
 }
 
-private val tempRectangle = Rectangle()
+private val tmpRectangle = Rectangle()
 fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {
-    tempRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
-    return contains(tempRectangle)
+    tmpRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
+    return contains(tmpRectangle)
 }
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {

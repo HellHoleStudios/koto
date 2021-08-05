@@ -26,6 +26,8 @@
 package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
+import com.hhs.koto.stg.addParticle
+import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
@@ -52,5 +54,6 @@ class PointItem(
 ) {
     override fun collected() {
         game.score += amount
+        addParticle(ScoreParticle(x, y, amount))
     }
 }

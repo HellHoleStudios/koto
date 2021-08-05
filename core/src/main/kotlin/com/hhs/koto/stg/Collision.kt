@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg
 
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.util.clamp
 import com.hhs.koto.util.dist2
 import com.hhs.koto.util.sqr
@@ -32,13 +33,17 @@ import kotlin.math.abs
 
 object Collision {
 
-    fun collide(s1: CollisionShape, x1: Float, y1: Float, s2: CollisionShape, x2: Float, y2: Float) =
-        s1.collide(s2, x1, y1, x2, y2)
+    fun collide(s1: CollisionShape, x1: Float, y1: Float, s2: CollisionShape, x2: Float, y2: Float): Boolean {
+        var tmp = s1.collide(s2, x1, y1, x2, y2)
+        if (tmp != null) return tmp
+        tmp = s2.collide(s1, x2, y2, x1, y1)
+        if (tmp != null) return tmp
+        throw GdxRuntimeException("Cannot compute collision between $s1 and $s2")
+    }
 
-//    TODO Entities
-//    fun collide(e1: Entity, e2: Entity): Boolean {
-//        return collide(e1.getX(), e1.getY(), e1.getCollisionData(e2), e2.getX(), e2.getY(), e2.getCollisionData(e1))
-//    }
+    fun collide(e1: Entity, e2: Entity): Boolean {
+        return collide(e1.collision, e1.x, e1.y, e2.collision, e2.x, e2.y)
+    }
 
     fun circleCircle(x1: Float, y1: Float, r1: Float, x2: Float, y2: Float, r2: Float): Boolean {
         if (!squareSquare(x1, y1, r1 * 2, x2, y2, r2 * 2)) {
