@@ -97,7 +97,7 @@ open class Bullet(
     }
 
     fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): Bullet {
-        val task = CoroutineTask(index = index, bullet = this, block = block)
+        val task = CoroutineTask(index, this, block)
         addTask(task)
         if (attachedTasks == null) {
             attachedTasks = GdxArray()

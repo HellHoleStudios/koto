@@ -42,8 +42,8 @@ import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
 import kotlin.math.absoluteValue
 
-open class StandardPlayer(
-    val texture: StandardPlayerTexture,
+open class BasicPlayer(
+    val texture: BasicPlayerTexture,
     hitboxTexture: TextureRegion,
     hitRadius: Float,
     var speedHigh: Float,
@@ -172,12 +172,12 @@ open class StandardPlayer(
         if (playerState != PlayerState.RESPAWNING) {
             if (y >= itemCollectLineHeight) {
                 game.items.forEach {
-                    it.collect()
+                    it.collect(x, y, true)
                 }
             } else {
                 game.items.forEach {
                     if (Collision.collide(it.collision, it.x, it.y, itemCollision, x, y)) {
-                        it.collect()
+                        it.collect(x, y, false)
                     }
                 }
             }
@@ -188,6 +188,7 @@ open class StandardPlayer(
                 game.bullets.forEach {
                     if (Collision.collide(it.collision, it.x, it.y, hitCollision, x, y)) {
                         hit = true
+                        it.destroy()
                     }
                 }
                 if (hit) {
@@ -252,7 +253,7 @@ open class StandardPlayer(
                 it.destroy()
             }
             game.items.forEach {
-                it.collect()
+                it.collect(x, y, true)
             }
             wait(290)
             playerState = PlayerState.NORMAL

@@ -59,7 +59,7 @@ class ScoreParticle(
         glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth
         val str = score.toString()
         for (i in str) {
-            digits.add(i.code - '0'.code)
+            digits.add(i.digitToInt())
         }
         boundingWidth = digits.size * glyphWidth / 2f
     }

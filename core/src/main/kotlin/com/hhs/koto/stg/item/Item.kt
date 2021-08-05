@@ -29,5 +29,5 @@ import com.hhs.koto.stg.Drawable
 import com.hhs.koto.stg.Entity
 
 interface Item : Entity, Drawable {
-    fun collect()
+    fun collect(collectPositionX: Float, collectPositionY: Float, autoCollect: Boolean)
 }

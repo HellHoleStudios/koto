@@ -106,6 +106,8 @@ class KotoGame : Disposable {
         st += this
     }
     lateinit var player: Player
+    var maxScore: Long = 10000
+    var maxScoreHeight: Float = Config.h / 4f * 3f - 50f - Config.originY
     var score: Long = 0
     val life = FragmentCounter()
     val bomb = FragmentCounter()

@@ -26,6 +26,8 @@
 package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.MathUtils.random
+import com.hhs.koto.app.Config
 import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
@@ -34,7 +36,6 @@ import com.hhs.koto.util.getRegion
 class PointItem(
     x: Float,
     y: Float,
-    val amount: Long,
     speed: Float = 2f,
     angle: Float = 90f,
     radius: Float = 10f,
@@ -52,8 +53,25 @@ class PointItem(
     scaleY = scaleY,
     color = color,
 ) {
-    override fun collected() {
+    override fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+        val amount: Long = if (autoCollected || collectPositionY >= game.maxScoreHeight) {
+            game.maxScore
+        } else {
+            (game.maxScore * 0.9f / (game.maxScoreHeight + Config.originY) *
+                    (y + Config.originY) + game.maxScore * 0.1f).toLong()
+        }
         game.score += amount
-        addParticle(ScoreParticle(x, y, amount))
+        addParticle(
+            ScoreParticle(
+                x + random(-20f, 20f),
+                y + random(-10f, 10f),
+                amount,
+                if (amount == game.maxScore) {
+                    Color.YELLOW
+                } else {
+                    Color.WHITE
+                },
+            )
+        )
     }
 }

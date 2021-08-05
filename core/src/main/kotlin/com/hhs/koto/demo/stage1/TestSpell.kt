@@ -25,20 +25,16 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addItem
-import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
-import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.SpellBuilder
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.ringCloud
-import com.hhs.koto.util.toHSVColor
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -48,10 +44,10 @@ class TestSpell : SpellBuilder {
     override fun build(): Task = CoroutineTask {
         while (true) {
             ringCloud(random(-100f, 100f), 100f, 10) { x, y ->
-                addItem(PowerItem(x, y, 1f))
+                addItem(PowerItem(x, y))
             }
             ringCloud(random(-100f, 100f), 100f, 10) { x, y ->
-                addItem(PointItem(x, y, 1000,))
+                addItem(PointItem(x, y))
             }
 //            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
 //                .accelerate(0.2f, 20)

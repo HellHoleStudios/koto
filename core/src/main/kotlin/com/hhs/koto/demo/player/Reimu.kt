@@ -26,12 +26,12 @@
 package com.hhs.koto.demo.player
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.stg.player.StandardPlayer
-import com.hhs.koto.stg.player.StandardPlayerTexture
+import com.hhs.koto.stg.player.BasicPlayer
+import com.hhs.koto.stg.player.BasicPlayerTexture
 import com.hhs.koto.util.A
 
-class Reimu : StandardPlayer(
-    StandardPlayerTexture(A["th10_reimu.atlas"], "th10_reimu"),
+class Reimu : BasicPlayer(
+    BasicPlayerTexture(A["th10_reimu.atlas"], "th10_reimu"),
     (A.get<TextureAtlas>("th10_reimu.atlas")).findRegion("hitbox"),
     2f,
     4.5f,

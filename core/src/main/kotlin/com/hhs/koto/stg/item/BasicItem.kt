@@ -60,6 +60,9 @@ open class BasicItem(
         get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
     override val collision: CollisionShape = CircleCollision(radius)
     var collected: Boolean = false
+    var autoCollected: Boolean? = null
+    var collectPositionX: Float? = null
+    var collectPositionY: Float? = null
     protected var t: Int = 0
 
     override fun tick() {
@@ -69,7 +72,7 @@ open class BasicItem(
             deltaX = cos(angle) * 8f
             deltaY = sin(angle) * 8f
             if (dist(x, y, playerX, playerY) <= 5f) {
-                collected()
+                collected(collectPositionX!!, collectPositionY!!, autoCollected!!)
                 destroy()
             }
         } else {
@@ -94,14 +97,17 @@ open class BasicItem(
         alive = false
     }
 
-    override fun collect() {
+    override fun collect(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         if (!collected) {
+            this.autoCollected = autoCollected
+            this.collectPositionX = collectPositionX
+            this.collectPositionY = collectPositionY
             SE.play("item")
             collected = true
         }
     }
 
-    open fun collected() = Unit
+    open fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) = Unit
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {

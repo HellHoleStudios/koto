@@ -32,12 +32,12 @@ import com.hhs.koto.util.getRegion
 class PowerItem(
     x: Float,
     y: Float,
-    val amount: Float,
     speed: Float = 2f,
     angle: Float = 90f,
     radius: Float = 10f,
     scaleX: Float = 1f,
     scaleY: Float = 1f,
+    val amount: Float = 0.01f,
     color: Color = Color.WHITE,
 ) : BasicItem(
     x,
@@ -50,7 +50,11 @@ class PowerItem(
     scaleY = scaleY,
     color = color,
 ) {
-    override fun collected() {
-        game.power = (game.power + amount).coerceAtMost(4f)
+    override fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+        if (game.power >= 4f) {
+            game.score += 10000
+        } else {
+            game.power = (game.power + amount).coerceAtMost(4f)
+        }
     }
 }

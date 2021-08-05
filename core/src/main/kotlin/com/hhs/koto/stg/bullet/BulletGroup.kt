@@ -38,7 +38,7 @@ class BulletGroup {
     }
 
     fun task(block: suspend CoroutineScope.() -> Unit): BulletGroup {
-        val task = CoroutineTask(bulletGroup = this, block = block)
+        val task = CoroutineTask(obj = this, block = block)
         addTask(task)
         return this
     }

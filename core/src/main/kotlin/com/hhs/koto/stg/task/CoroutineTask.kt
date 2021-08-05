@@ -36,8 +36,7 @@ import kotlin.coroutines.CoroutineContext
 
 class CoroutineTask(
     index: Int = 0,
-    bullet: Bullet? = null,
-    bulletGroup: BulletGroup? = null,
+    obj: Any? = null,
     block: suspend CoroutineScope.() -> Unit
 ) : Task {
     companion object {
@@ -67,13 +66,11 @@ class CoroutineTask(
     ) : AbstractCoroutineContextElement(CouroutineTaskElement) {
         companion object Key : CoroutineContext.Key<CouroutineTaskElement>
 
-        lateinit var bullet: Bullet
-        lateinit var group: BulletGroup
+        lateinit var obj: Any
     }
 
     private val element = CouroutineTaskElement(index = index).apply {
-        if (bullet != null) this.bullet = bullet
-        if (bulletGroup != null) group = bulletGroup
+        if (obj != null) this.obj = obj
     }
     private val job = scope.launch(element, block = block)
     override val isComplete: Boolean
@@ -98,9 +95,9 @@ val CoroutineScope.frame: Int
 val CoroutineScope.index: Int
     get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.index
 val CoroutineScope.bullet: Bullet
-    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.bullet
+    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.obj as Bullet
 val CoroutineScope.group: BulletGroup
-    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.group
+    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.obj as BulletGroup
 
 suspend fun wait(frameCount: Int = 1) {
     repeat(frameCount) {
@@ -116,11 +113,10 @@ suspend fun Task.waitForFinish() {
 
 fun task(
     index: Int = 0,
-    bullet: Bullet? = null,
-    bulletGroup: BulletGroup? = null,
+    obj: Any? = null,
     block: suspend CoroutineScope.() -> Unit
 ): Task {
-    val task = CoroutineTask(index, bullet, bulletGroup, block)
+    val task = CoroutineTask(index, obj, block)
     addTask(task)
     return task
 }

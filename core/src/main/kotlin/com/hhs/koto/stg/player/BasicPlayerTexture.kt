@@ -30,7 +30,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.util.StateMachine
 import ktx.collections.set
 
-class StandardPlayerTexture(
+class BasicPlayerTexture(
     atlas: TextureAtlas,
     baseName: String,
     centerName: String = "_center",
