@@ -60,9 +60,10 @@ open class BasicItem(
         get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
     override val collision: CollisionShape = CircleCollision(radius)
     var collected: Boolean = false
-    protected var counter: Int = 0
+    protected var t: Int = 0
 
     override fun tick() {
+        t++
         if (collected) {
             val angle = atan2(x, y, playerX, playerY)
             deltaX = cos(angle) * 8f
@@ -81,6 +82,9 @@ open class BasicItem(
             if (deltaX.absoluteValue <= xDampingLimit) {
                 deltaX = 0f
             }
+        }
+        if (t <= 32 && t % 4 == 0) {
+            rotation += 45f
         }
         x += deltaX
         y += deltaY
