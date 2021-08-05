@@ -59,6 +59,66 @@ class InputBlocker : InputProcessor {
     override fun scrolled(amountX: Float, amountY: Float) = isBlocking
 }
 
+enum class VK {
+    DOWN {
+        override val keycodes
+            get() = options.keyDown
+    },
+    UP {
+        override val keycodes
+            get() = options.keyUp
+    },
+    LEFT {
+        override val keycodes
+            get() = options.keyLeft
+    },
+    RIGHT {
+        override val keycodes
+            get() = options.keyRight
+    },
+    SELECT {
+        override val keycodes
+            get() = options.keySelect
+    },
+    CANCEL {
+        override val keycodes
+            get() = options.keyCancel
+    },
+    SHOT {
+        override val keycodes
+            get() = options.keyShot
+    },
+    SLOW {
+        override val keycodes
+            get() = options.keySlow
+    },
+    BOMB {
+        override val keycodes
+            get() = options.keyBomb
+    },
+    PAUSE {
+        override val keycodes
+            get() = options.keyPause
+    },
+    CUSTOM {
+        override val keycodes
+            get() = options.keyCustom
+    },
+    FULL_SCREEN {
+        override val keycodes
+            get() = options.keyFullScreen
+    },
+    SPEED_UP {
+        override val keycodes
+            get() = options.keySpeedUp
+    };
+
+    abstract val keycodes: GdxArray<Int>
+
+    fun pressed(): Boolean = keyPressed(keycodes)
+    fun justPressed(): Boolean = keyJustPressed(keycodes)
+}
+
 class KeyListener(private val keycodes: GdxArray<Int>, private var f: () -> Unit) : InputAdapter() {
     override fun keyDown(keycode: Int): Boolean {
         if (keycodes.contains(keycode)) {

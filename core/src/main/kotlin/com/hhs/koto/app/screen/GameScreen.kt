@@ -135,7 +135,7 @@ class GameScreen : BasicScreen(null, null) {
             super.render(delta)
             return
         }
-        if (!paused && keyJustPressed(options.keyPause)) {
+        if (!paused && VK.PAUSE.justPressed()) {
             tryPause = true
         }
         if (tryPause && game.frameScheduler.canPause) {
@@ -144,7 +144,7 @@ class GameScreen : BasicScreen(null, null) {
         }
         if (paused) {
             deltaTimeCounter += delta
-            if (passCounter >= 30 && keyJustPressed(options.keyPause) && blurredGameFrame.actions.isEmpty) {
+            if (passCounter >= 30 && VK.PAUSE.justPressed() && blurredGameFrame.actions.isEmpty) {
                 resumeGame()
             } else {
                 if (deltaTimeCounter >= 1 / 60f) {

@@ -31,10 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.hhs.koto.util.SE
-import com.hhs.koto.util.matchKey
-import com.hhs.koto.util.options
-import com.hhs.koto.util.safeIterator
+import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 import kotlin.math.abs
 
@@ -106,12 +103,12 @@ open class Grid(
     override fun keyDown(keycode: Int): Boolean {
         if (!enabled || !active) return false
         when {
-            matchKey(keycode, options.keyUp) -> select(selectedX, selectedY - 1, 0, -1)
-            matchKey(keycode, options.keyDown) -> select(selectedX, selectedY + 1, 0, 1)
-            matchKey(keycode, options.keyLeft) -> select(selectedX - 1, selectedY, -1, 0)
-            matchKey(keycode, options.keyRight) -> select(selectedX + 1, selectedY, 1, 0)
-            matchKey(keycode, options.keySelect) -> triggerButton()
-            matchKey(keycode, options.keyCancel) -> exit()
+            matchKey(keycode, VK.UP.keycodes) -> select(selectedX, selectedY - 1, 0, -1)
+            matchKey(keycode, VK.DOWN.keycodes) -> select(selectedX, selectedY + 1, 0, 1)
+            matchKey(keycode, VK.LEFT.keycodes) -> select(selectedX - 1, selectedY, -1, 0)
+            matchKey(keycode, VK.RIGHT.keycodes) -> select(selectedX + 1, selectedY, 1, 0)
+            matchKey(keycode, VK.SELECT.keycodes) -> triggerButton()
+            matchKey(keycode, VK.CANCEL.keycodes) -> exit()
         }
         return false
     }

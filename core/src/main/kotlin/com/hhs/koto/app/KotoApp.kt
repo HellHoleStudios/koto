@@ -147,7 +147,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         BGM.update()
         SE.update()
 
-        if (Config.allowFullScreen && keyJustPressed(options.keyFullScreen)) {
+        if (Config.allowFullScreen && VK.FULL_SCREEN.justPressed()) {
             if (Gdx.graphics.isFullscreen) {
                 Gdx.graphics.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
             } else {

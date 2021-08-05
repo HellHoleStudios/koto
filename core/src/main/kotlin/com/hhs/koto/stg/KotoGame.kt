@@ -37,7 +37,6 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutput
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.item.Item
-import com.hhs.koto.stg.player.Player
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*

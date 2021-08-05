@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.player
+package com.hhs.koto.stg
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
@@ -34,10 +34,10 @@ import com.crashinvaders.vfx.framebuffer.VfxPingPongWrapper
 import com.hhs.koto.app.Config
 import com.hhs.koto.util.A
 
-class PlayerDeathEffect : ShaderVfxEffect(
+class DeathEffect : ShaderVfxEffect(
     ShaderProgram(
         Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
-        A.get("shader/player_death.frag"),
+        A.get("shader/death.frag"),
     )
 ), ChainVfxEffect {
     var playerPositionX: Float = 0f

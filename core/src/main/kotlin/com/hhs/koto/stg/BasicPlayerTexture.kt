@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.player
+package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.hhs.koto.stg.StarGraphStateMachineTexture

@@ -49,7 +49,7 @@ open class BasicScreen(
     val input = InputMultiplexer().apply {
         addProcessor(blocker)
         addProcessor(st)
-        addProcessor(KeyListener(options.keyCancel) { onQuit() })
+        addProcessor(KeyListener(VK.CANCEL.keycodes) { onQuit() })
     }
     override var state: ScreenState = ScreenState.HIDDEN
 

@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.player
+package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -32,9 +32,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
-import com.hhs.koto.stg.CircleCollision
-import com.hhs.koto.stg.Collision
-import com.hhs.koto.stg.IndexedActor
 import com.hhs.koto.stg.task.frame
 import com.hhs.koto.stg.task.task
 import com.hhs.koto.stg.task.wait
@@ -70,7 +67,7 @@ open class BasicPlayer(
     var dy: Int = 0
     var speed: Float = 0f
     var invulnerable: Boolean = false
-    protected val effect = PlayerDeathEffect().apply {
+    protected val effect = DeathEffect().apply {
         game.vfx.addEffectRegistered(this)
     }
     protected var subFrameTime: Float = 0f
@@ -158,7 +155,7 @@ open class BasicPlayer(
     override fun tick() {
         subFrameTime = 0f
         if (playerState != PlayerState.RESPAWNING) {
-            if (keyPressed(options.keySlow)) {
+            if (VK.SLOW.pressed()) {
                 hitbox.alpha = 1f
                 hitbox.setScale((hitbox.scaleX - 0.02f).coerceAtLeast(1f))
             } else {
@@ -202,12 +199,12 @@ open class BasicPlayer(
             if (counter <= 0) {
                 playerState = PlayerState.RESPAWNING
                 death()
-            } else if (keyPressed(options.keyBomb)) {
+            } else if (VK.BOMB.pressed()) {
                 bomb(true)
                 playerState = PlayerState.BOMBING
             }
         } else if (playerState == PlayerState.NORMAL) {
-            if (keyPressed(options.keyBomb)) {
+            if (VK.BOMB.pressed()) {
                 bomb(false)
                 playerState = PlayerState.BOMBING
             }
@@ -216,23 +213,23 @@ open class BasicPlayer(
     }
 
     open fun move() {
-        speed = if (keyPressed(options.keySlow)) {
+        speed = if (VK.SLOW.pressed()) {
             speedLow
         } else {
             speedHigh
         }
         dx = 0
         dy = 0
-        if (keyPressed(options.keyLeft)) {
+        if (VK.LEFT.pressed()) {
             dx--
         }
-        if (keyPressed(options.keyRight)) {
+        if (VK.RIGHT.pressed()) {
             dx++
         }
-        if (keyPressed(options.keyDown)) {
+        if (VK.DOWN.pressed()) {
             dy--
         }
-        if (keyPressed(options.keyUp)) {
+        if (VK.UP.pressed()) {
             dy++
         }
         if (dx.absoluteValue > 0 && dy.absoluteValue > 0) {
