@@ -30,7 +30,6 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
-import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.util.*
 import kotlin.math.absoluteValue
 
@@ -92,8 +91,10 @@ open class BasicItem(
     }
 
     override fun collect() {
-        SE.play("item")
-        collected = true
+        if (!collected) {
+            SE.play("item")
+            collected = true
+        }
     }
 
     open fun collected() = Unit

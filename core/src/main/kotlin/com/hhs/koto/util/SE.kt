@@ -44,7 +44,7 @@ object SE {
         }
     }
 
-    fun play(name: String) {
+    fun play(name: String, volume: Float = 1f) {
         val sound = sounds[name]
         if (sound == null) {
             logger.error("SE with this name doesn't exist!")
@@ -56,7 +56,7 @@ object SE {
                 }
                 fired[name] = true
             }
-            val id = sound.play()
+            val id = sound.play(volume)
             sound.setVolume(id, options.SEVolume)
         }
     }

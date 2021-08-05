@@ -43,6 +43,7 @@ class ScoreParticle(
     override val boundingHeight: Float = 9f
     val glyphWidth: Int
     override var alive: Boolean = true
+    var deltaY: Float = 3f
     val variant: String = bundle["game.scoreParticle.variant"]
     val atlas: TextureAtlas
     val digits = GdxArray<Int>()
@@ -65,7 +66,8 @@ class ScoreParticle(
 
     override fun tick() {
         t++
-        y += 1f
+        y += deltaY
+        deltaY = (deltaY - 0.15f).coerceAtLeast(0f)
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
