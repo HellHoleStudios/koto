@@ -191,6 +191,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         BGM.dispose()
         disposeA()
         screens.safeValues().forEach { it.dispose() }
+        if (Config.useHSVShader) batch.shader.dispose()
     }
 
     fun setScreen(name: String?) {

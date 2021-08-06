@@ -75,7 +75,6 @@ open class Bullet(
 
     init {
         calculateDelta()
-        sprite.setOriginCenter()
     }
 
     fun setDeltas(deltaX: Float, deltaY: Float) {

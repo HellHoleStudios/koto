@@ -26,25 +26,44 @@
 package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.MathUtils.random
+import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.SpriteDrawable
+import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
 
-class GrazeParticle(x: Float, y: Float) : SpriteDrawable(
-    getRegion("graze_particle.png"),
+class Explosion(
+    x: Float,
+    y: Float,
+    val startSizeX: Float,
+    val startSizeY: Float = startSizeX,
+    val endSizeX: Float,
+    val endSizeY: Float = endSizeX,
+    rotation: Float = 0f,
+    val duration: Int,
+    color: Color = Color(0f, 1f, 1f, 1f),
+) : SpriteDrawable(
+    getRegion("explosion.png"),
     x,
     y,
-    random(0f, 180f),
-    4f,
-    1f,
-    1f,
     0f,
-    Color(1f, 1f, 1f, 0.8f),
+    0f,
+    startSizeX,
+    startSizeY,
+    rotation,
+    color,
 ) {
+    init {
+        sprite.setSize(1f, 1f)
+        sprite.setOriginCenter()
+    }
+
     override fun tick() {
         super.tick()
-        speed = (speed - 0.2f).coerceAtLeast(0f)
-        sprite.setScale((sprite.scaleX - 0.05f).coerceAtLeast(0f))
-        if (t >= 40) kill()
+        sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))
+        sprite.setScale(
+            Interpolation.linear.apply(startSizeX, endSizeX, t.toFloat() / duration),
+            Interpolation.linear.apply(startSizeY, endSizeY, t.toFloat() / duration),
+        )
+        if (t >= duration) kill()
     }
 }

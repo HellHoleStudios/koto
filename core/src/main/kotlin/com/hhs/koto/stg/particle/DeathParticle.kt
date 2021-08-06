@@ -26,25 +26,54 @@
 package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.MathUtils.random
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.SpriteDrawable
+import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.toHSVColor
 
-class GrazeParticle(x: Float, y: Float) : SpriteDrawable(
-    getRegion("graze_particle.png"),
+class DeathParticle(
+    x: Float,
+    y: Float,
+    angle: Float,
+    speed: Float,
+    val size: Float = 16f,
+    rotation: Float = 0f,
+    val duration: Int = 20,
+    color: Color = Color(0f, 1f, 1f, 1f).toHSVColor(),
+    private val additive: Boolean = false,
+) : SpriteDrawable(
+    getRegion("square_particle.png"),
     x,
     y,
-    random(0f, 180f),
-    4f,
-    1f,
-    1f,
-    0f,
-    Color(1f, 1f, 1f, 0.8f),
+    angle,
+    speed,
+    size,
+    size,
+    rotation,
+    color,
 ) {
+    init {
+        sprite.setSize(1f, 1f)
+        sprite.setOriginCenter()
+    }
+
     override fun tick() {
         super.tick()
         speed = (speed - 0.2f).coerceAtLeast(0f)
-        sprite.setScale((sprite.scaleX - 0.05f).coerceAtLeast(0f))
-        if (t >= 40) kill()
+        sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))
+        sprite.setScale((size * (1f - 1f / duration * t)).coerceAtLeast(0f))
+        if (t >= duration) kill()
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (additive) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
+        }
+        super.draw(batch, parentAlpha, subFrameTime)
+        if (additive) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        }
     }
 }

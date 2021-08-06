@@ -200,6 +200,7 @@ class KotoGame : Disposable {
         vfx.dispose()
         postVfx.dispose()
         disposeRegisteredEffects()
+        if (Config.useHSVShader) batch.shader.dispose()
         logger.info("Game instance disposed.")
     }
 }

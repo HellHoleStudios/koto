@@ -30,8 +30,11 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.Collision.collide
+import com.hhs.koto.stg.particle.DeathParticle
+import com.hhs.koto.stg.particle.Explosion
 import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.stg.task.frame
 import com.hhs.koto.stg.task.task
@@ -273,11 +276,61 @@ open class BasicPlayer(
         SE.play("pldead")
         playerState = PlayerState.DEATHBOMBING
         counter = deathbombTime
+        task {
+            repeat(5) {
+                repeat(2) {
+                    addParticle(
+                        DeathParticle(
+                            x,
+                            y,
+                            random(0f, 360f),
+                            20f,
+                            24f,
+                            duration = 10,
+                            color = Color(0f, 0f, 0f, 1f),
+                        )
+                    )
+                    addParticle(
+                        DeathParticle(
+                            x,
+                            y,
+                            random(0f, 360f),
+                            20f,
+                            24f,
+                            duration = 10,
+                            color = Color(0.85f, 0.35f, 1f, 1f),
+                            additive = true
+                        )
+                    )
+                }
+                yield()
+            }
+        }
     }
 
     open fun death() {
         invulnerable = true
         task {
+            addParticle(Explosion(x, y, 64f, 64f, 384f, 384f, duration = 10))
+            task {
+                repeat(10) {
+                    repeat(3) {
+                        addParticle(
+                            DeathParticle(
+                                x,
+                                y,
+                                random(0f, 360f),
+                                20f,
+                                96f,
+                                duration = 20,
+                                color = Color(0.85f, 0.35f, 1f, 1f),
+                                additive = true
+                            )
+                        )
+                    }
+                    wait(2)
+                }
+            }
             respawnAnimationPercentage = 0f
             effect.start(x, y)
             wait(30)

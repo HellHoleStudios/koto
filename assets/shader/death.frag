@@ -17,7 +17,7 @@ void main() {
     vec2 pos = v_texCoords * u_screenSize;
     float r1 = 0.3 * u_time * u_time;
     float r2 = 0.1 * u_time * u_time + 3.5 * u_time - 40.0;
-    float r3 = r2 - 100.0;
+    float r3 = r2 - 200.0;
     bool invert = distance(pos, u_playerPosition) < min(1.5, (60.0 - u_time) * 0.1);
     invert = invert ^^ (distance(pos, u_playerPosition) < r1);
     invert = invert ^^ (distance(pos, vec2(u_playerPosition.x - 30.0, u_playerPosition.y)) < r2);
