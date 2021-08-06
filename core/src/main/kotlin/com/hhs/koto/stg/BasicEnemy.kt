@@ -27,8 +27,10 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
+import com.hhs.koto.stg.particle.Explosion
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
@@ -131,6 +133,11 @@ open class BasicEnemy(
         ringCloud(x, y, pointCount, bulletCollision.radius) { x, y ->
             addItem(PointItem(x, y))
         }
+        addParticle(
+            Explosion(
+                x, y, 32f, 64f, 16f, 256f, random(0f, 360f), 10
+            )
+        )
         kill()
     }
 
