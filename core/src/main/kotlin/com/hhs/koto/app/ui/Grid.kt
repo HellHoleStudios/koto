@@ -31,7 +31,10 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.hhs.koto.util.*
+import com.hhs.koto.util.SE
+import com.hhs.koto.util.VK
+import com.hhs.koto.util.matchKey
+import com.hhs.koto.util.safeIterator
 import ktx.collections.GdxArray
 import kotlin.math.abs
 

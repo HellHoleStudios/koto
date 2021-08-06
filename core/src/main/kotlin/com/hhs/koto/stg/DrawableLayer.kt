@@ -26,6 +26,7 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
 class DrawableLayer(override val zIndex: Int = 0) : Drawable {
@@ -51,13 +52,7 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         for (i in 0 until drawables.size) {
-            if (drawables[i] != null) {
-                if (!drawables[i].alive) {
-                    drawables[i] = null
-                } else {
-                    drawables[i].draw(batch, parentAlpha, subFrameTime)
-                }
-            }
+            drawables[i].draw(batch, parentAlpha, subFrameTime)
         }
     }
 
@@ -71,5 +66,6 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
                 }
             }
         }
+        drawables.removeNull()
     }
 }

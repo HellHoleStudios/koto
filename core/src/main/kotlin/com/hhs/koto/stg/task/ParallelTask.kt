@@ -25,13 +25,13 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.util.app
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
 class ParallelTask(vararg task: Task) : Task {
     val tasks = GdxArray<Task>(8)
-    override var alive: Boolean = false
+    override var alive: Boolean = true
 
     init {
         task.forEach { tasks.add(it) }
@@ -40,28 +40,31 @@ class ParallelTask(vararg task: Task) : Task {
 
     override fun tick() {
         for (i in 0 until tasks.size) {
+            if (!tasks[i].alive) {
+                tasks[i] = null
+                continue
+            }
             tasks[i].tick()
-            if (tasks[i].alive) {
+            if (!tasks[i].alive) {
                 tasks[i] = null
             }
         }
         tasks.removeNull()
-        alive = tasks.size == 0
+        alive = tasks.size != 0
     }
 
     override fun kill(): Boolean {
         tasks.forEach {
-            if (!it.alive) it.kill()
+            if (it.alive) it.kill()
         }
         tasks.clear()
-        alive = true
+        alive = false
         return true
     }
 
     fun addTask(vararg task: Task) {
-        if (alive) {
-            app.logger.error("Cannot add task to a completed ParallelTask!")
-            return
+        if (!alive) {
+            throw GdxRuntimeException("Cannot add task to a completed ParallelTask!")
         }
 
         task.forEach {
@@ -70,9 +73,8 @@ class ParallelTask(vararg task: Task) : Task {
     }
 
     fun addTask(task: Task) {
-        if (alive) {
-            app.logger.error("Cannot add task to a completed ParallelTask!")
-            return
+        if (!alive) {
+            throw GdxRuntimeException("Cannot add task to a completed ParallelTask!")
         }
         tasks.add(task)
     }

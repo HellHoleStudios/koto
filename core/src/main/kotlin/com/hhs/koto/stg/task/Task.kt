@@ -27,6 +27,6 @@ package com.hhs.koto.stg.task
 
 interface Task {
     fun tick()
-    var alive: Boolean
+    val alive: Boolean
     fun kill(): Boolean = false
 }

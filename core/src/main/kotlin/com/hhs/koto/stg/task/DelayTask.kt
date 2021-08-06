@@ -28,18 +28,18 @@ package com.hhs.koto.stg.task
 class DelayTask(val duration: Int) : Task {
     var counter: Int = 0
 
-    override var alive: Boolean = false
+    override var alive: Boolean = true
 
     override fun tick() {
-        if (alive) return
+        if (!alive) return
         counter++
         if (counter >= duration) {
-            alive = true
+            alive = false
         }
     }
 
     override fun kill(): Boolean {
-        alive = true
+        alive = false
         return true
     }
 }

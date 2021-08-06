@@ -224,3 +224,7 @@ fun <T : Drawable> addParticle(particle: T): T {
     return particle
 }
 
+fun <T : Drawable> addEnemy(enemy: T): T {
+    game.enemies.addDrawable(enemy)
+    return enemy
+}

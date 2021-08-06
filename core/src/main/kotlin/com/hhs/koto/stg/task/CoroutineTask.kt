@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.Enemy
 import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
@@ -60,31 +61,32 @@ class CoroutineTask(
         }
     }
 
-    class CouroutineTaskElement(
+    class CoroutineTaskElement(
         var frame: Int = 0,
         val index: Int = 0,
-    ) : AbstractCoroutineContextElement(CouroutineTaskElement) {
-        companion object Key : CoroutineContext.Key<CouroutineTaskElement>
+    ) : AbstractCoroutineContextElement(CoroutineTaskElement) {
+        companion object Key : CoroutineContext.Key<CoroutineTaskElement>
 
         lateinit var obj: Any
     }
 
-    private val element = CouroutineTaskElement(index = index).apply {
+    private val element = CoroutineTaskElement(index = index).apply {
         if (obj != null) this.obj = obj
     }
     private val job = scope.launch(element, block = block)
     override var alive: Boolean = true
-        get() = job.isCompleted
 
     override fun tick() {
         CoroutineTaskDispatcher.tick(job.job)
-        if (alive) {
+        if (job.isCompleted) {
+            alive = false
             CoroutineTaskDispatcher.remove(job.job)
         }
         element.frame++
     }
 
     override fun kill(): Boolean {
+        alive = false
         job.cancel()
         CoroutineTaskDispatcher.remove(job.job)
         return true
@@ -92,13 +94,15 @@ class CoroutineTask(
 }
 
 val CoroutineScope.frame: Int
-    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.frame
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.frame
 val CoroutineScope.index: Int
-    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.index
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.index
 val CoroutineScope.bullet: Bullet
-    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.obj as Bullet
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as Bullet
+val CoroutineScope.enemy: Enemy
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as Enemy
 val CoroutineScope.group: BulletGroup
-    get() = coroutineContext[CoroutineTask.CouroutineTaskElement]!!.obj as BulletGroup
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as BulletGroup
 
 suspend fun wait(frameCount: Int = 1) {
     repeat(frameCount) {
@@ -113,7 +117,7 @@ suspend fun waitFor(predicate: () -> Boolean) {
 }
 
 suspend fun Task.waitForFinish() {
-    while (!alive) {
+    while (alive) {
         yield()
     }
 }

@@ -34,8 +34,8 @@ import com.hhs.koto.util.VK
 import com.hhs.koto.util.game
 
 class Reimu : BasicPlayer(
-    BasicPlayerTexture(A["th10_reimu.atlas"], "th10_reimu"),
-    (A.get<TextureAtlas>("th10_reimu.atlas")).findRegion("hitbox"),
+    BasicPlayerTexture(A["sprite/th10_reimu.atlas"], "th10_reimu"),
+    (A.get<TextureAtlas>("sprite/th10_reimu.atlas")).findRegion("hitbox"),
     2f,
     4.5f,
     2f,

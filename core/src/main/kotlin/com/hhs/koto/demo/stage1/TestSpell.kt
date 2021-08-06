@@ -25,19 +25,13 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.addItem
+import com.badlogic.gdx.math.Interpolation
+import com.hhs.koto.stg.*
 import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.SpellBuilder
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.stg.pattern.accelerate
-import com.hhs.koto.stg.task.wait
-import com.hhs.koto.util.B
-import com.hhs.koto.util.ring
-import com.hhs.koto.util.ringCloud
+import com.hhs.koto.stg.task.*
+import com.hhs.koto.util.*
+import kotlinx.coroutines.yield
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -45,16 +39,61 @@ class TestSpell : SpellBuilder {
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
 
     override fun build(): Task = CoroutineTask {
-        while (true) {
-            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
-                addItem(PowerItem(x, y))
+        task {
+            while (true) {
+                addEnemy(
+                    object : BasicEnemy(
+                        -250f,
+                        100f,
+                        30f,
+                        BasicEnemyTexture(A["sprite/th10_fairy.atlas"], "th10_fairy_red"),
+                        10f,
+                    ) {
+                        override fun death() {
+                            super.death()
+                            ringCloud(x, y, 5) { x, y ->
+                                addItem(PowerItem(x, y))
+                            }
+                            ringCloud(x, y, 5) { x, y ->
+                                addItem(PointItem(x, y))
+                            }
+                        }
+                    }
+                ).task {
+                    val enemy = enemy as BasicEnemy
+                    task {
+                        repeat(100) {
+                            enemy.x = Interpolation.sine.apply(-250f, 0f, frame / 100f)
+                            yield()
+                        }
+                    }.waitForFinish()
+                    wait(120)
+                    task {
+                        repeat(100) {
+                            enemy.x = Interpolation.sine.apply(0f, 250f, frame / 100f)
+                            yield()
+                        }
+                    }.waitForFinish()
+                    enemy.kill()
+                }.task {
+                    while (true) {
+                        towards(B["DS_BALL_S_BLUE"], enemy.x, enemy.y, playerX, playerY, 3f)
+                        wait(30)
+                    }
+                }
+                wait(130)
             }
-            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
-                addItem(PointItem(x, y))
-            }
+        }
+//        while (true) {
+//            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
+//                addItem(PowerItem(x, y))
+//            }
+//            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
+//                addItem(PointItem(x, y))
+//            }
 //            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
 //                .accelerate(0.2f, 20)
-            wait(10)
-        }
+//            wait(10)
+//        }
     }
 }

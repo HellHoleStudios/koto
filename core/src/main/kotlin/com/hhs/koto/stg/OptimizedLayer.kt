@@ -63,7 +63,7 @@ open class OptimizedLayer<T : Drawable>(
                                 current.boundingHeight,
                             )
                         ) {
-                            current.alive = false
+                            current.kill()
                             drawables[i] = null
                             count--
                             blankCount++

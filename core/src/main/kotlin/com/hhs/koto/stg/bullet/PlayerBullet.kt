@@ -41,10 +41,8 @@ open class PlayerBullet(
     rotation: Float = 0f,
     color: Color = Color.WHITE,
 ) : Bullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color) {
-    fun hit(target: Any) {
-        if (target is Enemy) {
-            target.hp -= damage
-        }
+    fun hit(enemy: Enemy) {
+        enemy.hp -= damage
         penetration--
         if (penetration <= 0) {
             kill()

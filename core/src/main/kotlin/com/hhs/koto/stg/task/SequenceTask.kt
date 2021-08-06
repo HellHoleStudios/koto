@@ -25,13 +25,13 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.util.app
+import com.badlogic.gdx.utils.GdxRuntimeException
 import ktx.collections.GdxArray
 
 class SequenceTask(vararg task: Task) : Task {
     val tasks = GdxArray<Task>(8)
     private var currentIndex: Int = 0
-    override var alive: Boolean = false
+    override var alive: Boolean = true
 
     init {
         task.forEach { tasks.add(it) }
@@ -41,7 +41,7 @@ class SequenceTask(vararg task: Task) : Task {
     override fun tick() {
         while (currentIndex < tasks.size) {
             tasks[currentIndex].tick()
-            if (tasks[currentIndex].alive) {
+            if (!tasks[currentIndex].alive) {
                 tasks[currentIndex] = null
                 currentIndex++
             } else {
@@ -49,35 +49,32 @@ class SequenceTask(vararg task: Task) : Task {
             }
         }
         if (currentIndex >= tasks.size) {
-            alive = true
+            alive = false
             return
         }
     }
 
     override fun kill(): Boolean {
         tasks.forEach {
-            if (!it.alive) it.kill()
+            if (it.alive) it.kill()
         }
         tasks.clear()
-        alive = true
+        alive = false
         return true
     }
 
     fun addTask(vararg task: Task) {
-        if (alive) {
-            app.logger.error("Cannot add task to a completed SequenceTask!")
-            return
+        if (!alive) {
+            throw GdxRuntimeException("Cannot add task to a completed SequenceTask!")
         }
-
         task.forEach {
             tasks.add(it)
         }
     }
 
     fun addTask(task: Task) {
-        if (alive) {
-            app.logger.error("Cannot add task to a completed SequenceTask!")
-            return
+        if (!alive) {
+            throw GdxRuntimeException("Cannot add task to a completed SequenceTask!")
         }
         tasks.add(task)
     }

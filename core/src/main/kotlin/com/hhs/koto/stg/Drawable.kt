@@ -33,5 +33,6 @@ interface Drawable : Task {
     val y: Float
     val zIndex: Int
         get() = 0
+
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
 }

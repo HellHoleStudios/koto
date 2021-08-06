@@ -32,7 +32,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
     val builders = GdxArray<TaskBuilder>(8)
     private var currentIndex: Int = 0
     private var currentTask: Task? = null
-    override var alive: Boolean = false
+    override var alive: Boolean = true
 
     init {
         builder.forEach { builders.add(it) }
@@ -45,7 +45,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
                 currentTask = builders[currentIndex].build()
             }
             currentTask!!.tick()
-            if (currentTask!!.alive) {
+            if (!currentTask!!.alive) {
                 currentTask = null
                 currentIndex++
             } else {
@@ -60,12 +60,12 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
 
     override fun kill(): Boolean {
         builders.clear()
-        alive = true
+        alive = false
         return true
     }
 
     fun addBuilder(vararg builder: TaskBuilder) {
-        if (alive) {
+        if (!alive) {
             app.logger.error("Cannot add builder to a completed BuilderSequence!")
             return
         }
@@ -76,7 +76,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
     }
 
     fun addBuilder(builder: TaskBuilder) {
-        if (alive) {
+        if (!alive) {
             app.logger.error("Cannot add builder to a completed BuilderSequence!")
             return
         }
