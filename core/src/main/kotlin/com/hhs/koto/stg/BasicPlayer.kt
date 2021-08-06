@@ -248,6 +248,17 @@ open class BasicPlayer(
     open fun bomb(isDeathBomb: Boolean) {
         invulnerable = true
         SE.play("bomb")
+        task{
+            repeat(290) {
+                color = if (frame % 6 <= 1) {
+                    Color.BLUE
+                } else {
+                    Color.WHITE
+                }
+                yield()
+            }
+            color = Color.WHITE
+        }
         task {
             game.bullets.forEach {
                 it.kill()

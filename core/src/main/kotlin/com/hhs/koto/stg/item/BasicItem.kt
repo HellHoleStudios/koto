@@ -102,12 +102,13 @@ open class BasicItem(
             this.autoCollected = autoCollect
             this.collectPositionX = collectPositionX
             this.collectPositionY = collectPositionY
-            SE.play("item")
             collected = true
         }
     }
 
-    open fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) = Unit
+    open fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+        SE.play("item")
+    }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {

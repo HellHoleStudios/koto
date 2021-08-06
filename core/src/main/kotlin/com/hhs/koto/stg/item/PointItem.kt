@@ -54,6 +54,7 @@ class PointItem(
     color = color,
 ) {
     override fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+        super.collected(collectPositionX, collectPositionY, autoCollected)
         val amount: Long = if (autoCollected || collectPositionY >= game.maxScoreHeight) {
             game.maxScore
         } else {

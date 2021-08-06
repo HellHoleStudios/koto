@@ -51,6 +51,7 @@ class PowerItem(
     color = color,
 ) {
     override fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+        super.collected(collectPositionX, collectPositionY, autoCollected)
         if (game.power >= 4f) {
             game.score += 10000
         } else {
