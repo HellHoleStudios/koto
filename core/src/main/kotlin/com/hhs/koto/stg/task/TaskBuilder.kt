@@ -25,8 +25,6 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.Task
-
 interface TaskBuilder {
     fun build(): Task
 }

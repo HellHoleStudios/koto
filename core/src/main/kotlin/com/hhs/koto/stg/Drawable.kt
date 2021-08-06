@@ -26,6 +26,7 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.stg.task.Task
 
 interface Drawable : Task {
     val x: Float

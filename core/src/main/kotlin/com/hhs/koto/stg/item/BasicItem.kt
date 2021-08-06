@@ -97,9 +97,9 @@ open class BasicItem(
         alive = false
     }
 
-    override fun collect(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+    override fun collect(collectPositionX: Float, collectPositionY: Float, autoCollect: Boolean) {
         if (!collected) {
-            this.autoCollected = autoCollected
+            this.autoCollected = autoCollect
             this.collectPositionX = collectPositionX
             this.collectPositionY = collectPositionY
             SE.play("item")

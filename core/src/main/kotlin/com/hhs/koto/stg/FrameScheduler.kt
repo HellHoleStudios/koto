@@ -65,12 +65,12 @@ class FrameScheduler(private val game: KotoGame) {
                     game.speedUpMultiplier
                 } - 1
             ) {
-                tick()
-                act(1f)
+                game.tick()
+                game.act(1f)
             }
-            tick()
-            draw()
-            act(1f)
+            game.tick()
+            game.draw()
+            game.act(1f)
         }
     }
 
@@ -106,23 +106,23 @@ class FrameScheduler(private val game: KotoGame) {
     private fun updateA() {
         when (arrangement[subFrame]) {
             0 -> {
-                tick()
-                draw()
-                act(actDelta1.first)
+                game.tick()
+                game.draw()
+                game.act(actDelta1.first)
             }
             1 -> {
-                draw()
-                act(actDelta1.second)
+                game.draw()
+                game.act(actDelta1.second)
                 canPause = false
             }
             2 -> {
-                tick()
-                draw()
-                act(actDelta2.first)
+                game.tick()
+                game.draw()
+                game.act(actDelta2.first)
             }
             3 -> {
-                draw()
-                act(actDelta2.second)
+                game.draw()
+                game.act(actDelta2.second)
                 canPause = false
             }
         }
@@ -156,12 +156,12 @@ class FrameScheduler(private val game: KotoGame) {
                 actUpdateCount - 1
             }
         ) {
-            tick()
-            act(1f)
+            game.tick()
+            game.act(1f)
         }
-        tick()
-        draw()
-        act(1f)
+        game.tick()
+        game.draw()
+        game.act(1f)
     }
 
     // arrange [n] elements with [factor] majors
@@ -201,17 +201,5 @@ class FrameScheduler(private val game: KotoGame) {
             sumDelta += deltaSmall
         }
         return Pair(1f - sumDelta + 1e-6f, deltaSmall)
-    }
-
-    private fun tick() {
-        game.tick()
-    }
-
-    private fun act(delta: Float) {
-        game.act(delta)
-    }
-
-    private fun draw() {
-        game.draw()
     }
 }

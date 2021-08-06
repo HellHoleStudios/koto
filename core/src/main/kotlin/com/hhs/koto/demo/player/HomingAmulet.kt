@@ -23,28 +23,22 @@
  *
  */
 
-package com.hhs.koto.stg.pattern
+package com.hhs.koto.demo.player
 
-import com.hhs.koto.stg.task.Task
+import com.hhs.koto.stg.bullet.PlayerBullet
+import com.hhs.koto.util.B
 
-abstract class TemporalPattern(val duration: Int = Int.MAX_VALUE) : Task {
-    var t: Int = 0
-    override var alive: Boolean = false
-
-    abstract fun action()
-
-    override fun tick() {
-        if (alive) return
-        t++
-        if (t >= duration) {
-            alive = true
-        } else {
-            action()
-        }
-    }
-
-    override fun kill(): Boolean {
-        alive = true
-        return true
-    }
-}
+class HomingAmulet(
+    x: Float,
+    y: Float,
+    damage: Float,
+) : PlayerBullet(
+    x,
+    y,
+    damage,
+    1,
+    20f,
+    90f,
+    B["PLAYER_REIMU_STANDARD"],
+    rotation = 90f,
+)

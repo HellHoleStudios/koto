@@ -25,8 +25,6 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.Task
-
 class DelayTask(val duration: Int) : Task {
     var counter: Int = 0
 

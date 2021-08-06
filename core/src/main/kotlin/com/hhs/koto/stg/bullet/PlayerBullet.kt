@@ -26,11 +26,13 @@
 package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
+import com.hhs.koto.stg.Enemy
 
-class PlayerBullet(
+open class PlayerBullet(
     x: Float,
     y: Float,
     var damage: Float,
+    var penetration: Int = 1,
     speed: Float = 0f,
     angle: Float = 0f,
     data: BulletData,
@@ -38,4 +40,15 @@ class PlayerBullet(
     scaleY: Float = 1f,
     rotation: Float = 0f,
     color: Color = Color.WHITE,
-) : Bullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color)
+) : Bullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color) {
+    fun hit(target: Any) {
+        if (target is Enemy) {
+            target.hp -= damage
+        }
+        penetration--
+        if (penetration <= 0) {
+            kill()
+        }
+        // TODO bullet hit animation
+    }
+}

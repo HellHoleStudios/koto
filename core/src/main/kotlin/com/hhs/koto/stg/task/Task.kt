@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.task
 
 interface Task {
     fun tick()

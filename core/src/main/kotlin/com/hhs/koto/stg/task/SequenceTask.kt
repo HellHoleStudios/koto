@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.Task
 import com.hhs.koto.util.app
 import ktx.collections.GdxArray
 

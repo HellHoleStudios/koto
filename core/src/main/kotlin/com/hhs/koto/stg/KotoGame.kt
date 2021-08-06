@@ -41,6 +41,7 @@ import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
 import com.hhs.koto.stg.item.Item
 import com.hhs.koto.stg.task.ParallelTask
+import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
 
@@ -153,10 +154,9 @@ class KotoGame : Disposable {
 
     fun tick() {
         subFrameTime = 0f
-        game.player.tick()
-        game.bullets.tick()
-        game.items.tick()
-        game.particles.tick()
+        game.background.tick()
+        game.st.tick()
+        game.hud.tick()
         game.tasks.tick()
         game.frame++
     }
