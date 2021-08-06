@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.Collision.collide
+import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.stg.task.frame
 import com.hhs.koto.stg.task.task
 import com.hhs.koto.stg.task.wait
@@ -174,6 +175,8 @@ open class BasicPlayer(
                     if (it.grazeCounter <= 0) {
                         it.grazeCounter++
                         game.graze++
+                        SE.play("graze")
+                        addParticle(GrazeParticle(x, y))
                     }
                 }
             }

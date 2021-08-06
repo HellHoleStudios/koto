@@ -27,49 +27,37 @@ package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.app.Config
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.*
-import ktx.collections.GdxArray
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.sin
+import com.hhs.koto.util.tmpColor
 
-class ScoreParticle(
+class GrazeParticle(
     override var x: Float,
     override var y: Float,
-    score: Long,
-    var color: Color = Color.WHITE,
 ) : Drawable, Bounded {
-    override val boundingWidth: Float
-    override val boundingHeight: Float = 9f
-    val glyphWidth: Int
+    override val boundingWidth: Float = 8f
+    override val boundingHeight: Float = 8f
     override var alive: Boolean = true
-    var deltaY: Float = 3f
-    val variant: String = bundle["game.scoreParticle.variant"]
-    val atlas: TextureAtlas
-    val digits = GdxArray<Int>()
-    protected var t: Int = 0
-
-    init {
-        if (Config.useHSVShader) {
-            atlas = A["score_particle_hsv.atlas"]
-            color = color.toHSVColor()
-        } else {
-            atlas = A["score_particle.atlas"]
-        }
-        glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth
-        val str = score.toString()
-        for (i in str) {
-            digits.add(i.digitToInt())
-        }
-        boundingWidth = digits.size * glyphWidth / 2f
-    }
+    private var scale: Float = 1f
+    private var angle: Float = random(0f, 180f)
+    private var speed: Float = 4f
+    private var color: Color = Color(1f, 1f, 1f, 0.8f)
+    private var t: Int = 0
+    val texture: TextureRegion = getRegion("graze_particle.png")
 
     override fun tick() {
         t++
-        y += deltaY
-        deltaY = (deltaY - 0.15f).coerceAtLeast(0f)
+        x += cos(angle) * speed
+        y += sin(angle) * speed
+        speed = (speed - 0.2f).coerceAtLeast(0f)
+        scale = (scale - 0.05f).coerceAtLeast(0f)
         if (t >= 40) kill()
+        println(color)
     }
 
     override fun kill(): Boolean {
@@ -78,23 +66,10 @@ class ScoreParticle(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val baseX = x - boundingWidth / 2
-        val baseY = y - boundingHeight / 2
         tmpColor.set(batch.color)
         batch.color = color
         batch.color.a *= parentAlpha
-        for (i in 0 until digits.size) {
-            val stage = getStage(i)
-            if (stage != 3) {
-                batch.draw(
-                    atlas.findRegion("${digits[i]}_$variant", stage),
-                    baseX + i * glyphWidth / 2f, baseY, glyphWidth / 2f, 9f,
-                )
-            }
-        }
+        batch.draw(texture, x - 4f, y - 4f, 8f * scale, 8f * scale)
         batch.color = tmpColor
     }
-
-    private fun getStage(i: Int): Int =
-        clamp(t / 2 - 10 - i, 0, 3)
 }
