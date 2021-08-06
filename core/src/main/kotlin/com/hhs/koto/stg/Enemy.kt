@@ -26,11 +26,33 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.util.SE
 
-interface Drawable : Task {
-    val x: Float
-    val y: Float
-    val zIndex: Int
-        get() = 0
-    fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
+open class Enemy(
+    override var x: Float,
+    override var y: Float,
+    val texture: BasicPlayerTexture,
+    hitRadius: Float,
+    var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
+    var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
+    override val zIndex: Int = -300,
+) : Drawable {
+    val hitCollision = CircleCollision(hitRadius)
+    override var alive: Boolean = true
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        TODO("Not yet implemented")
+    }
+
+    override fun tick() {
+
+    }
+
+    open fun hit() {
+        SE.play("pldead")
+    }
+
+    open fun death() {
+
+    }
 }

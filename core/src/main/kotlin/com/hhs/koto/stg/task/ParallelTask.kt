@@ -25,13 +25,14 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.Task
 import com.hhs.koto.util.app
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
 class ParallelTask(vararg task: Task) : Task {
     val tasks = GdxArray<Task>(8)
-    override var isComplete: Boolean = false
+    override var alive: Boolean = false
 
     init {
         task.forEach { tasks.add(it) }
@@ -41,25 +42,25 @@ class ParallelTask(vararg task: Task) : Task {
     override fun tick() {
         for (i in 0 until tasks.size) {
             tasks[i].tick()
-            if (tasks[i].isComplete) {
+            if (tasks[i].alive) {
                 tasks[i] = null
             }
         }
         tasks.removeNull()
-        isComplete = tasks.size == 0
+        alive = tasks.size == 0
     }
 
     override fun kill(): Boolean {
         tasks.forEach {
-            if (!it.isComplete) it.kill()
+            if (!it.alive) it.kill()
         }
         tasks.clear()
-        isComplete = true
+        alive = true
         return true
     }
 
     fun addTask(vararg task: Task) {
-        if (isComplete) {
+        if (alive) {
             app.logger.error("Cannot add task to a completed ParallelTask!")
             return
         }
@@ -70,7 +71,7 @@ class ParallelTask(vararg task: Task) : Task {
     }
 
     fun addTask(task: Task) {
-        if (isComplete) {
+        if (alive) {
             app.logger.error("Cannot add task to a completed ParallelTask!")
             return
         }

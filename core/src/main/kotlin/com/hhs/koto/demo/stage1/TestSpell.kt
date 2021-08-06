@@ -32,8 +32,11 @@ import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.SpellBuilder
-import com.hhs.koto.stg.task.Task
+import com.hhs.koto.stg.Task
+import com.hhs.koto.stg.pattern.accelerate
 import com.hhs.koto.stg.task.wait
+import com.hhs.koto.util.B
+import com.hhs.koto.util.ring
 import com.hhs.koto.util.ringCloud
 import ktx.collections.GdxArray
 
@@ -49,8 +52,8 @@ class TestSpell : SpellBuilder {
             ringCloud(random(-100f, 100f), 100f, 10) { x, y ->
                 addItem(PointItem(x, y))
             }
-//            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
-//                .accelerate(0.2f, 20)
+            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
+                .accelerate(0.2f, 20)
             wait(10)
         }
     }

@@ -26,6 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Rectangle
 import kotlin.math.sqrt
 
 const val SQRT2 = 1.41421356237309505f
@@ -97,3 +98,14 @@ fun cos(degrees: Float) = MathUtils.cosDeg(degrees)
 
 fun tan(degrees: Float) =
     MathUtils.radiansToDegrees * kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble())
+
+private val tmpRectangle = Rectangle()
+fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {
+    tmpRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
+    return contains(tmpRectangle)
+}
+
+fun Rectangle.overlaps(x: Float, y: Float, rx: Float, ry: Float): Boolean {
+    tmpRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
+    return overlaps(tmpRectangle)
+}

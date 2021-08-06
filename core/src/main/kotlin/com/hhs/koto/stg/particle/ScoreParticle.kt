@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.hhs.koto.app.Config
+import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
@@ -38,7 +39,7 @@ class ScoreParticle(
     override var y: Float,
     score: Long,
     var color: Color = Color.WHITE,
-) : Drawable {
+) : Drawable, Bounded {
     override val boundingWidth: Float
     override val boundingHeight: Float = 9f
     val glyphWidth: Int

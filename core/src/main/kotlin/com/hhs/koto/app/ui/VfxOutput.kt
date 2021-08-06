@@ -30,11 +30,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.crashinvaders.vfx.VfxManager
-import com.hhs.koto.stg.IndexedActor
+import com.hhs.koto.stg.Drawable
 
-class VfxOutput() : Image(), IndexedActor {
-    override val z: Int = Int.MIN_VALUE
-
+class VfxOutput() : Image() {
     constructor(vfxManager: VfxManager) : this() {
         this.vfxManager = vfxManager
     }
@@ -54,4 +52,37 @@ class VfxOutput() : Image(), IndexedActor {
         vfxOutput.region.flip(false, true)
         super.draw(batch, parentAlpha)
     }
+}
+
+class VfxOutputDrawable(
+    override val x: Float = 0f,
+    override val y: Float = 0f,
+    val width: Float,
+    val height: Float,
+    override val zIndex: Int = Int.MIN_VALUE,
+) : Drawable {
+    constructor(
+        vfxManager: VfxManager,
+        x: Float = 0f,
+        y: Float = 0f,
+        width: Float,
+        height: Float,
+        zIndex: Int = Int.MIN_VALUE,
+    ) : this(x, y, width, height, zIndex) {
+        this.vfxManager = vfxManager
+    }
+
+    override var alive: Boolean = true
+    private val vfxOutput = TextureRegion()
+
+    lateinit var vfxManager: VfxManager
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (vfxManager.resultBuffer == null) return
+        vfxOutput.setRegion(vfxManager.resultBuffer.texture)
+        vfxOutput.flip(false, true)
+        batch.draw(vfxOutput, x, y, width, height)
+    }
+
+    override fun tick() = Unit
 }

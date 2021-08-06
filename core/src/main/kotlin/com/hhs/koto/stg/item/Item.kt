@@ -25,9 +25,10 @@
 
 package com.hhs.koto.stg.item
 
+import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.stg.Entity
 
-interface Item : Entity, Drawable {
+interface Item : Entity, Drawable, Bounded {
     fun collect(collectPositionX: Float, collectPositionY: Float, autoCollect: Boolean)
 }

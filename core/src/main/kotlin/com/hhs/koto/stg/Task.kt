@@ -25,12 +25,8 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.graphics.g2d.Batch
-
-interface Drawable : Task {
-    val x: Float
-    val y: Float
-    val zIndex: Int
-        get() = 0
-    fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
+interface Task {
+    fun tick()
+    var alive: Boolean
+    fun kill(): Boolean = false
 }

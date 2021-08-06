@@ -25,12 +25,4 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.graphics.g2d.Batch
-
-interface Player {
-    fun getX(): Float
-    fun getY(): Float
-    fun tick()
-    fun draw(batch: Batch, parentAlpha: Float)
-    fun act(delta: Float)
-}
+interface Player : Drawable

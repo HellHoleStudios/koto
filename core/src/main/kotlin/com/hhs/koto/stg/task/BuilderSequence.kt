@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.Task
 import com.hhs.koto.util.app
 import ktx.collections.GdxArray
 
@@ -32,7 +33,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
     val builders = GdxArray<TaskBuilder>(8)
     private var currentIndex: Int = 0
     private var currentTask: Task? = null
-    override var isComplete: Boolean = false
+    override var alive: Boolean = false
 
     init {
         builder.forEach { builders.add(it) }
@@ -45,7 +46,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
                 currentTask = builders[currentIndex].build()
             }
             currentTask!!.tick()
-            if (currentTask!!.isComplete) {
+            if (currentTask!!.alive) {
                 currentTask = null
                 currentIndex++
             } else {
@@ -53,19 +54,19 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
             }
         }
         if (currentIndex >= builders.size) {
-            isComplete = true
+            alive = true
             return
         }
     }
 
     override fun kill(): Boolean {
         builders.clear()
-        isComplete = true
+        alive = true
         return true
     }
 
     fun addBuilder(vararg builder: TaskBuilder) {
-        if (isComplete) {
+        if (alive) {
             app.logger.error("Cannot add builder to a completed BuilderSequence!")
             return
         }
@@ -76,7 +77,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : Task {
     }
 
     fun addBuilder(builder: TaskBuilder) {
-        if (isComplete) {
+        if (alive) {
             app.logger.error("Cannot add builder to a completed BuilderSequence!")
             return
         }

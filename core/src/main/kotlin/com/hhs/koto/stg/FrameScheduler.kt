@@ -204,21 +204,11 @@ class FrameScheduler(private val game: KotoGame) {
     }
 
     private fun tick() {
-        game.player.tick()
-        game.bullets.tick()
-        game.items.tick()
-        game.particles.tick()
-        game.tasks.tick()
-        game.frame++
+        game.tick()
     }
 
     private fun act(delta: Float) {
-        game.backgroundVfx.update(delta)
-        game.vfx.update(delta)
-        game.postVfx.update(delta)
-        game.background.act(delta)
-        game.st.act(delta)
-        game.hud.act(delta)
+        game.act(delta)
     }
 
     private fun draw() {

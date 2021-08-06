@@ -27,7 +27,6 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
-import com.badlogic.gdx.math.Rectangle
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.addBullet
@@ -50,12 +49,6 @@ object B {
     }
 }
 
-private val tmpRectangle = Rectangle()
-fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {
-    tmpRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
-    return contains(tmpRectangle)
-}
-
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     if (x + rx < -Config.originX) return true
     if (x - rx > Config.w - Config.originX) return true
@@ -65,9 +58,9 @@ fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
 }
 
 val playerX: Float
-    get() = game.player.getX()
+    get() = game.player.x
 val playerY: Float
-    get() = game.player.getY()
+    get() = game.player.y
 
 fun create(
     data: BulletData,

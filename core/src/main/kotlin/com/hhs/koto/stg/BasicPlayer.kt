@@ -30,8 +30,8 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.scenes.scene2d.Actor
 import com.hhs.koto.app.Config
+import com.hhs.koto.stg.Collision.collide
 import com.hhs.koto.stg.task.frame
 import com.hhs.koto.stg.task.task
 import com.hhs.koto.stg.task.wait
@@ -57,8 +57,9 @@ open class BasicPlayer(
     var topMargin: Float = 20f,
     var spawnX: Float = Config.w / 2 - Config.originX,
     var spawnY: Float = -Config.originY + 30f,
-    override val z: Int = -300,
-) : Player, Actor(), IndexedActor {
+    override val zIndex: Int = -300,
+) : Player {
+    override var alive: Boolean = true
     val hitCollision = CircleCollision(hitRadius)
     val grazeCollision = CircleCollision(grazeRadius)
     val itemCollision = CircleCollision(itemRadius)
@@ -67,10 +68,13 @@ open class BasicPlayer(
     var dy: Int = 0
     var speed: Float = 0f
     var invulnerable: Boolean = false
+    var rotation: Float = 0f
+    var scaleX = 1f
+    var scaleY = 1f
+    var color: Color = Color.WHITE
     protected val effect = DeathEffect().apply {
         game.vfx.addEffectRegistered(this)
     }
-    protected var subFrameTime: Float = 0f
     protected var respawnAnimationPercentage: Float = 0f
     protected var counter: Int = 0
     protected var hitbox = Sprite(hitboxTexture).apply {
@@ -78,32 +82,26 @@ open class BasicPlayer(
         setSize(64f, 64f)
         alpha = 0f
     }
+    override var x: Float = spawnX
+    override var y: Float = spawnY
 
     enum class PlayerState {
         NORMAL, DEATHBOMBING, BOMBING, RESPAWNING, RESPAWNED
     }
 
     init {
-        setPosition(spawnX, spawnY)
-        game.st += this
+        game.st.addDrawable(this)
     }
 
-    override fun act(delta: Float) {
-        subFrameTime += delta
-        hitbox.rotate(4f * delta)
-        if (hitbox.rotation >= 360f) hitbox.rotation -= 360f
-        super.act(delta)
-    }
-
-    override fun draw(batch: Batch, parentAlpha: Float) {
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         batch.end()
 
-        app.normalBatch.projectionMatrix = batch.projectionMatrix
-        app.normalBatch.begin()
+        game.normalBatch.projectionMatrix = batch.projectionMatrix
+        game.normalBatch.begin()
 
-        tmpColor.set(app.normalBatch.color)
-        app.normalBatch.color = color
-        app.normalBatch.color.a *= parentAlpha
+        tmpColor.set(game.normalBatch.color)
+        game.normalBatch.color = color
+        game.normalBatch.color.a *= parentAlpha
 
         val tmpX: Float = if (playerState == PlayerState.RESPAWNING) {
             Interpolation.sine.apply(spawnX, spawnX, respawnAnimationPercentage)
@@ -116,7 +114,7 @@ open class BasicPlayer(
             clampY(y + speed * dy * subFrameTime)
         }
         if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
-            app.normalBatch.draw(
+            game.normalBatch.draw(
                 texture.texture,
                 tmpX - textureOriginX,
                 tmpY - textureOriginY,
@@ -129,7 +127,7 @@ open class BasicPlayer(
                 rotation,
             )
         } else {
-            app.normalBatch.draw(
+            game.normalBatch.draw(
                 texture.texture,
                 tmpX - textureOriginX,
                 tmpY - textureOriginY,
@@ -137,23 +135,24 @@ open class BasicPlayer(
                 texture.texture.regionHeight.toFloat(),
             )
         }
-        app.normalBatch.color = tmpColor
+        game.normalBatch.color = tmpColor
 
         hitbox.setPosition(
             clampX(x + speed * dx * subFrameTime) - hitbox.width / 2,
             clampY(y + speed * dy * subFrameTime) - hitbox.height / 2,
         )
-        hitbox.draw(app.normalBatch, parentAlpha)
+        hitbox.draw(game.normalBatch, parentAlpha)
         hitbox.rotation = -hitbox.rotation
-        hitbox.draw(app.normalBatch, parentAlpha)
+        hitbox.draw(game.normalBatch, parentAlpha)
         hitbox.rotation = -hitbox.rotation
 
-        app.normalBatch.end()
+        game.normalBatch.end()
         batch.begin()
     }
 
     override fun tick() {
-        subFrameTime = 0f
+        hitbox.rotate(4f)
+        if (hitbox.rotation >= 360f) hitbox.rotation -= 360f
         if (playerState != PlayerState.RESPAWNING) {
             if (VK.SLOW.pressed()) {
                 hitbox.alpha = 1f
@@ -162,19 +161,23 @@ open class BasicPlayer(
                 hitbox.alpha = 0f
                 hitbox.setScale(1.3f)
             }
-        }
-        if (playerState != PlayerState.RESPAWNING) {
             move()
-        }
-        if (playerState != PlayerState.RESPAWNING) {
             if (y >= itemCollectLineHeight) {
                 game.items.forEach {
                     it.collect(x, y, true)
                 }
             } else {
                 game.items.forEach {
-                    if (Collision.collide(it.collision, it.x, it.y, itemCollision, x, y)) {
+                    if (collide(it.collision, it.x, it.y, itemCollision, x, y)) {
                         it.collect(x, y, false)
+                    }
+                }
+            }
+            game.bullets.forEach {
+                if (collide(it.collision, it.x, it.y, grazeCollision, x, y)) {
+                    if (it.grazeCounter <= 0) {
+                        it.grazeCounter++
+                        game.graze++
                     }
                 }
             }
@@ -183,9 +186,9 @@ open class BasicPlayer(
             if (!invulnerable) {
                 var hit = false
                 game.bullets.forEach {
-                    if (Collision.collide(it.collision, it.x, it.y, hitCollision, x, y)) {
+                    if (collide(it.collision, it.x, it.y, hitCollision, x, y)) {
                         hit = true
-                        it.destroy()
+                        it.kill()
                     }
                 }
                 if (hit) {
@@ -247,7 +250,7 @@ open class BasicPlayer(
         SE.play("bomb")
         task {
             game.bullets.forEach {
-                it.destroy()
+                it.kill()
             }
             game.items.forEach {
                 it.collect(x, y, true)

@@ -25,23 +25,24 @@
 
 package com.hhs.koto.stg
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Logger
-import com.badlogic.gdx.utils.Scaling
-import com.badlogic.gdx.utils.viewport.ScalingViewport
+import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.app.Config
-import com.hhs.koto.app.ui.VfxOutput
+import com.hhs.koto.app.ui.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.PlayerBullet
 import com.hhs.koto.stg.item.Item
 import com.hhs.koto.stg.task.ParallelTask
-import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
-import java.lang.Float.min
 
 class KotoGame : Disposable {
     val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
@@ -49,39 +50,53 @@ class KotoGame : Disposable {
     val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
 
     val tasks = ParallelTask()
-
-    val background = IndexedStage(
-        ScalingViewport(
-            Scaling.stretch, backgroundVfx.width.toFloat(), backgroundVfx.height.toFloat(), OrthographicCamera()
-        ),
-        app.batch,
+    val normalViewport = StretchViewport(
+        Config.fw.toFloat(), Config.fh.toFloat(), OrthographicCamera(Config.fw.toFloat(), Config.fh.toFloat())
     )
-    val st = IndexedStage(
-        ScalingViewport(Scaling.stretch, vfx.width.toFloat(), vfx.height.toFloat(), OrthographicCamera()),
-        app.batch,
-    ).apply {
-        (viewport.camera as OrthographicCamera).apply {
-            position.x = Config.w / 2f - Config.originX
-            position.y = Config.h / 2f - Config.originY
-            zoom = min(Config.w / Config.fw, Config.h / Config.fh)
-        }
-        viewport.update(vfx.width, vfx.height)
-        addActor(VfxOutput(backgroundVfx))
+    val offsetViewport = StretchViewport(Config.w, Config.h, OrthographicCamera(Config.w, Config.h).apply {
+        position.x = Config.w / 2f - Config.originX
+        position.y = Config.h / 2f - Config.originY
+    })
+    val batch = if (Config.useHSVShader) {
+        SpriteBatch(
+            1000,
+            ShaderProgram(
+                Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
+                A["shader/koto_hsv.frag"],
+            ),
+        )
+    } else {
+        SpriteBatch()
     }
-    val hud = IndexedStage(
-        ScalingViewport(
-            Scaling.stretch, postVfx.width.toFloat(), postVfx.height.toFloat(), OrthographicCamera()
-        ),
-        app.batch,
-    ).apply {
-        addActor(VfxOutput(vfx))
+    val normalBatch = if (Config.useHSVShader) {
+        SpriteBatch()
+    } else {
+        batch
+    }
+    val background = DrawableLayer()
+    val st = DrawableLayer().apply {
+        addDrawable(VfxOutputDrawable(backgroundVfx, -Config.originX, -Config.originY, Config.w, Config.h))
+    }
+    val hud = DrawableLayer().apply {
+        addDrawable(VfxOutputDrawable(vfx, 0f, 0f, Config.fw.toFloat(), Config.fh.toFloat()))
     }
 
+    private var subFrameTime: Float = 0f
     var frame: Int = 0
     var speedUpMultiplier: Int = 1
     val frameScheduler = FrameScheduler(this)
     val logger = Logger("Game", Config.logLevel)
-    val bullets = DrawableLayer<Bullet>(
+    val playerBullets = OptimizedLayer<PlayerBullet>(
+        -10, Rectangle(
+            -Config.bulletDeleteDistance - Config.originX,
+            -Config.bulletDeleteDistance - Config.originY,
+            Config.bulletDeleteDistance * 2 + Config.w,
+            Config.bulletDeleteDistance * 2 + Config.h,
+        )
+    ).apply {
+        st.addDrawable(this)
+    }
+    val bullets = OptimizedLayer<Bullet>(
         0, Rectangle(
             -Config.bulletDeleteDistance - Config.originX,
             -Config.bulletDeleteDistance - Config.originY,
@@ -89,9 +104,9 @@ class KotoGame : Disposable {
             Config.bulletDeleteDistance * 2 + Config.h,
         )
     ).apply {
-        st += this
+        st.addDrawable(this)
     }
-    val items = DrawableLayer<Item>(
+    val items = OptimizedLayer<Item>(
         -400, Rectangle(
             -32768f,
             -32f - Config.originY,
@@ -99,10 +114,13 @@ class KotoGame : Disposable {
             32768f,
         )
     ).apply {
-        st += this
+        st.addDrawable(this)
     }
-    val particles = DrawableLayer<Drawable>(200).apply {
-        st += this
+    val particles = OptimizedLayer<Drawable>(200).apply {
+        st.addDrawable(this)
+    }
+    val enemies = DrawableLayer(-350).apply {
+        st.addDrawable(this)
     }
     lateinit var player: Player
     var maxScore: Long = 10000
@@ -111,6 +129,7 @@ class KotoGame : Disposable {
     val life = FragmentCounter()
     val bomb = FragmentCounter()
     var power: Float = 1f
+    var graze: Int = 0
 
     init {
         logger.info("Game instance created.")
@@ -125,24 +144,51 @@ class KotoGame : Disposable {
         frameScheduler.update()
     }
 
-    fun draw() {
-        st.viewport.apply()
+    fun act(delta: Float) {
+        game.backgroundVfx.update(delta)
+        game.vfx.update(delta)
+        game.postVfx.update(delta)
+        subFrameTime += delta
+    }
 
+    fun tick() {
+        subFrameTime = 0f
+        game.player.tick()
+        game.bullets.tick()
+        game.items.tick()
+        game.particles.tick()
+        game.tasks.tick()
+        game.frame++
+    }
+
+    fun draw() {
+        normalViewport.update(Config.fw, Config.fh, true)
         backgroundVfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        background.draw()
+        batch.projectionMatrix = normalViewport.camera.combined
+        batch.begin()
+        background.draw(batch, 1f, subFrameTime)
+        batch.end()
         backgroundVfx.endInputCapture()
         backgroundVfx.applyEffects()
 
+        offsetViewport.update(Config.fw, Config.fh)
         vfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        st.draw()
+        batch.projectionMatrix = offsetViewport.camera.combined
+        batch.begin()
+        st.draw(batch, 1f, subFrameTime)
+        batch.end()
         vfx.endInputCapture()
         vfx.applyEffects()
 
+        normalViewport.apply()
         postVfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        hud.draw()
+        batch.projectionMatrix = normalViewport.camera.combined
+        batch.begin()
+        hud.draw(batch, 1f, subFrameTime)
+        batch.end()
         postVfx.endInputCapture()
         postVfx.applyEffects()
 
@@ -150,9 +196,6 @@ class KotoGame : Disposable {
     }
 
     override fun dispose() {
-        background.dispose()
-        st.dispose()
-        hud.dispose()
         backgroundVfx.dispose()
         vfx.dispose()
         postVfx.dispose()

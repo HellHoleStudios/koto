@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.Task
 import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
@@ -73,12 +74,12 @@ class CoroutineTask(
         if (obj != null) this.obj = obj
     }
     private val job = scope.launch(element, block = block)
-    override val isComplete: Boolean
+    override var alive: Boolean = true
         get() = job.isCompleted
 
     override fun tick() {
         CoroutineTaskDispatcher.tick(job.job)
-        if (isComplete) {
+        if (alive) {
             CoroutineTaskDispatcher.remove(job.job)
         }
         element.frame++
@@ -106,8 +107,14 @@ suspend fun wait(frameCount: Int = 1) {
     }
 }
 
+suspend fun waitFor(predicate: () -> Boolean) {
+    while (!predicate()) {
+        yield()
+    }
+}
+
 suspend fun Task.waitForFinish() {
-    while (!isComplete) {
+    while (!alive) {
         yield()
     }
 }

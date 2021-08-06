@@ -28,7 +28,6 @@ package com.hhs.koto.stg
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.stg.task.SpellBuilder
 import com.hhs.koto.stg.task.StageBuilder
-import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.TaskBuilder
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game

@@ -25,26 +25,26 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.task.Task
+import com.hhs.koto.stg.Task
 
 abstract class TemporalPattern(val duration: Int = Int.MAX_VALUE) : Task {
     var t: Int = 0
-    override var isComplete: Boolean = false
+    override var alive: Boolean = false
 
     abstract fun action()
 
     override fun tick() {
-        if (isComplete) return
+        if (alive) return
         t++
         if (t >= duration) {
-            isComplete = true
+            alive = true
         } else {
             action()
         }
     }
 
     override fun kill(): Boolean {
-        isComplete = true
+        alive = true
         return true
     }
 }

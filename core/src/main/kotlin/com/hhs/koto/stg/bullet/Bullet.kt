@@ -28,12 +28,8 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.hhs.koto.stg.CollisionShape
-import com.hhs.koto.stg.Drawable
-import com.hhs.koto.stg.Entity
-import com.hhs.koto.stg.addTask
+import com.hhs.koto.stg.*
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
@@ -48,7 +44,7 @@ open class Bullet(
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
-) : Entity, Drawable {
+) : Entity, Drawable, Bounded {
     var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
         get() = data.collision
@@ -68,7 +64,8 @@ open class Bullet(
     var deltaX: Float = 0f
     var deltaY: Float = 0f
     override var alive: Boolean = true
-    var grazed: Boolean = false
+
+    var grazeCounter: Int = 0
     var t: Int = 0
     override val boundingWidth
         get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
@@ -112,10 +109,11 @@ open class Bullet(
         t++
     }
 
-    fun destroy() {
+    override fun kill(): Boolean {
         alive = false
         attachedTasks?.forEach { it.kill() }
         // TODO particle&animation
+        return true
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {

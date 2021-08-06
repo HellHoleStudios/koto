@@ -23,10 +23,19 @@
  *
  */
 
-package com.hhs.koto.stg.task
+package com.hhs.koto.stg.bullet
 
-interface Task {
-    fun tick()
-    val isComplete: Boolean
-    fun kill(): Boolean
-}
+import com.badlogic.gdx.graphics.Color
+
+class PlayerBullet(
+    x: Float,
+    y: Float,
+    var damage: Float,
+    speed: Float = 0f,
+    angle: Float = 0f,
+    data: BulletData,
+    scaleX: Float = 1f,
+    scaleY: Float = 1f,
+    rotation: Float = 0f,
+    color: Color = Color.WHITE,
+) : Bullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color)

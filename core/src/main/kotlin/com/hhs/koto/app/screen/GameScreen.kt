@@ -144,12 +144,13 @@ class GameScreen : BasicScreen(null, null) {
         }
         if (paused) {
             deltaTimeCounter += delta
-            if (passCounter >= 30 && VK.PAUSE.justPressed() && blurredGameFrame.actions.isEmpty) {
+            if (passCounter >= 30 && VK.PAUSE.justPressed() && !blurredGameFrame.hasActions()) {
                 resumeGame()
             } else {
                 if (deltaTimeCounter >= 1 / 60f) {
                     if (passCounter < 30) {
                         if (passCounter == 0) {
+                            blurredGameFrame.alpha = 1f
                             vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
                         } else {
                             vfxManager.useAsInput(vfxManager.resultBuffer.texture)
@@ -186,7 +187,6 @@ class GameScreen : BasicScreen(null, null) {
         passCounter = 0
         deltaTimeCounter = 0f
         pauseMenu.activate()
-        blurredGameFrame.alpha = 1f
     }
 
     fun reset() {

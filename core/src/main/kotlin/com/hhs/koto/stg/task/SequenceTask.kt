@@ -25,13 +25,14 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.Task
 import com.hhs.koto.util.app
 import ktx.collections.GdxArray
 
 class SequenceTask(vararg task: Task) : Task {
     val tasks = GdxArray<Task>(8)
     private var currentIndex: Int = 0
-    override var isComplete: Boolean = false
+    override var alive: Boolean = false
 
     init {
         task.forEach { tasks.add(it) }
@@ -41,7 +42,7 @@ class SequenceTask(vararg task: Task) : Task {
     override fun tick() {
         while (currentIndex < tasks.size) {
             tasks[currentIndex].tick()
-            if (tasks[currentIndex].isComplete) {
+            if (tasks[currentIndex].alive) {
                 tasks[currentIndex] = null
                 currentIndex++
             } else {
@@ -49,22 +50,22 @@ class SequenceTask(vararg task: Task) : Task {
             }
         }
         if (currentIndex >= tasks.size) {
-            isComplete = true
+            alive = true
             return
         }
     }
 
     override fun kill(): Boolean {
         tasks.forEach {
-            if (!it.isComplete) it.kill()
+            if (!it.alive) it.kill()
         }
         tasks.clear()
-        isComplete = true
+        alive = true
         return true
     }
 
     fun addTask(vararg task: Task) {
-        if (isComplete) {
+        if (alive) {
             app.logger.error("Cannot add task to a completed SequenceTask!")
             return
         }
@@ -75,7 +76,7 @@ class SequenceTask(vararg task: Task) : Task {
     }
 
     fun addTask(task: Task) {
-        if (isComplete) {
+        if (alive) {
             app.logger.error("Cannot add task to a completed SequenceTask!")
             return
         }

@@ -25,12 +25,14 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.Task
+
 class RunnableTask(val runnable: Runnable) : Task {
-    override var isComplete = false
+    override var alive = false
 
     override fun tick() {
         runnable.run()
-        isComplete = true
+        alive = true
     }
 
     override fun kill(): Boolean = true

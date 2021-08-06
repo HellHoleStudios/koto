@@ -26,87 +26,49 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.scenes.scene2d.Actor
-import com.hhs.koto.app.Config
-import com.hhs.koto.util.contains
-import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
-open class DrawableLayer<T : Drawable>(
-    override val z: Int,
-    val world: Rectangle = Rectangle(-32768f, -32768f, 65536f, 65536f),
-) : Actor(), IndexedActor {
-    val drawables = GdxArray<T>()
-    var count: Int = 0
-        protected set
-    var blankCount: Int = 0
-        protected set
-    var subFrameTime: Float = 0f
+class DrawableLayer(override val zIndex: Int = 0) : Drawable {
+    override val x: Float = 0f
+    override val y: Float = 0f
+    override var alive: Boolean = true
 
-    fun tick() {
-        subFrameTime = 0f
+    val drawables = GdxArray<Drawable>()
+
+    fun addDrawable(drawable: Drawable) {
+        for (i in 0 until drawables.size) {
+            if (drawables[i].zIndex > drawable.zIndex) {
+                drawables.insert(i, drawable)
+                return
+            }
+        }
+        drawables.add(drawable)
+    }
+
+    fun removeDrawable(drawable: Drawable) {
+        drawables.removeValue(drawable, true)
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         for (i in 0 until drawables.size) {
             if (drawables[i] != null) {
                 if (!drawables[i].alive) {
                     drawables[i] = null
-                    count--
-                    blankCount++
                 } else {
-                    drawables[i].tick()
-                    if (!world.contains(
-                            drawables[i].x,
-                            drawables[i].y,
-                            drawables[i].boundingWidth,
-                            drawables[i].boundingHeight,
-                        )
-                    ) {
-                        drawables[i].alive = false
-                        drawables[i] = null
-                        count--
-                        blankCount++
-                    }
+                    drawables[i].draw(batch, parentAlpha, subFrameTime)
                 }
             }
         }
-        if (blankCount >= Config.cleanupBlankCount || drawables.size >= 262144) {
-            drawables.removeNull()
-            blankCount = 0
-        }
     }
 
-    override fun act(delta: Float) {
-        subFrameTime += delta
-        super.act(delta)
-    }
-
-    inline fun forEach(action: (T) -> Unit) {
-        for (i in 0 until drawables.size) {
-            if (drawables[i] != null && drawables[i].alive) {
-                action(drawables[i])
-            }
-        }
-    }
-
-    fun add(drawable: T): T {
-        drawables.add(drawable)
-        count++
-        return drawable
-    }
-
-    fun remove(drawable: T) {
-        val index = drawables.indexOf(drawable)
-        if (index != -1) {
-            drawables[index] = null
-            blankCount++
-            count--
-        }
-    }
-
-    override fun draw(batch: Batch, parentAlpha: Float) {
+    override fun tick() {
         for (i in 0 until drawables.size) {
             if (drawables[i] != null) {
-                drawables[i].draw(batch, parentAlpha, subFrameTime)
+                if (!drawables[i].alive) {
+                    drawables[i] = null
+                } else {
+                    drawables[i].tick()
+                }
             }
         }
     }
