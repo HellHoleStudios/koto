@@ -26,9 +26,10 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.*
-import com.hhs.koto.stg.item.PointItem
-import com.hhs.koto.stg.item.PowerItem
+import com.hhs.koto.stg.BasicEnemy
+import com.hhs.koto.stg.BasicEnemyTexture
+import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
@@ -42,23 +43,14 @@ class TestSpell : SpellBuilder {
         task {
             while (true) {
                 addEnemy(
-                    object : BasicEnemy(
+                    BasicEnemy(
                         -250f,
                         100f,
-                        30f,
                         BasicEnemyTexture(A["sprite/th10_fairy.atlas"], "th10_fairy_red"),
-                        10f,
-                    ) {
-                        override fun death() {
-                            super.death()
-                            ringCloud(x, y, 5) { x, y ->
-                                addItem(PowerItem(x, y))
-                            }
-                            ringCloud(x, y, 5) { x, y ->
-                                addItem(PointItem(x, y))
-                            }
-                        }
-                    }
+                        30f,
+                        5,
+                        5,
+                    )
                 ).task {
                     val enemy = enemy as BasicEnemy
                     task {

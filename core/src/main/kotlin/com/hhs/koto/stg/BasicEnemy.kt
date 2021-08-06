@@ -27,20 +27,25 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.stg.item.PointItem
+import com.hhs.koto.stg.item.PowerItem
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
-import com.hhs.koto.util.game
-import com.hhs.koto.util.tmpColor
+import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 import kotlin.math.absoluteValue
+import kotlin.math.min
 
 open class BasicEnemy(
     override var x: Float,
     override var y: Float,
-    override var hp: Float,
     val texture: BasicEnemyTexture,
-    hitRadius: Float,
+    override var hp: Float,
+    var pointCount: Int,
+    var powerCount: Int,
+    bulletCollisionRadius: Float = min(texture.texture.regionWidth, texture.texture.regionHeight).toFloat() / 1.5f,
+    playerCollisionRadius: Float = bulletCollisionRadius / 3f,
     var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
     var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
     override val zIndex: Int = -300,
@@ -51,7 +56,8 @@ open class BasicEnemy(
     var scaleX = 1f
     var scaleY = 1f
     var color: Color = Color.WHITE
-    val hitCollision = CircleCollision(hitRadius)
+    val bulletCollision = CircleCollision(bulletCollisionRadius)
+    val playerCollision = CircleCollision(playerCollisionRadius)
     val attachedTasks = GdxArray<Task>()
     protected var oldX: Float = x;
     override var alive: Boolean = true
@@ -95,10 +101,16 @@ open class BasicEnemy(
     override fun tick() {
         if (!invulnerable) {
             game.playerBullets.forEach {
-                if (Collision.collide(it.collision, it.x, it.y, hitCollision, x, y)) {
+                if (Collision.collide(it.collision, it.x, it.y, bulletCollision, x, y)) {
                     it.hit(this)
                 }
             }
+        }
+        if (
+            game.player.playerState == PlayerState.NORMAL &&
+            Collision.collide(game.player.hitCollision, playerX, playerY, playerCollision, x, y)
+        ) {
+            game.player.hit()
         }
         if ((x - oldX).absoluteValue < 0.1f) {
             texture.update(0)
@@ -113,6 +125,12 @@ open class BasicEnemy(
 
     open fun death() {
         // TODO death animation
+        ringCloud(x, y, powerCount, bulletCollision.radius) { x, y ->
+            addItem(PowerItem(x, y))
+        }
+        ringCloud(x, y, pointCount, bulletCollision.radius) { x, y ->
+            addItem(PointItem(x, y))
+        }
         kill()
     }
 

@@ -60,10 +60,10 @@ open class BasicPlayer(
     override val zIndex: Int = -300,
 ) : Player {
     override var alive: Boolean = true
-    val hitCollision = CircleCollision(hitRadius)
-    val grazeCollision = CircleCollision(grazeRadius)
-    val itemCollision = CircleCollision(itemRadius)
-    var playerState = PlayerState.NORMAL
+    override val hitCollision = CircleCollision(hitRadius)
+    override val grazeCollision = CircleCollision(grazeRadius)
+    override val itemCollision = CircleCollision(itemRadius)
+    override var playerState = PlayerState.NORMAL
     var dx: Int = 0
     var dy: Int = 0
     var speed: Float = 0f
@@ -84,10 +84,6 @@ open class BasicPlayer(
     }
     override var x: Float = spawnX
     override var y: Float = spawnY
-
-    enum class PlayerState {
-        NORMAL, DEATHBOMBING, BOMBING, RESPAWNING, RESPAWNED
-    }
 
     init {
         game.st.addDrawable(this)
@@ -193,8 +189,6 @@ open class BasicPlayer(
                 }
                 if (hit) {
                     hit()
-                    playerState = PlayerState.DEATHBOMBING
-                    counter = deathbombTime
                 }
             }
         }
@@ -248,7 +242,7 @@ open class BasicPlayer(
     open fun bomb(isDeathBomb: Boolean) {
         invulnerable = true
         SE.play("bomb")
-        task{
+        task {
             repeat(290) {
                 color = if (frame % 6 <= 1) {
                     Color.BLUE
@@ -272,8 +266,10 @@ open class BasicPlayer(
         }
     }
 
-    open fun hit() {
+    override fun hit() {
         SE.play("pldead")
+        playerState = PlayerState.DEATHBOMBING
+        counter = deathbombTime
     }
 
     open fun death() {

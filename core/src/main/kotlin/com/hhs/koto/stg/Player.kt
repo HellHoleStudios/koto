@@ -25,4 +25,14 @@
 
 package com.hhs.koto.stg
 
-interface Player : Drawable
+interface Player : Drawable {
+    val hitCollision: CollisionShape
+    val grazeCollision: CollisionShape
+    val itemCollision: CollisionShape
+    val playerState: PlayerState
+    fun hit()
+}
+
+enum class PlayerState {
+    NORMAL, DEATHBOMBING, BOMBING, RESPAWNING, RESPAWNED
+}
