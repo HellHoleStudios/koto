@@ -40,7 +40,7 @@ class Reimu : BasicPlayer(
     2f,
     4.5f,
     2f,
-    8,
+    10,
 ) {
     override fun tick() {
         if (playerState != PlayerState.RESPAWNING && VK.SHOT.pressed()) {

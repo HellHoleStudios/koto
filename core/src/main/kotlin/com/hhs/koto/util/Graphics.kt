@@ -26,6 +26,7 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -117,5 +118,15 @@ fun VfxManager.removeEffectRegistered(effect: ChainVfxEffect) {
 fun disposeRegisteredEffects() {
     registeredEffects.forEach {
         it.dispose()
+    }
+}
+
+fun Batch.ensureBlendFunction(srcFunc: Int, dstFunc: Int, srcFuncAlpha: Int = srcFunc, dstFuncAlpha: Int = dstFunc) {
+    if (blendSrcFunc != srcFunc
+        || blendSrcFuncAlpha != srcFuncAlpha
+        || blendDstFunc != dstFunc
+        || blendDstFuncAlpha != dstFuncAlpha
+    ) {
+        setBlendFunctionSeparate(srcFunc, dstFunc, srcFuncAlpha, dstFuncAlpha)
     }
 }

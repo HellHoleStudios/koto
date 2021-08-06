@@ -28,6 +28,7 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.AABBCollision
@@ -79,7 +80,7 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
 class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData) {
     var id: Int = raw.id!!
     var name: String = raw.name!!
-    var render: String = raw.render
+    var blending: Pair<Int, Int> = getBlending(raw.blending)
     var texture: BulletTexture = BulletTexture(parent.atlas, name, raw.frames)
     var originX = raw.originX ?: (texture.maxWidth / 2f)
     var originY = raw.originY ?: (texture.maxWidth / 2f)
@@ -93,4 +94,9 @@ class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletD
         else -> CircleCollision(raw.collisionData!![0]) // use circle as default
     }
     var rotation = raw.rotation
+}
+
+fun getBlending(blendingString: String): Pair<Int, Int> = when (blendingString) {
+    "ADD" -> Pair(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
+    else -> Pair(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
 }

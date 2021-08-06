@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
+import com.hhs.koto.stg.particle.DeathParticle
 import com.hhs.koto.stg.particle.Explosion
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
@@ -61,7 +62,7 @@ open class BasicEnemy(
     val bulletCollision = CircleCollision(bulletCollisionRadius)
     val playerCollision = CircleCollision(playerCollisionRadius)
     val attachedTasks = GdxArray<Task>()
-    protected var oldX: Float = x;
+    protected var oldX: Float = x
     override var alive: Boolean = true
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
@@ -126,7 +127,7 @@ open class BasicEnemy(
     }
 
     open fun death() {
-        // TODO death animation
+        SE.play("enemydead")
         ringCloud(x, y, powerCount, bulletCollision.radius) { x, y ->
             addItem(PowerItem(x, y))
         }
@@ -135,9 +136,12 @@ open class BasicEnemy(
         }
         addParticle(
             Explosion(
-                x, y, 32f, 64f, 16f, 256f, random(0f, 360f), 10
+                x, y, 32f, 64f, 16f, 256f, random(0f, 360f), 15
             )
         )
+        repeat(5) {
+            addParticle(DeathParticle(x, y, random(0f, 360f), 10f, 24f, 0f, 20))
+        }
         kill()
     }
 

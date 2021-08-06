@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.SpriteDrawable
 import com.hhs.koto.util.alpha
+import com.hhs.koto.util.ensureBlendFunction
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.toHSVColor
 
@@ -69,11 +70,11 @@ class DeathParticle(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (additive) {
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
+            batch.ensureBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
         }
         super.draw(batch, parentAlpha, subFrameTime)
         if (additive) {
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+            batch.ensureBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         }
     }
 }

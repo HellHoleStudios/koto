@@ -287,7 +287,7 @@ open class BasicPlayer(
                             20f,
                             24f,
                             duration = 10,
-                            color = Color(0f, 0f, 0f, 1f),
+                            color = Color(0f, 0f, 0f, 0.8f),
                         )
                     )
                     addParticle(
@@ -298,7 +298,7 @@ open class BasicPlayer(
                             20f,
                             24f,
                             duration = 10,
-                            color = Color(0.85f, 0.35f, 1f, 1f),
+                            color = Color(0.85f, 0.35f, 1f, 0.8f),
                             additive = true
                         )
                     )
@@ -323,7 +323,7 @@ open class BasicPlayer(
                                 20f,
                                 96f,
                                 duration = 20,
-                                color = Color(0.85f, 0.35f, 1f, 1f),
+                                color = Color(0.85f, 0.35f, 1f, 0.8f),
                                 additive = true
                             )
                         )

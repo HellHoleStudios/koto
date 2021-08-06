@@ -69,8 +69,8 @@ class TestSpell : SpellBuilder {
                     enemy.kill()
                 }.task {
                     while (true) {
-                        towards(B["DS_BALL_S_BLUE"], enemy.x, enemy.y, playerX, playerY, 3f)
-                        wait(30)
+                        towards(B["DS_BALL_M_A_RED"], enemy.x, enemy.y, playerX, playerY, 3f)
+                        wait(10)
                     }
                 }
                 wait(130)

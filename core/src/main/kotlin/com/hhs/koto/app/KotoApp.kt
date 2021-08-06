@@ -112,6 +112,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("shoot", "snd/se_plst00.wav")
         SE.register("pause", "snd/se_pause.wav")
         SE.register("bomb", "snd/se_nep00.wav")
+        SE.register("enemydead", "snd/se_enep00.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
         B.defaultSheet = A[Config.defaultShotSheet]
