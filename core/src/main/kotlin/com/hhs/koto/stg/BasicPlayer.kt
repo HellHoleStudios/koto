@@ -262,6 +262,9 @@ open class BasicPlayer(
             game.bullets.forEach {
                 it.kill()
             }
+            game.enemies.forEach {
+                (it as Enemy).death()
+            }
             game.items.forEach {
                 it.collect(x, y, true)
             }

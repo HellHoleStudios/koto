@@ -69,6 +69,7 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
             val blending: String = Config.defaultBlending,
             val delaySrc: String? = null,
             val delayColor: String? = null,
+            val delayBlending: String? = null,
             val collisionMethod: String? = null,
             val collisionData: GdxArray<Float>? = null,
             val rotation: Float = 0f,

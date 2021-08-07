@@ -38,6 +38,7 @@ import com.hhs.koto.stg.NoCollision
 import com.hhs.koto.util.app
 import com.hhs.koto.util.json
 import com.hhs.koto.util.safeIterator
+import com.hhs.koto.util.toHSVColor
 import ktx.collections.GdxMap
 import ktx.json.fromJson
 
@@ -85,7 +86,8 @@ class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletD
     var originX = raw.originX ?: (texture.maxWidth / 2f)
     var originY = raw.originY ?: (texture.maxWidth / 2f)
     var delayTexture: TextureRegion = parent.atlas.findRegion(raw.delaySrc!!)
-    var delayColor: Color = Color.valueOf(raw.delayColor!!)
+    var delayColor: Color = Color.valueOf(raw.delayColor!!).toHSVColor()
+    var delayBlending: Pair<Int, Int> = getBlending(raw.delayBlending ?: "ADD")
     var spinVelocity = raw.spinVelocity
     var collision: CollisionShape = when (raw.collisionMethod) {
         "none" -> NoCollision()
@@ -96,7 +98,7 @@ class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletD
     var rotation = raw.rotation
 }
 
-fun getBlending(blendingString: String): Pair<Int, Int> = when (blendingString) {
+private fun getBlending(blendingString: String): Pair<Int, Int> = when (blendingString) {
     "ADD" -> Pair(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
     else -> Pair(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
 }

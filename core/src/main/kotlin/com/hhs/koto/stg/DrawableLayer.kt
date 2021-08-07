@@ -38,6 +38,14 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
 
     val drawables = GdxArray<Drawable>()
 
+    inline fun forEach(action: (Drawable) -> Unit) {
+        for (i in 0 until drawables.size) {
+            if (drawables[i] != null && drawables[i].alive) {
+                action(drawables[i])
+            }
+        }
+    }
+
     fun addDrawable(drawable: Drawable) {
         for (i in 0 until drawables.size) {
             if (drawables[i].zIndex > drawable.zIndex) {

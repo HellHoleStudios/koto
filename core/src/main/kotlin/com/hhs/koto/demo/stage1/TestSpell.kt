@@ -69,7 +69,17 @@ class TestSpell : SpellBuilder {
                     enemy.kill()
                 }.task {
                     while (true) {
-                        towards(B["DS_BALL_M_A_RED"], enemy.x, enemy.y, playerX, playerY, 3f)
+                        repeat(10) {
+                            towards(
+                                B["DS_BALL_S_RED"],
+                                enemy.x,
+                                enemy.y,
+                                playerX,
+                                playerY,
+                                3f,
+                                delay = 10
+                            ).angle += it * 36f
+                        }
                         wait(10)
                     }
                 }

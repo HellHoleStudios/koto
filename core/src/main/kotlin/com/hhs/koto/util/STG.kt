@@ -69,8 +69,9 @@ fun create(
     angle: Float = 0f,
     speed: Float = 0f,
     color: Color = Color.WHITE,
+    delay: Int = 0,
 ): Bullet =
-    addBullet(Bullet(x, y, speed, angle, data, color = color))
+    addBullet(Bullet(x, y, speed, angle, data, color = color, delay = delay))
 
 fun towards(
     data: BulletData,
@@ -80,8 +81,9 @@ fun towards(
     targetY: Float,
     speed: Float = 0f,
     color: Color = Color.WHITE,
+    delay: Int = 0,
 ): Bullet =
-    addBullet(Bullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color))
+    addBullet(Bullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color, delay = delay))
 
 fun ring(
     data: BulletData,
@@ -93,11 +95,15 @@ fun ring(
     startAngle: Float = 0f,
     speed: Float = 0f,
     color: Color = Color.WHITE,
+    delay: Int = 0,
 ): BulletGroup {
     val ret = BulletGroup()
     for (i in 0 until count) {
         val angle = i * offsetAngle + startAngle
-        val bullet = Bullet(x + cos(angle) * radius, y + sin(angle) * radius, speed, angle, data, color = color)
+        val bullet = Bullet(
+            x + cos(angle) * radius, y + sin(angle) * radius,
+            speed, angle, data, color = color, delay = delay,
+        )
         addBullet(bullet)
         ret.addBullet(bullet)
     }
@@ -112,11 +118,15 @@ fun ring(
     progression: IntProgression,
     speed: Float = 0f,
     color: Color = Color.WHITE,
+    delay: Int = 0,
 ): BulletGroup {
     val ret = BulletGroup()
     progression.forEach {
         val angle = it.toFloat()
-        val bullet = Bullet(x + cos(angle) * radius, y + sin(angle) * radius, speed, angle, data, color = color)
+        val bullet = Bullet(
+            x + cos(angle) * radius, y + sin(angle) * radius,
+            speed, angle, data, color = color, delay = delay,
+        )
         addBullet(bullet)
         ret.addBullet(bullet)
     }

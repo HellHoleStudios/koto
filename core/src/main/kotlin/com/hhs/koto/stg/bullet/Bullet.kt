@@ -28,6 +28,7 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.*
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
@@ -45,6 +46,7 @@ open class Bullet(
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
+    val delay: Int = 0,
 ) : Entity, Drawable, Bounded {
     var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
@@ -104,8 +106,10 @@ open class Bullet(
     }
 
     override fun tick() {
-        x += deltaX
-        y += deltaY
+        if (t >= delay) {
+            x += deltaX
+            y += deltaY
+        }
         t++
     }
 
@@ -118,36 +122,59 @@ open class Bullet(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
-            val texture = data.texture.getFrame(t)
             var tmpX = x
             var tmpY = y
             if (subFrameTime != 0f) {
                 tmpX += deltaX * subFrameTime
                 tmpY += deltaY * subFrameTime
             }
+            val texture = data.texture.getFrame(t)
             tmpColor.set(batch.color)
-            batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
-            batch.setBlendFunction(data.blending.first, data.blending.second)
-            if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
+            if (t >= delay) {
+                batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
+                batch.setBlendFunction(data.blending.first, data.blending.second)
+                if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
+                    batch.draw(
+                        texture,
+                        tmpX - data.originX,
+                        tmpY - data.originY,
+                        data.originX,
+                        data.originY,
+                        texture.regionWidth.toFloat(),
+                        texture.regionHeight.toFloat(),
+                        scaleX,
+                        scaleY,
+                        rotation,
+                    )
+                } else {
+                    batch.draw(
+                        texture,
+                        tmpX - data.originX,
+                        tmpY - data.originY,
+                        texture.regionWidth.toFloat(),
+                        texture.regionHeight.toFloat(),
+                    )
+                }
+            } else {
+                val scaleFactor = Interpolation.linear.apply(2f, 1f, t.toFloat() / delay)
+                batch.setColor(
+                    data.delayColor.r,
+                    data.delayColor.g,
+                    data.delayColor.b,
+                    data.delayColor.a * parentAlpha,
+                )
+                batch.setBlendFunction(data.delayBlending.first, data.delayBlending.second)
                 batch.draw(
-                    texture,
+                    data.delayTexture,
                     tmpX - data.originX,
                     tmpY - data.originY,
                     data.originX,
                     data.originY,
                     texture.regionWidth.toFloat(),
                     texture.regionHeight.toFloat(),
-                    scaleX,
-                    scaleY,
+                    scaleX * scaleFactor,
+                    scaleY * scaleFactor,
                     rotation,
-                )
-            } else {
-                batch.draw(
-                    texture,
-                    tmpX - data.originX,
-                    tmpY - data.originY,
-                    texture.regionWidth.toFloat(),
-                    texture.regionHeight.toFloat(),
                 )
             }
             batch.color = tmpColor

@@ -125,7 +125,7 @@ open class BasicEnemy(
         }
     }
 
-    open fun death() {
+    override fun death() {
         SE.play("enemydead")
         ringCloud(x, y, powerCount, bulletCollision.radius) { x, y ->
             addItem(PowerItem(x, y))
