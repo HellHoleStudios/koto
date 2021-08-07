@@ -40,11 +40,14 @@ open class SpriteDrawable(
     var speed: Float,
     scaleX: Float,
     scaleY: Float,
+    width: Float,
+    height: Float,
     rotation: Float,
     color: Color = Color.WHITE,
 ) : Drawable, Bounded {
     protected val sprite = Sprite(texture).apply {
         setOriginBasedPosition(x, y)
+        setSize(width, height)
         setScale(scaleX, scaleY)
         setColor(color)
         setRotation(rotation)

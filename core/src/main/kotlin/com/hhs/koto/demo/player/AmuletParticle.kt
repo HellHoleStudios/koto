@@ -25,27 +25,38 @@
 
 package com.hhs.koto.demo.player
 
-import com.hhs.koto.stg.Enemy
-import com.hhs.koto.stg.addParticle
-import com.hhs.koto.stg.bullet.PlayerBullet
-import com.hhs.koto.util.B
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.stg.SpriteDrawable
+import com.hhs.koto.util.alpha
+import com.hhs.koto.util.ensureBlendFunction
+import com.hhs.koto.util.getRegion
 
-class HomingAmulet(
+class AmuletParticle(
     x: Float,
     y: Float,
-    damage: Float,
-) : PlayerBullet(
+    val duration: Int = 10,
+) : SpriteDrawable(
+    getRegion("reimu_amulet_particle.png"),
     x,
     y,
-    damage,
-    1,
-    20f,
+    0f,
+    0f,
+    1f,
+    1f,
+    16f,
+    16f,
     90f,
-    B["PLAYER_REIMU_STANDARD"],
-    rotation = 90f,
 ) {
-    override fun hit(enemy: Enemy) {
-        super.hit(enemy)
-        addParticle(AmuletParticle(x, y))
+    override fun tick() {
+        super.tick()
+        sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))
+        if (t >= duration) kill()
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        batch.ensureBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
+        super.draw(batch, parentAlpha, subFrameTime)
+        batch.ensureBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
     }
 }

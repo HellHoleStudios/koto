@@ -38,6 +38,8 @@ class GrazeParticle(x: Float, y: Float) : SpriteDrawable(
     4f,
     1f,
     1f,
+    8f,
+    8f,
     0f,
     Color(1f, 1f, 1f, 0.8f),
 ) {

@@ -49,11 +49,12 @@ class Explosion(
     0f,
     startSizeX,
     startSizeY,
+    1f,
+    1f,
     rotation,
     color,
 ) {
     init {
-        sprite.setSize(1f, 1f)
         sprite.setOriginCenter()
     }
 
