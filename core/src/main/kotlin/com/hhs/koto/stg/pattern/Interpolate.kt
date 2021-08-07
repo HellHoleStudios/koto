@@ -25,26 +25,26 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.task.Task
+import com.badlogic.gdx.math.Interpolation
+import com.hhs.koto.stg.addTask
 
-abstract class TemporalPattern(val duration: Int = Int.MAX_VALUE) : Task {
-    var t: Int = 0
-    override var alive: Boolean = true
-
-    abstract fun action()
-
-    override fun tick() {
-        if (!alive) return
-        t++
-        if (t >= duration) {
-            alive = false
-        } else {
-            action()
-        }
-    }
-
-    override fun kill(): Boolean {
-        alive = false
-        return true
+class Interpolate(
+    val start: Float,
+    val end: Float,
+    duration: Int,
+    val interpolation: Interpolation = Interpolation.linear,
+    val action: (Float) -> Unit,
+) : TemporalPattern(duration) {
+    override fun action() {
+        action(interpolation.apply(start, end, t.toFloat() / duration))
     }
 }
+
+fun interpolate(
+    start: Float,
+    end: Float,
+    duration: Int,
+    interpolation: Interpolation = Interpolation.linear,
+    action: (Float) -> Unit,
+): Interpolate =
+    addTask(Interpolate(start, end, duration, interpolation, action))

@@ -81,8 +81,7 @@ class ScoreParticle(
         val baseX = x - boundingWidth / 2
         val baseY = y - boundingHeight / 2
         tmpColor.set(batch.color)
-        batch.color = color
-        batch.color.a *= parentAlpha
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         for (i in 0 until digits.size) {
             val stage = getStage(i)
             if (stage != 3) {

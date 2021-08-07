@@ -34,6 +34,7 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
     override val x: Float = 0f
     override val y: Float = 0f
     override var alive: Boolean = true
+    var alpha: Float = 1f
 
     val drawables = GdxArray<Drawable>()
 
@@ -53,7 +54,7 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         for (i in 0 until drawables.size) {
-            drawables[i].draw(batch, parentAlpha, subFrameTime)
+            drawables[i].draw(batch, parentAlpha * alpha, subFrameTime)
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
     }

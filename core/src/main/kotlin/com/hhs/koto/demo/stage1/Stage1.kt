@@ -28,6 +28,7 @@ package com.hhs.koto.demo.stage1
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.background.TileBackground
+import com.hhs.koto.stg.pattern.Interpolate
 import com.hhs.koto.stg.task.RunnableTask
 import com.hhs.koto.stg.task.SequenceTask
 import com.hhs.koto.stg.task.StageBuilder
@@ -81,6 +82,7 @@ class Stage1 : StageBuilder {
                 )
             )
         },
+        Interpolate(0f, 1f, 60) { game.background.alpha = it },
         TestSpell().build(),
     )
 }

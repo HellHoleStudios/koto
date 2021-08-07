@@ -75,7 +75,7 @@ class TileBackground(
         }
         val endIndexY: Int = ceil((height - tmpOffsetY) / tileHeight)
         tmpColor.set(batch.color)
-        batch.color = color
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         for (xIndex in startIndexX until endIndexX) {
             for (yIndex in startIndexY until endIndexY) {
                 batch.draw(

@@ -44,6 +44,7 @@ open class OptimizedLayer<T : Drawable>(
         protected set
     var blankCount: Int = 0
         protected set
+    var alpha: Float = 1f
     override var alive: Boolean = true
 
     override fun tick() {
@@ -105,7 +106,7 @@ open class OptimizedLayer<T : Drawable>(
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         for (i in 0 until drawables.size) {
             if (drawables[i] != null) {
-                drawables[i].draw(batch, parentAlpha, subFrameTime)
+                drawables[i].draw(batch, parentAlpha * alpha, subFrameTime)
             }
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)

@@ -100,8 +100,7 @@ open class BasicPlayer(
         game.normalBatch.begin()
 
         tmpColor.set(game.normalBatch.color)
-        game.normalBatch.color = color
-        game.normalBatch.color.a *= parentAlpha
+        game.normalBatch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
 
         val tmpX: Float = if (playerState == PlayerState.RESPAWNING) {
             Interpolation.sine.apply(spawnX, spawnX, respawnAnimationPercentage)

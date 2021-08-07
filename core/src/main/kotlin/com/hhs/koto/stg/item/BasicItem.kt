@@ -113,8 +113,7 @@ open class BasicItem(
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
             tmpColor.set(batch.color)
-            batch.color = color
-            batch.color.a *= parentAlpha
+            batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
             var tmpX = x
             var tmpY = y
             if (subFrameTime != 0f) {

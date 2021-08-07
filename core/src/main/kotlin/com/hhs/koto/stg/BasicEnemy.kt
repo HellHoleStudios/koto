@@ -67,8 +67,7 @@ open class BasicEnemy(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         tmpColor.set(batch.color)
-        batch.color = color
-        batch.color.a *= parentAlpha
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
 
         val tmpScaleX = if (x - oldX < 0) {
             -scaleX

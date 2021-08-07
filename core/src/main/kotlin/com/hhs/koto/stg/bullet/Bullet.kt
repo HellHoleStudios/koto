@@ -126,8 +126,7 @@ open class Bullet(
                 tmpY += deltaY * subFrameTime
             }
             tmpColor.set(batch.color)
-            batch.color = color
-            batch.color.a *= parentAlpha
+            batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
             batch.setBlendFunction(data.blending.first, data.blending.second)
             if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
                 batch.draw(
