@@ -31,7 +31,6 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.crashinvaders.vfx.VfxManager
 import com.crashinvaders.vfx.effects.ChainVfxEffect
-import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.HSVColorAction
 import ktx.collections.GdxSet
 import ktx.graphics.copy
@@ -62,11 +61,8 @@ inline var Sprite.alpha: Float
         this.setAlpha(value)
     }
 
-fun darken(color: Color, factor: Float = 0.5f): Color = if (Config.useHSVShader) {
+fun darken(color: Color, factor: Float = 0.5f): Color =
     color.cpy().mul(1.0f, 1.0f, factor, 1.0f)
-} else {
-    color.cpy().mul(factor, factor, factor, 1.0f)
-}
 
 private val tmpHSVArray = FloatArray(3)
 fun Color.getHue(): Float {

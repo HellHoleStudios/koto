@@ -78,19 +78,14 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         Config.UIFont = bundle["font.ui"]
         Config.UIFontSmall = bundle["font.uiSmall"]
 
-        if (Config.useHSVShader) {
-            batch = SpriteBatch(
-                1000,
-                ShaderProgram(
-                    Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
-                    A["shader/koto_hsv.frag"],
-                ),
-            )
-            normalBatch = SpriteBatch()
-        } else {
-            batch = SpriteBatch()
-            normalBatch = batch
-        }
+        batch = SpriteBatch(
+            1000,
+            ShaderProgram(
+                Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
+                A["shader/koto_hsv.frag"],
+            ),
+        )
+        normalBatch = SpriteBatch()
 
         fpsCounter = WindowedMean(10)
         viewport = ScalingViewport(Config.windowScaling, Config.screenWidth, Config.screenHeight)
@@ -192,7 +187,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         BGM.dispose()
         disposeA()
         screens.safeValues().forEach { it.dispose() }
-        if (Config.useHSVShader) batch.shader.dispose()
+        batch.shader.dispose()
     }
 
     fun setScreen(name: String?) {

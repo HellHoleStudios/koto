@@ -58,22 +58,14 @@ class KotoGame : Disposable {
         position.x = Config.w / 2f - Config.originX
         position.y = Config.h / 2f - Config.originY
     })
-    val batch = if (Config.useHSVShader) {
-        SpriteBatch(
-            1000,
-            ShaderProgram(
-                Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
-                A["shader/koto_hsv.frag"],
-            ),
-        )
-    } else {
-        SpriteBatch()
-    }
-    val normalBatch = if (Config.useHSVShader) {
-        SpriteBatch()
-    } else {
-        batch
-    }
+    val batch = SpriteBatch(
+        1000,
+        ShaderProgram(
+            Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
+            A["shader/koto_hsv.frag"],
+        ),
+    )
+    val normalBatch = SpriteBatch()
     val background = DrawableLayer()
     val st = DrawableLayer().apply {
         addDrawable(VfxOutputDrawable(backgroundVfx, -Config.originX, -Config.originY, Config.w, Config.h))
@@ -200,7 +192,7 @@ class KotoGame : Disposable {
         vfx.dispose()
         postVfx.dispose()
         disposeRegisteredEffects()
-        if (Config.useHSVShader) batch.shader.dispose()
+        batch.shader.dispose()
         logger.info("Game instance disposed.")
     }
 }

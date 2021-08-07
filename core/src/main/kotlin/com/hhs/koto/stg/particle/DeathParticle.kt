@@ -41,7 +41,7 @@ class DeathParticle(
     val size: Float = 16f,
     rotation: Float = 0f,
     val duration: Int = 20,
-    color: Color = Color(0f, 1f, 1f, 1f).toHSVColor(),
+    color: Color = Color.BLACK.toHSVColor(),
     private val additive: Boolean = false,
 ) : SpriteDrawable(
     getRegion("square_particle.png"),

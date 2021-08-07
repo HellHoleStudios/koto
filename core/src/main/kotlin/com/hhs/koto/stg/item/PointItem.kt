@@ -32,6 +32,7 @@ import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.toHSVColor
 
 class PointItem(
     x: Float,
@@ -68,9 +69,9 @@ class PointItem(
                 y + random(-10f, 10f),
                 amount,
                 if (amount == game.maxScore) {
-                    Color.YELLOW
+                    Color.YELLOW.toHSVColor()
                 } else {
-                    Color.WHITE
+                    Color.WHITE.toHSVColor()
                 },
             )
         )

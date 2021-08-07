@@ -28,7 +28,6 @@ package com.hhs.koto.stg.particle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.app.Config
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
@@ -38,7 +37,7 @@ class ScoreParticle(
     override var x: Float,
     override var y: Float,
     score: Long,
-    var color: Color = Color.WHITE,
+    var color: Color = Color.WHITE.toHSVColor(),
 ) : Drawable, Bounded {
     override val boundingWidth: Float
     override val boundingHeight: Float = 9f
@@ -51,12 +50,7 @@ class ScoreParticle(
     protected var t: Int = 0
 
     init {
-        if (Config.useHSVShader) {
-            atlas = A["score_particle_hsv.atlas"]
-            color = color.toHSVColor()
-        } else {
-            atlas = A["score_particle.atlas"]
-        }
+        atlas = A["score_particle_hsv.atlas"]
         glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth
         val str = score.toString()
         for (i in str) {
