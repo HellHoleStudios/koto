@@ -46,7 +46,7 @@ open class Bullet(
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
     var color: Color = Color.WHITE,
-    val delay: Int = 0,
+    val delay: Int = 8,
 ) : Entity, Drawable, Bounded {
     var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
@@ -156,13 +156,11 @@ open class Bullet(
                     )
                 }
             } else {
-                val scaleFactor = Interpolation.linear.apply(2f, 1f, t.toFloat() / delay)
-                batch.setColor(
-                    data.delayColor.r,
-                    data.delayColor.g,
-                    data.delayColor.b,
-                    data.delayColor.a * parentAlpha,
-                )
+                val scaleFactor = Interpolation.linear.apply(2f, 0.8f, t.toFloat() / delay)
+                val delayColor = data.delayColor.cpy()
+                delayColor.a *= parentAlpha
+                delayColor.a *= Interpolation.linear.apply(0.2f, 1f, t.toFloat() / delay)
+                batch.color = delayColor
                 batch.setBlendFunction(data.delayBlending.first, data.delayBlending.second)
                 batch.draw(
                     data.delayTexture,

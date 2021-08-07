@@ -77,7 +77,6 @@ class TestSpell : SpellBuilder {
                                 playerX,
                                 playerY,
                                 3f,
-                                delay = 10
                             ).angle += it * 36f
                         }
                         wait(10)

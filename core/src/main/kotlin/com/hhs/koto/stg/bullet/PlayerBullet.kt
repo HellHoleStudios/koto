@@ -40,7 +40,8 @@ open class PlayerBullet(
     scaleY: Float = 1f,
     rotation: Float = 0f,
     color: Color = Color.WHITE,
-) : Bullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color) {
+    delay: Int = 0,
+) : Bullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color, delay) {
     open fun hit(enemy: Enemy) {
         enemy.hp -= damage
         penetration--

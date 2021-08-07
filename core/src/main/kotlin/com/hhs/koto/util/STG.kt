@@ -69,7 +69,7 @@ fun create(
     angle: Float = 0f,
     speed: Float = 0f,
     color: Color = Color.WHITE,
-    delay: Int = 0,
+    delay: Int = 8,
 ): Bullet =
     addBullet(Bullet(x, y, speed, angle, data, color = color, delay = delay))
 
@@ -81,7 +81,7 @@ fun towards(
     targetY: Float,
     speed: Float = 0f,
     color: Color = Color.WHITE,
-    delay: Int = 0,
+    delay: Int = 8,
 ): Bullet =
     addBullet(Bullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color, delay = delay))
 
@@ -95,7 +95,7 @@ fun ring(
     startAngle: Float = 0f,
     speed: Float = 0f,
     color: Color = Color.WHITE,
-    delay: Int = 0,
+    delay: Int = 8,
 ): BulletGroup {
     val ret = BulletGroup()
     for (i in 0 until count) {
@@ -118,7 +118,7 @@ fun ring(
     progression: IntProgression,
     speed: Float = 0f,
     color: Color = Color.WHITE,
-    delay: Int = 0,
+    delay: Int = 8,
 ): BulletGroup {
     val ret = BulletGroup()
     progression.forEach {
