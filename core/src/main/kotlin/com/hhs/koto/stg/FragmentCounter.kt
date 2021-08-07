@@ -25,12 +25,14 @@
 
 package com.hhs.koto.stg
 
+import com.hhs.koto.util.safeMod
+
 class FragmentCounter(var fragmentFactor: Int = 3) {
     var completedCount: Int = 0
     var fragmentCount: Int = 0
 
     fun update() {
-        val remainder = (fragmentCount % fragmentFactor + fragmentFactor) % fragmentFactor
+        val remainder = safeMod(fragmentCount, fragmentFactor)
         val quotient = (fragmentCount - remainder) / fragmentFactor
         completedCount -= quotient
         fragmentCount = remainder

@@ -89,7 +89,7 @@ open class Bullet(
     }
 
     fun calculateAngleSpeed() {
-        angle = atan2(deltaX, deltaY)
+        angle = atan2(deltaY, deltaX)
         speed = len(deltaX, deltaY)
     }
 
@@ -128,7 +128,7 @@ open class Bullet(
             tmpColor.set(batch.color)
             batch.color = color
             batch.color.a *= parentAlpha
-            batch.ensureBlendFunction(data.blending.first, data.blending.second)
+            batch.setBlendFunction(data.blending.first, data.blending.second)
             if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
                 batch.draw(
                     texture,

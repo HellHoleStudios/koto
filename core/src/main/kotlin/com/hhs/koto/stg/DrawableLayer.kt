@@ -27,7 +27,6 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.hhs.koto.util.ensureBlendFunction
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
@@ -56,7 +55,7 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
         for (i in 0 until drawables.size) {
             drawables[i].draw(batch, parentAlpha, subFrameTime)
         }
-        batch.ensureBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
     }
 
     override fun tick() {

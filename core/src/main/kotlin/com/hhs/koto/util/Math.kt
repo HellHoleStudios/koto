@@ -86,7 +86,7 @@ fun dist(x1: Float, y1: Float, x2: Float, y2: Float): Float =
 fun dist2(x1: Float, y1: Float, x2: Float, y2: Float): Float =
     sqr(x1 - x2) + sqr(y1 - y2)
 
-fun atan2(x: Float, y: Float): Float =
+fun atan2(y: Float, x: Float): Float =
     MathUtils.atan2(y, x) * MathUtils.radiansToDegrees
 
 fun atan2(x1: Float, y1: Float, x2: Float, y2: Float): Float =

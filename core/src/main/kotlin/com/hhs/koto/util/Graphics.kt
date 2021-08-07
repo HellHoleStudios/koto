@@ -120,13 +120,3 @@ fun disposeRegisteredEffects() {
         it.dispose()
     }
 }
-
-fun Batch.ensureBlendFunction(srcFunc: Int, dstFunc: Int, srcFuncAlpha: Int = srcFunc, dstFuncAlpha: Int = dstFunc) {
-    if (blendSrcFunc != srcFunc
-        || blendSrcFuncAlpha != srcFuncAlpha
-        || blendDstFunc != dstFunc
-        || blendDstFuncAlpha != dstFuncAlpha
-    ) {
-        setBlendFunctionSeparate(srcFunc, dstFunc, srcFuncAlpha, dstFuncAlpha)
-    }
-}
