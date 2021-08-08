@@ -66,11 +66,6 @@ class ScoreParticle(
         if (t >= 40) kill()
     }
 
-    override fun kill(): Boolean {
-        alive = false
-        return true
-    }
-
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         val baseX = x - boundingWidth / 2
         val baseY = y - boundingHeight / 2

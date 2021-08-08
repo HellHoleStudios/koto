@@ -78,24 +78,42 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     }
 }
 
-class BulletData(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData) {
-    var id: Int = raw.id!!
-    var name: String = raw.name!!
-    var blending: Pair<Int, Int> = getBlending(raw.blending)
-    var texture: BulletTexture = BulletTexture(parent.atlas, name, raw.frames)
-    var originX = raw.originX ?: (texture.maxWidth / 2f)
-    var originY = raw.originY ?: (texture.maxWidth / 2f)
-    var delayTexture: TextureRegion = parent.atlas.findRegion(raw.delaySrc!!)
-    var delayColor: Color = Color.valueOf(raw.delayColor!!).toHSVColor()
-    var delayBlending: Pair<Int, Int> = getBlending(raw.delayBlending ?: "ADD")
-    var spinVelocity = raw.spinVelocity
-    var collision: CollisionShape = when (raw.collisionMethod) {
-        "none" -> NoCollision()
-        "circle" -> CircleCollision(raw.collisionData!![0])
-        "rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
-        else -> CircleCollision(raw.collisionData!![0]) // use circle as default
+data class BulletData(
+    var id: Int,
+    var name: String,
+    var blending: Pair<Int, Int>,
+    var texture: BulletTexture,
+    var originX: Float,
+    var originY: Float,
+    var delayTexture: TextureRegion,
+    var delayColor: Color,
+    var delayBlending: Pair<Int, Int>,
+    var spinVelocity: Float,
+    var collision: CollisionShape,
+    var rotation: Float,
+) {
+    constructor(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData) : this(
+        raw.id!!,
+        raw.name!!,
+        getBlending(raw.blending),
+        BulletTexture(parent.atlas, raw.name, raw.frames),
+        0f,
+        0f,
+        parent.atlas.findRegion(raw.delaySrc!!),
+        Color.valueOf(raw.delayColor!!).toHSVColor(),
+        getBlending(raw.delayBlending ?: "ADD"),
+        raw.spinVelocity,
+        when (raw.collisionMethod) {
+            "none" -> NoCollision()
+            "circle" -> CircleCollision(raw.collisionData!![0])
+            "rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
+            else -> CircleCollision(raw.collisionData!![0]) // use circle as default
+        },
+        raw.rotation,
+    ) {
+        originX = raw.originX ?: (texture.maxWidth / 2f)
+        originY = raw.originY ?: (texture.maxWidth / 2f)
     }
-    var rotation = raw.rotation
 }
 
 private fun getBlending(blendingString: String): Pair<Int, Int> = when (blendingString) {

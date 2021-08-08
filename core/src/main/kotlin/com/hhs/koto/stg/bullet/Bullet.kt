@@ -26,156 +26,16 @@
 package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.*
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.util.*
+import com.hhs.koto.stg.Drawable
+import com.hhs.koto.stg.Entity
 import kotlinx.coroutines.CoroutineScope
-import ktx.collections.GdxArray
 
-open class Bullet(
-    override var x: Float,
-    override var y: Float,
-    speed: Float = 0f,
-    angle: Float = 0f,
-    val data: BulletData,
-    var scaleX: Float = 1f,
-    var scaleY: Float = 1f,
-    var rotation: Float = 0f,
-    var color: Color = Color.WHITE,
-    val delay: Int = 8,
-) : Entity, Drawable, Bounded {
-    var attachedTasks: GdxArray<Task>? = null
-    override val collision: CollisionShape
-        get() = data.collision
-
-    var speed: Float = speed
-        set(value) {
-            field = value
-            calculateDelta()
-        }
-    var angle: Float = angle
-        set(value) {
-            field = value
-            calculateDelta()
-        }
-
-    val sprite = Sprite()
-    var deltaX: Float = 0f
-    var deltaY: Float = 0f
-    override var alive: Boolean = true
-
-    var grazeCounter: Int = 0
-    var t: Int = 0
-    override val boundingWidth
-        get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
-    override val boundingHeight
-        get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
-
-    init {
-        calculateDelta()
-    }
-
-    fun setDeltas(deltaX: Float, deltaY: Float) {
-        this.deltaX = deltaX
-        this.deltaY = deltaY
-        calculateAngleSpeed()
-    }
-
-    fun calculateDelta() {
-        deltaX = cos(angle) * speed
-        deltaY = sin(angle) * speed
-    }
-
-    fun calculateAngleSpeed() {
-        angle = atan2(deltaY, deltaX)
-        speed = len(deltaX, deltaY)
-    }
-
-    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): Bullet {
-        val task = CoroutineTask(index, this, block)
-        addTask(task)
-        if (attachedTasks == null) {
-            attachedTasks = GdxArray()
-        }
-        attachedTasks!!.add(task)
-        return this
-    }
-
-    override fun tick() {
-        if (t >= delay) {
-            x += deltaX
-            y += deltaY
-        }
-        t++
-    }
-
-    override fun kill(): Boolean {
-        alive = false
-        attachedTasks?.forEach { it.kill() }
-        // TODO particle&animation
-        return true
-    }
-
-    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
-            var tmpX = x
-            var tmpY = y
-            if (subFrameTime != 0f) {
-                tmpX += deltaX * subFrameTime
-                tmpY += deltaY * subFrameTime
-            }
-            val texture = data.texture.getFrame(t)
-            tmpColor.set(batch.color)
-            if (t >= delay) {
-                batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
-                batch.setBlendFunction(data.blending.first, data.blending.second)
-                if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
-                    batch.draw(
-                        texture,
-                        tmpX - data.originX,
-                        tmpY - data.originY,
-                        data.originX,
-                        data.originY,
-                        texture.regionWidth.toFloat(),
-                        texture.regionHeight.toFloat(),
-                        scaleX,
-                        scaleY,
-                        rotation,
-                    )
-                } else {
-                    batch.draw(
-                        texture,
-                        tmpX - data.originX,
-                        tmpY - data.originY,
-                        texture.regionWidth.toFloat(),
-                        texture.regionHeight.toFloat(),
-                    )
-                }
-            } else {
-                val scaleFactor = Interpolation.linear.apply(2f, 0.8f, t.toFloat() / delay)
-                val delayColor = data.delayColor.cpy()
-                delayColor.a *= parentAlpha
-                delayColor.a *= Interpolation.linear.apply(0.2f, 1f, t.toFloat() / delay)
-                batch.color = delayColor
-                batch.setBlendFunction(data.delayBlending.first, data.delayBlending.second)
-                batch.draw(
-                    data.delayTexture,
-                    tmpX - data.originX,
-                    tmpY - data.originY,
-                    data.originX,
-                    data.originY,
-                    texture.regionWidth.toFloat(),
-                    texture.regionHeight.toFloat(),
-                    scaleX * scaleFactor,
-                    scaleY * scaleFactor,
-                    rotation,
-                )
-            }
-            batch.color = tmpColor
-        }
-    }
+interface Bullet : Entity, Drawable {
+    var angle: Float
+    var speed: Float
+    var rotation: Float
+    var color: Color
+    fun onGraze()
+    fun task(index: Int, block: suspend CoroutineScope.() -> Unit): Bullet
+    fun task(block: suspend CoroutineScope.() -> Unit): Bullet = task(0, block)
 }

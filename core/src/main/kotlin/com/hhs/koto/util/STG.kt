@@ -30,7 +30,7 @@ import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.addBullet
-import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.BasicBullet
 import com.hhs.koto.stg.bullet.BulletData
 import com.hhs.koto.stg.bullet.BulletGroup
 import com.hhs.koto.stg.bullet.ShotSheet
@@ -70,8 +70,8 @@ fun create(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): Bullet =
-    addBullet(Bullet(x, y, speed, angle, data, color = color, delay = delay))
+): BasicBullet =
+    addBullet(BasicBullet(x, y, speed, angle, data, color = color, delay = delay))
 
 fun towards(
     data: BulletData,
@@ -82,8 +82,8 @@ fun towards(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): Bullet =
-    addBullet(Bullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color, delay = delay))
+): BasicBullet =
+    addBullet(BasicBullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color, delay = delay))
 
 fun ring(
     data: BulletData,
@@ -100,7 +100,7 @@ fun ring(
     val ret = BulletGroup()
     for (i in 0 until count) {
         val angle = i * offsetAngle + startAngle
-        val bullet = Bullet(
+        val bullet = BasicBullet(
             x + cos(angle) * radius, y + sin(angle) * radius,
             speed, angle, data, color = color, delay = delay,
         )
@@ -123,7 +123,7 @@ fun ring(
     val ret = BulletGroup()
     progression.forEach {
         val angle = it.toFloat()
-        val bullet = Bullet(
+        val bullet = BasicBullet(
             x + cos(angle) * radius, y + sin(angle) * radius,
             speed, angle, data, color = color, delay = delay,
         )

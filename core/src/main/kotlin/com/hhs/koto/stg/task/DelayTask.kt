@@ -37,9 +37,4 @@ class DelayTask(val duration: Int) : Task {
             alive = false
         }
     }
-
-    override fun kill(): Boolean {
-        alive = false
-        return true
-    }
 }

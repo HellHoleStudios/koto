@@ -35,7 +35,6 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.stg.Collision.collide
 import com.hhs.koto.stg.particle.DeathParticle
 import com.hhs.koto.stg.particle.Explosion
-import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.stg.task.frame
 import com.hhs.koto.stg.task.task
 import com.hhs.koto.stg.task.wait
@@ -174,12 +173,7 @@ open class BasicPlayer(
             }
             game.bullets.forEach {
                 if (collide(it.collision, it.x, it.y, grazeCollision, x, y)) {
-                    if (it.grazeCounter <= 0) {
-                        it.grazeCounter++
-                        game.graze++
-                        SE.play("graze")
-                        addParticle(GrazeParticle(x, y))
-                    }
+                    it.onGraze()
                 }
             }
         }

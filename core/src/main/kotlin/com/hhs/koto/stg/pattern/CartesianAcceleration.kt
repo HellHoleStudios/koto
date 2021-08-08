@@ -28,6 +28,10 @@ package com.hhs.koto.stg.pattern
 import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
+import com.hhs.koto.util.atan2
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.len
+import com.hhs.koto.util.sin
 
 open class CartesianAcceleration(
     val bullet: Bullet,
@@ -36,7 +40,10 @@ open class CartesianAcceleration(
     duration: Int = Int.MAX_VALUE
 ) : TemporalPattern(duration) {
     override fun action() {
-        bullet.setDeltas(bullet.deltaX + deltaX, bullet.deltaY + deltaY)
+        val deltaX = cos(bullet.angle) * bullet.speed + deltaX
+        val deltaY = sin(bullet.angle) * bullet.speed + deltaY
+        bullet.angle = atan2(deltaY, deltaX)
+        bullet.speed = len(deltaX, deltaY)
     }
 }
 

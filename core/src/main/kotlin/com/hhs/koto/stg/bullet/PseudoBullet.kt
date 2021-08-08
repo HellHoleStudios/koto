@@ -23,53 +23,58 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.CollisionShape
+import com.hhs.koto.stg.NoCollision
+import com.hhs.koto.stg.addTask
+import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.cos
 import com.hhs.koto.util.sin
+import kotlinx.coroutines.CoroutineScope
+import ktx.collections.GdxArray
 
-open class SpriteDrawable(
-    texture: TextureRegion,
+class PseudoBullet(
     override var x: Float,
     override var y: Float,
-    var angle: Float,
-    var speed: Float,
-    scaleX: Float,
-    scaleY: Float,
-    width: Float,
-    height: Float,
-    rotation: Float,
-    color: Color = Color.WHITE,
-) : Drawable, Bounded {
-    protected val sprite = Sprite(texture).apply {
-        setOriginBasedPosition(x, y)
-        setSize(width, height)
-        setScale(scaleX, scaleY)
-        setColor(color)
-        setRotation(rotation)
-    }
-    protected var t: Int = 0
-    override val boundingWidth: Float
-        get() = sprite.width * sprite.scaleX + sprite.height * sprite.scaleY
-    override val boundingHeight: Float
-        get() = sprite.width * sprite.scaleX + sprite.height * sprite.scaleY
-    override var alive: Boolean = true
+    override var speed: Float = 0f,
+    override var angle: Float = 0f,
+) : Bullet {
+    var attachedTasks: GdxArray<Task>? = null
+    override var rotation: Float = 0f
+    override var color: Color = Color.WHITE
+    var t: Int = 0
 
-    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        sprite.setOriginBasedPosition(
-            x + subFrameTime * cos(angle) * speed,
-            y + subFrameTime * cos(angle) * speed,
-        )
-        sprite.draw(batch, parentAlpha)
-    }
+    override fun onGraze() = Unit
+
+    override val collision: CollisionShape = NoCollision()
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) = Unit
 
     override fun tick() {
-        t++
         x += cos(angle) * speed
         y += sin(angle) * speed
+        t++
+    }
+
+    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): PseudoBullet {
+        val task = CoroutineTask(index, this, block)
+        addTask(task)
+        if (attachedTasks == null) {
+            attachedTasks = GdxArray()
+        }
+        attachedTasks!!.add(task)
+        return this
+    }
+
+    override var alive: Boolean = true
+
+    override fun kill(): Boolean {
+        alive = false
+        attachedTasks?.forEach { it.kill() }
+        return true
     }
 }

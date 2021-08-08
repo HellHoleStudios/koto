@@ -32,6 +32,4 @@ class RunnableTask(val runnable: Runnable) : Task {
         runnable.run()
         alive = false
     }
-
-    override fun kill(): Boolean = true
 }

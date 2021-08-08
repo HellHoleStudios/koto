@@ -73,7 +73,7 @@ open class BasicItem(
             deltaY = sin(angle) * 8f
             if (dist(x, y, playerX, playerY) <= 5f) {
                 collected(collectPositionX!!, collectPositionY!!, autoCollected!!)
-                destroy()
+                kill()
             }
         } else {
             deltaY = (deltaY - gravity).coerceAtLeast(-maxSpeed)
@@ -91,10 +91,6 @@ open class BasicItem(
         }
         x += deltaX
         y += deltaY
-    }
-
-    fun destroy() {
-        alive = false
     }
 
     override fun collect(collectPositionX: Float, collectPositionY: Float, autoCollect: Boolean) {
