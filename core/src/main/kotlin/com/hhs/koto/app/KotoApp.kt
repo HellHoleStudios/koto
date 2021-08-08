@@ -110,7 +110,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("enemydead", "snd/se_enep00.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
-        B.defaultSheet = A[Config.defaultShotSheet]
+        B = A[Config.defaultShotSheet]
 
         // TODO variants
         GameBuilder.players["reimuA"] = { Reimu() }

@@ -52,7 +52,12 @@ open class BasicBullet(
     override var tint: Color = Color(0f, 1f, 1f, 1f),
     val delay: Int = 8,
 ) : Bullet, Bounded {
-    override val blending = data.blending
+    override val blending
+        get() = if (t >= delay) {
+            data.blending
+        } else {
+            data.delayBlending
+        }
     var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
         get() = data.collision

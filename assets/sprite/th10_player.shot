@@ -1,0 +1,38 @@
+{
+    "atlas": "th10_player.atlas",
+    "data": [
+        {
+            "id": 512,
+            "name": "reimu.standard",
+            "delayRegion": "reimu.standard",
+            "delayColor": "#ffffff",
+            "originX": 55,
+            "originY": 7,
+            "collisionData": [
+                6
+            ]
+        },
+        {
+            "id": 513,
+            "name": "reimu.needle.red",
+            "delayRegion": "reimu.needle.a.yellow",
+            "delayColor": "#ffffff",
+            "collisionMethod": "rectangle",
+            "collisionData": [
+                28,
+                8
+            ]
+        },
+        {
+            "id": 514,
+            "name": "reimu.needle.yellow",
+            "delayRegion": "reimu.needle.a.yellow",
+            "delayColor": "#ffffff",
+            "collisionMethod": "rectangle",
+            "collisionData": [
+                28,
+                8
+            ]
+        }
+    ]
+}

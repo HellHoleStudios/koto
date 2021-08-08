@@ -28,12 +28,13 @@ package com.hhs.koto.demo.player
 import com.hhs.koto.stg.Enemy
 import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.bullet.PlayerBullet
-import com.hhs.koto.util.B
+import com.hhs.koto.stg.bullet.ShotSheet
 
 class HomingAmulet(
     x: Float,
     y: Float,
     damage: Float,
+    shotSheet: ShotSheet,
 ) : PlayerBullet(
     x,
     y,
@@ -41,7 +42,7 @@ class HomingAmulet(
     1,
     20f,
     90f,
-    B["PLAYER_REIMU_STANDARD"],
+    shotSheet["reimu.standard"],
     rotation = 90f,
 ) {
     override fun hit(enemy: Enemy) {

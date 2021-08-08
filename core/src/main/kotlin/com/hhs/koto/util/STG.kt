@@ -34,17 +34,7 @@ import com.hhs.koto.stg.bullet.*
 
 lateinit var game: KotoGame
 
-object B {
-    lateinit var defaultSheet: ShotSheet
-
-    operator fun get(id: Int): BulletData {
-        return defaultSheet.findBullet(id)
-    }
-
-    operator fun get(name: String): BulletData {
-        return defaultSheet.findBullet(name)
-    }
-}
+lateinit var B: ShotSheet
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     if (x + rx < -Config.originX) return true

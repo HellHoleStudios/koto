@@ -30,23 +30,27 @@ import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.stg.AABBCollision
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.NoCollision
-import com.hhs.koto.util.*
+import com.hhs.koto.util.BlendingMode
+import com.hhs.koto.util.json
+import com.hhs.koto.util.safeIterator
+import com.hhs.koto.util.toHSVColor
 import ktx.collections.GdxMap
 import ktx.json.fromJson
 
 class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
-    var data = GdxMap<Int, BulletData>()
-    private var nameToId = GdxMap<String, Int>()
+    var ids = GdxMap<Int, BulletData>()
+    var names = GdxMap<String, BulletData>()
 
     init {
         for (i in raw.data.safeIterator()) {
             val tmp = BulletData.fromShotSheet(this, i)
-            data.put(tmp.id, tmp)
-            nameToId.put(tmp.name, tmp.id)
+            if (tmp.id != null) ids.put(tmp.id, tmp)
+            if (tmp.name != null) names.put(tmp.name, tmp)
         }
     }
 
@@ -57,26 +61,18 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
         raw,
     )
 
-    fun getId(name: String): Int {
-        val tmp = nameToId[name]
-        if (tmp == null) {
-            app.logger.error("Shot data of name\"$name\" not found!")
-        }
-        return tmp
+    operator fun get(id: Int): BulletData {
+        return ids[id] ?: throw GdxRuntimeException("bullet with id $id not found!")
     }
 
-    fun findBullet(id: Int): BulletData {
-        return data[id]
-    }
-
-    fun findBullet(name: String): BulletData {
-        return data[nameToId[name]]
+    operator fun get(name: String): BulletData {
+        return names[name] ?: throw GdxRuntimeException("bullet with name \"$name\" not found!")
     }
 }
 
 data class BulletData(
-    var id: Int,
-    var name: String,
+    var id: Int?,
+    var name: String?,
     var color: Color,
     var blending: BlendingMode,
     var texture: BulletTexture,
@@ -92,11 +88,11 @@ data class BulletData(
     companion object {
         fun fromShotSheet(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData): BulletData {
             val result = BulletData(
-                raw.id!!,
-                raw.name!!,
+                raw.id,
+                raw.name,
                 Color.valueOf(raw.color ?: "ff0000").toHSVColor(),
                 BlendingMode.forName(raw.blending),
-                BulletTexture(parent.atlas, raw.region!!, raw.frames),
+                BulletTexture(parent.atlas, raw.region ?: raw.name!!, raw.frames),
                 0f,
                 0f,
                 parent.atlas.findRegion(raw.delayRegion!!),
