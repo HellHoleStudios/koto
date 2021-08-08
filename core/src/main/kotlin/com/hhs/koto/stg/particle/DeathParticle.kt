@@ -26,9 +26,8 @@
 package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.SpriteDrawable
+import com.hhs.koto.util.BlendingMode
 import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.toHSVColor
@@ -42,7 +41,7 @@ class DeathParticle(
     rotation: Float = 0f,
     val duration: Int = 20,
     color: Color = Color.BLACK.toHSVColor(),
-    private val additive: Boolean = false,
+    additive: Boolean = false,
 ) : SpriteDrawable(
     getRegion("square_particle.png"),
     x,
@@ -56,6 +55,12 @@ class DeathParticle(
     rotation,
     color,
 ) {
+    override val blending: BlendingMode = if (additive) {
+        BlendingMode.ADD
+    } else {
+        BlendingMode.ALPHA
+    }
+
     init {
         sprite.setOriginCenter()
     }
@@ -66,15 +71,5 @@ class DeathParticle(
         sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))
         sprite.setScale((size * (1f - 1f / duration * t)).coerceAtLeast(0f))
         if (t >= duration) kill()
-    }
-
-    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (additive) {
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
-        }
-        super.draw(batch, parentAlpha, subFrameTime)
-        if (additive) {
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
-        }
     }
 }

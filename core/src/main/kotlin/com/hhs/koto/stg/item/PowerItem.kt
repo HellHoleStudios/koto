@@ -53,8 +53,8 @@ class PowerItem(
     scaleY = scaleY,
     color = color,
 ) {
-    override fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
-        super.collected(collectPositionX, collectPositionY, autoCollected)
+    override fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+        super.onCollected(collectPositionX, collectPositionY, autoCollected)
         if (game.power >= 4f) {
             game.score += 10000
             addParticle(

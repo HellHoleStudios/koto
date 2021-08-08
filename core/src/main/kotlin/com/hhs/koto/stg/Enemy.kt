@@ -27,5 +27,5 @@ package com.hhs.koto.stg
 
 interface Enemy : Drawable {
     var hp: Float
-    fun death()
+    fun onDeath()
 }

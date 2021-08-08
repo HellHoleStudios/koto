@@ -30,10 +30,7 @@ import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.addBullet
-import com.hhs.koto.stg.bullet.BasicBullet
-import com.hhs.koto.stg.bullet.BulletData
-import com.hhs.koto.stg.bullet.BulletGroup
-import com.hhs.koto.stg.bullet.ShotSheet
+import com.hhs.koto.stg.bullet.*
 
 lateinit var game: KotoGame
 
@@ -71,7 +68,13 @@ fun create(
     color: Color = Color.WHITE,
     delay: Int = 8,
 ): BasicBullet =
-    addBullet(BasicBullet(x, y, speed, angle, data, color = color, delay = delay))
+    addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
+
+fun <T : Bullet> T.setVelocity(angle: Float, speed: Float): T {
+    this.angle = angle
+    this.speed = speed
+    return this
+}
 
 fun towards(
     data: BulletData,
@@ -83,7 +86,12 @@ fun towards(
     color: Color = Color.WHITE,
     delay: Int = 8,
 ): BasicBullet =
-    addBullet(BasicBullet(x, y, speed, atan2(x, y, targetX, targetY), data, color = color, delay = delay))
+    addBullet(BasicBullet(x, y, speed, atan2(x, y, targetX, targetY), data, tint = color, delay = delay))
+
+fun <T : Bullet> T.towards(targetX: Float, targetY: Float): T {
+    angle = atan2(x, y, targetX, targetY)
+    return this
+}
 
 fun ring(
     data: BulletData,
@@ -102,7 +110,7 @@ fun ring(
         val angle = i * offsetAngle + startAngle
         val bullet = BasicBullet(
             x + cos(angle) * radius, y + sin(angle) * radius,
-            speed, angle, data, color = color, delay = delay,
+            speed, angle, data, tint = color, delay = delay,
         )
         addBullet(bullet)
         ret.addBullet(bullet)
@@ -125,12 +133,40 @@ fun ring(
         val angle = it.toFloat()
         val bullet = BasicBullet(
             x + cos(angle) * radius, y + sin(angle) * radius,
-            speed, angle, data, color = color, delay = delay,
+            speed, angle, data, tint = color, delay = delay,
         )
         addBullet(bullet)
         ret.addBullet(bullet)
     }
     return ret
+}
+
+inline fun ring(
+    x: Float,
+    y: Float,
+    radius: Float,
+    progression: IntProgression,
+    action: (Float, Float) -> Unit,
+) {
+    progression.forEach {
+        val angle = it.toFloat()
+        action(x + cos(angle) * radius, y + sin(angle) * radius)
+    }
+}
+
+inline fun ring(
+    x: Float,
+    y: Float,
+    radius: Float,
+    offsetAngle: Float,
+    count: Int,
+    startAngle: Float = 0f,
+    action: (Float, Float) -> Unit,
+) {
+    for (i in 0 until count) {
+        val angle = i * offsetAngle + startAngle
+        action(x + cos(angle) * radius, y + sin(angle) * radius)
+    }
 }
 
 inline fun ringCloud(

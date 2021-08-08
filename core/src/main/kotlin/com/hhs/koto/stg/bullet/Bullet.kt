@@ -34,7 +34,7 @@ interface Bullet : Entity, Drawable {
     var angle: Float
     var speed: Float
     var rotation: Float
-    var color: Color
+    var tint: Color
     fun onGraze()
     fun task(index: Int, block: suspend CoroutineScope.() -> Unit): Bullet
     fun task(block: suspend CoroutineScope.() -> Unit): Bullet = task(0, block)

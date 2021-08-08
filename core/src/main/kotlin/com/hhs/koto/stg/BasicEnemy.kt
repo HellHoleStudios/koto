@@ -112,7 +112,7 @@ open class BasicEnemy(
             game.player.playerState == PlayerState.NORMAL &&
             Collision.collide(game.player.hitCollision, playerX, playerY, playerCollision, x, y)
         ) {
-            game.player.hit()
+            game.player.onHit()
         }
         if ((x - oldX).absoluteValue < 0.1f) {
             texture.update(0)
@@ -121,11 +121,11 @@ open class BasicEnemy(
         }
         oldX = x
         if (hp <= 0) {
-            death()
+            onDeath()
         }
     }
 
-    override fun death() {
+    override fun onDeath() {
         SE.play("enemydead")
         ringCloud(x, y, powerCount, bulletCollision.radius) { x, y ->
             addItem(PowerItem(x, y))

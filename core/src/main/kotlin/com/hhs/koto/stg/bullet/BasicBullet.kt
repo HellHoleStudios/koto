@@ -49,9 +49,10 @@ open class BasicBullet(
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
     override var rotation: Float = 0f,
-    override var color: Color = Color.WHITE,
+    override var tint: Color = Color(0f, 1f, 1f, 1f),
     val delay: Int = 8,
 ) : Bullet, Bounded {
+    override val blending = data.blending
     var attachedTasks: GdxArray<Task>? = null
     override val collision: CollisionShape
         get() = data.collision
@@ -133,8 +134,9 @@ open class BasicBullet(
             val texture = data.texture.getFrame(t)
             tmpColor.set(batch.color)
             if (t >= delay) {
-                batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
-                batch.setBlendFunction(data.blending.first, data.blending.second)
+                val bulletColor = data.color.tintHSV(tint)
+                bulletColor.a *= parentAlpha
+                batch.color = bulletColor
                 if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
                     batch.draw(
                         texture,
@@ -159,11 +161,10 @@ open class BasicBullet(
                 }
             } else {
                 val scaleFactor = Interpolation.linear.apply(2f, 0.8f, t.toFloat() / delay)
-                val delayColor = data.delayColor.cpy()
+                val delayColor = data.delayColor.tintHSV(tint)
                 delayColor.a *= parentAlpha
                 delayColor.a *= Interpolation.linear.apply(0.2f, 1f, t.toFloat() / delay)
                 batch.color = delayColor
-                batch.setBlendFunction(data.delayBlending.first, data.delayBlending.second)
                 batch.draw(
                     data.delayTexture,
                     tmpX - data.originX,

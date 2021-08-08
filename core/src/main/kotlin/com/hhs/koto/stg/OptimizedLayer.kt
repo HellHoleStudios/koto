@@ -25,12 +25,13 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Rectangle
 import com.hhs.koto.app.Config
+import com.hhs.koto.util.BlendingMode
 import com.hhs.koto.util.overlaps
 import com.hhs.koto.util.removeNull
+import com.hhs.koto.util.setBlending
 import ktx.collections.GdxArray
 
 open class OptimizedLayer<T : Drawable>(
@@ -104,11 +105,18 @@ open class OptimizedLayer<T : Drawable>(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        var currentBlending = BlendingMode.ALPHA
         for (i in 0 until drawables.size) {
             if (drawables[i] != null) {
+                if (drawables[i].blending != currentBlending) {
+                    currentBlending = drawables[i].blending
+                    batch.setBlending(currentBlending)
+                }
                 drawables[i].draw(batch, parentAlpha * alpha, subFrameTime)
             }
         }
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        if (currentBlending != BlendingMode.ALPHA) {
+            batch.setBlending(BlendingMode.ALPHA)
+        }
     }
 }

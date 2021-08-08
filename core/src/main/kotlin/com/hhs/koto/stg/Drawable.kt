@@ -27,12 +27,15 @@ package com.hhs.koto.stg
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.task.Task
+import com.hhs.koto.util.BlendingMode
 
 interface Drawable : Task {
     val x: Float
     val y: Float
     val zIndex: Int
         get() = 0
+    val blending: BlendingMode
+        get() = BlendingMode.ALPHA
 
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
 }

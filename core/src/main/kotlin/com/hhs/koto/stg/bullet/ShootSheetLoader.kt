@@ -65,9 +65,11 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
         data class RawBulletData(
             val id: Int? = null,
             val name: String? = null,
+            val region: String? = null,
+            val color: String? = null,
             val frames: GdxArray<Int> = GdxArray.with(1),
             val blending: String = Config.defaultBlending,
-            val delaySrc: String? = null,
+            val delayRegion: String? = null,
             val delayColor: String? = null,
             val delayBlending: String? = null,
             val collisionMethod: String? = null,

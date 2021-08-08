@@ -162,12 +162,12 @@ open class BasicPlayer(
             move()
             if (y >= itemCollectLineHeight) {
                 game.items.forEach {
-                    it.collect(x, y, true)
+                    it.onCollect(x, y, true)
                 }
             } else {
                 game.items.forEach {
                     if (collide(it.collision, it.x, it.y, itemCollision, x, y)) {
-                        it.collect(x, y, false)
+                        it.onCollect(x, y, false)
                     }
                 }
             }
@@ -187,21 +187,21 @@ open class BasicPlayer(
                     }
                 }
                 if (hit) {
-                    hit()
+                    onHit()
                 }
             }
         }
         if (playerState == PlayerState.DEATHBOMBING) {
             if (counter <= 0) {
                 playerState = PlayerState.RESPAWNING
-                death()
+                onDeath()
             } else if (VK.BOMB.pressed()) {
-                bomb(true)
+                onBomb(true)
                 playerState = PlayerState.BOMBING
             }
         } else if (playerState == PlayerState.NORMAL) {
             if (VK.BOMB.pressed()) {
-                bomb(false)
+                onBomb(false)
                 playerState = PlayerState.BOMBING
             }
         }
@@ -238,7 +238,7 @@ open class BasicPlayer(
         texture.update(dx)
     }
 
-    open fun bomb(isDeathBomb: Boolean) {
+    open fun onBomb(isDeathBomb: Boolean) {
         invulnerable = true
         SE.play("bomb")
         task {
@@ -257,10 +257,10 @@ open class BasicPlayer(
                 it.kill()
             }
             game.enemies.forEach {
-                (it as Enemy).death()
+                (it as Enemy).onDeath()
             }
             game.items.forEach {
-                it.collect(x, y, true)
+                it.onCollect(x, y, true)
             }
             wait(290)
             playerState = PlayerState.NORMAL
@@ -268,7 +268,7 @@ open class BasicPlayer(
         }
     }
 
-    override fun hit() {
+    override fun onHit() {
         SE.play("pldead")
         playerState = PlayerState.DEATHBOMBING
         counter = deathbombTime
@@ -304,7 +304,7 @@ open class BasicPlayer(
         }
     }
 
-    open fun death() {
+    open fun onDeath() {
         invulnerable = true
         task {
             addParticle(Explosion(x, y, 64f, 64f, 384f, 384f, duration = 10))

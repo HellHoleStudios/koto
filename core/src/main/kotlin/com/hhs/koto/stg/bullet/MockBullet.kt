@@ -37,7 +37,7 @@ import com.hhs.koto.util.sin
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 
-class PseudoBullet(
+class MockBullet(
     override var x: Float,
     override var y: Float,
     override var speed: Float = 0f,
@@ -45,7 +45,7 @@ class PseudoBullet(
 ) : Bullet {
     var attachedTasks: GdxArray<Task>? = null
     override var rotation: Float = 0f
-    override var color: Color = Color.WHITE
+    override var tint: Color = Color.WHITE
     var t: Int = 0
 
     override fun onGraze() = Unit
@@ -60,7 +60,7 @@ class PseudoBullet(
         t++
     }
 
-    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): PseudoBullet {
+    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): MockBullet {
         val task = CoroutineTask(index, this, block)
         addTask(task)
         if (attachedTasks == null) {

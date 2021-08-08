@@ -28,17 +28,13 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.AABBCollision
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.NoCollision
-import com.hhs.koto.util.app
-import com.hhs.koto.util.json
-import com.hhs.koto.util.safeIterator
-import com.hhs.koto.util.toHSVColor
+import com.hhs.koto.util.*
 import ktx.collections.GdxMap
 import ktx.json.fromJson
 
@@ -48,7 +44,7 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
 
     init {
         for (i in raw.data.safeIterator()) {
-            val tmp = BulletData(this, i)
+            val tmp = BulletData.fromShotSheet(this, i)
             data.put(tmp.id, tmp)
             nameToId.put(tmp.name, tmp.id)
         }
@@ -81,42 +77,44 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
 data class BulletData(
     var id: Int,
     var name: String,
-    var blending: Pair<Int, Int>,
+    var color: Color,
+    var blending: BlendingMode,
     var texture: BulletTexture,
     var originX: Float,
     var originY: Float,
     var delayTexture: TextureRegion,
     var delayColor: Color,
-    var delayBlending: Pair<Int, Int>,
+    var delayBlending: BlendingMode,
     var spinVelocity: Float,
     var collision: CollisionShape,
     var rotation: Float,
 ) {
-    constructor(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData) : this(
-        raw.id!!,
-        raw.name!!,
-        getBlending(raw.blending),
-        BulletTexture(parent.atlas, raw.name, raw.frames),
-        0f,
-        0f,
-        parent.atlas.findRegion(raw.delaySrc!!),
-        Color.valueOf(raw.delayColor!!).toHSVColor(),
-        getBlending(raw.delayBlending ?: "ADD"),
-        raw.spinVelocity,
-        when (raw.collisionMethod) {
-            "none" -> NoCollision()
-            "circle" -> CircleCollision(raw.collisionData!![0])
-            "rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
-            else -> CircleCollision(raw.collisionData!![0]) // use circle as default
-        },
-        raw.rotation,
-    ) {
-        originX = raw.originX ?: (texture.maxWidth / 2f)
-        originY = raw.originY ?: (texture.maxWidth / 2f)
+    companion object {
+        fun fromShotSheet(parent: ShotSheet, raw: ShotSheetLoader.RawShotSheet.RawBulletData): BulletData {
+            val result = BulletData(
+                raw.id!!,
+                raw.name!!,
+                Color.valueOf(raw.color ?: "ff0000").toHSVColor(),
+                BlendingMode.forName(raw.blending),
+                BulletTexture(parent.atlas, raw.region!!, raw.frames),
+                0f,
+                0f,
+                parent.atlas.findRegion(raw.delayRegion!!),
+                Color.valueOf(raw.delayColor ?: "ff0000").toHSVColor(),
+                BlendingMode.forName(raw.delayBlending ?: "ADD"),
+                raw.spinVelocity,
+                when (raw.collisionMethod) {
+                    "none" -> NoCollision()
+                    "circle" -> CircleCollision(raw.collisionData!![0])
+                    "rectangle" -> AABBCollision(raw.collisionData!![0], raw.collisionData[1])
+                    else -> CircleCollision(raw.collisionData!![0]) // use circle as default
+                },
+                raw.rotation,
+            )
+            result.originX = raw.originX ?: (result.texture.maxWidth / 2f)
+            result.originY = raw.originY ?: (result.texture.maxWidth / 2f)
+            return result
+        }
     }
 }
 
-private fun getBlending(blendingString: String): Pair<Int, Int> = when (blendingString) {
-    "ADD" -> Pair(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
-    else -> Pair(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
-}

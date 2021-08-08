@@ -72,7 +72,7 @@ open class BasicItem(
             deltaX = cos(angle) * 8f
             deltaY = sin(angle) * 8f
             if (dist(x, y, playerX, playerY) <= 5f) {
-                collected(collectPositionX!!, collectPositionY!!, autoCollected!!)
+                onCollected(collectPositionX!!, collectPositionY!!, autoCollected!!)
                 kill()
             }
         } else {
@@ -93,7 +93,7 @@ open class BasicItem(
         y += deltaY
     }
 
-    override fun collect(collectPositionX: Float, collectPositionY: Float, autoCollect: Boolean) {
+    override fun onCollect(collectPositionX: Float, collectPositionY: Float, autoCollect: Boolean) {
         if (!collected) {
             this.autoCollected = autoCollect
             this.collectPositionX = collectPositionX
@@ -102,7 +102,7 @@ open class BasicItem(
         }
     }
 
-    open fun collected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
+    open fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         SE.play("item")
     }
 

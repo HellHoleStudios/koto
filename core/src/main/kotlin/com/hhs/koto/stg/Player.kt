@@ -30,7 +30,7 @@ interface Player : Drawable {
     val grazeCollision: CollisionShape
     val itemCollision: CollisionShape
     val playerState: PlayerState
-    fun hit()
+    fun onHit()
 }
 
 enum class PlayerState {
