@@ -42,7 +42,7 @@ class Explosion(
     val duration: Int,
     color: Color = Color(0f, 1f, 1f, 1f),
 ) : SpriteDrawable(
-    getRegion("explosion.png"),
+    getRegion("particle/explosion.png"),
     x,
     y,
     0f,

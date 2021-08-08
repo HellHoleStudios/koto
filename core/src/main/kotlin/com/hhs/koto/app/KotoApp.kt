@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.demo.RegularGame
+import com.hhs.koto.demo.player.Marisa
 import com.hhs.koto.demo.player.Reimu
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.demo.stage1.TestSpell
@@ -116,6 +117,9 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         GameBuilder.players["reimuA"] = { Reimu() }
         GameBuilder.players["reimuB"] = { Reimu() }
         GameBuilder.players["reimu"] = { Reimu() }
+        GameBuilder.players["marisaA"] = { Marisa() }
+        GameBuilder.players["marisaB"] = { Marisa() }
+        GameBuilder.players["marisa"] = { Marisa() }
 
         GameBuilder.regularGame = RegularGame()
         GameBuilder.stages.add(Stage1())

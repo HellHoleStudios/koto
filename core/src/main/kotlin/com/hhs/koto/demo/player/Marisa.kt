@@ -25,38 +25,34 @@
 
 package com.hhs.koto.demo.player
 
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.stg.SpriteDrawable
-import com.hhs.koto.util.alpha
+import com.hhs.koto.stg.BasicPlayer
+import com.hhs.koto.stg.BasicPlayerTexture
+import com.hhs.koto.stg.PlayerState
+import com.hhs.koto.stg.bullet.ShotSheet
+import com.hhs.koto.util.A
+import com.hhs.koto.util.SE
+import com.hhs.koto.util.VK
+import com.hhs.koto.util.game
 
-class AmuletParticle(
-    x: Float,
-    y: Float,
-    val duration: Int = 10,
-    atlas: TextureAtlas,
-) : SpriteDrawable(
-    atlas.findRegion("reimu_amulet_particle"),
-    x,
-    y,
-    0f,
-    0f,
-    1f,
-    1f,
-    16f,
-    16f,
-    90f,
+open class Marisa : BasicPlayer(
+    BasicPlayerTexture(A["player/th10_player.atlas"], "th10_marisa"),
+    (A.get<TextureAtlas>("player/th10_player.atlas")).findRegion("hitbox"),
+    3.5f,
+    5f,
+    2f,
+    10,
 ) {
-    override fun tick() {
-        super.tick()
-        sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))
-        if (t >= duration) kill()
-    }
+    protected val shotSheet: ShotSheet = A["player/th10_player.shot"]
 
-    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
-        super.draw(batch, parentAlpha, subFrameTime)
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+    override fun tick() {
+        if (playerState != PlayerState.RESPAWNING && VK.SHOT.pressed()) {
+            if (game.frame % 4 == 0) {
+                SE.play("shoot")
+                game.playerBullets.add(HomingAmulet(x - 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
+                game.playerBullets.add(HomingAmulet(x + 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
+            }
+        }
+        super.tick()
     }
 }

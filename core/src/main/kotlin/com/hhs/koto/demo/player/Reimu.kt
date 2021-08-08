@@ -36,21 +36,21 @@ import com.hhs.koto.util.VK
 import com.hhs.koto.util.game
 
 open class Reimu : BasicPlayer(
-    BasicPlayerTexture(A["sprite/th10_player.atlas"], "th10_reimu"),
-    (A.get<TextureAtlas>("sprite/th10_player.atlas")).findRegion("hitbox"),
+    BasicPlayerTexture(A["player/th10_player.atlas"], "th10_reimu"),
+    (A.get<TextureAtlas>("player/th10_player.atlas")).findRegion("hitbox"),
     2f,
     4.5f,
     2f,
     10,
 ) {
-    protected val shotSheet: ShotSheet = A["sprite/th10_player.shot"]
+    protected val shotSheet: ShotSheet = A["player/th10_player.shot"]
 
     override fun tick() {
         if (playerState != PlayerState.RESPAWNING && VK.SHOT.pressed()) {
             if (game.frame % 4 == 0) {
                 SE.play("shoot")
-                game.playerBullets.add(HomingAmulet(x - 10, y, 3f, shotSheet))
-                game.playerBullets.add(HomingAmulet(x + 10, y, 3f, shotSheet))
+                game.playerBullets.add(HomingAmulet(x - 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
+                game.playerBullets.add(HomingAmulet(x + 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
             }
         }
         super.tick()

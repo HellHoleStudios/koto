@@ -46,6 +46,13 @@ reimu.standard
   orig: 65, 14
   offset: 0, 0
   index: -1
+reimu_amulet_particle
+  rotate: false
+  xy: 60, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 th10_marisa_center
   rotate: false
   xy: 2, 34
@@ -300,7 +307,7 @@ th10_reimu_left
   index: 3
 th10_reimu_movingLeft
   rotate: false
-  xy: 2, 84
+  xy: 68, 200
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -356,7 +363,7 @@ th10_reimu_movingRight
   index: 2
 th10_reimu_right
   rotate: false
-  xy: 68, 200
+  xy: 2, 84
   size: 32, 48
   orig: 32, 48
   offset: 0, 0

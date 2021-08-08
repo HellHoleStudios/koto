@@ -50,7 +50,7 @@ class ScoreParticle(
     protected var t: Int = 0
 
     init {
-        atlas = A["score_particle_hsv.atlas"]
+        atlas = A["particle/score_particle_hsv.atlas"]
         glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth
         val str = score.toString()
         for (i in str) {

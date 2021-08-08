@@ -43,7 +43,7 @@ class DeathParticle(
     color: Color = Color.BLACK.toHSVColor(),
     additive: Boolean = false,
 ) : SpriteDrawable(
-    getRegion("square_particle.png"),
+    getRegion("particle/death_particle.png"),
     x,
     y,
     speed,

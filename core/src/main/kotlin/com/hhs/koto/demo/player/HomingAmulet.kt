@@ -25,6 +25,7 @@
 
 package com.hhs.koto.demo.player
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.hhs.koto.stg.Enemy
 import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.bullet.PlayerBullet
@@ -35,6 +36,7 @@ class HomingAmulet(
     y: Float,
     damage: Float,
     shotSheet: ShotSheet,
+    val atlas: TextureAtlas,
 ) : PlayerBullet(
     x,
     y,
@@ -47,6 +49,6 @@ class HomingAmulet(
 ) {
     override fun hit(enemy: Enemy) {
         super.hit(enemy)
-        addParticle(AmuletParticle(x, y))
+        addParticle(AmuletParticle(x, y, atlas = atlas))
     }
 }

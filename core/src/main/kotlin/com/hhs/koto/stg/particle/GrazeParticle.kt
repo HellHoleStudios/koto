@@ -31,7 +31,7 @@ import com.hhs.koto.stg.SpriteDrawable
 import com.hhs.koto.util.getRegion
 
 class GrazeParticle(x: Float, y: Float) : SpriteDrawable(
-    getRegion("graze_particle.png"),
+    getRegion("particle/graze_particle.png"),
     x,
     y,
     4f,
