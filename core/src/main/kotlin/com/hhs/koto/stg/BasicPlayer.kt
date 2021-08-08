@@ -279,8 +279,8 @@ open class BasicPlayer(
                         DeathParticle(
                             x,
                             y,
-                            random(0f, 360f),
                             20f,
+                            random(0f, 360f),
                             24f,
                             duration = 10,
                             color = Color(0f, 0f, 0f, 0.8f),
@@ -290,8 +290,8 @@ open class BasicPlayer(
                         DeathParticle(
                             x,
                             y,
-                            random(0f, 360f),
                             20f,
+                            random(0f, 360f),
                             24f,
                             duration = 10,
                             color = Color(0.85f, 0.35f, 1f, 0.8f),
@@ -315,8 +315,8 @@ open class BasicPlayer(
                             DeathParticle(
                                 x,
                                 y,
-                                random(0f, 360f),
                                 20f,
+                                random(0f, 360f),
                                 96f,
                                 duration = 20,
                                 color = Color(0.85f, 0.35f, 1f, 0.8f),

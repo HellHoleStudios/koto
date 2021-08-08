@@ -137,7 +137,7 @@ open class BasicBullet(
                 val bulletColor = data.color.tintHSV(tint)
                 bulletColor.a *= parentAlpha
                 batch.color = bulletColor
-                if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
+                if ((rotation + data.rotation) != 0f || scaleX != 1f || scaleY != 1f) {
                     batch.draw(
                         texture,
                         tmpX - data.originX,
@@ -148,7 +148,7 @@ open class BasicBullet(
                         texture.regionHeight.toFloat(),
                         scaleX,
                         scaleY,
-                        rotation,
+                        rotation + data.rotation,
                     )
                 } else {
                     batch.draw(

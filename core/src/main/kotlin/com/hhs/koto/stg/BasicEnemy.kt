@@ -53,7 +53,6 @@ open class BasicEnemy(
     var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
     override val zIndex: Int = -300,
 ) : Enemy {
-    var speed: Float = 0f
     var invulnerable: Boolean = false
     var rotation: Float = 0f
     var scaleX = 1f
@@ -139,7 +138,7 @@ open class BasicEnemy(
             )
         )
         repeat(5) {
-            addParticle(DeathParticle(x, y, random(0f, 360f), 10f, 24f, 0f, 20))
+            addParticle(DeathParticle(x, y, 10f, random(0f, 360f), 24f, 0f, 20))
         }
         kill()
     }

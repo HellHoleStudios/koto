@@ -31,8 +31,8 @@ import com.hhs.koto.stg.Entity
 import kotlinx.coroutines.CoroutineScope
 
 interface Bullet : Entity, Drawable {
-    var angle: Float
     var speed: Float
+    var angle: Float
     var rotation: Float
     var tint: Color
     fun onGraze()

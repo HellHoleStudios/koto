@@ -33,8 +33,8 @@ import com.hhs.koto.util.sin
 
 class PolarAcceleration(
     bullet: Bullet,
-    accAngle: Float,
     accSpeed: Float,
+    accAngle: Float,
     duration: Int = Int.MAX_VALUE,
 ) : CartesianAcceleration(bullet, cos(accAngle) * accSpeed, sin(accAngle) * accSpeed, duration) {
     var accAngle: Float = accAngle
@@ -54,14 +54,14 @@ class PolarAcceleration(
     }
 }
 
-fun <T : Bullet> T.polarAcceleration(accAngle: Float, accSpeed: Float, duration: Int = Int.MAX_VALUE): T {
-    addTask(PolarAcceleration(this, accAngle, accSpeed, duration))
+fun <T : Bullet> T.polarAcceleration(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): T {
+    addTask(PolarAcceleration(this, accSpeed, accAngle, duration))
     return this
 }
 
-fun BulletGroup.polarAcceleration(accAngle: Float, accSpeed: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
+fun BulletGroup.polarAcceleration(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
     forEach {
-        addTask(PolarAcceleration(it, accAngle, accSpeed, duration))
+        addTask(PolarAcceleration(it, accSpeed, accAngle, duration))
     }
     return this
 }

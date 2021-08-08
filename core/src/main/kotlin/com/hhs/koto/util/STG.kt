@@ -63,16 +63,26 @@ fun create(
     data: BulletData,
     x: Float,
     y: Float,
-    angle: Float = 0f,
     speed: Float = 0f,
+    angle: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): BasicBullet =
-    addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
+    setRotation: Boolean = false,
+): BasicBullet {
+    val result = addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
+    if (setRotation) result.rotation = angle
+    return result
+}
 
-fun <T : Bullet> T.setVelocity(angle: Float, speed: Float): T {
-    this.angle = angle
+
+fun <T : Bullet> T.setSpeed(speed: Float): T {
     this.speed = speed
+    return this
+}
+
+fun <T : Bullet> T.setAngle(angle: Float, setRotation: Boolean = false): T {
+    this.angle = angle
+    if (setRotation) rotation = angle
     return this
 }
 
@@ -85,8 +95,14 @@ fun towards(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): BasicBullet =
-    addBullet(BasicBullet(x, y, speed, atan2(x, y, targetX, targetY), data, tint = color, delay = delay))
+    setRotation: Boolean = false,
+): BasicBullet {
+    val angle = atan2(x, y, targetX, targetY)
+    val result = addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
+    if (setRotation) result.rotation = angle
+    return result
+}
+
 
 fun <T : Bullet> T.towards(targetX: Float, targetY: Float): T {
     angle = atan2(x, y, targetX, targetY)
