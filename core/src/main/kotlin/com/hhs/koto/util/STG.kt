@@ -64,6 +64,16 @@ fun create(
     return result
 }
 
+fun create(
+    name: String,
+    x: Float,
+    y: Float,
+    speed: Float = 0f,
+    angle: Float = 0f,
+    color: Color = Color.WHITE,
+    delay: Int = 8,
+    setRotation: Boolean = false,
+): BasicBullet = create(B[name], x, y, speed, angle, color, delay, setRotation)
 
 fun <T : Bullet> T.setSpeed(speed: Float): T {
     this.speed = speed
@@ -93,6 +103,17 @@ fun towards(
     return result
 }
 
+fun towards(
+    name: String,
+    x: Float,
+    y: Float,
+    targetX: Float,
+    targetY: Float,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+    delay: Int = 8,
+    setRotation: Boolean = false,
+): BasicBullet = towards(B[name], x, y, targetX, targetY, speed, color, delay, setRotation)
 
 fun <T : Bullet> T.towards(targetX: Float, targetY: Float): T {
     angle = atan2(x, y, targetX, targetY)
@@ -125,6 +146,19 @@ fun ring(
 }
 
 fun ring(
+    name: String,
+    x: Float,
+    y: Float,
+    radius: Float,
+    offsetAngle: Float,
+    count: Int,
+    startAngle: Float = 0f,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+    delay: Int = 8,
+): BulletGroup = ring(B[name], x, y, radius, offsetAngle, count, startAngle, speed, color, delay)
+
+fun ring(
     data: BulletData,
     x: Float,
     y: Float,
@@ -146,6 +180,17 @@ fun ring(
     }
     return ret
 }
+
+fun ring(
+    name: String,
+    x: Float,
+    y: Float,
+    radius: Float,
+    progression: IntProgression,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+    delay: Int = 8,
+): BulletGroup = ring(B[name], x, y, radius, progression, speed, color, delay)
 
 inline fun ring(
     x: Float,

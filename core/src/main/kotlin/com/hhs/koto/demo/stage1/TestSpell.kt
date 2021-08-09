@@ -29,9 +29,12 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicEnemy
 import com.hhs.koto.stg.drawable.BasicEnemyTexture
-import com.hhs.koto.stg.pattern.Interpolate
+import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.task.*
-import com.hhs.koto.util.*
+import com.hhs.koto.util.A
+import com.hhs.koto.util.playerX
+import com.hhs.koto.util.playerY
+import com.hhs.koto.util.towards
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -52,11 +55,11 @@ class TestSpell : SpellBuilder {
                     )
                 ).task {
                     val enemy = enemy as BasicEnemy
-                    Interpolate(-250f, 0f, 100) {
+                    interpolate(-250f, 0f, 100) {
                         enemy.x = it
                     }
                     wait(120)
-                    Interpolate(0f, 250f, 100) {
+                    interpolate(0f, 250f, 100) {
                         enemy.x = it
                     }
                     enemy.kill()
@@ -64,7 +67,7 @@ class TestSpell : SpellBuilder {
                     while (true) {
                         repeat(10) {
                             towards(
-                                B["DS_BALL_S_RED"],
+                                "DS_BALL_S_RED",
                                 enemy.x,
                                 enemy.y,
                                 playerX,
