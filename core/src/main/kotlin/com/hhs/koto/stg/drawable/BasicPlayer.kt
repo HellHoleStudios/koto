@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -32,7 +32,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config
+import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision.collide
+import com.hhs.koto.stg.Player
+import com.hhs.koto.stg.PlayerState
+import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.DeathParticle
 import com.hhs.koto.stg.particle.Explosion
 import com.hhs.koto.stg.task.frame

@@ -23,9 +23,11 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
+
+import com.hhs.koto.stg.Drawable
 
 interface Enemy : Drawable {
-    var hp: Float
+    fun onHit(damage: Float)
     fun onDeath()
 }

@@ -23,9 +23,10 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.BlendingMode
 import com.hhs.koto.util.removeNull
 import com.hhs.koto.util.setBlending

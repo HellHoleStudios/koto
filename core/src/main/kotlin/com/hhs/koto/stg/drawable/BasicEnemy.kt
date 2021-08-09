@@ -23,11 +23,12 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils.random
+import com.hhs.koto.stg.*
 import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
 import com.hhs.koto.stg.particle.DeathParticle
@@ -44,7 +45,7 @@ open class BasicEnemy(
     override var x: Float,
     override var y: Float,
     val texture: BasicEnemyTexture,
-    override var hp: Float,
+    var hp: Float,
     var pointCount: Int,
     var powerCount: Int,
     bulletCollisionRadius: Float = min(texture.texture.regionWidth, texture.texture.regionHeight).toFloat() / 1.5f,
@@ -119,6 +120,10 @@ open class BasicEnemy(
             texture.update(1)
         }
         oldX = x
+    }
+
+    override fun onHit(damage: Float) {
+        hp -= damage
         if (hp <= 0) {
             onDeath()
         }

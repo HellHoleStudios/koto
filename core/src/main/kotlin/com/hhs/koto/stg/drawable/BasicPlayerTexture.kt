@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import ktx.collections.set

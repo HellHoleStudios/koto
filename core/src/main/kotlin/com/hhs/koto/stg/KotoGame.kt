@@ -39,6 +39,8 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
+import com.hhs.koto.stg.drawable.DrawableLayer
+import com.hhs.koto.stg.drawable.OptimizedLayer
 import com.hhs.koto.stg.item.Item
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task

@@ -23,12 +23,14 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.Bounded
+import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.cos
 import com.hhs.koto.util.sin
 

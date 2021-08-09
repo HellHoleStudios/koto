@@ -25,7 +25,7 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.Enemy
+import com.hhs.koto.stg.drawable.Enemy
 import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup

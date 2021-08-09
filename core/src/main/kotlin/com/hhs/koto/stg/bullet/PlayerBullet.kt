@@ -26,7 +26,7 @@
 package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.Enemy
+import com.hhs.koto.stg.drawable.Enemy
 
 open class PlayerBullet(
     x: Float,
@@ -43,7 +43,7 @@ open class PlayerBullet(
     delay: Int = 0,
 ) : BasicBullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color, delay) {
     open fun hit(enemy: Enemy) {
-        enemy.hp -= damage
+        enemy.onHit(damage)
         penetration--
         if (penetration <= 0) {
             kill()

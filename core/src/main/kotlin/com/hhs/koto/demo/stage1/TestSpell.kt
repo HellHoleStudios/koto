@@ -25,14 +25,13 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.BasicEnemy
-import com.hhs.koto.stg.BasicEnemyTexture
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
+import com.hhs.koto.stg.drawable.BasicEnemy
+import com.hhs.koto.stg.drawable.BasicEnemyTexture
+import com.hhs.koto.stg.pattern.Interpolate
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
-import kotlinx.coroutines.yield
 import ktx.collections.GdxArray
 
 class TestSpell : SpellBuilder {
@@ -53,19 +52,13 @@ class TestSpell : SpellBuilder {
                     )
                 ).task {
                     val enemy = enemy as BasicEnemy
-                    task {
-                        repeat(100) {
-                            enemy.x = Interpolation.sine.apply(-250f, 0f, frame / 100f)
-                            yield()
-                        }
-                    }.waitForFinish()
+                    Interpolate(-250f, 0f, 100) {
+                        enemy.x = it
+                    }
                     wait(120)
-                    task {
-                        repeat(100) {
-                            enemy.x = Interpolation.sine.apply(0f, 250f, frame / 100f)
-                            yield()
-                        }
-                    }.waitForFinish()
+                    Interpolate(0f, 250f, 100) {
+                        enemy.x = it
+                    }
                     enemy.kill()
                 }.task {
                     while (true) {

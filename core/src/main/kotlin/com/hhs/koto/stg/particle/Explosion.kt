@@ -27,7 +27,7 @@ package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.SpriteDrawable
+import com.hhs.koto.stg.drawable.SpriteDrawable
 import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
 

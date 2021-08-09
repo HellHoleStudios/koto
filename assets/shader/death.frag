@@ -26,6 +26,6 @@ void main() {
     invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y + 30.0)) < r2);
     invert = invert ^^ (distance(pos, vec2(u_playerPosition.x, u_playerPosition.y)) < r3);
     if (invert) {
-        gl_FragColor.rgb = 1 - gl_FragColor.rgb;
+        gl_FragColor.rgb = 1.0 - gl_FragColor.rgb;
     }
 }

@@ -26,6 +26,7 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.graphics.Color
+import com.hhs.koto.stg.drawable.BossDistortionEffect
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.background.TileBackground
 import com.hhs.koto.stg.pattern.Interpolate
@@ -81,6 +82,9 @@ class Stage1 : StageBuilder {
                     width = 256f,
                 )
             )
+            val effect = BossDistortionEffect()
+            game.backgroundVfx.addEffect(effect)
+            effect.tick(0f, 0f, 50f)
         },
         Interpolate(0f, 1f, 60) { game.background.alpha = it },
         TestSpell().build(),
