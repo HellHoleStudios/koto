@@ -27,6 +27,7 @@ package com.hhs.koto.stg.pattern
 
 import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.addTask
+import com.hhs.koto.stg.task.waitForFinish
 
 class Interpolate(
     val start: Float,
@@ -40,11 +41,13 @@ class Interpolate(
     }
 }
 
-fun interpolate(
+suspend fun interpolate(
     start: Float,
     end: Float,
     duration: Int,
     interpolation: Interpolation = Interpolation.linear,
     action: (Float) -> Unit,
-): Interpolate =
-    addTask(Interpolate(start, end, duration, interpolation, action))
+) {
+    addTask(Interpolate(start, end, duration, interpolation, action)).waitForFinish()
+}
+

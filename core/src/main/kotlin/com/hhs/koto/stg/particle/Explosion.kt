@@ -52,7 +52,7 @@ class Explosion(
     1f,
     1f,
     rotation,
-    color,
+    color = color,
 ) {
     init {
         sprite.setOriginCenter()

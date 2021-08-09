@@ -37,15 +37,17 @@ open class BasicItem(
     override var x: Float,
     override var y: Float,
     val texture: TextureRegion,
+    val width: Float,
+    val height: Float,
     speed: Float = 2f,
     angle: Float = 90f,
     radius: Float = 10f,
-    var gravity: Float = 0.05f,
-    var xDamping: Float = 0.05f,
-    var xDampingLimit: Float = 0.05f,
-    var maxSpeed: Float = 2f,
-    var originX: Float = texture.regionWidth.toFloat() / 2f,
-    var originY: Float = texture.regionHeight.toFloat() / 2f,
+    val gravity: Float = 0.05f,
+    val xDamping: Float = 0.05f,
+    val xDampingLimit: Float = 0.05f,
+    val maxSpeed: Float = 2f,
+    val originX: Float = texture.regionWidth.toFloat() / 2f,
+    val originY: Float = texture.regionHeight.toFloat() / 2f,
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
@@ -54,9 +56,9 @@ open class BasicItem(
     var deltaX: Float = cos(angle) * speed
     var deltaY: Float = sin(angle) * speed
     override var alive: Boolean = true
-    override val boundingWidth
+    override val boundingRadiusX
         get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
-    override val boundingHeight
+    override val boundingRadiusY
         get() = texture.regionWidth * scaleX + texture.regionHeight * scaleY
     override val collision: CollisionShape = CircleCollision(radius)
     var collected: Boolean = false
@@ -107,7 +109,7 @@ open class BasicItem(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
+        if (!outOfFrame(x, y, boundingRadiusX, boundingRadiusY)) {
             tmpColor.set(batch.color)
             batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
             var tmpX = x
@@ -123,8 +125,8 @@ open class BasicItem(
                     tmpY - originY,
                     originX,
                     originY,
-                    texture.regionWidth.toFloat(),
-                    texture.regionHeight.toFloat(),
+                    width,
+                    height,
                     scaleX,
                     scaleY,
                     rotation,
@@ -134,8 +136,8 @@ open class BasicItem(
                     texture,
                     tmpX - originX,
                     tmpY - originY,
-                    texture.regionWidth.toFloat(),
-                    texture.regionHeight.toFloat(),
+                    width,
+                    height,
                 )
             }
             batch.color = tmpColor

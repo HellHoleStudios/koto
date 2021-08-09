@@ -41,7 +41,7 @@ class GrazeParticle(x: Float, y: Float) : SpriteDrawable(
     8f,
     8f,
     0f,
-    Color(1f, 1f, 1f, 0.8f),
+    color = Color(1f, 1f, 1f, 0.8f),
 ) {
     override fun tick() {
         super.tick()

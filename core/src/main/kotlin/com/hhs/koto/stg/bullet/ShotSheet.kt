@@ -78,6 +78,8 @@ data class BulletData(
     var texture: BulletTexture,
     var originX: Float,
     var originY: Float,
+    var width: Float,
+    var height: Float,
     var delayTexture: TextureRegion,
     var delayColor: Color,
     var delayBlending: BlendingMode,
@@ -95,6 +97,8 @@ data class BulletData(
                 BulletTexture(parent.atlas, raw.region ?: raw.name!!, raw.frames),
                 0f,
                 0f,
+                0f,
+                0f,
                 parent.atlas.findRegion(raw.delayRegion!!),
                 Color.valueOf(raw.delayColor ?: "ff0000").toHSVColor(),
                 BlendingMode.forName(raw.delayBlending ?: "ADD"),
@@ -108,9 +112,10 @@ data class BulletData(
                 raw.rotation,
             )
             result.originX = raw.originX ?: (result.texture.maxWidth / 2f)
-            result.originY = raw.originY ?: (result.texture.maxWidth / 2f)
+            result.originY = raw.originY ?: (result.texture.maxHeight / 2f)
+            result.width = raw.width ?: result.texture.maxWidth.toFloat()
+            result.height = raw.height ?: result.texture.maxHeight.toFloat()
             return result
         }
     }
 }
-

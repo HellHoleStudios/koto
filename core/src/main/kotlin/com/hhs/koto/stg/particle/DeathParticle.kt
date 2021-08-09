@@ -53,7 +53,7 @@ class DeathParticle(
     1f,
     1f,
     rotation,
-    color,
+    color = color,
 ) {
     override val blending: BlendingMode = if (additive) {
         BlendingMode.ADD

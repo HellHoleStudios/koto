@@ -38,10 +38,12 @@ class ScoreParticle(
     override var y: Float,
     score: Long,
     var color: Color = Color.WHITE.toHSVColor(),
+    val glyphScale: Float = 0.5f,
 ) : Drawable, Bounded {
-    override val boundingWidth: Float
-    override val boundingHeight: Float = 9f
-    val glyphWidth: Int
+    override val boundingRadiusX: Float
+    override val boundingRadiusY: Float
+    protected val glyphWidth: Float
+    protected val glyphHeight: Float
     override var alive: Boolean = true
     var deltaY: Float = 3f
     val variant: String = bundle["game.scoreParticle.variant"]
@@ -51,12 +53,14 @@ class ScoreParticle(
 
     init {
         atlas = A["particle/score_particle_hsv.atlas"]
-        glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth
+        glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth.toFloat() * glyphScale
+        glyphHeight = atlas.findRegion("0_$variant", 0).regionHeight.toFloat() * glyphScale
         val str = score.toString()
         for (i in str) {
             digits.add(i.digitToInt())
         }
-        boundingWidth = digits.size * glyphWidth / 2f
+        boundingRadiusX = digits.size * glyphWidth / 2f
+        boundingRadiusY = glyphHeight / 2f
     }
 
     override fun tick() {
@@ -67,8 +71,8 @@ class ScoreParticle(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val baseX = x - boundingWidth / 2
-        val baseY = y - boundingHeight / 2
+        val baseX = x - boundingRadiusX / 2
+        val baseY = y - boundingRadiusY / 2
         tmpColor.set(batch.color)
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         for (i in 0 until digits.size) {
@@ -76,7 +80,7 @@ class ScoreParticle(
             if (stage != 3) {
                 batch.draw(
                     atlas.findRegion("${digits[i]}_$variant", stage),
-                    baseX + i * glyphWidth / 2f, baseY, glyphWidth / 2f, 9f,
+                    baseX + i * glyphWidth, baseY, glyphWidth, glyphHeight,
                 )
             }
         }

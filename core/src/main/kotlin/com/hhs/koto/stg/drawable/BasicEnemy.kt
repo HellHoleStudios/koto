@@ -50,6 +50,8 @@ open class BasicEnemy(
     var powerCount: Int,
     bulletCollisionRadius: Float = min(texture.texture.regionWidth, texture.texture.regionHeight).toFloat() / 1.5f,
     playerCollisionRadius: Float = bulletCollisionRadius / 3f,
+    val width: Float = texture.texture.regionWidth.toFloat(),
+    val height: Float = texture.texture.regionHeight.toFloat(),
     var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
     var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
     override val zIndex: Int = -300,
@@ -82,8 +84,8 @@ open class BasicEnemy(
                 y - textureOriginY,
                 textureOriginX,
                 textureOriginY,
-                texture.texture.regionWidth.toFloat(),
-                texture.texture.regionHeight.toFloat(),
+                width,
+                height,
                 tmpScaleX,
                 scaleY,
                 rotation,
@@ -93,8 +95,8 @@ open class BasicEnemy(
                 texture.texture,
                 x - textureOriginX,
                 y - textureOriginY,
-                texture.texture.regionWidth.toFloat(),
-                texture.texture.regionHeight.toFloat(),
+                width,
+                height,
             )
         }
         batch.color = tmpColor

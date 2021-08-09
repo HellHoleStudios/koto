@@ -28,6 +28,6 @@ package com.hhs.koto.stg
 interface Bounded {
     val x: Float
     val y: Float
-    val boundingWidth: Float
-    val boundingHeight: Float
+    val boundingRadiusX: Float
+    val boundingRadiusY: Float
 }

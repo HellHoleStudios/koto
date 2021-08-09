@@ -46,6 +46,8 @@ class PowerItem(
     x,
     y,
     getRegion("item/power.png"),
+    16f,
+    16f,
     speed,
     angle,
     radius,

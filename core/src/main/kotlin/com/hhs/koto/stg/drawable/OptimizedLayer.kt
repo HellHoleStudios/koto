@@ -64,8 +64,8 @@ open class OptimizedLayer<T : Drawable>(
                         if (!world.overlaps(
                                 current.x,
                                 current.y,
-                                current.boundingWidth,
-                                current.boundingHeight,
+                                current.boundingRadiusX,
+                                current.boundingRadiusY,
                             )
                         ) {
                             current.kill()

@@ -25,6 +25,7 @@
 
 package com.hhs.koto.demo.stage1
 
+import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicEnemy
@@ -55,11 +56,11 @@ class TestSpell : SpellBuilder {
                     )
                 ).task {
                     val enemy = enemy as BasicEnemy
-                    interpolate(-250f, 0f, 100) {
+                    interpolate(-250f, 0f, 100, Interpolation.sine) {
                         enemy.x = it
                     }
                     wait(120)
-                    interpolate(0f, 250f, 100) {
+                    interpolate(0f, 250f, 100, Interpolation.sine) {
                         enemy.x = it
                     }
                     enemy.kill()

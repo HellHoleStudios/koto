@@ -55,15 +55,17 @@ open class BasicPlayer(
     var deathbombTime: Int,
     grazeRadius: Float = hitRadius * 10f,
     itemRadius: Float = hitRadius * 15f,
-    var itemCollectLineHeight: Float = Config.h / 4f * 3f - Config.originY,
-    var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
-    var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
-    var leftMargin: Float = 10f,
-    var rightMargin: Float = 10f,
-    var bottomMargin: Float = 20f,
-    var topMargin: Float = 20f,
-    var spawnX: Float = Config.w / 2 - Config.originX,
-    var spawnY: Float = -Config.originY + 30f,
+    val itemCollectLineHeight: Float = Config.h / 4f * 3f - Config.originY,
+    val width: Float = texture.texture.regionWidth.toFloat(),
+    val height: Float = texture.texture.regionHeight.toFloat(),
+    val textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
+    val textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
+    val leftMargin: Float = 8f,
+    val rightMargin: Float = 8f,
+    val bottomMargin: Float = 16f,
+    val topMargin: Float = 16f,
+    val spawnX: Float = 0f,
+    val spawnY: Float = -Config.originY + 48f,
     override val zIndex: Int = -300,
 ) : Player {
     override var alive: Boolean = true
@@ -111,7 +113,7 @@ open class BasicPlayer(
             clampX(x + speed * dx * subFrameTime)
         }
         val tmpY: Float = if (playerState == PlayerState.RESPAWNING) {
-            Interpolation.sine.apply(spawnY - 80f, spawnY, respawnAnimationPercentage)
+            Interpolation.sine.apply(spawnY - 96f, spawnY, respawnAnimationPercentage)
         } else {
             clampY(y + speed * dy * subFrameTime)
         }
@@ -122,8 +124,8 @@ open class BasicPlayer(
                 tmpY - textureOriginY,
                 textureOriginX,
                 textureOriginY,
-                texture.texture.regionWidth.toFloat(),
-                texture.texture.regionHeight.toFloat(),
+                width,
+                height,
                 scaleX,
                 scaleY,
                 rotation,
@@ -133,8 +135,8 @@ open class BasicPlayer(
                 texture.texture,
                 tmpX - textureOriginX,
                 tmpY - textureOriginY,
-                texture.texture.regionWidth.toFloat(),
-                texture.texture.regionHeight.toFloat(),
+                width,
+                height,
             )
         }
         game.normalBatch.color = tmpColor

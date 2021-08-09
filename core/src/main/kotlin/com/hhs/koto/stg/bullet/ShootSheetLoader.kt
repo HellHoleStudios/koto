@@ -80,6 +80,8 @@ class ShotSheetLoader(resolver: FileHandleResolver) :
             val spinVelocity: Float = 0f,
             val originX: Float? = null,
             val originY: Float? = null,
+            val width: Float? = null,
+            val height: Float? = null,
         )
     }
 

@@ -80,9 +80,9 @@ open class BasicBullet(
 
     var grazeCounter: Int = 0
     var t: Int = 0
-    override val boundingWidth
+    override val boundingRadiusX
         get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
-    override val boundingHeight
+    override val boundingRadiusY
         get() = data.texture.maxWidth * scaleX + data.texture.maxHeight * scaleY
 
     init {
@@ -129,7 +129,7 @@ open class BasicBullet(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (!outOfFrame(x, y, boundingWidth, boundingHeight)) {
+        if (!outOfFrame(x, y, boundingRadiusX, boundingRadiusY)) {
             var tmpX = x
             var tmpY = y
             if (subFrameTime != 0f) {
@@ -149,8 +149,8 @@ open class BasicBullet(
                         tmpY - data.originY,
                         data.originX,
                         data.originY,
-                        texture.regionWidth.toFloat(),
-                        texture.regionHeight.toFloat(),
+                        data.width,
+                        data.height,
                         scaleX,
                         scaleY,
                         rotation + data.rotation,
@@ -160,8 +160,8 @@ open class BasicBullet(
                         texture,
                         tmpX - data.originX,
                         tmpY - data.originY,
-                        texture.regionWidth.toFloat(),
-                        texture.regionHeight.toFloat(),
+                        data.width,
+                        data.height,
                     )
                 }
             } else {
@@ -176,8 +176,8 @@ open class BasicBullet(
                     tmpY - data.originY,
                     data.originX,
                     data.originY,
-                    texture.regionWidth.toFloat(),
-                    texture.regionHeight.toFloat(),
+                    data.width,
+                    data.height,
                     scaleX * scaleFactor,
                     scaleY * scaleFactor,
                     rotation,

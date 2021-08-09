@@ -47,6 +47,8 @@ class PointItem(
     x,
     y,
     getRegion("item/point.png"),
+    16f,
+    16f,
     speed,
     angle,
     radius,

@@ -45,9 +45,12 @@ open class SpriteDrawable(
     width: Float,
     height: Float,
     rotation: Float,
+    originX: Float = texture.regionWidth.toFloat() / 2,
+    originY: Float = texture.regionHeight.toFloat() / 2,
     color: Color = Color.WHITE,
 ) : Drawable, Bounded {
     protected val sprite = Sprite(texture).apply {
+        setOrigin(originX, originY)
         setOriginBasedPosition(x, y)
         setSize(width, height)
         setScale(scaleX, scaleY)
@@ -55,9 +58,9 @@ open class SpriteDrawable(
         setRotation(rotation)
     }
     protected var t: Int = 0
-    override val boundingWidth: Float
+    override val boundingRadiusX: Float
         get() = sprite.width * sprite.scaleX + sprite.height * sprite.scaleY
-    override val boundingHeight: Float
+    override val boundingRadiusY: Float
         get() = sprite.width * sprite.scaleX + sprite.height * sprite.scaleY
     override var alive: Boolean = true
 

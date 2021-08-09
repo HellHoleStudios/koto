@@ -82,8 +82,8 @@ object Config {
     const val fh: Int = 1008
     const val w: Float = 384f
     const val h: Float = 448f
-    const val originX: Float = w / 2
-    const val originY: Float = h / 2
+    const val originX: Float = w / 2f
+    const val originY: Float = h / 2f
     const val bulletDeleteDistance: Float = 1024f
     const val safeDistance: Float = 16f
     const val orthoCircleCollision: Boolean = true
