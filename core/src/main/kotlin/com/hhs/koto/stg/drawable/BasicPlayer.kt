@@ -55,7 +55,7 @@ open class BasicPlayer(
     var deathbombTime: Int,
     grazeRadius: Float = hitRadius * 10f,
     itemRadius: Float = hitRadius * 15f,
-    val itemCollectLineHeight: Float = Config.h / 4f * 3f - Config.originY,
+    val itemCollectLineHeight: Float = Config.worldH / 4f * 3f - Config.originY,
     val width: Float = texture.texture.regionWidth.toFloat(),
     val height: Float = texture.texture.regionHeight.toFloat(),
     val textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
@@ -95,7 +95,7 @@ open class BasicPlayer(
     override var y: Float = spawnY
 
     init {
-        game.st.addDrawable(this)
+        game.stage.addDrawable(this)
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
@@ -361,13 +361,13 @@ open class BasicPlayer(
 
     fun clampX(x: Float): Float {
         if (playerState == PlayerState.RESPAWNING) return x
-        return clamp(x, leftMargin - Config.originX, Config.w - Config.originX - rightMargin)
+        return clamp(x, leftMargin - Config.originX, Config.worldW - Config.originX - rightMargin)
     }
 
 
     fun clampY(y: Float): Float {
         if (playerState == PlayerState.RESPAWNING) return y
-        return clamp(y, bottomMargin - Config.originY, Config.h - Config.originY - topMargin)
+        return clamp(y, bottomMargin - Config.originY, Config.worldH - Config.originY - topMargin)
     }
 
 }

@@ -84,7 +84,7 @@ class BossDistortionEffect : ShaderVfxEffect(
     override fun rebind() {
         program.bind()
         program.setUniformi("u_texture", TEXTURE_HANDLE0)
-        program.setUniformf("u_screenSize", Config.w, Config.h)
+        program.setUniformf("u_screenSize", Config.worldW, Config.worldH)
         program.setUniformf("u_bossPosition", 2048f, 2048f)
         program.setUniformf("u_radius", 50f)
         program.setUniformf("u_time", 0f)

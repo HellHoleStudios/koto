@@ -38,9 +38,9 @@ lateinit var B: ShotSheet
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     if (x + rx < -Config.originX) return true
-    if (x - rx > Config.w - Config.originX) return true
+    if (x - rx > Config.worldW - Config.originX) return true
     if (y + ry < -Config.originY) return true
-    if (y - ry > Config.h - Config.originY) return true
+    if (y - ry > Config.worldH - Config.originY) return true
     return false
 }
 

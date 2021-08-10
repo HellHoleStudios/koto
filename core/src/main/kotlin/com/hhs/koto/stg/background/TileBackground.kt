@@ -44,10 +44,10 @@ class TileBackground(
     var offsetY: Float = 0f,
     val tileWidth: Float = texture.regionWidth.toFloat(),
     val tileHeight: Float = texture.regionHeight.toFloat(),
-    override val x: Float = 0f,
-    override val y: Float = 0f,
-    val width: Float = Config.fw.toFloat(),
-    val height: Float = Config.fh.toFloat(),
+    override val x: Float = -Config.originX,
+    override val y: Float = -Config.originY,
+    val width: Float = Config.worldW,
+    val height: Float = Config.worldH,
     val color: Color = Color.WHITE
 ) : Drawable {
     override var alive: Boolean = true

@@ -48,18 +48,24 @@ import com.hhs.koto.util.*
 import ktx.app.clearScreen
 
 class KotoGame : Disposable {
-    val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
-    val vfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
-    val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.fw, Config.fh)
+    val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
+    val vfx = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
+    val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
 
     val tasks = ParallelTask()
-    val normalViewport = StretchViewport(
-        Config.fw.toFloat(), Config.fh.toFloat(), OrthographicCamera(Config.fw.toFloat(), Config.fh.toFloat())
-    )
-    val offsetViewport = StretchViewport(Config.w, Config.h, OrthographicCamera(Config.w, Config.h).apply {
-        position.x = Config.w / 2f - Config.originX
-        position.y = Config.h / 2f - Config.originY
+    val backgroundViewport = StretchViewport(Config.worldW, Config.worldH, OrthographicCamera(Config.worldW, Config.worldH).apply {
+        position.x = Config.worldW / 2f - Config.originX
+        position.y = Config.worldH / 2f - Config.originY
     })
+    val stageViewport = StretchViewport(Config.worldW, Config.worldH, OrthographicCamera(Config.worldW, Config.worldH).apply {
+        position.x = Config.worldW / 2f - Config.originX
+        position.y = Config.worldH / 2f - Config.originY
+    })
+    val hudViewport = StretchViewport(Config.worldW, Config.worldH, OrthographicCamera(Config.worldW, Config.worldH).apply {
+        position.x = Config.worldW / 2f - Config.originX
+        position.y = Config.worldH / 2f - Config.originY
+    })
+
     val batch = SpriteBatch(
         1000,
         ShaderProgram(
@@ -69,11 +75,11 @@ class KotoGame : Disposable {
     )
     val normalBatch = SpriteBatch()
     val background = DrawableLayer()
-    val st = DrawableLayer().apply {
-        addDrawable(VfxOutputDrawable(backgroundVfx, -Config.originX, -Config.originY, Config.w, Config.h))
+    val stage = DrawableLayer().apply {
+        addDrawable(VfxOutputDrawable(backgroundVfx, -Config.originX, -Config.originY, Config.worldW, Config.worldH))
     }
     val hud = DrawableLayer().apply {
-        addDrawable(VfxOutputDrawable(vfx, 0f, 0f, Config.fw.toFloat(), Config.fh.toFloat()))
+        addDrawable(VfxOutputDrawable(vfx, -Config.originX, -Config.originY, Config.worldW, Config.worldH))
     }
 
     private var subFrameTime: Float = 0f
@@ -85,21 +91,21 @@ class KotoGame : Disposable {
         -10, Rectangle(
             -Config.bulletDeleteDistance - Config.originX,
             -Config.bulletDeleteDistance - Config.originY,
-            Config.bulletDeleteDistance * 2 + Config.w,
-            Config.bulletDeleteDistance * 2 + Config.h,
+            Config.bulletDeleteDistance * 2 + Config.worldW,
+            Config.bulletDeleteDistance * 2 + Config.worldH,
         )
     ).apply {
-        st.addDrawable(this)
+        stage.addDrawable(this)
     }
     val bullets = OptimizedLayer<Bullet>(
         0, Rectangle(
             -Config.bulletDeleteDistance - Config.originX,
             -Config.bulletDeleteDistance - Config.originY,
-            Config.bulletDeleteDistance * 2 + Config.w,
-            Config.bulletDeleteDistance * 2 + Config.h,
+            Config.bulletDeleteDistance * 2 + Config.worldW,
+            Config.bulletDeleteDistance * 2 + Config.worldH,
         )
     ).apply {
-        st.addDrawable(this)
+        stage.addDrawable(this)
     }
     val items = OptimizedLayer<Item>(
         -400, Rectangle(
@@ -109,17 +115,17 @@ class KotoGame : Disposable {
             32768f,
         )
     ).apply {
-        st.addDrawable(this)
+        stage.addDrawable(this)
     }
     val particles = OptimizedLayer<Drawable>(200).apply {
-        st.addDrawable(this)
+        stage.addDrawable(this)
     }
     val enemies = DrawableLayer(-350).apply {
-        st.addDrawable(this)
+        stage.addDrawable(this)
     }
     lateinit var player: Player
     var maxScore: Long = 10000
-    var maxScoreHeight: Float = Config.h / 4f * 3f - 50f - Config.originY
+    var maxScoreHeight: Float = Config.worldH / 4f * 3f - 50f - Config.originY
     var score: Long = 0
     val life = FragmentCounter()
     val bomb = FragmentCounter()
@@ -149,37 +155,36 @@ class KotoGame : Disposable {
     fun tick() {
         subFrameTime = 0f
         game.background.tick()
-        game.st.tick()
+        game.stage.tick()
         game.hud.tick()
         game.tasks.tick()
         game.frame++
     }
 
     fun draw() {
-        normalViewport.update(Config.fw, Config.fh, true)
         backgroundVfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        batch.projectionMatrix = normalViewport.camera.combined
+        batch.projectionMatrix = backgroundViewport.camera.combined
         batch.begin()
         background.draw(batch, 1f, subFrameTime)
         batch.end()
         backgroundVfx.endInputCapture()
         backgroundVfx.applyEffects()
 
-        offsetViewport.update(Config.fw, Config.fh)
+        stageViewport.update(Config.frameWidth, Config.frameHeight)
         vfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        batch.projectionMatrix = offsetViewport.camera.combined
+        batch.projectionMatrix = stageViewport.camera.combined
         batch.begin()
-        st.draw(batch, 1f, subFrameTime)
+        stage.draw(batch, 1f, subFrameTime)
         batch.end()
         vfx.endInputCapture()
         vfx.applyEffects()
 
-        normalViewport.apply()
+        hudViewport.apply()
         postVfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
-        batch.projectionMatrix = normalViewport.camera.combined
+        batch.projectionMatrix = hudViewport.camera.combined
         batch.begin()
         hud.draw(batch, 1f, subFrameTime)
         batch.end()

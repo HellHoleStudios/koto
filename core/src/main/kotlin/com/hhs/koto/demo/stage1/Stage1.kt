@@ -26,9 +26,10 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.drawable.BossDistortionEffect
+import com.hhs.koto.app.Config
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.background.TileBackground
+import com.hhs.koto.stg.drawable.BossDistortionEffect
 import com.hhs.koto.stg.pattern.Interpolate
 import com.hhs.koto.stg.task.RunnableTask
 import com.hhs.koto.stg.task.SequenceTask
@@ -47,8 +48,8 @@ class Stage1 : StageBuilder {
                     getRegion("st3_water.png"),
                     0,
                     speedY = -4f,
-                    tileWidth = 256f,
-                    tileHeight = 512f,
+                    tileWidth = 128f,
+                    tileHeight = 256f,
                 )
             )
             game.background.addDrawable(
@@ -56,8 +57,8 @@ class Stage1 : StageBuilder {
                     getRegion("st3_water_overlay.png"),
                     0,
                     speedY = -6f,
-                    tileWidth = 256f,
-                    tileHeight = 256f,
+                    tileWidth = 128f,
+                    tileHeight = 128f,
                     color = Color(1f, 1f, 1f, 0.3f)
                 )
             )
@@ -66,9 +67,9 @@ class Stage1 : StageBuilder {
                     getRegion("st3_shore_left.png"),
                     0,
                     speedY = -5f,
-                    tileWidth = 256f,
-                    tileHeight = 512f,
-                    width = 256f,
+                    tileWidth = 128f,
+                    tileHeight = 256f,
+                    width = 128f,
                 )
             )
             game.background.addDrawable(
@@ -76,10 +77,10 @@ class Stage1 : StageBuilder {
                     getRegion("st3_shore_right.png"),
                     0,
                     speedY = -5f,
-                    x = 608f,
-                    tileWidth = 256f,
-                    tileHeight = 512f,
-                    width = 256f,
+                    x = Config.worldW - 128f - Config.originX,
+                    tileWidth = 128f,
+                    tileHeight = 256f,
+                    width = 128f,
                 )
             )
             val effect = BossDistortionEffect()
