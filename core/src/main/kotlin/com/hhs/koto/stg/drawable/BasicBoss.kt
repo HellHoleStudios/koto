@@ -29,12 +29,12 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision
 import com.hhs.koto.stg.PlayerState
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.game
 import com.hhs.koto.util.playerX
 import com.hhs.koto.util.playerY
+import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 
@@ -64,6 +64,14 @@ class BasicBoss(
         ) {
             game.player.onHit()
         }
+        for (i in 0 until attachedTasks.size) {
+            if (attachedTasks[i].alive) {
+                attachedTasks[i].tick()
+            } else {
+                attachedTasks[i] = null
+            }
+        }
+        attachedTasks.removeNull()
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
@@ -84,10 +92,13 @@ class BasicBoss(
         return true
     }
 
-    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): BasicBoss {
-        val task = CoroutineTask(index, this, block)
-        addTask(task)
+    fun attachTask(task: Task): BasicBoss {
         attachedTasks.add(task)
+        return this
+    }
+
+    fun task(block: suspend CoroutineScope.() -> Unit): BasicBoss {
+        attachTask(CoroutineTask(obj = this, block = block))
         return this
     }
 }

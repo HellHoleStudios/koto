@@ -39,11 +39,11 @@ import com.hhs.koto.stg.PlayerState
 import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.DeathParticle
 import com.hhs.koto.stg.particle.Explosion
-import com.hhs.koto.stg.task.frame
-import com.hhs.koto.stg.task.task
-import com.hhs.koto.stg.task.wait
+import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.yield
+import ktx.collections.GdxArray
 import kotlin.math.absoluteValue
 
 open class BasicPlayer(
@@ -81,6 +81,7 @@ open class BasicPlayer(
     var scaleX = 1f
     var scaleY = 1f
     var color: Color = Color.WHITE
+    val attachedTasks = GdxArray<Task>()
     protected val effect = DeathEffect().apply {
         game.vfx.addEffectRegistered(this)
     }
@@ -212,6 +213,14 @@ open class BasicPlayer(
             }
         }
         if (counter > 0) counter--
+        for (i in 0 until attachedTasks.size) {
+            if (attachedTasks[i].alive) {
+                attachedTasks[i].tick()
+            } else {
+                attachedTasks[i] = null
+            }
+        }
+        attachedTasks.removeNull()
     }
 
     open fun move() {
@@ -357,6 +366,22 @@ open class BasicPlayer(
             invulnerable = false
             playerState = PlayerState.NORMAL
         }
+    }
+
+    fun attachTask(task: Task): BasicPlayer {
+        attachedTasks.add(task)
+        return this
+    }
+
+    fun task(block: suspend CoroutineScope.() -> Unit): BasicPlayer {
+        attachTask(CoroutineTask(obj = this, block = block))
+        return this
+    }
+
+    override fun kill(): Boolean {
+        alive = false
+        attachedTasks.forEach { it.kill() }
+        return true
     }
 
     fun clampX(x: Float): Float {

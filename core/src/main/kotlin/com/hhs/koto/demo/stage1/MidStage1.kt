@@ -38,7 +38,7 @@ import com.hhs.koto.util.playerY
 import com.hhs.koto.util.towards
 import ktx.collections.GdxArray
 
-class TestSpell : SpellBuilder {
+class MidStage1 : SpellBuilder {
     override val name = "stage1.spell1"
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
 
@@ -81,7 +81,7 @@ class TestSpell : SpellBuilder {
                 }
                 wait(130)
             }
-        }
+        }.waitForFinish()
 //        while (true) {
 //            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
 //                addItem(PowerItem(x, y))

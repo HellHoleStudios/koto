@@ -122,6 +122,14 @@ open class BasicEnemy(
             texture.update(1)
         }
         oldX = x
+        for (i in 0 until attachedTasks.size) {
+            if (attachedTasks[i].alive) {
+                attachedTasks[i].tick()
+            } else {
+                attachedTasks[i] = null
+            }
+        }
+        attachedTasks.removeNull()
     }
 
     override fun onHit(damage: Float) {
@@ -156,10 +164,13 @@ open class BasicEnemy(
         return true
     }
 
-    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): BasicEnemy {
-        val task = CoroutineTask(index, this, block)
-        addTask(task)
+    fun attachTask(task: Task): BasicEnemy {
         attachedTasks.add(task)
+        return this
+    }
+
+    fun task(index: Int = 0, block: suspend CoroutineScope.() -> Unit): BasicEnemy {
+        attachTask(CoroutineTask(index, this, block))
         return this
     }
 }

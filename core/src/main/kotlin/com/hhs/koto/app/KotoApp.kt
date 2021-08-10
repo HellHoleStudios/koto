@@ -42,7 +42,7 @@ import com.hhs.koto.demo.RegularGame
 import com.hhs.koto.demo.player.Marisa
 import com.hhs.koto.demo.player.Reimu
 import com.hhs.koto.demo.stage1.Stage1
-import com.hhs.koto.demo.stage1.TestSpell
+import com.hhs.koto.demo.stage1.MidStage1
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
@@ -123,7 +123,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         GameBuilder.regularGame = RegularGame()
         GameBuilder.stages.add(Stage1())
-        GameBuilder.spells.add(TestSpell())
+        GameBuilder.spells.add(MidStage1())
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()

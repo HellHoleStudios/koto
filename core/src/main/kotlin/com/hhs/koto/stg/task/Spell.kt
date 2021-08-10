@@ -25,9 +25,54 @@
 
 package com.hhs.koto.stg.task
 
-interface Spell {
-    val maxTime: Int
-    val health: Int
-    val invulnerable: Boolean
-    fun getSpellBonus(): Long
+import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.util.game
+import kotlinx.coroutines.yield
+import ktx.collections.GdxArray
+
+abstract class Spell<T : Enemy>(
+    override val name: String,
+    override val availableDifficulties: GdxArray<GameDifficulty>,
+    val bossClass: Class<T>,
+    val maxTime: Int,
+    val health: Int,
+) : SpellBuilder {
+    abstract suspend fun createBoss()
+    abstract suspend fun spell(boss: T)
+    abstract suspend fun terminate(boss: T, time: Int)
+
+    override fun build(): Task {
+        val task = CoroutineTask {
+            if (findBoss(bossClass) == null) {
+                createBoss()
+            }
+            val boss: T = findBoss(bossClass)!!
+            var time = 0
+            task {
+                while (true) {
+                    yield()
+                    time++
+                }
+            }
+            task {
+                wait(maxTime)
+                terminate(boss, time)
+            }
+            spell(boss)
+        }
+        return task
+    }
+
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        fun <T : Enemy> findBoss(clazz: Class<T>): T? {
+            game.enemies.forEach {
+                if (it.javaClass == clazz) {
+                    return it as T
+                }
+            }
+            return null
+        }
+    }
 }

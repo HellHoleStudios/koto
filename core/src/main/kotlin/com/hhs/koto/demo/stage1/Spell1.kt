@@ -23,21 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.Drawable
-import com.hhs.koto.stg.Entity
-import com.hhs.koto.stg.task.Task
-import kotlinx.coroutines.CoroutineScope
-
-interface Bullet : Entity, Drawable {
-    var speed: Float
-    var angle: Float
-    var rotation: Float
-    var tint: Color
-    fun onGraze()
-    fun attachTask(task: Task): Bullet
-    fun task(index: Int, block: suspend CoroutineScope.() -> Unit): Bullet
-    fun task(block: suspend CoroutineScope.() -> Unit): Bullet = task(0, block)
+class Spell1 {
 }

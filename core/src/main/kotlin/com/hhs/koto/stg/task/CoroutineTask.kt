@@ -25,11 +25,12 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.drawable.Enemy
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
+import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.*
+import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.set
 import kotlin.coroutines.AbstractCoroutineContextElement
@@ -42,6 +43,7 @@ class CoroutineTask(
 ) : Task {
     companion object {
         val scope = CoroutineScope(CoroutineTaskDispatcher)
+        val reflect = GdxMap<CoroutineContext, CoroutineTask>()
     }
 
     object CoroutineTaskDispatcher : MainCoroutineDispatcher() {
@@ -67,7 +69,7 @@ class CoroutineTask(
     ) : AbstractCoroutineContextElement(CoroutineTaskElement) {
         companion object Key : CoroutineContext.Key<CoroutineTaskElement>
 
-        lateinit var obj: Any
+        var obj: Any? = null
     }
 
     private val element = CoroutineTaskElement(index = index).apply {
@@ -75,6 +77,11 @@ class CoroutineTask(
     }
     private val job = scope.launch(element, block = block)
     override var alive: Boolean = true
+    var attachedTasks: GdxArray<Task>? = null
+
+    init {
+        reflect[job] = this
+    }
 
     override fun tick() {
         CoroutineTaskDispatcher.tick(job.job)
@@ -83,13 +90,37 @@ class CoroutineTask(
             CoroutineTaskDispatcher.remove(job.job)
         }
         element.frame++
+        if (attachedTasks != null) {
+            for (i in 0 until attachedTasks!!.size) {
+                if (attachedTasks!![i].alive) {
+                    attachedTasks!![i].tick()
+                } else {
+                    attachedTasks!![i] = null
+                }
+            }
+            attachedTasks!!.removeNull()
+        }
     }
 
     override fun kill(): Boolean {
         alive = false
         job.cancel()
         CoroutineTaskDispatcher.remove(job.job)
+        reflect.remove(job)
         return true
+    }
+
+    fun attachTask(task: Task): CoroutineTask {
+        if (attachedTasks == null) {
+            attachedTasks = GdxArray()
+        }
+        attachedTasks!!.add(task)
+        return this
+    }
+
+    fun task(block: suspend CoroutineScope.() -> Unit): CoroutineTask {
+        attachTask(CoroutineTask(obj = this, block = block))
+        return this
     }
 }
 
@@ -101,8 +132,6 @@ val CoroutineScope.bullet: Bullet
     get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as Bullet
 val CoroutineScope.enemy: Enemy
     get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as Enemy
-val CoroutineScope.group: BulletGroup
-    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as BulletGroup
 
 suspend fun wait(frameCount: Int = 1) {
     repeat(frameCount) {
@@ -122,12 +151,11 @@ suspend fun Task.waitForFinish() {
     }
 }
 
-fun task(
-    index: Int = 0,
-    obj: Any? = null,
+fun CoroutineScope.task(
     block: suspend CoroutineScope.() -> Unit
 ): Task {
+    val obj = coroutineContext[CoroutineTask.CoroutineTaskElement]?.obj
     val task = CoroutineTask(index, obj, block)
-    addTask(task)
+    CoroutineTask.reflect[coroutineContext.job].attachTask(task)
     return task
 }

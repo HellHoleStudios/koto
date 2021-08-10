@@ -32,15 +32,15 @@ import com.hhs.koto.util.removeNull
 import com.hhs.koto.util.setBlending
 import ktx.collections.GdxArray
 
-class DrawableLayer(override val zIndex: Int = 0) : Drawable {
+class DrawableLayer<T : Drawable>(override val zIndex: Int = 0) : Drawable {
     override val x: Float = 0f
     override val y: Float = 0f
     override var alive: Boolean = true
     var alpha: Float = 1f
 
-    val drawables = GdxArray<Drawable>()
+    val drawables = GdxArray<T>()
 
-    inline fun forEach(action: (Drawable) -> Unit) {
+    inline fun forEach(action: (T) -> Unit) {
         for (i in 0 until drawables.size) {
             if (drawables[i] != null && drawables[i].alive) {
                 action(drawables[i])
@@ -48,7 +48,7 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
         }
     }
 
-    fun addDrawable(drawable: Drawable) {
+    fun addDrawable(drawable: T) {
         for (i in 0 until drawables.size) {
             if (drawables[i].zIndex > drawable.zIndex) {
                 drawables.insert(i, drawable)
@@ -58,7 +58,7 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
         drawables.add(drawable)
     }
 
-    fun removeDrawable(drawable: Drawable) {
+    fun removeDrawable(drawable: T) {
         drawables.removeValue(drawable, true)
     }
 
@@ -78,12 +78,10 @@ class DrawableLayer(override val zIndex: Int = 0) : Drawable {
 
     override fun tick() {
         for (i in 0 until drawables.size) {
-            if (drawables[i] != null) {
-                if (!drawables[i].alive) {
-                    drawables[i] = null
-                } else {
-                    drawables[i].tick()
-                }
+            if (!drawables[i].alive) {
+                drawables[i] = null
+            } else {
+                drawables[i].tick()
             }
         }
         drawables.removeNull()

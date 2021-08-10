@@ -29,10 +29,10 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.NoCollision
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.cos
+import com.hhs.koto.util.removeNull
 import com.hhs.koto.util.sin
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
@@ -58,15 +58,28 @@ class MockBullet(
         x += cos(angle) * speed
         y += sin(angle) * speed
         t++
+        if (attachedTasks != null) {
+            for (i in 0 until attachedTasks!!.size) {
+                if (attachedTasks!![i].alive) {
+                    attachedTasks!![i].tick()
+                } else {
+                    attachedTasks!![i] = null
+                }
+            }
+            attachedTasks!!.removeNull()
+        }
     }
 
-    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): MockBullet {
-        val task = CoroutineTask(index, this, block)
-        addTask(task)
+    override fun attachTask(task: Task): MockBullet {
         if (attachedTasks == null) {
             attachedTasks = GdxArray()
         }
         attachedTasks!!.add(task)
+        return this
+    }
+
+    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): MockBullet {
+        attachTask(CoroutineTask(index, this, block))
         return this
     }
 

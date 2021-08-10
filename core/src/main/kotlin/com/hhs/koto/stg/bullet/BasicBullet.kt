@@ -32,7 +32,6 @@ import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.addParticle
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
@@ -94,13 +93,16 @@ open class BasicBullet(
         deltaY = sin(angle) * speed
     }
 
-    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): BasicBullet {
-        val task = CoroutineTask(index, this, block)
-        addTask(task)
+    override fun attachTask(task: Task): BasicBullet {
         if (attachedTasks == null) {
             attachedTasks = GdxArray()
         }
         attachedTasks!!.add(task)
+        return this
+    }
+
+    override fun task(index: Int, block: suspend CoroutineScope.() -> Unit): BasicBullet {
+        attachTask(CoroutineTask(index, this, block))
         return this
     }
 
@@ -110,6 +112,16 @@ open class BasicBullet(
             y += deltaY
         }
         t++
+        if (attachedTasks != null) {
+            for (i in 0 until attachedTasks!!.size) {
+                if (attachedTasks!![i].alive) {
+                    attachedTasks!![i].tick()
+                } else {
+                    attachedTasks!![i] = null
+                }
+            }
+            attachedTasks!!.removeNull()
+        }
     }
 
     override fun kill(): Boolean {

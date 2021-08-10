@@ -88,6 +88,6 @@ class Stage1 : StageBuilder {
             effect.tick(0f, 0f, 50f)
         },
         Interpolate(0f, 1f, 60) { game.background.alpha = it },
-        TestSpell().build(),
+        MidStage1().build(),
     )
 }
