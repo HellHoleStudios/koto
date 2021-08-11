@@ -30,5 +30,5 @@ import com.hhs.koto.stg.task.BuilderSequence
 import com.hhs.koto.stg.task.TaskBuilder
 
 class RegularGame : TaskBuilder {
-    override fun build() = BuilderSequence(Stage1())
+    override fun build() = BuilderSequence(Stage1()).build()
 }

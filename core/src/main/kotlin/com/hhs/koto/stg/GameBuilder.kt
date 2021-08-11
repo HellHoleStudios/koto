@@ -91,7 +91,7 @@ object GameBuilder {
         if (difficulty !in spellBuilder.availableDifficulties) {
             throw GdxRuntimeException("Spell \"$name\" does not support difficulty \"$difficulty\"")
         }
-        return buildGameWithTask(spellBuilder.build())
+        return buildGameWithTask(spellBuilder.buildSpellPractice())
     }
 
     fun buildGameWithTask(task: Task): KotoGame {

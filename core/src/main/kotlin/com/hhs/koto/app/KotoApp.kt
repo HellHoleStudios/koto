@@ -39,10 +39,10 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.demo.RegularGame
-import com.hhs.koto.demo.player.Marisa
-import com.hhs.koto.demo.player.Reimu
+import com.hhs.koto.demo.player.MarisaPlayer
+import com.hhs.koto.demo.player.ReimuPlayer
+import com.hhs.koto.demo.stage1.Spell1
 import com.hhs.koto.demo.stage1.Stage1
-import com.hhs.koto.demo.stage1.MidStage1
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
@@ -114,16 +114,16 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         B = A[Config.defaultShotSheet]
 
         // TODO variants
-        GameBuilder.players["reimuA"] = { Reimu() }
-        GameBuilder.players["reimuB"] = { Reimu() }
-        GameBuilder.players["reimu"] = { Reimu() }
-        GameBuilder.players["marisaA"] = { Marisa() }
-        GameBuilder.players["marisaB"] = { Marisa() }
-        GameBuilder.players["marisa"] = { Marisa() }
+        GameBuilder.players["reimuA"] = { ReimuPlayer() }
+        GameBuilder.players["reimuB"] = { ReimuPlayer() }
+        GameBuilder.players["reimu"] = { ReimuPlayer() }
+        GameBuilder.players["marisaA"] = { MarisaPlayer() }
+        GameBuilder.players["marisaB"] = { MarisaPlayer() }
+        GameBuilder.players["marisa"] = { MarisaPlayer() }
 
         GameBuilder.regularGame = RegularGame()
         GameBuilder.stages.add(Stage1())
-        GameBuilder.spells.add(MidStage1())
+        GameBuilder.spells.add(Spell1())
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()

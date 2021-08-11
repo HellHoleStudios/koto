@@ -26,29 +26,33 @@
 package com.hhs.koto.demo.player
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.stg.addParticle
-import com.hhs.koto.stg.bullet.PlayerBullet
+import com.hhs.koto.stg.PlayerState
 import com.hhs.koto.stg.bullet.ShotSheet
-import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.stg.drawable.BasicPlayer
+import com.hhs.koto.stg.drawable.BasicPlayerTexture
+import com.hhs.koto.util.A
+import com.hhs.koto.util.SE
+import com.hhs.koto.util.VK
+import com.hhs.koto.util.game
 
-class HomingAmulet(
-    x: Float,
-    y: Float,
-    damage: Float,
-    shotSheet: ShotSheet,
-    val atlas: TextureAtlas,
-) : PlayerBullet(
-    x,
-    y,
-    damage,
-    1,
-    20f,
-    90f,
-    shotSheet["reimu.standard"],
-    rotation = 90f,
+open class MarisaPlayer : BasicPlayer(
+    BasicPlayerTexture(A["player/th10_player.atlas"], "th10_marisa"),
+    (A.get<TextureAtlas>("player/th10_player.atlas")).findRegion("hitbox"),
+    3.5f,
+    5f,
+    2f,
+    10,
 ) {
-    override fun hit(enemy: Enemy) {
-        super.hit(enemy)
-        addParticle(AmuletParticle(x, y, atlas = atlas))
+    protected val shotSheet: ShotSheet = A["player/th10_player.shot"]
+
+    override fun tick() {
+        if (playerState != PlayerState.RESPAWNING && VK.SHOT.pressed()) {
+            if (game.frame % 4 == 0) {
+                SE.play("shoot")
+                game.playerBullets.add(HomingAmulet(x - 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
+                game.playerBullets.add(HomingAmulet(x + 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
+            }
+        }
+        super.tick()
     }
 }

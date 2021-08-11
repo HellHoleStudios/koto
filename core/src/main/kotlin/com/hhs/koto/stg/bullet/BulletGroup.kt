@@ -25,9 +25,6 @@
 
 package com.hhs.koto.stg.bullet
 
-import com.hhs.koto.stg.addTask
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.Task
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 

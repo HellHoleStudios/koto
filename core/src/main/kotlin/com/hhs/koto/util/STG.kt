@@ -27,10 +27,13 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.app.Config
+import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.addBullet
 import com.hhs.koto.stg.bullet.*
+import com.hhs.koto.stg.drawable.Boss
 
 lateinit var game: KotoGame
 
@@ -44,10 +47,30 @@ fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     return false
 }
 
+fun <T> difficultySelect(easy: T, normal: T, hard: T, lunatic: T): T {
+    return when (SystemFlag.difficulty) {
+        GameDifficulty.EASY -> easy
+        GameDifficulty.NORMAL -> normal
+        GameDifficulty.HARD -> hard
+        GameDifficulty.LUNATIC -> lunatic
+        else -> throw GdxRuntimeException("Difficulty select: current difficulty is not regular")
+    }
+}
+
 val playerX: Float
     get() = game.player.x
 val playerY: Float
     get() = game.player.y
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Boss> findBoss(clazz: Class<T>): T? {
+    game.enemies.forEach {
+        if (it.javaClass == clazz) {
+            return it as T
+        }
+    }
+    return null
+}
 
 fun create(
     data: BulletData,

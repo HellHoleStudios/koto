@@ -25,6 +25,18 @@
 
 package com.hhs.koto.stg.task
 
+import kotlinx.coroutines.CoroutineScope
+
 interface TaskBuilder {
     fun build(): Task
 }
+
+fun taskBuilder(builder: () -> Task): TaskBuilder =
+    object : TaskBuilder {
+        override fun build(): Task = builder()
+    }
+
+fun coroutineTaskBuilder(block: suspend CoroutineScope.() -> Unit): TaskBuilder =
+    object : TaskBuilder {
+        override fun build(): Task = CoroutineTask(block = block)
+    }

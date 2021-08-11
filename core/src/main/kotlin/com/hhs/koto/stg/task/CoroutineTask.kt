@@ -26,7 +26,6 @@
 package com.hhs.koto.stg.task
 
 import com.hhs.koto.stg.bullet.Bullet
-import com.hhs.koto.stg.bullet.BulletGroup
 import com.hhs.koto.stg.drawable.Enemy
 import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.*
@@ -64,6 +63,7 @@ class CoroutineTask(
     }
 
     class CoroutineTaskElement(
+        val self: CoroutineTask,
         var frame: Int = 0,
         val index: Int = 0,
     ) : AbstractCoroutineContextElement(CoroutineTaskElement) {
@@ -72,7 +72,7 @@ class CoroutineTask(
         var obj: Any? = null
     }
 
-    private val element = CoroutineTaskElement(index = index).apply {
+    private val element = CoroutineTaskElement(this, index = index).apply {
         if (obj != null) this.obj = obj
     }
     private val job = scope.launch(element, block = block)
@@ -124,10 +124,14 @@ class CoroutineTask(
     }
 }
 
+val CoroutineScope.self: CoroutineTask
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.self
 val CoroutineScope.frame: Int
     get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.frame
 val CoroutineScope.index: Int
     get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.index
+val CoroutineScope.obj: Any
+    get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj!!
 val CoroutineScope.bullet: Bullet
     get() = coroutineContext[CoroutineTask.CoroutineTaskElement]!!.obj as Bullet
 val CoroutineScope.enemy: Enemy
@@ -151,9 +155,7 @@ suspend fun Task.waitForFinish() {
     }
 }
 
-fun CoroutineScope.task(
-    block: suspend CoroutineScope.() -> Unit
-): Task {
+fun CoroutineScope.task(block: suspend CoroutineScope.() -> Unit): Task {
     val obj = coroutineContext[CoroutineTask.CoroutineTaskElement]?.obj
     val task = CoroutineTask(index, obj, block)
     CoroutineTask.reflect[coroutineContext.job].attachTask(task)

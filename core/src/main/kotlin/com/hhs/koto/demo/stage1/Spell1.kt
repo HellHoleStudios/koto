@@ -25,5 +25,28 @@
 
 package com.hhs.koto.demo.stage1
 
-class Spell1 {
+import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.task.BasicSpell
+import com.hhs.koto.stg.task.Task
+import com.hhs.koto.util.difficultySelect
+import ktx.collections.GdxArray
+
+class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
+    override val name: String = "spell1"
+    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
+    override val health: Float
+        get() = difficultySelect(1000f, 1200f, 1400f, 1600f)
+    override val maxTime: Int = 1200
+
+    override fun spell(): Task {
+        TODO("Not yet implemented")
+    }
+
+    override fun terminate(): Task {
+        TODO("Not yet implemented")
+    }
+
+    override fun buildSpellPractice(): Task {
+        TODO("Not yet implemented")
+    }
 }

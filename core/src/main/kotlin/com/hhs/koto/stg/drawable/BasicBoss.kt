@@ -38,12 +38,12 @@ import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 
-class BasicBoss(
+open class BasicBoss(
     override val x: Float,
     override val y: Float,
     bulletCollisionRadius: Float,
     playerCollisionRadius: Float = bulletCollisionRadius / 3f,
-) : Enemy {
+) : Boss {
     var invulnerable: Boolean = false
     val attachedTasks = GdxArray<Task>()
     val bulletCollision = CircleCollision(bulletCollisionRadius)

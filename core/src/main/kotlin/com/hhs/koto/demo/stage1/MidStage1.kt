@@ -26,7 +26,6 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicEnemy
 import com.hhs.koto.stg.drawable.BasicEnemyTexture
@@ -36,12 +35,8 @@ import com.hhs.koto.util.A
 import com.hhs.koto.util.playerX
 import com.hhs.koto.util.playerY
 import com.hhs.koto.util.towards
-import ktx.collections.GdxArray
 
-class MidStage1 : SpellBuilder {
-    override val name = "stage1.spell1"
-    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
-
+class MidStage1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
         task {
             while (true) {

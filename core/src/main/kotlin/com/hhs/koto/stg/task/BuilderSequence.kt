@@ -25,65 +25,58 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.util.app
 import ktx.collections.GdxArray
 
-class BuilderSequence(vararg builder: TaskBuilder) : Task {
-    val builders = GdxArray<TaskBuilder>(8)
-    private var currentIndex: Int = 0
-    private var currentTask: Task? = null
-    override var alive: Boolean = true
+class BuilderSequence(vararg builder: TaskBuilder) : TaskBuilder {
+    private val builders = GdxArray<TaskBuilder>(8)
 
     init {
         builder.forEach { builders.add(it) }
         builders.shrink()
     }
 
-    override fun tick() {
-        while (currentIndex < builders.size) {
-            if (currentTask == null) {
-                currentTask = builders[currentIndex].build()
+    override fun build(): Task = object : Task {
+        private var currentIndex: Int = 0
+        private var currentTask: Task? = null
+        override var alive: Boolean = true
+
+        override fun tick() {
+            while (currentIndex < builders.size) {
+                if (currentTask == null) {
+                    currentTask = builders[currentIndex].build()
+                }
+                currentTask!!.tick()
+                if (!currentTask!!.alive) {
+                    currentTask = null
+                    currentIndex++
+                } else {
+                    break
+                }
             }
-            currentTask!!.tick()
-            if (!currentTask!!.alive) {
-                currentTask = null
-                currentIndex++
-            } else {
-                break
+            if (currentIndex >= builders.size) {
+                alive = true
+                return
             }
         }
-        if (currentIndex >= builders.size) {
-            alive = true
-            return
+
+        override fun kill(): Boolean {
+            builders.clear()
+            alive = false
+            return true
         }
     }
 
-    override fun kill(): Boolean {
-        builders.clear()
-        alive = false
-        return true
-    }
-
-    fun addBuilder(vararg builder: TaskBuilder) {
-        if (!alive) {
-            app.logger.error("Cannot add builder to a completed BuilderSequence!")
-            return
-        }
-
+    fun add(vararg builder: TaskBuilder) {
         builder.forEach {
             builders.add(it)
         }
     }
 
-    fun addBuilder(builder: TaskBuilder) {
-        if (!alive) {
-            app.logger.error("Cannot add builder to a completed BuilderSequence!")
-            return
-        }
+    fun add(builder: TaskBuilder) {
         builders.add(builder)
     }
 
-    operator fun plusAssign(builder: TaskBuilder) = addBuilder(builder)
+    operator fun plusAssign(builder: TaskBuilder) = add(builder)
 
     operator fun plus(other: BuilderSequence): BuilderSequence {
         val tmp = BuilderSequence()

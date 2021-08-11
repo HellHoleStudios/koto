@@ -23,32 +23,13 @@
  *
  */
 
-package com.hhs.koto.demo.player
+package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.stg.addParticle
-import com.hhs.koto.stg.bullet.PlayerBullet
-import com.hhs.koto.stg.bullet.ShotSheet
-import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.stg.drawable.BasicBoss
 
-class HomingAmulet(
-    x: Float,
-    y: Float,
-    damage: Float,
-    shotSheet: ShotSheet,
-    val atlas: TextureAtlas,
-) : PlayerBullet(
-    x,
-    y,
-    damage,
-    1,
-    20f,
-    90f,
-    shotSheet["reimu.standard"],
-    rotation = 90f,
+class AyaBoss : BasicBoss(
+    114514f,
+    114514f,
+    114514f,
 ) {
-    override fun hit(enemy: Enemy) {
-        super.hit(enemy)
-        addParticle(AmuletParticle(x, y, atlas = atlas))
-    }
 }
