@@ -25,11 +25,46 @@
 
 package com.hhs.koto.demo.stage1
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.drawable.BasicBoss
+import com.hhs.koto.stg.drawable.StarGraphStateMachineTexture
+import com.hhs.koto.util.A
+import ktx.collections.set
 
 class AyaBoss : BasicBoss(
-    114514f,
-    114514f,
-    114514f,
+    0f,
+    0f,
+    0f,
 ) {
+    val textureStateMachine = StarGraphStateMachineTexture(
+        A["sprite/th10_aya.atlas"], "th10_aya", "_center", 5
+    ).apply {
+        branches["left"] = StarGraphStateMachineTexture.Branch(
+            edgeRegionName = "_movingLeft", edgeTransitionTime = 5
+        )
+        branches["right"] = StarGraphStateMachineTexture.Branch(
+            edgeRegionName = "_movingRight", edgeTransitionTime = 5
+        )
+        branches["action"] = StarGraphStateMachineTexture.Branch(
+            edgeRegionName = "_action", edgeTransitionTime = 5
+        )
+        build()
+    }
+    override val texture: TextureRegion
+        get() = textureStateMachine.texture
+    override val width: Float = 64f
+    override val height: Float = 64f
+    var oldX: Float = x
+
+    override fun tick() {
+        if (x < oldX) {
+            textureStateMachine.update("left")
+        } else if (x > oldX) {
+            textureStateMachine.update("right")
+        } else {
+            textureStateMachine.update("")
+        }
+        oldX = x
+        super.tick()
+    }
 }

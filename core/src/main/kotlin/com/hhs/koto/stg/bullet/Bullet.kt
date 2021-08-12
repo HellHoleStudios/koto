@@ -28,10 +28,11 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.stg.Entity
+import com.hhs.koto.stg.Movable
 import com.hhs.koto.stg.task.Task
 import kotlinx.coroutines.CoroutineScope
 
-interface Bullet : Entity, Drawable {
+interface Bullet : Entity, Drawable, Movable {
     var speed: Float
     var angle: Float
     var rotation: Float

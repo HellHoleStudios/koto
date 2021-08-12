@@ -23,10 +23,39 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg
 
-import com.hhs.koto.stg.HealthBar
+import ktx.collections.GdxArray
 
-interface Boss : Enemy {
-    val healthBar: HealthBar
+class HealthBar {
+    val segments = GdxArray<Float>()
+    var currentSegment: Int = -1
+    var totalHealth: Float = 0f
+    var currentHealth: Float = 0f
+
+    fun addSegment(health: Float) {
+        currentSegment++
+        totalHealth += health
+        currentHealth = health
+        segments.add(health)
+    }
+
+    fun currentTotalHealth(): Float {
+        var result = 0f
+        for (i in 0 until currentSegment) {
+            result += segments[i]
+        }
+        return result + currentHealth
+    }
+
+    fun damage(damage: Float) {
+        currentHealth = (currentHealth - damage).coerceAtLeast(0f)
+    }
+
+    fun currentSegmentDepleted(): Boolean = currentHealth <= 0
+
+    fun nextSegment() {
+        currentSegment--
+        currentHealth = segments[currentSegment]
+    }
 }

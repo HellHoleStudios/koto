@@ -23,10 +23,9 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg
 
-import com.hhs.koto.stg.HealthBar
-
-interface Boss : Enemy {
-    val healthBar: HealthBar
+interface Movable {
+    var x: Float
+    var y: Float
 }

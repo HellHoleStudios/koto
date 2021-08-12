@@ -34,18 +34,21 @@ import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.set
 
-abstract class StarGraphStateMachineTexture(
-    protected val atlas: TextureAtlas,
-    protected val baseName: String,
+open class StarGraphStateMachineTexture(
+    val atlas: TextureAtlas,
+    val baseName: String,
+    val centerRegionName: String,
+    val centerTransitionTime: Int,
 ) {
-    protected lateinit var stateMachine: StateMachine<TextureRegion, String>
-    abstract val centerRegionName: String
-    abstract val centerTransitionTime: Int
-    protected val branches = GdxMap<String, Branch>()
+    lateinit var stateMachine: StateMachine<TextureRegion, String>
+    val branches = GdxMap<String, Branch>()
+
+    val texture: TextureRegion
+        get() = stateMachine.state
 
     data class Branch(
-        val vertexRegionName: String,
-        val vertexTransitionTime: Int,
+        val vertexRegionName: String? = null,
+        val vertexTransitionTime: Int? = null,
         val edgeRegionName: String? = null,
         val edgeTransitionTime: Int? = null,
     )
@@ -57,7 +60,9 @@ abstract class StarGraphStateMachineTexture(
 
         for (branchName in branches.safeKeys()) {
             val branch = branches[branchName]
-            vertexRegions[branchName] = atlas.findRegions(baseName + branch.vertexRegionName)
+            if (branch.vertexRegionName != null && branch.vertexTransitionTime != null) {
+                vertexRegions[branchName] = atlas.findRegions(baseName + branch.vertexRegionName)
+            }
             if (branch.edgeRegionName != null && branch.edgeTransitionTime != null) {
                 edgeRegions[branchName] = atlas.findRegions(baseName + branch.edgeRegionName)
             }
@@ -77,7 +82,7 @@ abstract class StarGraphStateMachineTexture(
                     } else {
                         Pair(
                             vertexRegions[it][0],
-                            branch.vertexTransitionTime,
+                            branch.vertexTransitionTime!!,
                         )
                     }
                 }
@@ -85,7 +90,36 @@ abstract class StarGraphStateMachineTexture(
         }
         for (branchName in branches.safeKeys()) {
             val branch = branches[branchName]
-            if (branch.edgeRegionName != null && branch.edgeTransitionTime != null) {
+            if (branch.edgeRegionName == null || branch.edgeTransitionTime == null) {
+                for (i in 0 until vertexRegions[branchName].size) {
+                    stateMachine.states[vertexRegions[branchName][i]] = {
+                        when (it) {
+                            branchName -> Pair(
+                                vertexRegions[branchName][(i + 1) % vertexRegions[branchName].size],
+                                branch.vertexTransitionTime!!,
+                            )
+                            else -> Pair(centerRegions[0], branch.vertexTransitionTime!!)
+                        }
+                    }
+                }
+            } else if (branch.vertexRegionName == null || branch.vertexTransitionTime == null) {
+                for (i in 0 until edgeRegions[branchName].size) {
+                    stateMachine.states[edgeRegions[branchName][i]] = {
+                        when (it) {
+                            branchName -> if (i == edgeRegions[branchName].size - 1) {
+                                Pair(edgeRegions[branchName][i], branch.edgeTransitionTime)
+                            } else {
+                                Pair(edgeRegions[branchName][i + 1], branch.edgeTransitionTime)
+                            }
+                            else -> if (i == 0) {
+                                Pair(centerRegions[0], branch.edgeTransitionTime)
+                            } else {
+                                Pair(edgeRegions[branchName][i - 1], branch.edgeTransitionTime)
+                            }
+                        }
+                    }
+                }
+            } else {
                 for (i in 0 until vertexRegions[branchName].size) {
                     stateMachine.states[vertexRegions[branchName][i]] = {
                         when (it) {
@@ -113,18 +147,6 @@ abstract class StarGraphStateMachineTexture(
                         }
                     }
                 }
-            } else {
-                for (i in 0 until vertexRegions[branchName].size) {
-                    stateMachine.states[vertexRegions[branchName][i]] = {
-                        when (it) {
-                            branchName -> Pair(
-                                vertexRegions[branchName][(i + 1) % vertexRegions[branchName].size],
-                                branch.vertexTransitionTime,
-                            )
-                            else -> Pair(centerRegions[0], branch.vertexTransitionTime)
-                        }
-                    }
-                }
             }
         }
     }
@@ -132,7 +154,4 @@ abstract class StarGraphStateMachineTexture(
     fun update(condition: String) {
         stateMachine.update(condition)
     }
-
-    val texture: TextureRegion
-        get() = stateMachine.state
 }

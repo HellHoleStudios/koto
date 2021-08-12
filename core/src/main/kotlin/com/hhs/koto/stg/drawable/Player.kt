@@ -25,7 +25,7 @@
 
 package com.hhs.koto.stg
 
-interface Player : Drawable {
+interface Player : Drawable, Movable {
     val hitCollision: CollisionShape
     val grazeCollision: CollisionShape
     val itemCollision: CollisionShape

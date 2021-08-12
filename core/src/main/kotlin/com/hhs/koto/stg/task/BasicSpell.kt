@@ -42,7 +42,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         return ParallelTask(CoroutineTask {
             boss = findBoss(bossClass)!!
             while (true) {
-                if (t >= maxTime) {
+                if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
                     spellTask.kill()
                     break
                 }

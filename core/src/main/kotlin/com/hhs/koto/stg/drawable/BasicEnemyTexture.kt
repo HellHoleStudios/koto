@@ -26,49 +26,23 @@
 package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.util.StateMachine
 import ktx.collections.set
 
 class BasicEnemyTexture(
     atlas: TextureAtlas,
     baseName: String,
     centerRegionName: String = "_center",
+    rightRegionName: String = "_right",
     movingRightRegionName: String = "_movingRight",
     centerTransitionTime: Int = 5,
-    movingRightTransitionTime: Int = 10,
-) {
-
-    protected val stateMachine: StateMachine<TextureRegion, String>
+    rightTransitionTime: Int = 5,
+    movingRightTransitionTime: Int = 5,
+) : StarGraphStateMachineTexture(atlas, baseName, centerRegionName, centerTransitionTime) {
 
     init {
-        val centerRegions = atlas.findRegions(baseName + centerRegionName)
-        val movingRightRegions = atlas.findRegions(baseName + movingRightRegionName)
-        stateMachine = StateMachine(centerRegions[0])
-        for (i in 0 until centerRegions.size) {
-            stateMachine.states[centerRegions[i]] = {
-                when (it) {
-                    "right" -> Pair(movingRightRegions[0], movingRightTransitionTime)
-                    else -> Pair(centerRegions[(i + 1) % centerRegions.size], centerTransitionTime)
-                }
-            }
-        }
-        for (i in 0 until movingRightRegions.size) {
-            stateMachine.states[movingRightRegions[i]] = {
-                when (it) {
-                    "right" -> if (i == movingRightRegions.size - 1) {
-                        Pair(movingRightRegions[i - 1], movingRightTransitionTime)
-                    } else {
-                        Pair(movingRightRegions[i], movingRightTransitionTime)
-                    }
-                    else -> if (i == 0) {
-                        Pair(centerRegions[0], movingRightTransitionTime)
-                    } else {
-                        Pair(movingRightRegions[i + 1], movingRightTransitionTime)
-                    }
-                }
-            }
-        }
+        branches["right"] =
+            Branch(rightRegionName, rightTransitionTime, movingRightRegionName, movingRightTransitionTime)
+        build()
     }
 
     fun update(condition: Int) {
@@ -77,7 +51,4 @@ class BasicEnemyTexture(
             1 -> stateMachine.update("right")
         }
     }
-
-    val texture: TextureRegion
-        get() = stateMachine.state
 }

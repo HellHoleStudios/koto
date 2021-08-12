@@ -272,7 +272,7 @@ open class BasicPlayer(
                 it.kill()
             }
             game.enemies.forEach {
-                (it as Enemy).onDeath()
+                it.onDeath()
             }
             game.items.forEach {
                 it.onCollect(x, y, true)

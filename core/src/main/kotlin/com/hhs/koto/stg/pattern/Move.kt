@@ -23,10 +23,34 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.HealthBar
+import com.badlogic.gdx.math.Interpolation
+import com.hhs.koto.stg.Movable
+import com.hhs.koto.stg.addTask
+import com.hhs.koto.stg.task.waitForFinish
 
-interface Boss : Enemy {
-    val healthBar: HealthBar
+class Move(
+    val target: Movable,
+    val targetX: Float = target.x,
+    val targetY: Float = target.y,
+    duration: Int,
+    val interpolation: Interpolation = Interpolation.smooth,
+) : TemporalPattern(duration) {
+    val startX: Float = target.x
+    val startY: Float = target.y
+    override fun action() {
+        target.x = interpolation.apply(startX, targetX, t.toFloat() / duration)
+        target.y = interpolation.apply(startY, targetY, t.toFloat() / duration)
+    }
+}
+
+suspend fun move(
+    target: Movable,
+    targetX: Float = target.x,
+    targetY: Float = target.y,
+    duration: Int,
+    interpolation: Interpolation = Interpolation.sine,
+) {
+    addTask(Move(target, targetX, targetY, duration, interpolation)).waitForFinish()
 }

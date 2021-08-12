@@ -123,22 +123,6 @@ fun Color.tintHSV(tint: Color): Color {
     return Color((r + tint.r) % 1f, g * tint.g, b * tint.b, a * tint.a)
 }
 
-fun hsvColor(color: Color): HSVColorAction {
-    return hsvColor(color, 0f, null)
-}
-
-fun hsvColor(color: Color, duration: Float): HSVColorAction {
-    return hsvColor(color, duration, null)
-}
-
-fun hsvColor(color: Color, duration: Float, interpolation: Interpolation?): HSVColorAction {
-    val action = Actions.action(HSVColorAction::class.java)
-    action.endColor = color
-    action.duration = duration
-    action.interpolation = interpolation
-    return action
-}
-
 val registeredEffects = GdxSet<ChainVfxEffect>()
 
 fun VfxManager.addEffectRegistered(effect: ChainVfxEffect, priority: Int = 0) {

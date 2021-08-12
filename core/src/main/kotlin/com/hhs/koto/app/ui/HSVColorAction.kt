@@ -26,6 +26,8 @@
 package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction
 import kotlin.math.absoluteValue
 
@@ -82,4 +84,20 @@ class HSVColorAction : TemporalAction() {
             }
         }
     }
+}
+
+fun hsvColor(color: Color): HSVColorAction {
+    return hsvColor(color, 0f, null)
+}
+
+fun hsvColor(color: Color, duration: Float): HSVColorAction {
+    return hsvColor(color, duration, null)
+}
+
+fun hsvColor(color: Color, duration: Float, interpolation: Interpolation?): HSVColorAction {
+    val action = Actions.action(HSVColorAction::class.java)
+    action.endColor = color
+    action.duration = duration
+    action.interpolation = interpolation
+    return action
 }

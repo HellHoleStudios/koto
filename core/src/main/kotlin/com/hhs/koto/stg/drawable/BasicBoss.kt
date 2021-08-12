@@ -25,22 +25,22 @@
 
 package com.hhs.koto.stg.drawable
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision
+import com.hhs.koto.stg.HealthBar
 import com.hhs.koto.stg.PlayerState
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
-import com.hhs.koto.util.game
-import com.hhs.koto.util.playerX
-import com.hhs.koto.util.playerY
-import com.hhs.koto.util.removeNull
+import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 
-open class BasicBoss(
-    override val x: Float,
-    override val y: Float,
+abstract class BasicBoss(
+    override var x: Float,
+    override var y: Float,
     bulletCollisionRadius: Float,
     playerCollisionRadius: Float = bulletCollisionRadius / 3f,
 ) : Boss {
@@ -48,6 +48,18 @@ open class BasicBoss(
     val attachedTasks = GdxArray<Task>()
     val bulletCollision = CircleCollision(bulletCollisionRadius)
     val playerCollision = CircleCollision(playerCollisionRadius)
+    var rotation: Float = 0f
+    var scaleX = 1f
+    var scaleY = 1f
+    var color: Color = Color.WHITE
+    override val healthBar = HealthBar()
+    abstract val texture: TextureRegion
+    abstract val width: Float
+    abstract val height: Float
+    open val textureOriginX: Float
+        get() = texture.regionWidth.toFloat() / 2
+    open val textureOriginY: Float
+        get() = texture.regionHeight.toFloat() / 2
     override var alive: Boolean = true
 
     override fun tick() {
@@ -75,15 +87,39 @@ open class BasicBoss(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-
+        tmpColor.set(batch.color)
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
+        if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
+            batch.draw(
+                texture,
+                x - textureOriginX,
+                y - textureOriginY,
+                textureOriginX,
+                textureOriginY,
+                width,
+                height,
+                scaleX,
+                scaleY,
+                rotation,
+            )
+        } else {
+            batch.draw(
+                texture,
+                x - textureOriginX,
+                y - textureOriginY,
+                width,
+                height,
+            )
+        }
+        batch.color = tmpColor
     }
 
     override fun onHit(damage: Float) {
-
+        healthBar.damage(damage)
     }
 
     override fun onDeath() {
-
+        // TODO boss death animation
     }
 
     override fun kill(): Boolean {

@@ -20,28 +20,21 @@ th10_fairy_blue_center
   index: 3
 th10_fairy_blue_center
   rotate: false
-  xy: 104, 138
+  xy: 70, 104
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 th10_fairy_blue_center
   rotate: false
-  xy: 70, 36
+  xy: 172, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
-th10_fairy_blue_center
-  rotate: false
-  xy: 138, 36
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
 th10_fairy_blue_movingRight
   rotate: false
-  xy: 36, 206
+  xy: 2, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -55,25 +48,11 @@ th10_fairy_blue_movingRight
   index: 0
 th10_fairy_blue_movingRight
   rotate: false
-  xy: 104, 172
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 5
-th10_fairy_blue_movingRight
-  rotate: false
-  xy: 138, 172
+  xy: 104, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
-th10_fairy_blue_movingRight
-  rotate: false
-  xy: 104, 70
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
 th10_fairy_blue_movingRight
   rotate: false
   xy: 138, 70
@@ -81,16 +60,37 @@ th10_fairy_blue_movingRight
   orig: 32, 32
   offset: 0, 0
   index: 1
-th10_fairy_blue_movingRight
+th10_fairy_blue_right
   rotate: false
-  xy: 172, 70
+  xy: 70, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 6
+  index: 1
+th10_fairy_blue_right
+  rotate: false
+  xy: 138, 172
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+th10_fairy_blue_right
+  rotate: false
+  xy: 36, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+th10_fairy_blue_right
+  rotate: false
+  xy: 172, 104
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
 th10_fairy_green_center
   rotate: false
-  xy: 36, 172
+  xy: 36, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -111,32 +111,18 @@ th10_fairy_green_center
   index: 2
 th10_fairy_green_center
   rotate: false
-  xy: 206, 172
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
-th10_fairy_green_center
-  rotate: false
-  xy: 206, 104
+  xy: 172, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 th10_fairy_green_movingRight
   rotate: false
-  xy: 70, 206
+  xy: 2, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
-th10_fairy_green_movingRight
-  rotate: false
-  xy: 70, 104
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
 th10_fairy_green_movingRight
   rotate: false
   xy: 70, 70
@@ -146,13 +132,6 @@ th10_fairy_green_movingRight
   index: 1
 th10_fairy_green_movingRight
   rotate: false
-  xy: 172, 172
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 6
-th10_fairy_green_movingRight
-  rotate: false
   xy: 70, 2
   size: 32, 32
   orig: 32, 32
@@ -160,46 +139,60 @@ th10_fairy_green_movingRight
   index: 3
 th10_fairy_green_movingRight
   rotate: false
+  xy: 206, 104
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+th10_fairy_green_right
+  rotate: false
+  xy: 36, 172
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+th10_fairy_green_right
+  rotate: false
+  xy: 104, 104
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+th10_fairy_green_right
+  rotate: false
+  xy: 206, 172
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+th10_fairy_green_right
+  rotate: false
   xy: 138, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
-th10_fairy_green_movingRight
-  rotate: false
-  xy: 172, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 5
 th10_fairy_red_center
   rotate: false
-  xy: 2, 104
+  xy: 70, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 th10_fairy_red_center
   rotate: false
-  xy: 138, 206
+  xy: 104, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 th10_fairy_red_center
   rotate: false
-  xy: 104, 104
+  xy: 138, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
-th10_fairy_red_center
-  rotate: false
-  xy: 104, 36
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
 th10_fairy_red_center
   rotate: false
   xy: 172, 36
@@ -209,25 +202,11 @@ th10_fairy_red_center
   index: 1
 th10_fairy_red_movingRight
   rotate: false
-  xy: 2, 138
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
-th10_fairy_red_movingRight
-  rotate: false
-  xy: 70, 172
+  xy: 104, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
-th10_fairy_red_movingRight
-  rotate: false
-  xy: 2, 36
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 6
 th10_fairy_red_movingRight
   rotate: false
   xy: 172, 206
@@ -237,28 +216,49 @@ th10_fairy_red_movingRight
   index: 3
 th10_fairy_red_movingRight
   rotate: false
-  xy: 138, 138
+  xy: 206, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 th10_fairy_red_movingRight
   rotate: false
-  xy: 138, 104
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 5
-th10_fairy_red_movingRight
-  rotate: false
-  xy: 172, 104
+  xy: 206, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
+th10_fairy_red_right
+  rotate: false
+  xy: 2, 70
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+th10_fairy_red_right
+  rotate: false
+  xy: 70, 36
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+th10_fairy_red_right
+  rotate: false
+  xy: 104, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+th10_fairy_red_right
+  rotate: false
+  xy: 172, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
 th10_fairy_yellow_center
   rotate: false
-  xy: 104, 206
+  xy: 138, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -272,18 +272,11 @@ th10_fairy_yellow_center
   index: 0
 th10_fairy_yellow_center
   rotate: false
-  xy: 206, 206
+  xy: 104, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
-th10_fairy_yellow_center
-  rotate: false
-  xy: 206, 138
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
 th10_fairy_yellow_center
   rotate: false
   xy: 206, 70
@@ -293,42 +286,21 @@ th10_fairy_yellow_center
   index: 1
 th10_fairy_yellow_movingRight
   rotate: false
-  xy: 2, 172
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 5
-th10_fairy_yellow_movingRight
-  rotate: false
-  xy: 2, 70
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 th10_fairy_yellow_movingRight
   rotate: false
-  xy: 2, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 4
-th10_fairy_yellow_movingRight
-  rotate: false
-  xy: 36, 2
+  xy: 138, 104
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 th10_fairy_yellow_movingRight
   rotate: false
-  xy: 172, 138
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 6
-th10_fairy_yellow_movingRight
-  rotate: false
-  xy: 104, 2
+  xy: 138, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -340,3 +312,31 @@ th10_fairy_yellow_movingRight
   orig: 32, 32
   offset: 0, 0
   index: 0
+th10_fairy_yellow_right
+  rotate: false
+  xy: 2, 104
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+th10_fairy_yellow_right
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+th10_fairy_yellow_right
+  rotate: false
+  xy: 172, 172
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+th10_fairy_yellow_right
+  rotate: false
+  xy: 104, 36
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2

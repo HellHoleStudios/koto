@@ -26,8 +26,9 @@
 package com.hhs.koto.stg.drawable
 
 import com.hhs.koto.stg.Drawable
+import com.hhs.koto.stg.Movable
 
-interface Enemy : Drawable {
+interface Enemy : Drawable, Movable {
     fun onHit(damage: Float)
     fun onDeath()
 }

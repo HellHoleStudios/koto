@@ -31,17 +31,17 @@ import ktx.collections.set
 class BasicPlayerTexture(
     atlas: TextureAtlas,
     baseName: String,
-    override val centerRegionName: String = "_center",
+    centerRegionName: String = "_center",
     leftRegionName: String = "_left",
     rightRegionName: String = "_right",
     movingLeftRegionName: String = "_movingLeft",
     movingRightRegionName: String = "_movingRight",
-    override val centerTransitionTime: Int = 5,
+    centerTransitionTime: Int = 5,
     leftTransitionTime: Int = 5,
     rightTransitionTime: Int = 5,
     movingLeftTransitionTime: Int = 2,
     movingRightTransitionTime: Int = 2,
-) : StarGraphStateMachineTexture(atlas, baseName) {
+) : StarGraphStateMachineTexture(atlas, baseName, centerRegionName, centerTransitionTime) {
 
     init {
         branches["left"] =
