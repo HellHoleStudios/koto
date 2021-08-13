@@ -28,10 +28,7 @@ package com.hhs.koto.stg.drawable
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.stg.CircleCollision
-import com.hhs.koto.stg.Collision
-import com.hhs.koto.stg.HealthBar
-import com.hhs.koto.stg.PlayerState
+import com.hhs.koto.stg.*
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
@@ -52,7 +49,11 @@ abstract class BasicBoss(
     var scaleX = 1f
     var scaleY = 1f
     var color: Color = Color.WHITE
-    override val healthBar = HealthBar()
+    val magicCircle = MagicCircle()
+
+    override val healthBar = HealthBar(this).apply {
+        game.hud.addDrawable(this)
+    }
     abstract val texture: TextureRegion
     abstract val width: Float
     abstract val height: Float
@@ -76,6 +77,7 @@ abstract class BasicBoss(
         ) {
             game.player.onHit()
         }
+        magicCircle.tick()
         for (i in 0 until attachedTasks.size) {
             if (attachedTasks[i].alive) {
                 attachedTasks[i].tick()
@@ -87,6 +89,7 @@ abstract class BasicBoss(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        magicCircle.draw(batch, parentAlpha, x, y)
         tmpColor.set(batch.color)
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
@@ -116,6 +119,11 @@ abstract class BasicBoss(
 
     override fun onHit(damage: Float) {
         healthBar.damage(damage)
+        if (healthBar.currentHealth < 500f) {
+            SE.play("damage1")
+        } else {
+            SE.play("damage0")
+        }
     }
 
     override fun onDeath() {

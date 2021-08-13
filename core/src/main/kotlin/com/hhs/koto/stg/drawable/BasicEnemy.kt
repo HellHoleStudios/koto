@@ -134,6 +134,11 @@ open class BasicEnemy(
 
     override fun onHit(damage: Float) {
         hp -= damage
+        if (hp < 500f) {
+            SE.play("damage1")
+        } else {
+            SE.play("damage0")
+        }
         if (hp <= 0) {
             onDeath()
         }

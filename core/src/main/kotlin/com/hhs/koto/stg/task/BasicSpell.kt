@@ -43,12 +43,12 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             boss = findBoss(bossClass)!!
             while (true) {
                 if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
-                    spellTask.kill()
+                    if (spellTask.alive) spellTask.kill()
                     break
                 }
                 yield()
                 t++
             }
-        }, spellTask, terminate())
+        }, SequenceTask(spellTask, terminate()))
     }
 }

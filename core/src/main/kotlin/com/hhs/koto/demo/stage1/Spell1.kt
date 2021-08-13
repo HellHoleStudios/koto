@@ -25,9 +25,13 @@
 
 package com.hhs.koto.demo.stage1
 
+import com.badlogic.gdx.math.MathUtils
 import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.BasicSpell
+import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
+import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.difficultySelect
 import ktx.collections.GdxArray
 
@@ -38,15 +42,24 @@ class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
         get() = difficultySelect(1000f, 1200f, 1400f, 1600f)
     override val maxTime: Int = 1200
 
-    override fun spell(): Task {
-        TODO("Not yet implemented")
+    override fun spell(): Task = CoroutineTask {
+        while (true) {
+            move(boss, MathUtils.random(-150f, 150f), MathUtils.random(-150f, 150f), 120)
+            wait(30)
+            boss.usingAction = true
+            wait(60)
+            boss.usingAction = false
+            wait(30)
+        }
     }
 
     override fun terminate(): Task {
-        TODO("Not yet implemented")
+        return CoroutineTask {
+            boss.healthBar.nextSegment()
+        }
     }
 
     override fun buildSpellPractice(): Task {
-        TODO("Not yet implemented")
+        return CoroutineTask {}
     }
 }

@@ -34,7 +34,7 @@ import ktx.collections.set
 class AyaBoss : BasicBoss(
     0f,
     0f,
-    0f,
+    20f,
 ) {
     val textureStateMachine = StarGraphStateMachineTexture(
         A["sprite/th10_aya.atlas"], "th10_aya", "_center", 5
@@ -54,10 +54,13 @@ class AyaBoss : BasicBoss(
         get() = textureStateMachine.texture
     override val width: Float = 64f
     override val height: Float = 64f
+    var usingAction: Boolean = false
     var oldX: Float = x
 
     override fun tick() {
-        if (x < oldX) {
+        if (usingAction) {
+            textureStateMachine.update("action")
+        } else if (x < oldX) {
             textureStateMachine.update("left")
         } else if (x > oldX) {
             textureStateMachine.update("right")

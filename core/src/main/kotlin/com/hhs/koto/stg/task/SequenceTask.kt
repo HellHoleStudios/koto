@@ -40,6 +40,11 @@ class SequenceTask(vararg task: Task) : Task {
 
     override fun tick() {
         while (currentIndex < tasks.size) {
+            if (!tasks[currentIndex].alive) {
+                tasks[currentIndex] = null
+                currentIndex++
+                continue
+            }
             tasks[currentIndex].tick()
             if (!tasks[currentIndex].alive) {
                 tasks[currentIndex] = null

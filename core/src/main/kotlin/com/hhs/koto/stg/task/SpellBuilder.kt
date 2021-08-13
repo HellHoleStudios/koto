@@ -28,9 +28,8 @@ package com.hhs.koto.stg.task
 import com.hhs.koto.stg.GameDifficulty
 import ktx.collections.GdxArray
 
-interface SpellBuilder {
+interface SpellBuilder : TaskBuilder {
     val name: String
     val availableDifficulties: GdxArray<GameDifficulty>
-    fun build(): Task
     fun buildSpellPractice(): Task
 }

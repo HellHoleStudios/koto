@@ -26,25 +26,20 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicEnemy
 import com.hhs.koto.stg.drawable.BasicEnemyTexture
 import com.hhs.koto.stg.pattern.interpolate
-import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.A
+import com.hhs.koto.util.playerX
+import com.hhs.koto.util.playerY
+import com.hhs.koto.util.towards
 
 class MidStage1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
         task {
-            addEnemy(AyaBoss()).task {
-                while (true) {
-                    move(enemy, random(-150f, 150f), random(-150f, 150f), 120)
-                    wait(120)
-                }
-            }
-            while (true) {
+            repeat(3) {
                 addEnemy(
                     BasicEnemy(
                         -250f,
@@ -66,16 +61,16 @@ class MidStage1 : TaskBuilder {
                     enemy.kill()
                 }.task {
                     while (true) {
-//                        repeat(10) {
-//                            towards(
-//                                "DS_BALL_S_RED",
-//                                enemy.x,
-//                                enemy.y,
-//                                playerX,
-//                                playerY,
-//                                3f,
-//                            ).angle += it * 36f
-//                        }
+                        repeat(10) {
+                            towards(
+                                "DS_BALL_S_RED",
+                                enemy.x,
+                                enemy.y,
+                                playerX,
+                                playerY,
+                                3f,
+                            ).angle += it * 36f
+                        }
                         wait(10)
                     }
                 }
