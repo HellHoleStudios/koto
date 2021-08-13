@@ -25,27 +25,39 @@
 
 package com.hhs.koto.stg.drawable
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.crashinvaders.vfx.VfxRenderContext
 import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.crashinvaders.vfx.effects.ShaderVfxEffect
 import com.crashinvaders.vfx.framebuffer.VfxPingPongWrapper
 import com.hhs.koto.app.Config
+import com.hhs.koto.util.A
 
-class BossDistortionEffect : ShaderVfxEffect(shader), ChainVfxEffect {
-    companion object {
-        lateinit var shader: ShaderProgram
-    }
-
+class BossDistortionEffect : ShaderVfxEffect(
+    ShaderProgram(
+        Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
+        A.get("shader/boss_distortion.frag"),
+    )
+), ChainVfxEffect {
     var bossPositionX: Float = 0f
     var bossPositionY: Float = 0f
     var radius: Float = 50f
     var time: Float = 0f
-    var enabled: Boolean = true
+    var enabled: Boolean = false
 
     init {
         rebind()
+    }
+
+    fun start() {
         time = 0f
+        enabled = true
+    }
+
+    fun end() {
+        enabled = false
+        rebind()
     }
 
     fun tick(bossX: Float, bossY: Float, radius: Float = 80f) {

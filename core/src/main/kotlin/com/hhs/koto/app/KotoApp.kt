@@ -74,15 +74,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         loadAssetIndex(Gdx.files.internal(".assets.json"))
         A.finishLoading()
 
-        DeathEffect.shader = ShaderProgram(
-            Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
-            A.get("shader/death.frag"),
-        )
-        BossDistortionEffect.shader = ShaderProgram(
-            Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
-            A.get("shader/boss_distortion.frag"),
-        )
-
         Gdx.app.logLevel = Config.logLevel
         logger.info("Game start.")
         Locale.setDefault(Locale.ROOT)

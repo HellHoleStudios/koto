@@ -39,6 +39,7 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
+import com.hhs.koto.stg.drawable.BossDistortionEffect
 import com.hhs.koto.stg.drawable.DrawableLayer
 import com.hhs.koto.stg.drawable.Enemy
 import com.hhs.koto.stg.drawable.OptimizedLayer
@@ -126,6 +127,9 @@ class KotoGame : Disposable {
     }
     val enemies = DrawableLayer<Enemy>(-350).apply {
         stage.addDrawable(this)
+    }
+    val bossDistortionEffect = BossDistortionEffect().apply {
+        backgroundVfx.addEffectRegistered(this)
     }
     lateinit var player: Player
     var maxScore: Long = 10000

@@ -40,7 +40,7 @@ abstract class BasicBoss(
     override var x: Float,
     override var y: Float,
     bulletCollisionRadius: Float,
-    playerCollisionRadius: Float = bulletCollisionRadius / 3f,
+    playerCollisionRadius: Float = bulletCollisionRadius / 2f,
 ) : Boss {
     var invulnerable: Boolean = false
     val attachedTasks = GdxArray<Task>()
@@ -51,9 +51,6 @@ abstract class BasicBoss(
     var scaleY = 1f
     var color: Color = Color.WHITE
     val magicCircle = MagicCircle()
-    val effect = BossDistortionEffect().apply {
-        game.backgroundVfx.addEffectRegistered(this)
-    }
 
     override val healthBar = HealthBar(this).apply {
         game.hud.addDrawable(this)
@@ -66,6 +63,10 @@ abstract class BasicBoss(
     open val textureOriginY: Float
         get() = texture.regionHeight.toFloat() / 2
     override var alive: Boolean = true
+
+    init {
+        game.bossDistortionEffect.start()
+    }
 
     fun creationTask(): Task {
         x = 300f
@@ -88,7 +89,7 @@ abstract class BasicBoss(
             game.player.onHit()
         }
         magicCircle.tick()
-        effect.tick(x, y)
+        game.bossDistortionEffect.tick(x, y)
         for (i in 0 until attachedTasks.size) {
             if (attachedTasks[i].alive) {
                 attachedTasks[i].tick()
@@ -144,7 +145,7 @@ abstract class BasicBoss(
     override fun kill(): Boolean {
         alive = false
         attachedTasks.forEach { it.kill() }
-        game.backgroundVfx.removeEffectRegistered(effect)
+        game.bossDistortionEffect.end()
         return true
     }
 

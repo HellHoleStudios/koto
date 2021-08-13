@@ -34,7 +34,7 @@ import ktx.collections.set
 class AyaBoss(
     x: Float = 300f,
     y: Float = 300f,
-) : BasicBoss(x, y, 20f) {
+) : BasicBoss(x, y, 30f) {
     val textureStateMachine = StarGraphStateMachineTexture(
         A["sprite/th10_aya.atlas"], "th10_aya", "_center", 5
     ).apply {
