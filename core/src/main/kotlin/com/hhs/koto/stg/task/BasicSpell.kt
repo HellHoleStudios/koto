@@ -25,6 +25,8 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.addEnemy
+import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
 import com.hhs.koto.util.findBoss
 import kotlinx.coroutines.yield
@@ -50,5 +52,14 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 t++
             }
         }, SequenceTask(spellTask, terminate()))
+    }
+
+    fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task {
+        return BuilderSequence(taskBuilder {
+            val boss = bossBuilder()
+            addEnemy(boss)
+            boss.healthBar.addSpell(this)
+            boss.creationTask()
+        }, this).build()
     }
 }

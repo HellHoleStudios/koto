@@ -36,14 +36,14 @@ import com.hhs.koto.util.difficultySelect
 import ktx.collections.GdxArray
 
 class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
-    override val name: String = "spell1"
+    override val name: String = "stage1.spell1"
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
     override val health: Float
         get() = difficultySelect(1000f, 1200f, 1400f, 1600f)
     override val maxTime: Int = 1200
 
     override fun spell(): Task = CoroutineTask {
-        while (true) {
+        repeat(20) {
             move(boss, MathUtils.random(-150f, 150f), MathUtils.random(-150f, 150f), 120)
             wait(30)
             boss.usingAction = true
@@ -59,7 +59,5 @@ class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
         }
     }
 
-    override fun buildSpellPractice(): Task {
-        return CoroutineTask {}
-    }
+    override fun buildSpellPractice(): Task = buildSpellPractice { AyaBoss() }
 }

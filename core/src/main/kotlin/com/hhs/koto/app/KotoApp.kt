@@ -44,6 +44,8 @@ import com.hhs.koto.demo.player.ReimuPlayer
 import com.hhs.koto.demo.stage1.Spell1
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.stg.GameBuilder
+import com.hhs.koto.stg.drawable.BossDistortionEffect
+import com.hhs.koto.stg.drawable.DeathEffect
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen
@@ -71,6 +73,15 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         loadAssetIndex(Gdx.files.internal(".assets.json"))
         A.finishLoading()
+
+        DeathEffect.shader = ShaderProgram(
+            Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
+            A.get("shader/death.frag"),
+        )
+        BossDistortionEffect.shader = ShaderProgram(
+            Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
+            A.get("shader/boss_distortion.frag"),
+        )
 
         Gdx.app.logLevel = Config.logLevel
         logger.info("Game start.")

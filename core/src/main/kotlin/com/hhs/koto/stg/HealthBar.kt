@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils.PI
 import com.badlogic.gdx.math.MathUtils.PI2
 import com.hhs.koto.stg.drawable.Boss
+import com.hhs.koto.stg.task.BasicSpell
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 import space.earlygrey.shapedrawer.ShapeDrawer
@@ -88,11 +89,22 @@ class HealthBar(
 
     override fun tick() = Unit
 
-    fun addSegment(health: Float) {
-        currentSegment++
-        totalHealth += health
-        currentHealth = health
-        segments.add(health)
+    fun addSegment(vararg health: Float) {
+        health.forEach {
+            currentSegment++
+            totalHealth += it
+            segments.add(it)
+        }
+        currentHealth = health.last()
+    }
+
+    fun addSpell(vararg spell: BasicSpell<*>) {
+        spell.forEach {
+            currentSegment++
+            totalHealth += it.health
+            segments.add(it.health)
+        }
+        currentHealth = spell.last().health
     }
 
     fun currentTotalHealth(): Float {
@@ -113,6 +125,8 @@ class HealthBar(
         if (currentSegment > 0) {
             currentSegment--
             currentHealth = segments[currentSegment]
+        } else {
+            currentHealth = 0f
         }
     }
 }

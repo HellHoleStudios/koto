@@ -31,11 +31,10 @@ import com.hhs.koto.stg.drawable.StarGraphStateMachineTexture
 import com.hhs.koto.util.A
 import ktx.collections.set
 
-class AyaBoss : BasicBoss(
-    0f,
-    0f,
-    20f,
-) {
+class AyaBoss(
+    x: Float = 300f,
+    y: Float = 300f,
+) : BasicBoss(x, y, 20f) {
     val textureStateMachine = StarGraphStateMachineTexture(
         A["sprite/th10_aya.atlas"], "th10_aya", "_center", 5
     ).apply {

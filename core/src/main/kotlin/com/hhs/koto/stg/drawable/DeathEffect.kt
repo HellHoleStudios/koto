@@ -25,21 +25,18 @@
 
 package com.hhs.koto.stg.drawable
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.crashinvaders.vfx.VfxRenderContext
 import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.crashinvaders.vfx.effects.ShaderVfxEffect
 import com.crashinvaders.vfx.framebuffer.VfxPingPongWrapper
 import com.hhs.koto.app.Config
-import com.hhs.koto.util.A
 
-class DeathEffect : ShaderVfxEffect(
-    ShaderProgram(
-        Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
-        A.get("shader/death.frag"),
-    )
-), ChainVfxEffect {
+class DeathEffect : ShaderVfxEffect(shader), ChainVfxEffect {
+    companion object {
+        lateinit var shader: ShaderProgram
+    }
+
     var playerPositionX: Float = 0f
     var playerPositionY: Float = 0f
     var time: Float = 0f

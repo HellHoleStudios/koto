@@ -30,12 +30,10 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.background.TileBackground
-import com.hhs.koto.stg.drawable.BossDistortionEffect
 import com.hhs.koto.stg.pattern.Interpolate
-import com.hhs.koto.stg.task.BuilderSequence
-import com.hhs.koto.stg.task.RunnableTask
-import com.hhs.koto.stg.task.StageBuilder
-import com.hhs.koto.stg.task.taskBuilder
+import com.hhs.koto.stg.pattern.move
+import com.hhs.koto.stg.task.*
+import com.hhs.koto.util.findBoss
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
@@ -86,24 +84,26 @@ class Stage1 : StageBuilder {
                         width = 128f,
                     )
                 )
-                val effect = BossDistortionEffect()
-                game.backgroundVfx.addEffect(effect)
-                effect.tick(0f, 0f, 50f)
             }
         },
         taskBuilder { Interpolate(0f, 1f, 60) { game.background.alpha = it } },
-//        MidStage1(),
-//        taskBuilder { DelayTask(120) },
+        MidStage1(),
+        taskBuilder { DelayTask(240) },
         taskBuilder {
-            RunnableTask {
+            CoroutineTask {
                 val boss = addEnemy(AyaBoss())
-                boss.healthBar.addSegment(500f)
-                boss.healthBar.addSegment(600f)
-                boss.healthBar.addSegment(700f)
+                boss.healthBar.addSpell(Spell1(), Spell1(), Spell1())
+                boss.creationTask().waitForFinish()
             }
         },
         Spell1(),
         Spell1(),
         Spell1(),
+        taskBuilder {
+            CoroutineTask {
+                val boss = findBoss(AyaBoss::class.java)!!
+                move(boss, -300f, 300f, 120)
+            }
+        }
     ).build()
 }

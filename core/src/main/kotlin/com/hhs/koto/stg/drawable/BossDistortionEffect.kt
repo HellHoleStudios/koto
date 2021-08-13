@@ -25,37 +25,30 @@
 
 package com.hhs.koto.stg.drawable
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.crashinvaders.vfx.VfxRenderContext
 import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.crashinvaders.vfx.effects.ShaderVfxEffect
 import com.crashinvaders.vfx.framebuffer.VfxPingPongWrapper
 import com.hhs.koto.app.Config
-import com.hhs.koto.util.A
 
-class BossDistortionEffect : ShaderVfxEffect(
-    ShaderProgram(
-        Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
-        A.get("shader/boss_distortion.frag"),
-    )
-), ChainVfxEffect {
+class BossDistortionEffect : ShaderVfxEffect(shader), ChainVfxEffect {
+    companion object {
+        lateinit var shader: ShaderProgram
+    }
+
     var bossPositionX: Float = 0f
     var bossPositionY: Float = 0f
     var radius: Float = 50f
     var time: Float = 0f
-    var enabled: Boolean = false
+    var enabled: Boolean = true
 
     init {
         rebind()
-    }
-
-    fun start() {
         time = 0f
-        enabled = true
     }
 
-    fun tick(bossX: Float, bossY: Float, radius: Float = 50f) {
+    fun tick(bossX: Float, bossY: Float, radius: Float = 80f) {
         bossPositionX = bossX
         bossPositionY = bossY
         this.radius = radius
@@ -63,14 +56,9 @@ class BossDistortionEffect : ShaderVfxEffect(
         program.setUniformf(
             "u_bossPosition",
             bossPositionX + Config.originX,
-            bossPositionX + Config.originY,
+            bossPositionY + Config.originY,
         )
         program.setUniformf("u_radius", radius)
-    }
-
-    fun end() {
-        enabled = false
-        rebind()
     }
 
     override fun update(delta: Float) {

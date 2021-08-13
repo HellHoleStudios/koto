@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.*
+import com.hhs.koto.stg.pattern.Move
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
@@ -50,6 +51,9 @@ abstract class BasicBoss(
     var scaleY = 1f
     var color: Color = Color.WHITE
     val magicCircle = MagicCircle()
+    val effect = BossDistortionEffect().apply {
+        game.backgroundVfx.addEffectRegistered(this)
+    }
 
     override val healthBar = HealthBar(this).apply {
         game.hud.addDrawable(this)
@@ -62,6 +66,12 @@ abstract class BasicBoss(
     open val textureOriginY: Float
         get() = texture.regionHeight.toFloat() / 2
     override var alive: Boolean = true
+
+    fun creationTask(): Task {
+        x = 300f
+        y = 300f
+        return addTask(Move(this, 0f, 0f, 120))
+    }
 
     override fun tick() {
         if (!invulnerable) {
@@ -78,6 +88,7 @@ abstract class BasicBoss(
             game.player.onHit()
         }
         magicCircle.tick()
+        effect.tick(x, y)
         for (i in 0 until attachedTasks.size) {
             if (attachedTasks[i].alive) {
                 attachedTasks[i].tick()
@@ -133,6 +144,7 @@ abstract class BasicBoss(
     override fun kill(): Boolean {
         alive = false
         attachedTasks.forEach { it.kill() }
+        game.backgroundVfx.removeEffectRegistered(effect)
         return true
     }
 
