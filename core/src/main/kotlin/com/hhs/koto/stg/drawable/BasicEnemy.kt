@@ -45,7 +45,7 @@ open class BasicEnemy(
     override var x: Float,
     override var y: Float,
     val texture: BasicEnemyTexture,
-    var hp: Float,
+    val health: Float,
     var pointCount: Int,
     var powerCount: Int,
     bulletCollisionRadius: Float = min(texture.texture.regionWidth, texture.texture.regionHeight).toFloat() / 1.5f,
@@ -56,6 +56,7 @@ open class BasicEnemy(
     var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
     override val zIndex: Int = -300,
 ) : Enemy {
+    var hp: Float = health
     var invulnerable: Boolean = false
     var rotation: Float = 0f
     var scaleX = 1f
@@ -134,10 +135,14 @@ open class BasicEnemy(
 
     override fun onHit(damage: Float) {
         hp -= damage
-        if (hp < 500f) {
-            SE.play("damage1")
-        } else {
+        if (health < 1000f) {
             SE.play("damage0")
+        } else {
+            if (hp < 500f) {
+                SE.play("damage1")
+            } else {
+                SE.play("damage0")
+            }
         }
         if (hp <= 0) {
             onDeath()
