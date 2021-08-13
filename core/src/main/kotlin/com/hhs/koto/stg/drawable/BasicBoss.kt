@@ -138,7 +138,7 @@ abstract class BasicBoss(
         }
     }
 
-    override fun onDeath() {
+    override fun destroy() {
         // TODO boss death animation
     }
 

@@ -54,10 +54,6 @@ class Explosion(
     rotation,
     color = color,
 ) {
-    init {
-        sprite.setOriginCenter()
-    }
-
     override fun tick() {
         super.tick()
         sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))

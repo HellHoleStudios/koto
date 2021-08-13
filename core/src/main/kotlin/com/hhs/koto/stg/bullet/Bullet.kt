@@ -41,4 +41,5 @@ interface Bullet : Entity, Drawable, Movable {
     fun attachTask(task: Task): Bullet
     fun task(index: Int, block: suspend CoroutineScope.() -> Unit): Bullet
     fun task(block: suspend CoroutineScope.() -> Unit): Bullet = task(0, block)
+    fun destroy()
 }

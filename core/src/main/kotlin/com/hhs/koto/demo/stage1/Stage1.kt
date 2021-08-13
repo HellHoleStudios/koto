@@ -92,12 +92,10 @@ class Stage1 : StageBuilder {
         taskBuilder {
             CoroutineTask {
                 val boss = addEnemy(AyaBoss())
-                boss.healthBar.addSpell(Spell1(), Spell1(), Spell1())
+                boss.healthBar.addSpell(Spell1())
                 boss.creationTask().waitForFinish()
             }
         },
-        Spell1(),
-        Spell1(),
         Spell1(),
         taskBuilder {
             CoroutineTask {

@@ -32,6 +32,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.addParticle
+import com.hhs.koto.stg.particle.BulletDestroyParticle
 import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
@@ -124,10 +125,18 @@ open class BasicBullet(
         }
     }
 
+    override fun destroy() {
+        addParticle(
+            BulletDestroyParticle(
+                data.texture.getFrame(t), x, y, data.width, data.height, data.color.tintHSV(tint)
+            )
+        )
+        kill()
+    }
+
     override fun kill(): Boolean {
         alive = false
         attachedTasks?.forEach { it.kill() }
-        // TODO particle&animation
         return true
     }
 

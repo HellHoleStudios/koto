@@ -145,11 +145,11 @@ open class BasicEnemy(
             }
         }
         if (hp <= 0) {
-            onDeath()
+            destroy()
         }
     }
 
-    override fun onDeath() {
+    override fun destroy() {
         SE.play("enemydead")
         ringCloud(x, y, powerCount, bulletCollision.radius) { x, y ->
             addItem(PowerItem(x, y))

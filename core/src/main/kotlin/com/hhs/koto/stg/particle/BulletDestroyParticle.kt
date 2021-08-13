@@ -23,12 +23,47 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg.particle
 
-import com.hhs.koto.stg.Drawable
-import com.hhs.koto.stg.Movable
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.drawable.SpriteDrawable
+import com.hhs.koto.util.BlendingMode
+import com.hhs.koto.util.alpha
 
-interface Enemy : Drawable, Movable {
-    fun onHit(damage: Float)
-    fun destroy()
+class BulletDestroyParticle(
+    region: TextureRegion,
+    x: Float,
+    y: Float,
+    width: Float,
+    height: Float,
+    color: Color,
+    val duration: Int = 10,
+) : SpriteDrawable(
+    region,
+    x,
+    y,
+    0f,
+    0f,
+    0.8f,
+    0.8f,
+    width,
+    height,
+    0f,
+    width / 2f,
+    height / 2f,
+    color,
+) {
+    override val blending: BlendingMode = BlendingMode.ADD
+
+    init {
+        sprite.alpha = 0.5f
+    }
+
+    override fun tick() {
+        super.tick()
+        sprite.setScale(sprite.scaleX + 0.1f)
+        sprite.alpha -= 0.05f
+        if (t >= duration) kill()
+    }
 }

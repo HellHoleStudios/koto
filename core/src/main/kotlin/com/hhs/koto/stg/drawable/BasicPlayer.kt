@@ -268,11 +268,18 @@ open class BasicPlayer(
             color = Color.WHITE
         }
         task {
-            game.bullets.forEach {
-                it.kill()
-            }
-            game.enemies.forEach {
-                it.onDeath()
+            task {
+                val collision = CircleCollision(10f)
+                repeat(50) {
+                    collision.radius += 10f
+                    game.bullets.forEach {
+                        if (collide(collision, x, y, it.collision, it.x, it.y)) it.destroy()
+                    }
+                    game.enemies.forEach {
+                        if (it is BasicEnemy && collide(collision, x, y, it.bulletCollision, it.x, it.y)) it.destroy()
+                    }
+                    yield()
+                }
             }
             game.items.forEach {
                 it.onCollect(x, y, true)

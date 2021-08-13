@@ -83,6 +83,10 @@ class MockBullet(
         return this
     }
 
+    override fun destroy() {
+        kill()
+    }
+
     override var alive: Boolean = true
 
     override fun kill(): Boolean {

@@ -61,10 +61,6 @@ class DeathParticle(
         BlendingMode.ALPHA
     }
 
-    init {
-        sprite.setOriginCenter()
-    }
-
     override fun tick() {
         super.tick()
         speed = (speed - 0.2f).coerceAtLeast(0f)
