@@ -31,10 +31,7 @@ import com.hhs.koto.stg.drawable.BasicEnemy
 import com.hhs.koto.stg.drawable.BasicEnemyTexture
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.task.*
-import com.hhs.koto.util.A
-import com.hhs.koto.util.playerX
-import com.hhs.koto.util.playerY
-import com.hhs.koto.util.towards
+import com.hhs.koto.util.*
 
 class MidStage1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
@@ -60,8 +57,9 @@ class MidStage1 : TaskBuilder {
                     }
                     enemy.kill()
                 }.task {
+                    val way = difficultySelect(10, 12, 16, 24)
                     while (true) {
-                        repeat(10) {
+                        repeat(way) {
                             towards(
                                 "DS_BALL_S_RED",
                                 enemy.x,
@@ -69,7 +67,7 @@ class MidStage1 : TaskBuilder {
                                 playerX,
                                 playerY,
                                 3f,
-                            ).angle += it * 36f
+                            ).angle += it * 360f / way + 360f / way / 2f
                         }
                         wait(10)
                     }
@@ -77,16 +75,5 @@ class MidStage1 : TaskBuilder {
                 wait(130)
             }
         }.waitForFinish()
-//        while (true) {
-//            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
-//                addItem(PowerItem(x, y))
-//            }
-//            ringCloud(random(-100f, 100f), 100f, 5) { x, y ->
-//                addItem(PointItem(x, y))
-//            }
-//            ring(B["DS_BALL_S_RED"], 0f, 0f, 50f, 7 until 367 step 15)
-//                .accelerate(0.2f, 20)
-//            wait(10)
-//        }
     }
 }

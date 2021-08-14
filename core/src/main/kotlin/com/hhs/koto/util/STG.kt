@@ -148,8 +148,8 @@ fun ring(
     x: Float,
     y: Float,
     radius: Float,
-    offsetAngle: Float,
     count: Int,
+    offsetAngle: Float = 360f / count,
     startAngle: Float = 0f,
     speed: Float = 0f,
     color: Color = Color.WHITE,
@@ -173,13 +173,13 @@ fun ring(
     x: Float,
     y: Float,
     radius: Float,
-    offsetAngle: Float,
     count: Int,
+    offsetAngle: Float = 360f / count,
     startAngle: Float = 0f,
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): BulletGroup = ring(B[name], x, y, radius, offsetAngle, count, startAngle, speed, color, delay)
+): BulletGroup = ring(B[name], x, y, radius, count, offsetAngle, startAngle, speed, color, delay)
 
 fun ring(
     data: BulletData,

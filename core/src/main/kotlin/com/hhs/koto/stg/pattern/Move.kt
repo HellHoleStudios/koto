@@ -26,9 +26,11 @@
 package com.hhs.koto.stg.pattern
 
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.Movable
 import com.hhs.koto.stg.task.self
 import com.hhs.koto.stg.task.waitForFinish
+import com.hhs.koto.util.dist
 import kotlinx.coroutines.CoroutineScope
 
 class Move(
@@ -53,6 +55,27 @@ suspend fun CoroutineScope.move(
     duration: Int,
     interpolation: Interpolation = Interpolation.sine,
 ) {
+    val task = Move(target, targetX, targetY, duration, interpolation)
+    self.attachTask(task)
+    task.waitForFinish()
+}
+
+suspend fun CoroutineScope.wander(
+    target: Movable,
+    duration: Int,
+    targetMinX: Float = -150f,
+    targetMaxX: Float = 150f,
+    targetMinY: Float = 0f,
+    targetMaxY: Float = 200f,
+    interpolation: Interpolation = Interpolation.sine,
+) {
+    var targetX = target.x
+    var targetY = target.y
+    repeat(100) {
+        targetX = random(targetMinX, targetMaxX)
+        targetY = random(targetMinY, targetMaxY)
+        if (dist(target.x, target.y, targetX, targetY) >= 50f) return@repeat
+    }
     val task = Move(target, targetX, targetY, duration, interpolation)
     self.attachTask(task)
     task.waitForFinish()

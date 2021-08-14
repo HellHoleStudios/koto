@@ -38,6 +38,7 @@ import com.hhs.koto.app.ui.hsvColor
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
+import ktx.actors.alpha
 import ktx.actors.plusAssign
 
 class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
@@ -95,7 +96,11 @@ class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
         grid.arrange(0f, 1000f, 0f, -45f)
         grid.selectFirst()
         grid.finishAnimation()
-        titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+        if (grid.grid.size > 0) {
+            titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+        } else {
+            titleBackground.alpha = 0f
+        }
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
