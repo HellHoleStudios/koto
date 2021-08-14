@@ -66,7 +66,7 @@ suspend fun CoroutineScope.wander(
     targetMinX: Float = -150f,
     targetMaxX: Float = 150f,
     targetMinY: Float = 0f,
-    targetMaxY: Float = 200f,
+    targetMaxY: Float = 150f,
     interpolation: Interpolation = Interpolation.sine,
 ) {
     var targetX = target.x

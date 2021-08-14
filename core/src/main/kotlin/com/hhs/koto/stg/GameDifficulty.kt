@@ -34,5 +34,6 @@ enum class GameDifficulty {
         val REGULAR_AVAILABLE = GdxArray.with(EASY, NORMAL, HARD, LUNATIC)
         val EXTRA_AVAILABLE = GdxArray.with(EXTRA)
         val PHANTASM_AVAILABLE = GdxArray.with(PHANTASM)
+        val NONE_AVAILABLE = GdxArray<GameDifficulty>()
     }
 }

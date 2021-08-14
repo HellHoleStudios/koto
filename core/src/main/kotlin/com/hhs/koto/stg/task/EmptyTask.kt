@@ -23,48 +23,12 @@
  *
  */
 
-package com.hhs.koto.stg.particle
+package com.hhs.koto.stg.task
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.stg.drawable.SpriteDrawable
-import com.hhs.koto.util.BlendingMode
-import com.hhs.koto.util.alpha
-
-class BulletDestroyParticle(
-    region: TextureRegion,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
-    color: Color,
-    rotation: Float,
-    val duration: Int = 10,
-) : SpriteDrawable(
-    region,
-    x,
-    y,
-    0f,
-    0f,
-    0.8f,
-    0.8f,
-    width,
-    height,
-    rotation,
-    width / 2f,
-    height / 2f,
-    color,
-) {
-    override val blending: BlendingMode = BlendingMode.ADD
-
-    init {
-        sprite.alpha = 0.5f
-    }
+class EmptyTask : Task {
+    override var alive: Boolean = true
 
     override fun tick() {
-        super.tick()
-        sprite.setScale(sprite.scaleX + 0.1f)
-        sprite.alpha -= 0.05f
-        if (t >= duration) kill()
+        alive = false
     }
 }

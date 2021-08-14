@@ -91,10 +91,11 @@ class Stage1 : StageBuilder {
         wait(240)
 
         val boss = addEnemy(AyaBoss())
-        boss.healthBar.addSpell(Spell1())
+        boss.healthBar.addSpell(Nonspell1(), Spell1())
         attachAndWait(boss.creationTask())
         attachAndWait(boss.createSpellBackground())
 
+        attachAndWait(Nonspell1().build())
         attachAndWait(Spell1().build())
 
         attachAndWait(boss.removeSpellBackground())

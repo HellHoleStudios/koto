@@ -31,7 +31,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.*
 import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.RunnableTask
+import com.hhs.koto.stg.task.EmptyTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
@@ -77,16 +77,14 @@ abstract class BasicBoss(
         invulnerable = false
     }
 
-    open fun createSpellBackground(): Task = RunnableTask {}
+    open fun createSpellBackground(): Task = EmptyTask()
 
-    open fun removeSpellBackground(): Task = RunnableTask {}
+    open fun removeSpellBackground(): Task = EmptyTask()
 
     override fun tick() {
-        if (!invulnerable) {
-            game.playerBullets.forEach {
-                if (Collision.collide(it.collision, it.x, it.y, bulletCollision, x, y)) {
-                    it.hit(this)
-                }
+        game.playerBullets.forEach {
+            if (Collision.collide(it.collision, it.x, it.y, bulletCollision, x, y)) {
+                it.hit(this)
             }
         }
         if (
@@ -137,11 +135,13 @@ abstract class BasicBoss(
     }
 
     override fun onHit(damage: Float) {
-        healthBar.damage(damage)
-        if (healthBar.currentHealth < 500f) {
-            SE.play("damage1")
-        } else {
-            SE.play("damage0")
+        if (!invulnerable) {
+            healthBar.damage(damage)
+            if (healthBar.currentHealth < 500f) {
+                SE.play("damage1")
+            } else {
+                SE.play("damage0")
+            }
         }
     }
 

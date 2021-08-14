@@ -23,48 +23,17 @@
  *
  */
 
-package com.hhs.koto.stg.particle
+package com.hhs.koto.stg.task
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.stg.drawable.SpriteDrawable
-import com.hhs.koto.util.BlendingMode
-import com.hhs.koto.util.alpha
+import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.drawable.Boss
+import com.hhs.koto.util.KotoRuntimeException
+import ktx.collections.GdxArray
 
-class BulletDestroyParticle(
-    region: TextureRegion,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
-    color: Color,
-    rotation: Float,
-    val duration: Int = 10,
-) : SpriteDrawable(
-    region,
-    x,
-    y,
-    0f,
-    0f,
-    0.8f,
-    0.8f,
-    width,
-    height,
-    rotation,
-    width / 2f,
-    height / 2f,
-    color,
-) {
-    override val blending: BlendingMode = BlendingMode.ADD
+abstract class BasicNonspell<T : Boss>(bossClass: Class<T>) : BasicSpell<T>(bossClass) {
+    override val name: String = ""
+    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.NONE_AVAILABLE
 
-    init {
-        sprite.alpha = 0.5f
-    }
-
-    override fun tick() {
-        super.tick()
-        sprite.setScale(sprite.scaleX + 0.1f)
-        sprite.alpha -= 0.05f
-        if (t >= duration) kill()
-    }
+    override fun buildSpellPractice(): Task =
+        throw KotoRuntimeException("Cannot practice a nonspell!")
 }

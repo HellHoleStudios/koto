@@ -29,13 +29,14 @@ import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
 import com.hhs.koto.util.findBoss
+import com.hhs.koto.util.game
 import kotlinx.coroutines.yield
 
 abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBuilder {
     abstract val health: Float
     abstract val maxTime: Int
     abstract fun spell(): Task
-    abstract fun terminate(): Task
+    open fun terminate(): Task = EmptyTask()
     lateinit var boss: T
     var t: Int = 0
 
@@ -55,7 +56,12 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             },
             SequenceTask(
                 spellTask,
-                RunnableTask { boss.healthBar.nextSegment() },
+                RunnableTask {
+                    game.bullets.forEach {
+                        it.destroy()
+                    }
+                    boss.healthBar.nextSegment()
+                },
                 terminate(),
             ),
         )

@@ -25,45 +25,24 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.pattern.wander
-import com.hhs.koto.stg.task.BasicSpell
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.stg.task.wait
+import com.hhs.koto.stg.task.*
+import com.hhs.koto.util.create
 import com.hhs.koto.util.difficultySelect
-import com.hhs.koto.util.ring
-import ktx.collections.GdxArray
+import com.hhs.koto.util.sin
 
-class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
-    override val name: String = "stage1.spell1"
-    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
-    override val health: Float
-        get() = difficultySelect(1000f, 1200f, 1400f, 1600f)
+class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
+    override val health: Float = 1000f
     override val maxTime: Int = 1200
 
     override fun spell(): Task = CoroutineTask {
-        repeat(20) {
-            wander(boss, 120)
-            wait(30)
-            boss.usingAction = true
-            repeat(3) {
-                ring(
-                    "DS_BALL_M_A_BLUE",
-                    boss.x,
-                    boss.y,
-                    50f,
-                    difficultySelect(8, 12, 16, 20),
-                    startAngle = random(0f, 360f),
-                    speed = 5f,
-                )
-                wait(20)
+        var f = 72f
+        while (true) {
+            for (i in 0 until 360 step 72) {
+                create("DS_RICE_S_RED", boss.x, boss.y, 2f, i + f)
+                create("DS_RICE_S_BLUE", boss.x, boss.y, 2f, i - f)
             }
-            boss.usingAction = false
-            wait(30)
+            f += sin(frame / 2f) * 6f
+            wait(difficultySelect(16, 10, 5, 2))
         }
     }
-
-    override fun buildSpellPractice(): Task = buildSpellPractice { AyaBoss() }
 }

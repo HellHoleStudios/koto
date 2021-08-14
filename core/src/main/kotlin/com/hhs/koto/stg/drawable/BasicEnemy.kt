@@ -104,11 +104,9 @@ open class BasicEnemy(
     }
 
     override fun tick() {
-        if (!invulnerable) {
-            game.playerBullets.forEach {
-                if (Collision.collide(it.collision, it.x, it.y, bulletCollision, x, y)) {
-                    it.hit(this)
-                }
+        game.playerBullets.forEach {
+            if (Collision.collide(it.collision, it.x, it.y, bulletCollision, x, y)) {
+                it.hit(this)
             }
         }
         if (
@@ -134,18 +132,20 @@ open class BasicEnemy(
     }
 
     override fun onHit(damage: Float) {
-        hp -= damage
-        if (health < 1000f) {
-            SE.play("damage0")
-        } else {
-            if (hp < 500f) {
-                SE.play("damage1")
-            } else {
+        if (!invulnerable) {
+            hp -= damage
+            if (health < 1000f) {
                 SE.play("damage0")
+            } else {
+                if (hp < 500f) {
+                    SE.play("damage1")
+                } else {
+                    SE.play("damage0")
+                }
             }
-        }
-        if (hp <= 0) {
-            destroy()
+            if (hp <= 0) {
+                destroy()
+            }
         }
     }
 

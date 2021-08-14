@@ -79,7 +79,7 @@ fun create(
     angle: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-    setRotation: Boolean = false,
+    setRotation: Boolean = true,
 ): BasicBullet {
     val result = addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
     if (setRotation) result.rotation = angle
@@ -94,7 +94,7 @@ fun create(
     angle: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-    setRotation: Boolean = false,
+    setRotation: Boolean = true,
 ): BasicBullet = create(B[name], x, y, speed, angle, color, delay, setRotation)
 
 fun <T : Bullet> T.setSpeed(speed: Float): T {
@@ -102,7 +102,7 @@ fun <T : Bullet> T.setSpeed(speed: Float): T {
     return this
 }
 
-fun <T : Bullet> T.setAngle(angle: Float, setRotation: Boolean = false): T {
+fun <T : Bullet> T.setAngle(angle: Float, setRotation: Boolean = true): T {
     this.angle = angle
     if (setRotation) rotation = angle
     return this
@@ -117,7 +117,7 @@ fun towards(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-    setRotation: Boolean = false,
+    setRotation: Boolean = true,
 ): BasicBullet {
     val angle = atan2(x, y, targetX, targetY)
     val result = addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
@@ -134,7 +134,7 @@ fun towards(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-    setRotation: Boolean = false,
+    setRotation: Boolean = true,
 ): BasicBullet = towards(B[name], x, y, targetX, targetY, speed, color, delay, setRotation)
 
 fun <T : Bullet> T.towards(targetX: Float, targetY: Float): T {
@@ -153,6 +153,7 @@ fun ring(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
+    setRotation: Boolean = true,
 ): BulletGroup {
     val ret = BulletGroup()
     for (i in 0 until count) {
@@ -161,6 +162,9 @@ fun ring(
             x + cos(angle) * radius, y + sin(angle) * radius,
             speed, angle, data, tint = color, delay = delay,
         )
+        if (setRotation) {
+            bullet.rotation = angle
+        }
         addBullet(bullet)
         ret.addBullet(bullet)
     }
@@ -178,7 +182,8 @@ fun ring(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): BulletGroup = ring(B[name], x, y, radius, count, offsetAngle, startAngle, speed, color, delay)
+    setRotation: Boolean = true,
+): BulletGroup = ring(B[name], x, y, radius, count, offsetAngle, startAngle, speed, color, delay, setRotation)
 
 fun ring(
     data: BulletData,
@@ -189,6 +194,7 @@ fun ring(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
+    setRotation: Boolean = true,
 ): BulletGroup {
     val ret = BulletGroup()
     progression.forEach {
@@ -197,6 +203,9 @@ fun ring(
             x + cos(angle) * radius, y + sin(angle) * radius,
             speed, angle, data, tint = color, delay = delay,
         )
+        if (setRotation) {
+            bullet.rotation = angle
+        }
         addBullet(bullet)
         ret.addBullet(bullet)
     }
@@ -212,7 +221,8 @@ fun ring(
     speed: Float = 0f,
     color: Color = Color.WHITE,
     delay: Int = 8,
-): BulletGroup = ring(B[name], x, y, radius, progression, speed, color, delay)
+    setRotation: Boolean = true,
+): BulletGroup = ring(B[name], x, y, radius, progression, speed, color, delay, setRotation)
 
 inline fun ring(
     x: Float,
