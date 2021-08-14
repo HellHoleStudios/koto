@@ -35,7 +35,7 @@ class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
     override val maxTime: Int = 1200
 
     override fun spell(): Task = CoroutineTask {
-        var f = 72f
+        var f = 0f
         while (true) {
             for (i in 0 until 360 step 72) {
                 create("DS_RICE_S_RED", boss.x, boss.y, 2f, i + f)

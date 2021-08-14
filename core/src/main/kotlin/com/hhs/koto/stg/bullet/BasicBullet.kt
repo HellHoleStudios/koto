@@ -128,7 +128,15 @@ open class BasicBullet(
     override fun destroy() {
         addParticle(
             BulletDestroyParticle(
-                data.texture.getFrame(t), x, y, data.width, data.height, data.color.tintHSV(tint), rotation
+                data.texture.getFrame(t),
+                x,
+                y,
+                data.width,
+                data.height,
+                scaleX,
+                scaleY,
+                data.color.tintHSV(tint),
+                rotation,
             )
         )
         kill()
