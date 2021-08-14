@@ -169,7 +169,9 @@ open class BasicPlayer(
                 hitbox.alpha = 0f
                 hitbox.setScale(1.3f)
             }
-            move()
+            if (playerState != PlayerState.DEATHBOMBING) {
+                move()
+            }
             if (y >= itemCollectLineHeight) {
                 game.items.forEach {
                     it.onCollect(x, y, true)

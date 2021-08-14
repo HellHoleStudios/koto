@@ -75,8 +75,8 @@ class AyaBoss(
         spellForeground = TileBackground(
             getRegion("st1/spell_foreground.png"),
             100,
-            -3f,
-            3f,
+            -1f,
+            1f,
             color = Color(0f, 1f, 1f, 0f),
         )
         game.background.addDrawable(spellBackground)
