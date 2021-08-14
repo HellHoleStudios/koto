@@ -25,7 +25,7 @@
 
 package com.hhs.koto.stg.task
 
-import com.badlogic.gdx.utils.GdxRuntimeException
+import com.hhs.koto.util.KotoRuntimeException
 import ktx.collections.GdxArray
 
 class SequenceTask(vararg task: Task) : Task {
@@ -70,7 +70,7 @@ class SequenceTask(vararg task: Task) : Task {
 
     fun addTask(vararg task: Task) {
         if (!alive) {
-            throw GdxRuntimeException("Cannot add task to a completed SequenceTask!")
+            throw KotoRuntimeException("Cannot add task to a completed SequenceTask!")
         }
         task.forEach {
             tasks.add(it)
@@ -79,7 +79,7 @@ class SequenceTask(vararg task: Task) : Task {
 
     fun addTask(task: Task) {
         if (!alive) {
-            throw GdxRuntimeException("Cannot add task to a completed SequenceTask!")
+            throw KotoRuntimeException("Cannot add task to a completed SequenceTask!")
         }
         tasks.add(task)
     }

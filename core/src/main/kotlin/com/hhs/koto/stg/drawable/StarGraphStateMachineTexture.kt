@@ -27,7 +27,7 @@ package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.utils.GdxRuntimeException
+import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.StateMachine
 import com.hhs.koto.util.safeKeys
 import ktx.collections.GdxArray
@@ -73,7 +73,7 @@ open class StarGraphStateMachineTexture(
             stateMachine.states[centerRegions[i]] = {
                 if (it == "") Pair(centerRegions[(i + 1) % centerRegions.size], centerTransitionTime)
                 else {
-                    val branch = branches[it] ?: throw GdxRuntimeException("Branch $it does not exist!!")
+                    val branch = branches[it] ?: throw KotoRuntimeException("Branch $it does not exist!!")
                     if (branch.edgeRegionName != null && branch.edgeTransitionTime != null) {
                         Pair(
                             edgeRegions[it][0],

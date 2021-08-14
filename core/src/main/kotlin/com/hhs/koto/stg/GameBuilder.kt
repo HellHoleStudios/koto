@@ -25,11 +25,11 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.stg.task.SpellBuilder
 import com.hhs.koto.stg.task.StageBuilder
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
 import ktx.collections.GdxArray
@@ -48,17 +48,17 @@ object GameBuilder {
             GameMode.STORY -> buildRegularGame()
             GameMode.EXTRA -> buildExtraGame()
             GameMode.STAGE_PRACTICE -> buildStagePractice(
-                SystemFlag.name ?: throw GdxRuntimeException("name flag is null!"),
-                SystemFlag.difficulty ?: throw GdxRuntimeException("difficulty flag is null!"),
+                SystemFlag.name ?: throw KotoRuntimeException("name flag is null!"),
+                SystemFlag.difficulty ?: throw KotoRuntimeException("difficulty flag is null!"),
             )
             GameMode.SPELL_PRACTICE -> buildSpellPractice(
-                SystemFlag.name ?: throw GdxRuntimeException("name flag is null!"),
-                SystemFlag.difficulty ?: throw GdxRuntimeException("difficulty flag is null!"),
+                SystemFlag.name ?: throw KotoRuntimeException("name flag is null!"),
+                SystemFlag.difficulty ?: throw KotoRuntimeException("difficulty flag is null!"),
             )
-            null -> throw GdxRuntimeException("gameMode flag is null!")
+            null -> throw KotoRuntimeException("gameMode flag is null!")
         }
-        val playerName = SystemFlag.player ?: throw GdxRuntimeException("player flag is null!")
-        game.player = (players[playerName] ?: throw GdxRuntimeException("player \"$playerName\" not found!"))()
+        val playerName = SystemFlag.player ?: throw KotoRuntimeException("player flag is null!")
+        game.player = (players[playerName] ?: throw KotoRuntimeException("player \"$playerName\" not found!"))()
         return game
     }
 
@@ -67,29 +67,29 @@ object GameBuilder {
     fun buildExtraGame(): KotoGame = buildGameWithTask(extraGame.build())
 
     fun getAvailableStages(): GdxArray<StageBuilder> {
-        if (SystemFlag.difficulty == null) throw GdxRuntimeException("difficulty flag is null!")
+        if (SystemFlag.difficulty == null) throw KotoRuntimeException("difficulty flag is null!")
         return stages.filter { SystemFlag.difficulty in it.availableDifficulties }
     }
 
     fun getAvailableSpells(): GdxArray<SpellBuilder> {
-        if (SystemFlag.difficulty == null) throw GdxRuntimeException("difficulty flag is null!")
+        if (SystemFlag.difficulty == null) throw KotoRuntimeException("difficulty flag is null!")
         return spells.filter { SystemFlag.difficulty in it.availableDifficulties }
     }
 
 
     fun buildStagePractice(name: String, difficulty: GameDifficulty): KotoGame {
-        val stageBuilder = stages.find { it.name == name } ?: throw GdxRuntimeException("Stage \"$name\" not found!")
+        val stageBuilder = stages.find { it.name == name } ?: throw KotoRuntimeException("Stage \"$name\" not found!")
         if (difficulty !in stageBuilder.availableDifficulties) {
-            throw GdxRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
+            throw KotoRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
         }
         return buildGameWithTask(stageBuilder.build())
     }
 
     fun buildSpellPractice(name: String, difficulty: GameDifficulty): KotoGame {
         val spellBuilder =
-            spells.find { it.name == name } ?: throw GdxRuntimeException("Spell \"$name\" not found!")
+            spells.find { it.name == name } ?: throw KotoRuntimeException("Spell \"$name\" not found!")
         if (difficulty !in spellBuilder.availableDifficulties) {
-            throw GdxRuntimeException("Spell \"$name\" does not support difficulty \"$difficulty\"")
+            throw KotoRuntimeException("Spell \"$name\" does not support difficulty \"$difficulty\"")
         }
         return buildGameWithTask(spellBuilder.buildSpellPractice())
     }

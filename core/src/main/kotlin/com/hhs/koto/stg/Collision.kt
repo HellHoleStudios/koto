@@ -25,7 +25,7 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.utils.GdxRuntimeException
+import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.clamp
 import com.hhs.koto.util.dist2
 import com.hhs.koto.util.sqr
@@ -38,7 +38,7 @@ object Collision {
         if (tmp != null) return tmp
         tmp = s2.collide(s1, x2, y2, x1, y1)
         if (tmp != null) return tmp
-        throw GdxRuntimeException("Cannot compute collision between $s1 and $s2")
+        throw KotoRuntimeException("Cannot compute collision between $s1 and $s2")
     }
 
     fun collide(e1: Entity, e2: Entity): Boolean {

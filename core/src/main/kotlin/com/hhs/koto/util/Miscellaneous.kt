@@ -43,6 +43,7 @@ object SystemFlag {
     var redirect: String? = null
     var redirectDuration: Float? = null
     var gamemode: GameMode? = null
+    var replay: Boolean? = null
     var name: String? = null
     var difficulty: GameDifficulty? = null
     var player: String? = null

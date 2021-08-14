@@ -41,17 +41,24 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
 
     override fun build(): Task {
         val spellTask = spell()
-        return ParallelTask(CoroutineTask {
-            boss = findBoss(bossClass)!!
-            while (true) {
-                if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
-                    if (spellTask.alive) spellTask.kill()
-                    break
+        return ParallelTask(
+            CoroutineTask {
+                boss = findBoss(bossClass)!!
+                while (true) {
+                    if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
+                        if (spellTask.alive) spellTask.kill()
+                        break
+                    }
+                    yield()
+                    t++
                 }
-                yield()
-                t++
-            }
-        }, SequenceTask(spellTask, terminate()))
+            },
+            SequenceTask(
+                spellTask,
+                RunnableTask { boss.healthBar.nextSegment() },
+                terminate(),
+            ),
+        )
     }
 
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {

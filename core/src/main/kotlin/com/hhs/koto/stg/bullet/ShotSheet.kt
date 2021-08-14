@@ -30,15 +30,11 @@ import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.stg.AABBCollision
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.NoCollision
-import com.hhs.koto.util.BlendingMode
-import com.hhs.koto.util.json
-import com.hhs.koto.util.safeIterator
-import com.hhs.koto.util.toHSVColor
+import com.hhs.koto.util.*
 import ktx.collections.GdxMap
 import ktx.json.fromJson
 
@@ -62,11 +58,11 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     )
 
     operator fun get(id: Int): BulletData {
-        return ids[id] ?: throw GdxRuntimeException("bullet with id $id not found!")
+        return ids[id] ?: throw KotoRuntimeException("bullet with id $id not found!")
     }
 
     operator fun get(name: String): BulletData {
-        return names[name] ?: throw GdxRuntimeException("bullet with name \"$name\" not found!")
+        return names[name] ?: throw KotoRuntimeException("bullet with name \"$name\" not found!")
     }
 }
 

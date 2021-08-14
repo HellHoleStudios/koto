@@ -47,7 +47,7 @@ class Stage1 : StageBuilder {
     override fun build() = CoroutineTask {
         game.background.addDrawable(
             TileBackground(
-                getRegion("st3_water.png"),
+                getRegion("st1/water.png"),
                 0,
                 speedY = -4f,
                 tileWidth = 128f,
@@ -56,7 +56,7 @@ class Stage1 : StageBuilder {
         )
         game.background.addDrawable(
             TileBackground(
-                getRegion("st3_water_overlay.png"),
+                getRegion("st1/water_overlay.png"),
                 0,
                 speedY = -6f,
                 tileWidth = 128f,
@@ -66,7 +66,7 @@ class Stage1 : StageBuilder {
         )
         game.background.addDrawable(
             TileBackground(
-                getRegion("st3_shore_left.png"),
+                getRegion("st1/shore_left.png"),
                 0,
                 speedY = -5f,
                 tileWidth = 128f,
@@ -76,7 +76,7 @@ class Stage1 : StageBuilder {
         )
         game.background.addDrawable(
             TileBackground(
-                getRegion("st3_shore_right.png"),
+                getRegion("st1/shore_right.png"),
                 0,
                 speedY = -5f,
                 x = worldW - 128f - worldOriginX,

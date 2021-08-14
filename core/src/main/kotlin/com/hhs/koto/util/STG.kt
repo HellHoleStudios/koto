@@ -27,7 +27,6 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
-import com.badlogic.gdx.utils.GdxRuntimeException
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.KotoGame
@@ -53,7 +52,7 @@ fun <T> difficultySelect(easy: T, normal: T, hard: T, lunatic: T): T {
         GameDifficulty.NORMAL -> normal
         GameDifficulty.HARD -> hard
         GameDifficulty.LUNATIC -> lunatic
-        else -> throw GdxRuntimeException("Difficulty select: current difficulty is not regular")
+        else -> throw KotoRuntimeException("Difficulty select: current difficulty is not regular")
     }
 }
 

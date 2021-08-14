@@ -27,10 +27,11 @@ package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.stg.Drawable
 import com.hhs.koto.stg.background.TileBackground
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.StarGraphStateMachineTexture
+import com.hhs.koto.stg.pattern.interpolate
+import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.RunnableTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.A
@@ -62,20 +63,28 @@ class AyaBoss(
     override val height: Float = 64f
     var usingAction: Boolean = false
     var oldX: Float = x
-    lateinit var spellBackground: Drawable
-    lateinit var spellForeground: Drawable
+    lateinit var spellBackground: TileBackground
+    lateinit var spellForeground: TileBackground
 
-    override fun createSpellBackground(): Task = RunnableTask {
-        spellBackground = game.background.addDrawable(TileBackground(getRegion("st4_spell_background.png"), 100))
-        spellForeground = game.background.addDrawable(
-            TileBackground(
-                getRegion("st4_spell_foreground.png"),
-                100,
-                -3f,
-                3f,
-                color = Color(0f, 1f, 1f, 0.5f),
-            )
+    override fun createSpellBackground(): Task = CoroutineTask {
+        spellBackground = TileBackground(
+            getRegion("st1/spell_background.png"),
+            100,
+            color = Color(0f, 1f, 1f, 0f),
         )
+        spellForeground = TileBackground(
+            getRegion("st1/spell_foreground.png"),
+            100,
+            -3f,
+            3f,
+            color = Color(0f, 1f, 1f, 0f),
+        )
+        game.background.addDrawable(spellBackground)
+        game.background.addDrawable(spellForeground)
+        interpolate(0f, 1f, 30) {
+            spellBackground.color.a = it
+            spellForeground.color.a = it / 2f
+        }
     }
 
     override fun removeSpellBackground(): Task = RunnableTask {

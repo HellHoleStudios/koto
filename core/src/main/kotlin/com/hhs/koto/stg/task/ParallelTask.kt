@@ -25,7 +25,7 @@
 
 package com.hhs.koto.stg.task
 
-import com.badlogic.gdx.utils.GdxRuntimeException
+import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.removeNull
 import ktx.collections.GdxArray
 
@@ -64,7 +64,7 @@ class ParallelTask(vararg task: Task) : Task {
 
     fun addTask(vararg task: Task) {
         if (!alive) {
-            throw GdxRuntimeException("Cannot add task to a completed ParallelTask!")
+            throw KotoRuntimeException("Cannot add task to a completed ParallelTask!")
         }
 
         task.forEach {
@@ -74,7 +74,7 @@ class ParallelTask(vararg task: Task) : Task {
 
     fun addTask(task: Task) {
         if (!alive) {
-            throw GdxRuntimeException("Cannot add task to a completed ParallelTask!")
+            throw KotoRuntimeException("Cannot add task to a completed ParallelTask!")
         }
         tasks.add(task)
     }
