@@ -52,6 +52,9 @@ class ScoreParticle(
     protected var t: Int = 0
 
     init {
+        if (score < 0) {
+            throw IllegalArgumentException("Score cannot be lower than 0!")
+        }
         atlas = A["particle/score_particle_hsv.atlas"]
         glyphWidth = atlas.findRegion("0_$variant", 0).regionWidth.toFloat() * glyphScale
         glyphHeight = atlas.findRegion("0_$variant", 0).regionHeight.toFloat() * glyphScale

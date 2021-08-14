@@ -31,7 +31,10 @@ import com.crashinvaders.vfx.VfxRenderContext
 import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.crashinvaders.vfx.effects.ShaderVfxEffect
 import com.crashinvaders.vfx.framebuffer.VfxPingPongWrapper
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.util.A
 
 class DeathEffect : ShaderVfxEffect(
@@ -57,8 +60,8 @@ class DeathEffect : ShaderVfxEffect(
         program.bind()
         program.setUniformf(
             "u_playerPosition",
-            playerPositionX + Config.originX,
-            playerPositionY + Config.originY,
+            playerPositionX + worldOriginX,
+            playerPositionY + worldOriginY,
         )
     }
 
@@ -78,7 +81,7 @@ class DeathEffect : ShaderVfxEffect(
     override fun rebind() {
         program.bind()
         program.setUniformi("u_texture", TEXTURE_HANDLE0)
-        program.setUniformf("u_screenSize", Config.worldW, Config.worldH)
+        program.setUniformf("u_screenSize", worldW, worldH)
         program.setUniformf("u_playerPosition", 2048f, 2048f)
         program.setUniformf("u_time", 0f)
     }

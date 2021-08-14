@@ -31,7 +31,10 @@ import com.crashinvaders.vfx.VfxRenderContext
 import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.crashinvaders.vfx.effects.ShaderVfxEffect
 import com.crashinvaders.vfx.framebuffer.VfxPingPongWrapper
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.util.A
 
 class BossDistortionEffect : ShaderVfxEffect(
@@ -67,8 +70,8 @@ class BossDistortionEffect : ShaderVfxEffect(
         program.bind()
         program.setUniformf(
             "u_bossPosition",
-            bossPositionX + Config.originX,
-            bossPositionY + Config.originY,
+            bossPositionX + worldOriginX,
+            bossPositionY + worldOriginY,
         )
         program.setUniformf("u_radius", radius)
     }
@@ -84,7 +87,7 @@ class BossDistortionEffect : ShaderVfxEffect(
     override fun rebind() {
         program.bind()
         program.setUniformi("u_texture", TEXTURE_HANDLE0)
-        program.setUniformf("u_screenSize", Config.worldW, Config.worldH)
+        program.setUniformf("u_screenSize", worldW, worldH)
         program.setUniformf("u_bossPosition", 2048f, 2048f)
         program.setUniformf("u_radius", 50f)
         program.setUniformf("u_time", 0f)

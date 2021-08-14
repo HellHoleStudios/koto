@@ -26,7 +26,8 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.background.TileBackground
@@ -78,7 +79,7 @@ class Stage1 : StageBuilder {
                 getRegion("st3_shore_right.png"),
                 0,
                 speedY = -5f,
-                x = Config.worldW - 128f - Config.originX,
+                x = worldW - 128f - worldOriginX,
                 tileWidth = 128f,
                 tileHeight = 256f,
                 width = 128f,

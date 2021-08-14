@@ -30,7 +30,10 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils.ceil
 import com.badlogic.gdx.math.MathUtils.floor
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.safeMod
 import com.hhs.koto.util.tmpColor
@@ -44,10 +47,10 @@ class TileBackground(
     var offsetY: Float = 0f,
     val tileWidth: Float = texture.regionWidth.toFloat(),
     val tileHeight: Float = texture.regionHeight.toFloat(),
-    override val x: Float = -Config.originX,
-    override val y: Float = -Config.originY,
-    val width: Float = Config.worldW,
-    val height: Float = Config.worldH,
+    override val x: Float = -worldOriginX,
+    override val y: Float = -worldOriginY,
+    val width: Float = worldW,
+    val height: Float = worldH,
     val color: Color = Color.WHITE
 ) : Drawable {
     override var alive: Boolean = true

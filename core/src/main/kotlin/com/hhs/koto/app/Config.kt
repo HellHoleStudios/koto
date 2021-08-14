@@ -82,8 +82,8 @@ object Config {
     const val frameHeight: Int = 1008
     const val worldW: Float = 384f
     const val worldH: Float = 448f
-    const val originX: Float = worldW / 2f
-    const val originY: Float = worldH / 2f
+    const val worldOriginX: Float = worldW / 2f
+    const val worldOriginY: Float = worldH / 2f
     const val bulletDeleteDistance: Float = 1024f
     const val safeDistance: Float = 16f
     const val orthoCircleCollision: Boolean = true

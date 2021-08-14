@@ -40,10 +40,10 @@ lateinit var game: KotoGame
 lateinit var B: ShotSheet
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
-    if (x + rx < -Config.originX) return true
-    if (x - rx > Config.worldW - Config.originX) return true
-    if (y + ry < -Config.originY) return true
-    if (y - ry > Config.worldH - Config.originY) return true
+    if (x + rx < -Config.worldOriginX) return true
+    if (x - rx > Config.worldW - Config.worldOriginX) return true
+    if (y + ry < -Config.worldOriginY) return true
+    if (y - ry > Config.worldH - Config.worldOriginY) return true
     return false
 }
 

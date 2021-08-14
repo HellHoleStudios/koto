@@ -29,7 +29,10 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector3
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.util.BlendingMode
 import com.hhs.koto.util.cos
 import com.hhs.koto.util.getRegion
@@ -41,7 +44,7 @@ class MagicCircle(
 ) {
     val texture = getRegion("particle/magic_circle.png")
     val vertices = FloatArray(20)
-    var camera = OrthographicCamera(Config.worldW, Config.worldH)
+    var camera = OrthographicCamera(worldW, worldH)
     var t: Int = 0
 
     companion object {
@@ -81,22 +84,22 @@ class MagicCircle(
         batch.setBlending(BlendingMode.ADD)
 
         tmpVector.set(-size / 2f, -size / 2f, 0f)
-        camera.project(tmpVector, -Config.originX, -Config.originY, Config.worldW, Config.worldH)
+        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
         vertices[Batch.X1] = tmpVector.x + x
         vertices[Batch.Y1] = tmpVector.y + y
 
         tmpVector.set(-size / 2f, size / 2f, 0f)
-        camera.project(tmpVector, -Config.originX, -Config.originY, Config.worldW, Config.worldH)
+        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
         vertices[Batch.X2] = tmpVector.x + x
         vertices[Batch.Y2] = tmpVector.y + y
 
         tmpVector.set(size / 2f, size / 2f, 0f)
-        camera.project(tmpVector, -Config.originX, -Config.originY, Config.worldW, Config.worldH)
+        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
         vertices[Batch.X3] = tmpVector.x + x
         vertices[Batch.Y3] = tmpVector.y + y
 
         tmpVector.set(size / 2f, -size / 2f, 0f)
-        camera.project(tmpVector, -Config.originX, -Config.originY, Config.worldW, Config.worldH)
+        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
         vertices[Batch.X4] = tmpVector.x + x
         vertices[Batch.Y4] = tmpVector.y + y
 

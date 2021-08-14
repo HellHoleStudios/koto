@@ -31,7 +31,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision.collide
 import com.hhs.koto.stg.Player
@@ -55,7 +58,7 @@ open class BasicPlayer(
     var deathbombTime: Int,
     grazeRadius: Float = hitRadius * 10f,
     itemRadius: Float = hitRadius * 15f,
-    val itemCollectLineHeight: Float = Config.worldH / 4f * 3f - Config.originY,
+    val itemCollectLineHeight: Float = worldH / 4f * 3f - worldOriginY,
     val width: Float = texture.texture.regionWidth.toFloat(),
     val height: Float = texture.texture.regionHeight.toFloat(),
     val textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
@@ -65,7 +68,7 @@ open class BasicPlayer(
     val bottomMargin: Float = 16f,
     val topMargin: Float = 16f,
     val spawnX: Float = 0f,
-    val spawnY: Float = -Config.originY + 48f,
+    val spawnY: Float = -worldOriginY + 48f,
     override val zIndex: Int = -300,
 ) : Player {
     override var alive: Boolean = true
@@ -393,13 +396,13 @@ open class BasicPlayer(
 
     fun clampX(x: Float): Float {
         if (playerState == PlayerState.RESPAWNING) return x
-        return clamp(x, leftMargin - Config.originX, Config.worldW - Config.originX - rightMargin)
+        return clamp(x, leftMargin - worldOriginX, worldW - worldOriginX - rightMargin)
     }
 
 
     fun clampY(y: Float): Float {
         if (playerState == PlayerState.RESPAWNING) return y
-        return clamp(y, bottomMargin - Config.originY, Config.worldH - Config.originY - topMargin)
+        return clamp(y, bottomMargin - worldOriginY, worldH - worldOriginY - topMargin)
     }
 
 }

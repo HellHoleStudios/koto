@@ -27,7 +27,7 @@ package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
@@ -61,8 +61,8 @@ class PointItem(
         val amount: Long = if (autoCollected || collectPositionY >= game.maxScoreHeight) {
             game.maxScore
         } else {
-            (game.maxScore * 0.9f / (game.maxScoreHeight + Config.originY) *
-                    (y + Config.originY) + game.maxScore * 0.1f).toLong()
+            (game.maxScore * 0.9f / (game.maxScoreHeight + worldOriginY) * (collectPositionY + worldOriginY)
+                    + game.maxScore * 0.1f).toLong()
         }
         game.score += amount
         addParticle(

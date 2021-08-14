@@ -44,8 +44,6 @@ import com.hhs.koto.demo.player.ReimuPlayer
 import com.hhs.koto.demo.stage1.Spell1
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.stg.GameBuilder
-import com.hhs.koto.stg.drawable.BossDistortionEffect
-import com.hhs.koto.stg.drawable.DeathEffect
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen

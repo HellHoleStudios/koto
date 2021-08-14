@@ -36,6 +36,10 @@ import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.app.ui.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
@@ -56,19 +60,19 @@ class KotoGame : Disposable {
 
     val tasks = ParallelTask()
     val backgroundViewport =
-        StretchViewport(Config.worldW, Config.worldH, OrthographicCamera(Config.worldW, Config.worldH).apply {
-            position.x = Config.worldW / 2f - Config.originX
-            position.y = Config.worldH / 2f - Config.originY
+        StretchViewport(worldW, worldH, OrthographicCamera(worldW, worldH).apply {
+            position.x = worldW / 2f - worldOriginX
+            position.y = worldH / 2f - worldOriginY
         })
     val stageViewport =
-        StretchViewport(Config.worldW, Config.worldH, OrthographicCamera(Config.worldW, Config.worldH).apply {
-            position.x = Config.worldW / 2f - Config.originX
-            position.y = Config.worldH / 2f - Config.originY
+        StretchViewport(worldW, worldH, OrthographicCamera(worldW, worldH).apply {
+            position.x = worldW / 2f - worldOriginX
+            position.y = worldH / 2f - worldOriginY
         })
     val hudViewport =
-        StretchViewport(Config.worldW, Config.worldH, OrthographicCamera(Config.worldW, Config.worldH).apply {
-            position.x = Config.worldW / 2f - Config.originX
-            position.y = Config.worldH / 2f - Config.originY
+        StretchViewport(worldW, worldH, OrthographicCamera(worldW, worldH).apply {
+            position.x = worldW / 2f - worldOriginX
+            position.y = worldH / 2f - worldOriginY
         })
 
     val batch = SpriteBatch(
@@ -81,10 +85,10 @@ class KotoGame : Disposable {
     val normalBatch = SpriteBatch()
     val background = DrawableLayer<Drawable>()
     val stage = DrawableLayer<Drawable>().apply {
-        addDrawable(VfxOutputDrawable(backgroundVfx, -Config.originX, -Config.originY, Config.worldW, Config.worldH))
+        addDrawable(VfxOutputDrawable(backgroundVfx, -worldOriginX, -worldOriginY, worldW, worldH))
     }
     val hud = DrawableLayer<Drawable>().apply {
-        addDrawable(VfxOutputDrawable(vfx, -Config.originX, -Config.originY, Config.worldW, Config.worldH))
+        addDrawable(VfxOutputDrawable(vfx, -worldOriginX, -worldOriginY, worldW, worldH))
     }
 
     private var subFrameTime: Float = 0f
@@ -94,20 +98,20 @@ class KotoGame : Disposable {
     val logger = Logger("Game", Config.logLevel)
     val playerBullets = OptimizedLayer<PlayerBullet>(
         -10, Rectangle(
-            -Config.bulletDeleteDistance - Config.originX,
-            -Config.bulletDeleteDistance - Config.originY,
-            Config.bulletDeleteDistance * 2 + Config.worldW,
-            Config.bulletDeleteDistance * 2 + Config.worldH,
+            -Config.bulletDeleteDistance - worldOriginX,
+            -Config.bulletDeleteDistance - worldOriginY,
+            Config.bulletDeleteDistance * 2 + worldW,
+            Config.bulletDeleteDistance * 2 + worldH,
         )
     ).apply {
         stage.addDrawable(this)
     }
     val bullets = OptimizedLayer<Bullet>(
         0, Rectangle(
-            -Config.bulletDeleteDistance - Config.originX,
-            -Config.bulletDeleteDistance - Config.originY,
-            Config.bulletDeleteDistance * 2 + Config.worldW,
-            Config.bulletDeleteDistance * 2 + Config.worldH,
+            -Config.bulletDeleteDistance - worldOriginX,
+            -Config.bulletDeleteDistance - worldOriginY,
+            Config.bulletDeleteDistance * 2 + worldW,
+            Config.bulletDeleteDistance * 2 + worldH,
         )
     ).apply {
         stage.addDrawable(this)
@@ -115,7 +119,7 @@ class KotoGame : Disposable {
     val items = OptimizedLayer<Item>(
         -400, Rectangle(
             -32768f,
-            -32f - Config.originY,
+            -32f - worldOriginY,
             65536f,
             32768f,
         )
@@ -133,7 +137,7 @@ class KotoGame : Disposable {
     }
     lateinit var player: Player
     var maxScore: Long = 10000
-    var maxScoreHeight: Float = Config.worldH / 4f * 3f - 50f - Config.originY
+    var maxScoreHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
     val life = FragmentCounter()
     val bomb = FragmentCounter()
