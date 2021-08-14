@@ -42,7 +42,6 @@ class CoroutineTask(
 ) : Task {
     companion object {
         val scope = CoroutineScope(CoroutineTaskDispatcher)
-        val reflect = GdxMap<CoroutineContext, CoroutineTask>()
     }
 
     object CoroutineTaskDispatcher : MainCoroutineDispatcher() {
@@ -79,10 +78,6 @@ class CoroutineTask(
     override var alive: Boolean = true
     var attachedTasks: GdxArray<Task>? = null
 
-    init {
-        reflect[job] = this
-    }
-
     override fun tick() {
         CoroutineTaskDispatcher.tick(job.job)
         if (job.isCompleted) {
@@ -106,7 +101,6 @@ class CoroutineTask(
         alive = false
         job.cancel()
         CoroutineTaskDispatcher.remove(job.job)
-        reflect.remove(job)
         return true
     }
 
@@ -155,9 +149,16 @@ suspend fun Task.waitForFinish() {
     }
 }
 
+suspend fun CoroutineScope.attachAndWait(task: Task) {
+    self.attachTask(task)
+    while (task.alive) {
+        yield()
+    }
+}
+
 fun CoroutineScope.task(block: suspend CoroutineScope.() -> Unit): Task {
     val obj = coroutineContext[CoroutineTask.CoroutineTaskElement]?.obj
     val task = CoroutineTask(index, obj, block)
-    CoroutineTask.reflect[coroutineContext.job].attachTask(task)
+    self.attachTask(task)
     return task
 }

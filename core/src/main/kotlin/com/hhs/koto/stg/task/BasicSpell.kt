@@ -54,12 +54,13 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         }, SequenceTask(spellTask, terminate()))
     }
 
-    fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task {
-        return BuilderSequence(taskBuilder {
-            val boss = bossBuilder()
-            addEnemy(boss)
-            boss.healthBar.addSpell(this)
-            boss.creationTask()
-        }, this).build()
+    fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
+        val boss = bossBuilder()
+        addEnemy(boss)
+        boss.healthBar.addSpell(this@BasicSpell)
+        attachAndWait(boss.creationTask())
+        attachAndWait(boss.createSpellBackground())
+        attachAndWait(this@BasicSpell.build())
+        attachAndWait(boss.removeSpellBackground())
     }
 }

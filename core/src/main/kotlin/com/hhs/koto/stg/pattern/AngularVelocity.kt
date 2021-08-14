@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
 
@@ -42,13 +41,13 @@ class AngularVelocity(
 }
 
 fun <T : Bullet> T.angularVel(omega: Float = 0f, duration: Int = Int.MAX_VALUE): T {
-    addTask(AngularVelocity(this, omega, duration))
+    attachTask(AngularVelocity(this, omega, duration))
     return this
 }
 
 fun BulletGroup.angularVel(omega: Float = 0f, duration: Int = Int.MAX_VALUE): BulletGroup {
     forEach {
-        addTask(AngularVelocity(it, omega, duration))
+        it.attachTask(AngularVelocity(it, omega, duration))
     }
     return this
 }

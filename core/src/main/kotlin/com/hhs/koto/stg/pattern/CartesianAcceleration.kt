@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
 import com.hhs.koto.util.atan2
@@ -48,13 +47,13 @@ open class CartesianAcceleration(
 }
 
 fun <T : Bullet> T.cartesianAcceleration(deltaX: Float, deltaY: Float, duration: Int = Int.MAX_VALUE): T {
-    addTask(CartesianAcceleration(this, deltaX, deltaY, duration))
+    attachTask(CartesianAcceleration(this, deltaX, deltaY, duration))
     return this
 }
 
 fun BulletGroup.cartesianAcceleration(deltaX: Float, deltaY: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
     forEach {
-        addTask(CartesianAcceleration(it, deltaX, deltaY, duration))
+        it.attachTask(CartesianAcceleration(it, deltaX, deltaY, duration))
     }
     return this
 }

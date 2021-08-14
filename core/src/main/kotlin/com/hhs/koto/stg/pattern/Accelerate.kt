@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
 
@@ -40,13 +39,13 @@ class Accelerate(
 }
 
 fun <T : Bullet> T.accelerate(acc: Float = 0f, duration: Int = Int.MAX_VALUE): T {
-    addTask(Accelerate(this, acc, duration))
+    attachTask(Accelerate(this, acc, duration))
     return this
 }
 
 fun BulletGroup.accelerate(acc: Float = 0f, duration: Int = Int.MAX_VALUE): BulletGroup {
     forEach {
-        addTask(Accelerate(it, acc, duration))
+        it.attachTask(Accelerate(it, acc, duration))
     }
     return this
 }

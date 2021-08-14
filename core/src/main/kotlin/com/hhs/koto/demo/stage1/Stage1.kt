@@ -30,10 +30,12 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.background.TileBackground
-import com.hhs.koto.stg.pattern.Interpolate
+import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move
-import com.hhs.koto.stg.task.*
-import com.hhs.koto.util.findBoss
+import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.StageBuilder
+import com.hhs.koto.stg.task.attachAndWait
+import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
@@ -41,67 +43,61 @@ class Stage1 : StageBuilder {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
     override val name = "stage1"
 
-    override fun build() = BuilderSequence(
-        taskBuilder {
-            RunnableTask {
-                game.background.addDrawable(
-                    TileBackground(
-                        getRegion("st3_water.png"),
-                        0,
-                        speedY = -4f,
-                        tileWidth = 128f,
-                        tileHeight = 256f,
-                    )
-                )
-                game.background.addDrawable(
-                    TileBackground(
-                        getRegion("st3_water_overlay.png"),
-                        0,
-                        speedY = -6f,
-                        tileWidth = 128f,
-                        tileHeight = 128f,
-                        color = Color(1f, 1f, 1f, 0.3f)
-                    )
-                )
-                game.background.addDrawable(
-                    TileBackground(
-                        getRegion("st3_shore_left.png"),
-                        0,
-                        speedY = -5f,
-                        tileWidth = 128f,
-                        tileHeight = 256f,
-                        width = 128f,
-                    )
-                )
-                game.background.addDrawable(
-                    TileBackground(
-                        getRegion("st3_shore_right.png"),
-                        0,
-                        speedY = -5f,
-                        x = Config.worldW - 128f - Config.originX,
-                        tileWidth = 128f,
-                        tileHeight = 256f,
-                        width = 128f,
-                    )
-                )
-            }
-        },
-        taskBuilder { Interpolate(0f, 1f, 60) { game.background.alpha = it } },
-        MidStage1(),
-        taskBuilder { DelayTask(240) },
-        taskBuilder {
-            CoroutineTask {
-                val boss = addEnemy(AyaBoss())
-                boss.healthBar.addSpell(Spell1())
-                boss.creationTask().waitForFinish()
-            }
-        },
-        Spell1(),
-        taskBuilder {
-            CoroutineTask {
-                val boss = findBoss(AyaBoss::class.java)!!
-                move(boss, -300f, 300f, 120)
-            }
-        }
-    ).build()
+    override fun build() = CoroutineTask {
+        game.background.addDrawable(
+            TileBackground(
+                getRegion("st3_water.png"),
+                0,
+                speedY = -4f,
+                tileWidth = 128f,
+                tileHeight = 256f,
+            )
+        )
+        game.background.addDrawable(
+            TileBackground(
+                getRegion("st3_water_overlay.png"),
+                0,
+                speedY = -6f,
+                tileWidth = 128f,
+                tileHeight = 128f,
+                color = Color(1f, 1f, 1f, 0.3f)
+            )
+        )
+        game.background.addDrawable(
+            TileBackground(
+                getRegion("st3_shore_left.png"),
+                0,
+                speedY = -5f,
+                tileWidth = 128f,
+                tileHeight = 256f,
+                width = 128f,
+            )
+        )
+        game.background.addDrawable(
+            TileBackground(
+                getRegion("st3_shore_right.png"),
+                0,
+                speedY = -5f,
+                x = Config.worldW - 128f - Config.originX,
+                tileWidth = 128f,
+                tileHeight = 256f,
+                width = 128f,
+            )
+        )
+        interpolate(0f, 1f, 60) { game.background.alpha = it }
+
+        attachAndWait(MidStage1().build())
+        wait(240)
+
+        val boss = addEnemy(AyaBoss())
+        boss.healthBar.addSpell(Spell1())
+        attachAndWait(boss.creationTask())
+        attachAndWait(boss.createSpellBackground())
+
+        attachAndWait(Spell1().build())
+
+        attachAndWait(boss.removeSpellBackground())
+
+        move(boss, -300f, 300f, 120)
+    }
 }

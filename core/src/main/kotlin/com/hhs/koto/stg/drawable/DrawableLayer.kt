@@ -48,14 +48,15 @@ class DrawableLayer<T : Drawable>(override val zIndex: Int = 0) : Drawable {
         }
     }
 
-    fun addDrawable(drawable: T) {
+    fun addDrawable(drawable: T): T {
         for (i in 0 until drawables.size) {
             if (drawables[i].zIndex > drawable.zIndex) {
                 drawables.insert(i, drawable)
-                return
+                return drawable
             }
         }
         drawables.add(drawable)
+        return drawable
     }
 
     fun removeDrawable(drawable: T) {

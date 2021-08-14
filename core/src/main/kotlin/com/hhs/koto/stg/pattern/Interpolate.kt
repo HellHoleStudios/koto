@@ -26,8 +26,9 @@
 package com.hhs.koto.stg.pattern
 
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.addTask
+import com.hhs.koto.stg.task.self
 import com.hhs.koto.stg.task.waitForFinish
+import kotlinx.coroutines.CoroutineScope
 
 class Interpolate(
     val start: Float,
@@ -41,13 +42,15 @@ class Interpolate(
     }
 }
 
-suspend fun interpolate(
+suspend fun CoroutineScope.interpolate(
     start: Float,
     end: Float,
     duration: Int,
     interpolation: Interpolation = Interpolation.linear,
     action: (Float) -> Unit,
 ) {
-    addTask(Interpolate(start, end, duration, interpolation, action)).waitForFinish()
+    val task = Interpolate(start, end, duration, interpolation, action)
+    self.attachTask(task)
+    task.waitForFinish()
 }
 

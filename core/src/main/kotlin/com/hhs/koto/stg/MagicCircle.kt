@@ -30,11 +30,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector3
 import com.hhs.koto.app.Config
-import com.hhs.koto.util.*
+import com.hhs.koto.util.BlendingMode
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.setBlending
 
 class MagicCircle(
     val size: Float = 256f,
-    var color: Color = Color.WHITE,
+    var color: Color = Color(0f, 1f, 1f, 0.5f),
 ) {
     val texture = getRegion("particle/magic_circle.png")
     val vertices = FloatArray(20)
@@ -48,16 +51,12 @@ class MagicCircle(
     init {
         vertices[Batch.U1] = texture.u
         vertices[Batch.V1] = texture.v2
-        vertices[Batch.C1] = Color.WHITE_FLOAT_BITS
         vertices[Batch.U2] = texture.u
         vertices[Batch.V2] = texture.v
-        vertices[Batch.C2] = Color.WHITE_FLOAT_BITS
         vertices[Batch.U3] = texture.u2
         vertices[Batch.V3] = texture.v
-        vertices[Batch.C3] = Color.WHITE_FLOAT_BITS
         vertices[Batch.U4] = texture.u2
         vertices[Batch.V4] = texture.v2
-        vertices[Batch.C4] = Color.WHITE_FLOAT_BITS
     }
 
     fun tick() {
@@ -66,14 +65,19 @@ class MagicCircle(
         camera.direction.set(-1f, 0f, 0f)
         camera.up.set(0f, 0f, 1f)
         camera.rotateAround(Vector3.Zero, Vector3.Y, 60f + 30f * cos(t / 3f))
-        camera.rotateAround(Vector3.Zero, Vector3.Z, t.toFloat())
+        camera.rotateAround(Vector3.Zero, Vector3.Z, t.toFloat() * 2f)
         camera.rotate(t.toFloat() / 2f)
         camera.update()
     }
 
     fun draw(batch: Batch, parentAlpha: Float, x: Float, y: Float) {
-        tmpColor.set(batch.color)
-        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
+        val tmpColor = color.cpy()
+        color.a *= parentAlpha
+        vertices[Batch.C1] = tmpColor.toFloatBits()
+        vertices[Batch.C2] = tmpColor.toFloatBits()
+        vertices[Batch.C3] = tmpColor.toFloatBits()
+        vertices[Batch.C4] = tmpColor.toFloatBits()
+
         batch.setBlending(BlendingMode.ADD)
 
         tmpVector.set(-size / 2f, -size / 2f, 0f)
@@ -98,6 +102,5 @@ class MagicCircle(
 
         batch.draw(texture.texture, vertices, 0, 20)
         batch.setBlending(BlendingMode.ALPHA)
-        batch.color = tmpColor
     }
 }

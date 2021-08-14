@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.hhs.koto.stg.addTask
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.BulletGroup
 import com.hhs.koto.util.cos
@@ -55,13 +54,13 @@ class PolarAcceleration(
 }
 
 fun <T : Bullet> T.polarAcceleration(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): T {
-    addTask(PolarAcceleration(this, accSpeed, accAngle, duration))
+    attachTask(PolarAcceleration(this, accSpeed, accAngle, duration))
     return this
 }
 
 fun BulletGroup.polarAcceleration(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
     forEach {
-        addTask(PolarAcceleration(it, accSpeed, accAngle, duration))
+        it.attachTask(PolarAcceleration(it, accSpeed, accAngle, duration))
     }
     return this
 }

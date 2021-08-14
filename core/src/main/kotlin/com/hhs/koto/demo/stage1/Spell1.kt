@@ -25,14 +25,18 @@
 
 package com.hhs.koto.demo.stage1
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.background.TileBackground
 import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.BasicSpell
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.difficultySelect
+import com.hhs.koto.util.game
+import com.hhs.koto.util.getRegion
 import ktx.collections.GdxArray
 
 class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {

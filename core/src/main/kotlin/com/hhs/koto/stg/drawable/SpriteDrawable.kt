@@ -45,8 +45,8 @@ open class SpriteDrawable(
     width: Float,
     height: Float,
     rotation: Float,
-    originX: Float = texture.regionWidth.toFloat() / 2f,
-    originY: Float = texture.regionHeight.toFloat() / 2f,
+    originX: Float = width / 2f,
+    originY: Float = height / 2f,
     color: Color = Color.WHITE,
 ) : Drawable, Bounded {
     protected val sprite = Sprite(texture).apply {

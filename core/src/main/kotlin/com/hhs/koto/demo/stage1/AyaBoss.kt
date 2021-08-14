@@ -25,10 +25,17 @@
 
 package com.hhs.koto.demo.stage1
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.Drawable
+import com.hhs.koto.stg.background.TileBackground
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.StarGraphStateMachineTexture
+import com.hhs.koto.stg.task.RunnableTask
+import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.A
+import com.hhs.koto.util.game
+import com.hhs.koto.util.getRegion
 import ktx.collections.set
 
 class AyaBoss(
@@ -55,6 +62,26 @@ class AyaBoss(
     override val height: Float = 64f
     var usingAction: Boolean = false
     var oldX: Float = x
+    lateinit var spellBackground: Drawable
+    lateinit var spellForeground: Drawable
+
+    override fun createSpellBackground(): Task = RunnableTask {
+        spellBackground = game.background.addDrawable(TileBackground(getRegion("st4_spell_background.png"), 100))
+        spellForeground = game.background.addDrawable(
+            TileBackground(
+                getRegion("st4_spell_foreground.png"),
+                100,
+                -3f,
+                3f,
+                color = Color(0f, 1f, 1f, 0.5f),
+            )
+        )
+    }
+
+    override fun removeSpellBackground(): Task = RunnableTask {
+        game.background.removeDrawable(spellBackground)
+        game.background.removeDrawable(spellForeground)
+    }
 
     override fun tick() {
         if (usingAction) {

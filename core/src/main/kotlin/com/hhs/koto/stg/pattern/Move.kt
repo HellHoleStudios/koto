@@ -27,8 +27,9 @@ package com.hhs.koto.stg.pattern
 
 import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Movable
-import com.hhs.koto.stg.addTask
+import com.hhs.koto.stg.task.self
 import com.hhs.koto.stg.task.waitForFinish
+import kotlinx.coroutines.CoroutineScope
 
 class Move(
     val target: Movable,
@@ -45,12 +46,14 @@ class Move(
     }
 }
 
-suspend fun move(
+suspend fun CoroutineScope.move(
     target: Movable,
     targetX: Float = target.x,
     targetY: Float = target.y,
     duration: Int,
     interpolation: Interpolation = Interpolation.sine,
 ) {
-    addTask(Move(target, targetX, targetY, duration, interpolation)).waitForFinish()
+    val task = Move(target, targetX, targetY, duration, interpolation)
+    self.attachTask(task)
+    task.waitForFinish()
 }

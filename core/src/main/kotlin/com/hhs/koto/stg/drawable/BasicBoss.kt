@@ -29,8 +29,9 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.*
-import com.hhs.koto.stg.pattern.Move
+import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.RunnableTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
@@ -68,11 +69,17 @@ abstract class BasicBoss(
         game.bossDistortionEffect.start()
     }
 
-    fun creationTask(): Task {
+    open fun creationTask(): Task = CoroutineTask {
         x = 300f
         y = 300f
-        return addTask(Move(this, 0f, 0f, 120))
+        invulnerable = true
+        move(this@BasicBoss, 0f, 0f, 120)
+        invulnerable = false
     }
+
+    open fun createSpellBackground(): Task = RunnableTask {}
+
+    open fun removeSpellBackground(): Task = RunnableTask {}
 
     override fun tick() {
         if (!invulnerable) {
