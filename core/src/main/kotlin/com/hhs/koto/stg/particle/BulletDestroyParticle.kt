@@ -65,8 +65,8 @@ class BulletDestroyParticle(
 
     override fun tick() {
         super.tick()
-        sprite.setScale(sprite.scaleX + 0.1f)
-        sprite.alpha -= 0.05f
+        sprite.setScale(sprite.scaleX - 1f / duration)
+        sprite.alpha -= 0.5f / duration
         if (t >= duration) kill()
     }
 }

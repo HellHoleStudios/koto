@@ -28,7 +28,9 @@ package com.hhs.koto.stg.drawable
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.stg.*
+import com.hhs.koto.stg.CircleCollision
+import com.hhs.koto.stg.Collision
+import com.hhs.koto.stg.PlayerState
 import com.hhs.koto.stg.item.PointItem
 import com.hhs.koto.stg.item.PowerItem
 import com.hhs.koto.stg.particle.DeathParticle
@@ -152,18 +154,18 @@ open class BasicEnemy(
     override fun destroy() {
         SE.play("enemydead")
         ringCloud(x, y, powerCount, bulletCollision.radius) { x, y ->
-            addItem(PowerItem(x, y))
+            game.addItem(PowerItem(x, y))
         }
         ringCloud(x, y, pointCount, bulletCollision.radius) { x, y ->
-            addItem(PointItem(x, y))
+            game.addItem(PointItem(x, y))
         }
-        addParticle(
+        game.addParticle(
             Explosion(
                 x, y, 32f, 64f, 16f, 256f, random(0f, 360f), 15
             )
         )
         repeat(5) {
-            addParticle(DeathParticle(x, y, 10f, random(0f, 360f), 24f, 0f, 20))
+            game.addParticle(DeathParticle(x, y, 10f, random(0f, 360f), 24f, 0f, 20))
         }
         kill()
     }

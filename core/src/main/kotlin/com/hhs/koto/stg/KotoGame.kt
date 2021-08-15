@@ -43,10 +43,7 @@ import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.app.ui.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
-import com.hhs.koto.stg.drawable.BossDistortionEffect
-import com.hhs.koto.stg.drawable.DrawableLayer
-import com.hhs.koto.stg.drawable.Enemy
-import com.hhs.koto.stg.drawable.OptimizedLayer
+import com.hhs.koto.stg.drawable.*
 import com.hhs.koto.stg.item.Item
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
@@ -117,7 +114,7 @@ class KotoGame : Disposable {
         stage.addDrawable(this)
     }
     val items = OptimizedLayer<Item>(
-        -400, Rectangle(
+        -500, Rectangle(
             -32768f,
             -32f - worldOriginY,
             65536f,
@@ -129,7 +126,10 @@ class KotoGame : Disposable {
     val particles = OptimizedLayer<Drawable>(200).apply {
         stage.addDrawable(this)
     }
-    val enemies = DrawableLayer<Enemy>(-350).apply {
+    val enemies = DrawableLayer<Enemy>(-450).apply {
+        stage.addDrawable(this)
+    }
+    val bosses = DrawableLayer<Boss>(-400).apply {
         stage.addDrawable(this)
     }
     val bossDistortionEffect = BossDistortionEffect().apply {
@@ -214,29 +214,45 @@ class KotoGame : Disposable {
         batch.shader.dispose()
         logger.info("Game instance disposed.")
     }
-}
 
-fun <T : Task> addTask(task: T): T {
-    game.tasks.addTask(task)
-    return task
-}
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Boss> findBoss(clazz: Class<T>): T? {
+        bosses.forEach {
+            if (it.javaClass == clazz) {
+                return it as T
+            }
+        }
+        return null
+    }
 
-fun <T : Bullet> addBullet(bullet: T): T {
-    game.bullets.add(bullet)
-    return bullet
-}
 
-fun <T : Item> addItem(item: T): T {
-    game.items.add(item)
-    return item
-}
+    fun <T : Task> addTask(task: T): T {
+        tasks.addTask(task)
+        return task
+    }
 
-fun <T : Drawable> addParticle(particle: T): T {
-    game.particles.add(particle)
-    return particle
-}
+    fun <T : Bullet> addBullet(bullet: T): T {
+        bullets.add(bullet)
+        return bullet
+    }
 
-fun <T : Enemy> addEnemy(enemy: T): T {
-    game.enemies.addDrawable(enemy)
-    return enemy
+    fun <T : Item> addItem(item: T): T {
+        items.add(item)
+        return item
+    }
+
+    fun <T : Drawable> addParticle(particle: T): T {
+        particles.add(particle)
+        return particle
+    }
+
+    fun <T : Enemy> addEnemy(enemy: T): T {
+        enemies.addDrawable(enemy)
+        return enemy
+    }
+
+    fun <T : Boss> addBoss(boss: T): T {
+        bosses.addDrawable(boss)
+        return boss
+    }
 }

@@ -27,7 +27,6 @@ package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
-import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
@@ -59,7 +58,7 @@ class PowerItem(
         super.onCollected(collectPositionX, collectPositionY, autoCollected)
         if (game.power >= 4f) {
             game.score += 10000
-            addParticle(
+            game.addParticle(
                 ScoreParticle(
                     x + MathUtils.random(-20f, 20f),
                     y + MathUtils.random(-10f, 10f),

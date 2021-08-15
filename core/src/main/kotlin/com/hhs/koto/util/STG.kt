@@ -30,9 +30,7 @@ import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.KotoGame
-import com.hhs.koto.stg.addBullet
 import com.hhs.koto.stg.bullet.*
-import com.hhs.koto.stg.drawable.Boss
 
 lateinit var game: KotoGame
 
@@ -61,16 +59,6 @@ val playerX: Float
 val playerY: Float
     get() = game.player.y
 
-@Suppress("UNCHECKED_CAST")
-fun <T : Boss> findBoss(clazz: Class<T>): T? {
-    game.enemies.forEach {
-        if (it.javaClass == clazz) {
-            return it as T
-        }
-    }
-    return null
-}
-
 fun create(
     data: BulletData,
     x: Float,
@@ -81,7 +69,7 @@ fun create(
     delay: Int = 8,
     setRotation: Boolean = true,
 ): BasicBullet {
-    val result = addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
+    val result = game.addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
     if (setRotation) result.rotation = angle
     return result
 }
@@ -120,7 +108,7 @@ fun towards(
     setRotation: Boolean = true,
 ): BasicBullet {
     val angle = atan2(x, y, targetX, targetY)
-    val result = addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
+    val result = game.addBullet(BasicBullet(x, y, speed, angle, data, tint = color, delay = delay))
     if (setRotation) result.rotation = angle
     return result
 }
@@ -165,7 +153,7 @@ fun ring(
         if (setRotation) {
             bullet.rotation = angle
         }
-        addBullet(bullet)
+        game.addBullet(bullet)
         ret.addBullet(bullet)
     }
     return ret
@@ -206,7 +194,7 @@ fun ring(
         if (setRotation) {
             bullet.rotation = angle
         }
-        addBullet(bullet)
+        game.addBullet(bullet)
         ret.addBullet(bullet)
     }
     return ret

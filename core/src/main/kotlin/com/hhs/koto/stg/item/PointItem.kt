@@ -28,7 +28,6 @@ package com.hhs.koto.stg.item
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config.worldOriginY
-import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
@@ -65,7 +64,7 @@ class PointItem(
                     + game.maxScore * 0.1f).toLong()
         }
         game.score += amount
-        addParticle(
+        game.addParticle(
             ScoreParticle(
                 x + random(-20f, 20f),
                 y + random(-10f, 10f),

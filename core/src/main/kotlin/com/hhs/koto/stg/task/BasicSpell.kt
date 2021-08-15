@@ -25,10 +25,8 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
-import com.hhs.koto.util.findBoss
 import com.hhs.koto.util.game
 import kotlinx.coroutines.yield
 
@@ -44,7 +42,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         val spellTask = spell()
         return ParallelTask(
             CoroutineTask {
-                boss = findBoss(bossClass)!!
+                boss = game.findBoss(bossClass)!!
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
                         if (spellTask.alive) spellTask.kill()
@@ -57,10 +55,13 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             SequenceTask(
                 spellTask,
                 RunnableTask {
+                    boss.healthBar.nextSegment()
                     game.bullets.forEach {
                         it.destroy()
                     }
-                    boss.healthBar.nextSegment()
+                    game.enemies.forEach {
+                        it.destroy()
+                    }
                 },
                 terminate(),
             ),
@@ -69,7 +70,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
 
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
         val boss = bossBuilder()
-        addEnemy(boss)
+        game.addBoss(boss)
         boss.healthBar.addSpell(this@BasicSpell)
         attachAndWait(boss.creationTask())
         attachAndWait(boss.createSpellBackground())

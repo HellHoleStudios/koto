@@ -29,7 +29,6 @@ import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.background.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move
@@ -90,7 +89,7 @@ class Stage1 : StageBuilder {
         attachAndWait(MidStage1().build())
         wait(240)
 
-        val boss = addEnemy(AyaBoss())
+        val boss = game.addBoss(AyaBoss())
         boss.healthBar.addSpell(Nonspell1(), Spell1())
         attachAndWait(boss.creationTask())
         attachAndWait(Nonspell1().build())

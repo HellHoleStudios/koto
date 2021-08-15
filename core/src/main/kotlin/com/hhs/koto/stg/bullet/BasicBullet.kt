@@ -31,7 +31,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.CollisionShape
-import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.BulletDestroyParticle
 import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.stg.task.CoroutineTask
@@ -126,7 +125,7 @@ open class BasicBullet(
     }
 
     override fun destroy() {
-        addParticle(
+        game.addParticle(
             BulletDestroyParticle(
                 data.texture.getFrame(t),
                 x,
@@ -153,7 +152,7 @@ open class BasicBullet(
             grazeCounter++
             game.graze++
             SE.play("graze")
-            addParticle(GrazeParticle(x, y))
+            game.addParticle(GrazeParticle(x, y))
         }
     }
 

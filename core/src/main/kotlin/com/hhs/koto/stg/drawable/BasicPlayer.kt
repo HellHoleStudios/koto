@@ -39,7 +39,6 @@ import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision.collide
 import com.hhs.koto.stg.Player
 import com.hhs.koto.stg.PlayerState
-import com.hhs.koto.stg.addParticle
 import com.hhs.koto.stg.particle.DeathParticle
 import com.hhs.koto.stg.particle.Explosion
 import com.hhs.koto.stg.task.*
@@ -302,7 +301,7 @@ open class BasicPlayer(
         task {
             repeat(5) {
                 repeat(2) {
-                    addParticle(
+                    game.addParticle(
                         DeathParticle(
                             x,
                             y,
@@ -313,7 +312,7 @@ open class BasicPlayer(
                             color = Color(0f, 0f, 0f, 0.8f),
                         )
                     )
-                    addParticle(
+                    game.addParticle(
                         DeathParticle(
                             x,
                             y,
@@ -334,11 +333,11 @@ open class BasicPlayer(
     open fun onDeath() {
         invulnerable = true
         task {
-            addParticle(Explosion(x, y, 64f, 64f, 384f, 384f, duration = 10))
+            game.addParticle(Explosion(x, y, 64f, 64f, 384f, 384f, duration = 10))
             task {
                 repeat(10) {
                     repeat(3) {
-                        addParticle(
+                        game.addParticle(
                             DeathParticle(
                                 x,
                                 y,

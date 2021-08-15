@@ -26,7 +26,6 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.addEnemy
 import com.hhs.koto.stg.drawable.BasicEnemy
 import com.hhs.koto.stg.drawable.BasicEnemyTexture
 import com.hhs.koto.stg.pattern.interpolate
@@ -37,7 +36,7 @@ class MidStage1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
         task {
             repeat(3) {
-                addEnemy(
+                game.addEnemy(
                     BasicEnemy(
                         -250f,
                         100f,
