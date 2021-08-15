@@ -25,6 +25,7 @@
 
 package com.hhs.koto.app.ui
 
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -32,7 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.crashinvaders.vfx.VfxManager
 import com.hhs.koto.stg.Drawable
 
-class VfxOutput() : Image() {
+class VfxOutput(val useLinearFilter: Boolean = true) : Image() {
     constructor(vfxManager: VfxManager) : this() {
         this.vfxManager = vfxManager
     }
@@ -47,16 +48,18 @@ class VfxOutput() : Image() {
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
         if (vfxManager.resultBuffer == null) return
-        setSize(vfxManager.width.toFloat(), vfxManager.height.toFloat())
         vfxOutput.region.setRegion(vfxManager.resultBuffer.texture)
         vfxOutput.region.flip(false, true)
+        if (useLinearFilter && vfxOutput.region.texture.magFilter != Texture.TextureFilter.Linear) {
+            vfxOutput.region.texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Linear)
+        }
         super.draw(batch, parentAlpha)
     }
 }
 
 class VfxOutputDrawable(
-    override val x: Float = 0f,
-    override val y: Float = 0f,
+    override var x: Float = 0f,
+    override var y: Float = 0f,
     val width: Float,
     val height: Float,
     override val zIndex: Int = Int.MIN_VALUE,

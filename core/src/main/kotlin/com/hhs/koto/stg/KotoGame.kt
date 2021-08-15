@@ -135,6 +135,10 @@ class KotoGame : Disposable {
     val bossDistortionEffect = BossDistortionEffect().apply {
         backgroundVfx.addEffectRegistered(this)
     }
+    val bossNameDisplay = BossNameDisplay().apply {
+        hud.addDrawable(this)
+    }
+
     lateinit var player: Player
     var maxScore: Long = 10000
     var maxScoreHeight: Float = worldH / 4f * 3f - 50f - worldOriginY

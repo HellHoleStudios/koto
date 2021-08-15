@@ -33,8 +33,8 @@ import com.hhs.koto.util.setBlending
 import ktx.collections.GdxArray
 
 class DrawableLayer<T : Drawable>(override val zIndex: Int = 0) : Drawable {
-    override val x: Float = 0f
-    override val y: Float = 0f
+    override var x: Float = 0f
+    override var y: Float = 0f
     override var alive: Boolean = true
     var alpha: Float = 1f
 

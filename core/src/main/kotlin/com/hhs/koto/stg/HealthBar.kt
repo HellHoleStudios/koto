@@ -41,10 +41,16 @@ class HealthBar(
     val borderColor: Color = Color.RED.toHSVColor(),
     val barColor: Color = Color.WHITE.toHSVColor(),
 ) : Drawable {
-    override val x: Float
+    @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
+    override var x: Float
         get() = boss.x
-    override val y: Float
+        set(value) = throw UnsupportedOperationException()
+
+    @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
+    override var y: Float
         get() = boss.y
+        set(value) = throw UnsupportedOperationException()
+
     override var alive: Boolean = true
     var visible: Boolean = true
     val segments = GdxArray<Float>()

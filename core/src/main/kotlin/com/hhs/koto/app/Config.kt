@@ -78,8 +78,8 @@ object Config {
     const val allowResize: Boolean = true
     val windowScaling: Scaling = Scaling.fit
     const val defaultBlending: String = "ALPHA"
-    const val frameWidth: Int = 864
-    const val frameHeight: Int = 1008
+    const val frameWidth: Int = 768
+    const val frameHeight: Int = 896
     const val worldW: Float = 384f
     const val worldH: Float = 448f
     const val worldOriginX: Float = worldW / 2f
@@ -103,5 +103,12 @@ object Config {
         }
     }
     val UIFontBorderColor: Color = Color.BLACK
+    val UIFontShadowOffsetXFunction: (Int) -> Int = { fontSize: Int ->
+        fontSize / 10
+    }
+    val UIFontShadowOffsetYFunction: (Int) -> Int = { fontSize: Int ->
+        fontSize / 10
+    }
+    val UIFontShadowColor: Color? = null
     const val debugActorLayout: Boolean = false
 }

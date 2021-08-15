@@ -47,8 +47,8 @@ class TileBackground(
     var offsetY: Float = 0f,
     val tileWidth: Float = texture.regionWidth.toFloat(),
     val tileHeight: Float = texture.regionHeight.toFloat(),
-    override val x: Float = -worldOriginX,
-    override val y: Float = -worldOriginY,
+    override var x: Float = -worldOriginX,
+    override var y: Float = -worldOriginY,
     val width: Float = worldW,
     val height: Float = worldH,
     val color: Color = Color.WHITE

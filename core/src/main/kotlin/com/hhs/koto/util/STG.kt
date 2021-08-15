@@ -27,7 +27,10 @@ package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.random
-import com.hhs.koto.app.Config
+import com.hhs.koto.app.Config.worldH
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.bullet.*
@@ -37,10 +40,10 @@ lateinit var game: KotoGame
 lateinit var B: ShotSheet
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
-    if (x + rx < -Config.worldOriginX) return true
-    if (x - rx > Config.worldW - Config.worldOriginX) return true
-    if (y + ry < -Config.worldOriginY) return true
-    if (y - ry > Config.worldH - Config.worldOriginY) return true
+    if (x + rx < -worldOriginX) return true
+    if (x - rx > worldW - worldOriginX) return true
+    if (y + ry < -worldOriginY) return true
+    if (y - ry > worldH - worldOriginY) return true
     return false
 }
 

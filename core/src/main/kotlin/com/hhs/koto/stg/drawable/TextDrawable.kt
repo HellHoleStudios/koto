@@ -23,17 +23,26 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.drawable
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.util.BlendingMode
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.hhs.koto.stg.Drawable
 
-interface Drawable : Task, Movable {
-    val zIndex: Int
-        get() = 10000
-    val blending: BlendingMode
-        get() = BlendingMode.ALPHA
+class TextDrawable(
+    val font: BitmapFont,
+    var text: String,
+    override var x: Float,
+    override var y: Float,
+    var color: Color = Color.WHITE,
+) : Drawable {
+    override var alive: Boolean = true
 
-    fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
+    override fun tick() = Unit
+
+    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        font.setColor(color.r, color.g, color.b, color.a * parentAlpha)
+        font.draw(batch, text, x, y)
+    }
 }

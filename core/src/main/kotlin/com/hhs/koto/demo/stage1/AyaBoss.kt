@@ -57,6 +57,7 @@ class AyaBoss(
         )
         build()
     }
+    override val name: String = "aya"
     override val texture: TextureRegion
         get() = textureStateMachine.texture
     override val width: Float = 64f
@@ -67,6 +68,7 @@ class AyaBoss(
     lateinit var spellForeground: TileBackground
 
     override fun createSpellBackground(): Task = CoroutineTask {
+        useDistortionEffect = false
         spellBackground = TileBackground(
             getRegion("st1/spell_background.png"),
             100,
@@ -88,6 +90,7 @@ class AyaBoss(
     }
 
     override fun removeSpellBackground(): Task = RunnableTask {
+        useDistortionEffect = true
         game.background.removeDrawable(spellBackground)
         game.background.removeDrawable(spellForeground)
     }

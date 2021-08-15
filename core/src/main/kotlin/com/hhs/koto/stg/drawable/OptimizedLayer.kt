@@ -39,8 +39,8 @@ import ktx.collections.GdxArray
 open class OptimizedLayer<T : Drawable>(
     override val zIndex: Int,
     val world: Rectangle = Rectangle(-32768f, -32768f, 65536f, 65536f),
-    override val x: Float = 0f,
-    override val y: Float = 0f,
+    override var x: Float = 0f,
+    override var y: Float = 0f,
 ) : Drawable {
     val drawables = GdxArray<T>()
     var count: Int = 0

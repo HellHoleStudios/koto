@@ -101,7 +101,10 @@ fun getFont(
     color: Color = Config.UIFontColor,
     borderWidth: Float = Config.UIFontBorderWidthFunction(fontSize),
     borderColor: Color? = Config.UIFontBorderColor,
-    borderOutside: Boolean = true
+    borderOutside: Boolean = true,
+    shadowOffsetX: Int = Config.UIFontShadowOffsetXFunction(fontSize),
+    shadowOffsetY: Int = Config.UIFontShadowOffsetYFunction(fontSize),
+    shadowColor: Color? = Config.UIFontShadowColor,
 ): BitmapFont {
     val parameter = FreeTypeFontParameter()
     parameter.size = fontSize
@@ -113,6 +116,11 @@ fun getFont(
             parameter.spaceX -= borderWidth.nextUp().toInt()
             parameter.spaceY -= borderWidth.nextUp().toInt()
         }
+    }
+    if (shadowColor != null) {
+        parameter.shadowColor = shadowColor
+        parameter.shadowOffsetX = shadowOffsetX
+        parameter.shadowOffsetY = shadowOffsetY
     }
     parameter.packer = packer
     parameter.characters = charset

@@ -56,6 +56,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             if (boss is BasicBoss) {
                 self.attachTask(boss.createSpellBackground())
             }
+            game.bossNameDisplay.nextSpell()
             attachAndWait(spellTask)
             boss.healthBar.nextSegment()
             game.bullets.forEach {
@@ -73,9 +74,11 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
         val boss = bossBuilder()
         game.addBoss(boss)
+        game.bossNameDisplay.show(boss, 1)
         boss.healthBar.addSpell(this@BasicSpell)
         attachAndWait(boss.creationTask())
         attachAndWait(this@BasicSpell.build())
+        game.bossNameDisplay.hide()
         boss.healthBar.visible = false
     }
 }

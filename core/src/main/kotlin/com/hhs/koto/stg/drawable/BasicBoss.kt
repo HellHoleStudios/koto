@@ -52,10 +52,13 @@ abstract class BasicBoss(
     var scaleY = 1f
     var color: Color = Color.WHITE
     val magicCircle = MagicCircle()
+    var useDistortionEffect: Boolean = true
 
     override val healthBar = HealthBar(this).apply {
         game.hud.addDrawable(this)
     }
+    abstract val name: String
+    open val nameColor = Color.CYAN.toHSVColor()
     abstract val texture: TextureRegion
     abstract val width: Float
     abstract val height: Float
@@ -64,10 +67,6 @@ abstract class BasicBoss(
     open val textureOriginY: Float
         get() = texture.regionHeight.toFloat() / 2
     override var alive: Boolean = true
-
-    init {
-        game.bossDistortionEffect.start()
-    }
 
     open fun creationTask(): Task = CoroutineTask {
         x = 300f
@@ -94,7 +93,12 @@ abstract class BasicBoss(
             game.player.onHit()
         }
         magicCircle.tick()
-        game.bossDistortionEffect.tick(x, y)
+        if (useDistortionEffect) {
+            if (!game.bossDistortionEffect.enabled) game.bossDistortionEffect.start()
+            game.bossDistortionEffect.tick(x, y)
+        } else {
+            if (game.bossDistortionEffect.enabled) game.bossDistortionEffect.end()
+        }
         for (i in 0 until attachedTasks.size) {
             if (attachedTasks[i].alive) {
                 attachedTasks[i].tick()

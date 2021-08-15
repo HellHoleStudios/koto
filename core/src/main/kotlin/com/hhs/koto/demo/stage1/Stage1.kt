@@ -90,6 +90,7 @@ class Stage1 : StageBuilder {
         wait(240)
 
         val boss = game.addBoss(AyaBoss())
+        game.bossNameDisplay.show(boss, 1)
         boss.healthBar.addSpell(Nonspell1(), Spell1())
         attachAndWait(boss.creationTask())
 
@@ -97,6 +98,7 @@ class Stage1 : StageBuilder {
         attachAndWait(Spell1().build())
 
         boss.healthBar.visible = false
+        game.bossNameDisplay.hide()
         move(boss, -300f, 300f, 120)
     }
 }
