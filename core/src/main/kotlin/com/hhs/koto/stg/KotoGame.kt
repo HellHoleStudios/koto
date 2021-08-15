@@ -114,7 +114,7 @@ class KotoGame : Disposable {
         stage.addDrawable(this)
     }
     val items = OptimizedLayer<Item>(
-        -500, Rectangle(
+        -400, Rectangle(
             -32768f,
             -32f - worldOriginY,
             65536f,
@@ -126,10 +126,10 @@ class KotoGame : Disposable {
     val particles = OptimizedLayer<Drawable>(200).apply {
         stage.addDrawable(this)
     }
-    val enemies = DrawableLayer<Enemy>(-450).apply {
+    val enemies = DrawableLayer<Enemy>(-200).apply {
         stage.addDrawable(this)
     }
-    val bosses = DrawableLayer<Boss>(-400).apply {
+    val bosses = DrawableLayer<Boss>(-150).apply {
         stage.addDrawable(this)
     }
     val bossDistortionEffect = BossDistortionEffect().apply {

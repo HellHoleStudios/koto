@@ -33,7 +33,7 @@ interface Drawable : Task {
     val x: Float
     val y: Float
     val zIndex: Int
-        get() = 0
+        get() = 10000
     val blending: BlendingMode
         get() = BlendingMode.ALPHA
 

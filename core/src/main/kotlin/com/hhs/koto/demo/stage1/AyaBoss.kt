@@ -27,7 +27,7 @@ package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.stg.background.TileBackground
+import com.hhs.koto.stg.drawable.TileBackground
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.StarGraphStateMachineTexture
 import com.hhs.koto.stg.pattern.interpolate
@@ -81,7 +81,7 @@ class AyaBoss(
         )
         game.background.addDrawable(spellBackground)
         game.background.addDrawable(spellForeground)
-        interpolate(0f, 1f, 30) {
+        interpolate(0f, 1f, 20) {
             spellBackground.color.a = it
             spellForeground.color.a = it / 2f
         }

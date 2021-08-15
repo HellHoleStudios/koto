@@ -46,6 +46,7 @@ class HealthBar(
     override val y: Float
         get() = boss.y
     override var alive: Boolean = true
+    var visible: Boolean = true
     val segments = GdxArray<Float>()
     var currentSegment: Int = -1
     var totalHealth: Float = 0f
@@ -56,33 +57,35 @@ class HealthBar(
     val segmentDivider = getRegion("ui/segment_divider.png")
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (batch != shapeDrawer.batch) {
-            shapeDrawer = ShapeDrawer(batch, getRegion("ui/blank.png"))
-            shapeDrawer.pixelSize = 0.5f
-        }
-        shapeDrawer.setColor(barColor)
-        shapeDrawer.arc(x, y, radius, PI / 2f, PI2 * currentTotalHealth() / totalHealth, 3f)
-        shapeDrawer.setColor(borderColor)
-        shapeDrawer.circle(x, y, radius + 1.5f, 1f)
-        shapeDrawer.circle(x, y, radius - 1.5f, 1f)
+        if (visible) {
+            if (batch != shapeDrawer.batch) {
+                shapeDrawer = ShapeDrawer(batch, getRegion("ui/blank.png"))
+                shapeDrawer.pixelSize = 0.5f
+            }
+            shapeDrawer.setColor(barColor)
+            shapeDrawer.arc(x, y, radius, PI / 2f, PI2 * currentTotalHealth() / totalHealth, 3f)
+            shapeDrawer.setColor(borderColor)
+            shapeDrawer.circle(x, y, radius + 1.5f, 1f)
+            shapeDrawer.circle(x, y, radius - 1.5f, 1f)
 
-        if (currentSegment > 0) {
-            var currentSum = segments[0]
-            for (i in 1..currentSegment) {
-                val angle = currentSum / totalHealth * 360f + 90f
-                batch.draw(
-                    segmentDivider,
-                    x + radius * cos(angle) - 4f,
-                    y + radius * sin(angle) - 4f,
-                    4f,
-                    4f,
-                    8f,
-                    8f,
-                    1f,
-                    1f,
-                    angle,
-                )
-                currentSum += segments[i]
+            if (currentSegment > 0) {
+                var currentSum = segments[0]
+                for (i in 1..currentSegment) {
+                    val angle = currentSum / totalHealth * 360f + 90f
+                    batch.draw(
+                        segmentDivider,
+                        x + radius * cos(angle) - 4f,
+                        y + radius * sin(angle) - 4f,
+                        4f,
+                        4f,
+                        8f,
+                        8f,
+                        1f,
+                        1f,
+                        angle,
+                    )
+                    currentSum += segments[i]
+                }
             }
         }
     }

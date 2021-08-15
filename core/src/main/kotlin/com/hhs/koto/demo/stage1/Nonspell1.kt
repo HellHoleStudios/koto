@@ -28,6 +28,7 @@ package com.hhs.koto.demo.stage1
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.create
 import com.hhs.koto.util.difficultySelect
+import com.hhs.koto.util.game
 import com.hhs.koto.util.sin
 
 class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
@@ -35,6 +36,7 @@ class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
     override val maxTime: Int = 1200
 
     override fun spell(): Task = CoroutineTask {
+        val boss = getBoss()
         var f = 0f
         while (true) {
             for (i in 0 until 360 step 72) {

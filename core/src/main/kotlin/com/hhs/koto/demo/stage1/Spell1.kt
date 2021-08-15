@@ -27,12 +27,15 @@ package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.drawable.Cutin
 import com.hhs.koto.stg.pattern.wander
 import com.hhs.koto.stg.task.BasicSpell
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.difficultySelect
+import com.hhs.koto.util.game
+import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.ring
 import ktx.collections.GdxArray
 
@@ -44,6 +47,8 @@ class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
     override val maxTime: Int = 1200
 
     override fun spell(): Task = CoroutineTask {
+        val boss = getBoss()
+        game.stage.addDrawable(Cutin(getRegion("portrait/aya/attack.png")))
         repeat(20) {
             wander(boss, 120)
             wait(30)

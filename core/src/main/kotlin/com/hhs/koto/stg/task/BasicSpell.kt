@@ -35,14 +35,16 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
     abstract val maxTime: Int
     abstract fun spell(): Task
     open fun terminate(): Task = EmptyTask()
-    lateinit var boss: T
-    var t: Int = 0
+
+    fun getBoss(): T = game.findBoss(bossClass)!!
 
     override fun build(): Task {
         val spellTask = spell()
+        lateinit var boss: T
         return ParallelTask(
             CoroutineTask {
-                boss = game.findBoss(bossClass)!!
+                boss = getBoss()
+                var t = 0
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
                         if (spellTask.alive) spellTask.kill()
@@ -76,5 +78,6 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         attachAndWait(boss.createSpellBackground())
         attachAndWait(this@BasicSpell.build())
         attachAndWait(boss.removeSpellBackground())
+        boss.healthBar.visible = false
     }
 }

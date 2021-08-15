@@ -68,7 +68,7 @@ open class BasicPlayer(
     val topMargin: Float = 16f,
     val spawnX: Float = 0f,
     val spawnY: Float = -worldOriginY + 48f,
-    override val zIndex: Int = -300,
+    override val zIndex: Int = -200,
 ) : Player {
     override var alive: Boolean = true
     override val hitCollision = CircleCollision(hitRadius)
