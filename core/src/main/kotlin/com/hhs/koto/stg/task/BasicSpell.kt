@@ -38,12 +38,11 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
 
     fun getBoss(): T = game.findBoss(bossClass)!!
 
-    override fun build(): Task {
-        val spellTask = spell()
-        lateinit var boss: T
-        return ParallelTask(
-            CoroutineTask {
-                boss = getBoss()
+    override fun build(): Task =
+        CoroutineTask {
+            val spellTask = spell()
+            val boss = getBoss()
+            task {
                 var t = 0
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
@@ -53,31 +52,30 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                     yield()
                     t++
                 }
-            },
-            SequenceTask(
-                spellTask,
-                RunnableTask {
-                    boss.healthBar.nextSegment()
-                    game.bullets.forEach {
-                        it.destroy()
-                    }
-                    game.enemies.forEach {
-                        it.destroy()
-                    }
-                },
-                terminate(),
-            ),
-        )
-    }
+            }
+            if (boss is BasicBoss) {
+                self.attachTask(boss.createSpellBackground())
+            }
+            attachAndWait(spellTask)
+            boss.healthBar.nextSegment()
+            game.bullets.forEach {
+                it.destroy()
+            }
+            game.enemies.forEach {
+                it.destroy()
+            }
+            if (boss is BasicBoss) {
+                self.attachTask(boss.removeSpellBackground())
+            }
+            attachAndWait(terminate())
+        }
 
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
         val boss = bossBuilder()
         game.addBoss(boss)
         boss.healthBar.addSpell(this@BasicSpell)
         attachAndWait(boss.creationTask())
-        attachAndWait(boss.createSpellBackground())
         attachAndWait(this@BasicSpell.build())
-        attachAndWait(boss.removeSpellBackground())
         boss.healthBar.visible = false
     }
 }

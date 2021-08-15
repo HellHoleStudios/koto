@@ -28,7 +28,6 @@ package com.hhs.koto.demo.stage1
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.create
 import com.hhs.koto.util.difficultySelect
-import com.hhs.koto.util.game
 import com.hhs.koto.util.sin
 
 class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {

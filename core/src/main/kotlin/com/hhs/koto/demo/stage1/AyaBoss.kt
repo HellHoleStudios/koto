@@ -27,9 +27,9 @@ package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.hhs.koto.stg.drawable.TileBackground
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.StarGraphStateMachineTexture
+import com.hhs.koto.stg.drawable.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.RunnableTask
