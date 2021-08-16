@@ -124,7 +124,7 @@ object Lwjgl3Launcher {
         json.fromJson(optionsFile)
     } else {
         val options = Options()
-        ResolutionMode.findOptimal(Gdx.graphics.displayMode).apply(options)
+        ResolutionMode.findOptimal(Lwjgl3ApplicationConfiguration.getDisplayMode()).apply(options)
         optionsFile.parent().mkdirs()
         println("Creating default options file...")
         prettyPrintJson(optionsFile, options)
