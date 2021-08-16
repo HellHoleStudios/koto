@@ -27,6 +27,7 @@ package com.hhs.koto.stg.drawable
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginY
@@ -42,6 +43,7 @@ class SpellTimer(
     override val zIndex: Int = 0,
 ) : Drawable {
     override var alive: Boolean = true
+    var scale: Float = 1f
 
     val integer = TextDrawable(
         getFont(bundle["font.spellTimer"], 36, Color.RED, 3f, Color.BLACK),
@@ -64,28 +66,30 @@ class SpellTimer(
         Color(0f, 0f, 1f, 0f),
     )
     var time: Int = 0
-    var warningTime: Int = 600
     var visible: Boolean = false
 
-    fun show(time: Int, warningTime: Int = 600) {
+    fun show(time: Int) {
+        scale = 1f
         this.time = time
-        this.warningTime = warningTime
         visible = true
     }
 
     fun hide() {
         this.time = 0
-        this.warningTime = 600
         visible = false
     }
 
     fun tickTime() {
         time = (time - 1).coerceAtLeast(0)
-        if (time <= warningTime) {
+        if (time <= 600) {
             integer.color = Color(0f, 1f, 0.85f, 1f)
             fraction.color = Color(0f, 1f, 0.85f, 1f)
-            if (time % 60 == 0) {
-                SE.play("timeout")
+            if (time % 60 == 0 && time > 0) {
+                if (time <= 300) {
+                    SE.play("timeout1")
+                } else {
+                    SE.play("timeout0")
+                }
             }
         } else {
             integer.color = WHITE_HSV
@@ -97,8 +101,15 @@ class SpellTimer(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        var oldScale = integer.fontScale
+        integer.fontScale *= scale
         integer.draw(batch, parentAlpha, subFrameTime)
+        integer.fontScale = oldScale
+
+        oldScale = fraction.fontScale
+        fraction.fontScale *= scale
         fraction.draw(batch, parentAlpha, subFrameTime)
+        fraction.fontScale = oldScale
     }
 
     override fun tick() {
@@ -108,6 +119,9 @@ class SpellTimer(
         } else {
             integer.color.a = (integer.color.a - 0.03f).coerceAtLeast(0f)
             fraction.color.a = (fraction.color.a - 0.03f).coerceAtLeast(0f)
+        }
+        if (time <= 600) {
+            scale = Interpolation.pow5Out.apply(1.3f, 1f, (60 - time % 60) / 60f)
         }
         integer.x = x
         integer.y = y

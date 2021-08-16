@@ -48,7 +48,7 @@ data class ResolutionMode(
     companion object {
         fun findOptimalIndex(displayMode: Graphics.DisplayMode): Int {
             var modeIndex = Config.resolutionModes.indexOfLast {
-                it.windowWidth <= displayMode.width && it.windowHeight <= displayMode.height - 40
+                it.windowWidth <= displayMode.width && it.windowHeight <= displayMode.height - 100
             }
             if (modeIndex == -1) modeIndex = 0
             return modeIndex

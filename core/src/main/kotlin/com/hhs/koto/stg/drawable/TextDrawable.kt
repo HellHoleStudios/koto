@@ -33,7 +33,7 @@ import com.hhs.koto.stg.Drawable
 
 open class TextDrawable(
     val font: BitmapFont,
-    val fontScale: Float,
+    var fontScale: Float,
     var text: String,
     override var x: Float,
     override var y: Float,
