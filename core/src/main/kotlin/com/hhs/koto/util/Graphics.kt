@@ -26,14 +26,45 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.crashinvaders.vfx.VfxManager
 import com.crashinvaders.vfx.effects.ChainVfxEffect
+import com.hhs.koto.app.Config
+import com.hhs.koto.app.Options
 import ktx.collections.GdxSet
 import ktx.graphics.copy
+
+data class ResolutionMode(
+    val windowWidth: Int,
+    val windowHeight: Int = windowWidth / 4 * 3,
+    val frameWidth: Int = windowWidth / 5 * 3,
+    val frameHeight: Int = windowWidth / 10 * 7,
+    val name: String = "${windowWidth}x${windowHeight}",
+) {
+    companion object {
+        fun findOptimalIndex(displayMode: Graphics.DisplayMode): Int {
+            var modeIndex = Config.resolutionModes.indexOfLast {
+                it.windowWidth <= displayMode.width && it.windowHeight <= displayMode.height - 40
+            }
+            if (modeIndex == -1) modeIndex = 0
+            return modeIndex
+        }
+
+        fun findOptimal(displayMode: Graphics.DisplayMode): ResolutionMode =
+            Config.resolutionModes[findOptimalIndex(displayMode)]
+    }
+
+    fun apply(options: Options) {
+        options.windowWidth = windowWidth
+        options.windowHeight = windowHeight
+        options.frameWidth = frameWidth
+        options.frameHeight = frameHeight
+    }
+}
 
 data class BlendingMode(
     val srcRGB: Int,

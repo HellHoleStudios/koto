@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
+import com.hhs.koto.util.ResolutionMode
 import ktx.collections.GdxArray
 import java.util.*
 
@@ -37,11 +38,11 @@ data class Options(
     var fps: Int = 60,
     var fpsMultiplier: Int = 1,
     var vsyncEnabled: Boolean = false,
-    var startupWindowWidth: Int = 960,
-    var startupWindowHeight: Int = 720,
+    var windowWidth: Int = 960,
+    var windowHeight: Int = 720,
     var frameWidth: Int = 576,
     var frameHeight: Int = 672,
-    var startupFullScreen: Boolean = false,
+    var fullScreen: Boolean = false,
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
     var SEVolume: Float = 0.5f,
@@ -70,6 +71,14 @@ data class Options(
 
 object Config {
     var logLevel: Int = Logger.DEBUG
+    val resolutionModes: GdxArray<ResolutionMode> = GdxArray.with(
+        ResolutionMode(640),
+        ResolutionMode(800),
+        ResolutionMode(960),
+        ResolutionMode(1200),
+        ResolutionMode(1280),
+        ResolutionMode(1440),
+    )
     val textureMinFilter: TextureFilter = TextureFilter.MipMapLinearLinear
     val textureMagFilter: TextureFilter = TextureFilter.Linear
     const val genMipMaps: Boolean = true

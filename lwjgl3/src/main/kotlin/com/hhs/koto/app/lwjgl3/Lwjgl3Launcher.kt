@@ -35,6 +35,7 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.KotoCallbacks
 import com.hhs.koto.app.Options
+import com.hhs.koto.util.ResolutionMode
 import com.hhs.koto.util.getTrueFPSMultiplier
 import com.hhs.koto.util.json
 import com.hhs.koto.util.prettyPrintJson
@@ -86,10 +87,10 @@ object Lwjgl3Launcher {
             "icon/koto-icon_48x.png",
             "icon/koto-icon_128x.png",
         )
-        if (options.startupFullScreen) {
+        if (options.fullScreen) {
             configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
         } else {
-            configuration.setWindowedMode(options.startupWindowWidth, options.startupWindowHeight)
+            configuration.setWindowedMode(options.windowWidth, options.windowHeight)
         }
         configuration.useVsync(options.vsyncEnabled)
         configuration.setForegroundFPS((options.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
@@ -123,6 +124,7 @@ object Lwjgl3Launcher {
         json.fromJson(optionsFile)
     } else {
         val options = Options()
+        ResolutionMode.findOptimal(Gdx.graphics.displayMode).apply(options)
         optionsFile.parent().mkdirs()
         println("Creating default options file...")
         prettyPrintJson(optionsFile, options)

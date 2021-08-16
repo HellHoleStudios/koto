@@ -92,9 +92,8 @@ class SpellTimer(
             fraction.color = WHITE_HSV
         }
         val text = String.format("%.2f", time / 60f)
-        val index = text.indexOf(".")
-        integer.text = text.substring(0, index + 1)
-        fraction.text = text.substring(index + 1)
+        integer.text = text.substring(0, text.length - 2)
+        fraction.text = text.substring(text.length - 2)
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
