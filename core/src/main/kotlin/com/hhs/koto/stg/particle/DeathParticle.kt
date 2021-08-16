@@ -27,10 +27,10 @@ package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.drawable.SpriteDrawable
+import com.hhs.koto.util.BLACK_HSV
 import com.hhs.koto.util.BlendingMode
 import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.toHSVColor
 
 class DeathParticle(
     x: Float,
@@ -40,7 +40,7 @@ class DeathParticle(
     val size: Float = 16f,
     rotation: Float = 0f,
     val duration: Int = 20,
-    color: Color = Color.BLACK.toHSVColor(),
+    color: Color = BLACK_HSV,
     additive: Boolean = false,
 ) : SpriteDrawable(
     getRegion("particle/death_particle.png"),

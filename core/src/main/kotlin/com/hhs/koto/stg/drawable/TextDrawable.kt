@@ -28,13 +28,17 @@ package com.hhs.koto.stg.drawable
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.utils.Align
 import com.hhs.koto.stg.Drawable
 
-class TextDrawable(
+open class TextDrawable(
     val font: BitmapFont,
+    val fontScale: Float,
     var text: String,
     override var x: Float,
     override var y: Float,
+    var targetWidth: Float = 512f,
+    var halign: Int = Align.left,
     var color: Color = Color.WHITE,
 ) : Drawable {
     override var alive: Boolean = true
@@ -42,7 +46,11 @@ class TextDrawable(
     override fun tick() = Unit
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        val oldScaleX = font.data.scaleX
+        val oldScaleY = font.data.scaleY
+        font.data.setScale(fontScale)
         font.setColor(color.r, color.g, color.b, color.a * parentAlpha)
-        font.draw(batch, text, x, y)
+        font.draw(batch, text, x, y, targetWidth, halign, false)
+        font.data.setScale(oldScaleX, oldScaleY)
     }
 }

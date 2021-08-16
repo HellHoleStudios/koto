@@ -39,6 +39,8 @@ data class Options(
     var vsyncEnabled: Boolean = false,
     var startupWindowWidth: Int = 960,
     var startupWindowHeight: Int = 720,
+    var frameWidth: Int = 576,
+    var frameHeight: Int = 672,
     var startupFullScreen: Boolean = false,
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
@@ -78,8 +80,6 @@ object Config {
     const val allowResize: Boolean = true
     val windowScaling: Scaling = Scaling.fit
     const val defaultBlending: String = "ALPHA"
-    const val frameWidth: Int = 768
-    const val frameHeight: Int = 896
     const val worldW: Float = 384f
     const val worldH: Float = 448f
     const val worldOriginX: Float = worldW / 2f

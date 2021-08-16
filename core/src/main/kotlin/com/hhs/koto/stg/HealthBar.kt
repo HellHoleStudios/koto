@@ -38,8 +38,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 class HealthBar(
     val boss: Boss,
     val radius: Float = 50f,
-    val borderColor: Color = Color.RED.toHSVColor(),
-    val barColor: Color = Color.WHITE.toHSVColor(),
+    val borderColor: Color = RED_HSV,
+    val barColor: Color = WHITE_HSV,
 ) : Drawable {
     @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
     override var x: Float
@@ -58,7 +58,7 @@ class HealthBar(
     var totalHealth: Float = 0f
     var currentHealth: Float = 0f
     var shapeDrawer = ShapeDrawer(game.batch, getRegion("ui/blank.png")).apply {
-        pixelSize = 0.5f
+        pixelSize = 0.1f
     }
     val segmentDivider = getRegion("ui/segment_divider.png")
 

@@ -43,7 +43,7 @@ import ktx.actors.then
 
 class GameScreen : BasicScreen(null, null) {
 
-    val vfxManager = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
+    val vfxManager = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
     val blurEffect = GaussianBlurEffect()
     val gameFrame = VfxOutput().apply {
         setBounds(72f, 36f, 864f, 1008f)

@@ -58,14 +58,14 @@ abstract class BasicBoss(
         game.hud.addDrawable(this)
     }
     abstract val name: String
-    open val nameColor = Color.CYAN.toHSVColor()
+    open val nameColor = CYAN_HSV
     abstract val texture: TextureRegion
     abstract val width: Float
     abstract val height: Float
     open val textureOriginX: Float
-        get() = texture.regionWidth.toFloat() / 2
+        get() = texture.regionWidth / 2f
     open val textureOriginY: Float
-        get() = texture.regionHeight.toFloat() / 2
+        get() = texture.regionHeight / 2f
     override var alive: Boolean = true
 
     open fun creationTask(): Task = CoroutineTask {

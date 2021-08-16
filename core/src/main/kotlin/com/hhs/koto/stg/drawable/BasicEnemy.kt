@@ -54,8 +54,8 @@ open class BasicEnemy(
     playerCollisionRadius: Float = bulletCollisionRadius / 3f,
     val width: Float = texture.texture.regionWidth.toFloat(),
     val height: Float = texture.texture.regionHeight.toFloat(),
-    var textureOriginX: Float = texture.texture.regionWidth.toFloat() / 2,
-    var textureOriginY: Float = texture.texture.regionHeight.toFloat() / 2,
+    var textureOriginX: Float = texture.texture.regionWidth / 2f,
+    var textureOriginY: Float = texture.texture.regionHeight / 2f,
     override val zIndex: Int = -300,
 ) : Enemy {
     var hp: Float = health

@@ -28,39 +28,12 @@ package com.hhs.koto.stg.task
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.drawable.Boss
 import com.hhs.koto.util.KotoRuntimeException
-import com.hhs.koto.util.game
-import kotlinx.coroutines.yield
 import ktx.collections.GdxArray
 
 abstract class BasicNonspell<T : Boss>(bossClass: Class<T>) : BasicSpell<T>(bossClass) {
     override val name: String = ""
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.NONE_AVAILABLE
-
-    override fun build(): Task =
-        CoroutineTask {
-            val spellTask = spell()
-            val boss = getBoss()
-            task {
-                var t = 0
-                while (true) {
-                    if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
-                        if (spellTask.alive) spellTask.kill()
-                        break
-                    }
-                    yield()
-                    t++
-                }
-            }
-            attachAndWait(spellTask)
-            boss.healthBar.nextSegment()
-            game.bullets.forEach {
-                it.destroy()
-            }
-            game.enemies.forEach {
-                it.destroy()
-            }
-            attachAndWait(terminate())
-        }
+    override val isNonSpell: Boolean = true
 
     override fun buildSpellPractice(): Task =
         throw KotoRuntimeException("Cannot practice a nonspell!")

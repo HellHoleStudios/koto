@@ -37,7 +37,7 @@ class ScoreParticle(
     override var x: Float,
     override var y: Float,
     score: Long,
-    var color: Color = Color.WHITE.toHSVColor(),
+    var color: Color = WHITE_HSV,
     val glyphScale: Float = 0.5f,
 ) : Drawable, Bounded {
     override val boundingRadiusX: Float

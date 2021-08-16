@@ -51,9 +51,9 @@ import com.hhs.koto.util.*
 import ktx.app.clearScreen
 
 class KotoGame : Disposable {
-    val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
-    val vfx = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
-    val postVfx = VfxManager(Pixmap.Format.RGBA8888, Config.frameWidth, Config.frameHeight)
+    val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
+    val vfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
+    val postVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
 
     val tasks = ParallelTask()
     val backgroundViewport =
@@ -138,6 +138,9 @@ class KotoGame : Disposable {
     val bossNameDisplay = BossNameDisplay().apply {
         hud.addDrawable(this)
     }
+    val spellTimer = SpellTimer().apply {
+        hud.addDrawable(this)
+    }
 
     lateinit var player: Player
     var maxScore: Long = 10000
@@ -187,7 +190,6 @@ class KotoGame : Disposable {
         backgroundVfx.endInputCapture()
         backgroundVfx.applyEffects()
 
-        stageViewport.update(Config.frameWidth, Config.frameHeight)
         vfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
         batch.projectionMatrix = stageViewport.camera.combined

@@ -40,14 +40,14 @@ class BossNameDisplay(
     override var alive: Boolean = true
     override var x: Float = -worldOriginX + 6
     override var y: Float = worldH - worldOriginY - 30
-    var textColor: Color = Color.CYAN.toHSVColor()
+    var textColor: Color = CYAN_HSV
     var bossName: String = ""
     var spellCount: Int = 0
     var textAlpha = 0f
     var visible: Boolean = false
-    val font = getFont(bundle["font.uiSmall"], 20, Color.RED, borderWidth = 0f)
+    val font = getFont(bundle["font.bossNameDisplay"], 20, Color.RED, borderWidth = 1f, borderColor = Color.BLACK)
     val star = Sprite(getRegion("ui/star.png")).apply {
-        color = Color.GREEN.toHSVColor()
+        color = GREEN_HSV
         setSize(12f, 12f)
     }
 
@@ -55,7 +55,7 @@ class BossNameDisplay(
         show(bundle["game.boss.${boss.name}.name"], spellCount, boss.nameColor)
     }
 
-    fun show(bossName: String, spellCount: Int, textColor: Color = Color.BLUE.toHSVColor()) {
+    fun show(bossName: String, spellCount: Int, textColor: Color = BLUE_HSV) {
         this.bossName = bossName
         this.spellCount = spellCount
         this.textColor = textColor
@@ -75,7 +75,7 @@ class BossNameDisplay(
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         val oldScaleX = font.data.scaleX
         val oldScaleY = font.data.scaleY
-        font.data.setScale(0.5f)
+        font.data.setScale(10f / 20)
         font.setColor(textColor.r, textColor.g, textColor.b, textColor.a * textAlpha * parentAlpha)
         font.draw(batch, bossName, x, y + 24)
         font.data.setScale(oldScaleX, oldScaleY)

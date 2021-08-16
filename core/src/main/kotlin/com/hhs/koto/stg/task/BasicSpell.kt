@@ -35,6 +35,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
     abstract val maxTime: Int
     abstract fun spell(): Task
     open fun terminate(): Task = EmptyTask()
+    open val isNonSpell: Boolean = false
 
     fun getBoss(): T = game.findBoss(bossClass)!!
 
@@ -51,12 +52,14 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                     }
                     yield()
                     t++
+                    game.spellTimer.tickTime()
                 }
             }
-            if (boss is BasicBoss) {
+            if (!isNonSpell && boss is BasicBoss) {
                 self.attachTask(boss.createSpellBackground())
             }
-            game.bossNameDisplay.nextSpell()
+            if (!isNonSpell) game.bossNameDisplay.nextSpell()
+            game.spellTimer.show(maxTime)
             attachAndWait(spellTask)
             boss.healthBar.nextSegment()
             game.bullets.forEach {
@@ -65,9 +68,10 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             game.enemies.forEach {
                 it.destroy()
             }
-            if (boss is BasicBoss) {
+            if (!isNonSpell && boss is BasicBoss) {
                 self.attachTask(boss.removeSpellBackground())
             }
+            game.spellTimer.hide()
             attachAndWait(terminate())
         }
 

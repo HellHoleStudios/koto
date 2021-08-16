@@ -68,8 +68,8 @@ class MagicCircle(
         camera.direction.set(-1f, 0f, 0f)
         camera.up.set(0f, 0f, 1f)
         camera.rotateAround(Vector3.Zero, Vector3.Y, 60f + 30f * cos(t / 3f))
-        camera.rotateAround(Vector3.Zero, Vector3.Z, t.toFloat() * 2f)
-        camera.rotate(t.toFloat() / 2f)
+        camera.rotateAround(Vector3.Zero, Vector3.Z, t * 2f)
+        camera.rotate(t / 2f)
         camera.update()
     }
 

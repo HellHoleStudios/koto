@@ -111,6 +111,15 @@ fun fromHsv(h: Float, s: Float, v: Float, a: Float): Color {
     return color
 }
 
+val WHITE_HSV: Color get() = Color.WHITE.toHSVColor()
+val BLACK_HSV: Color get() = Color.BLACK.toHSVColor()
+val RED_HSV: Color get() = Color.RED.toHSVColor()
+val GREEN_HSV: Color get() = Color.GREEN.toHSVColor()
+val BLUE_HSV: Color get() = Color.BLUE.toHSVColor()
+val CYAN_HSV: Color get() = Color.CYAN.toHSVColor()
+val MAGENTA_HSV: Color get() = Color.MAGENTA.toHSVColor()
+val YELLOW_HSV: Color get() = Color.YELLOW.toHSVColor()
+
 fun Color.toHSVColor(): Color {
     toHsv(tmpHSVArray)
     return Color(tmpHSVArray[0] / 360f, tmpHSVArray[1], tmpHSVArray[2], a)
