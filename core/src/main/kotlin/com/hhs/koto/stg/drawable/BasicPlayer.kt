@@ -207,12 +207,12 @@ open class BasicPlayer(
             if (counter <= 0) {
                 playerState = PlayerState.RESPAWNING
                 onDeath()
-            } else if (VK.BOMB.pressed()) {
+            } else if (game.bomb.completedCount > 0 && VK.BOMB.pressed()) {
                 onBomb(true)
                 playerState = PlayerState.BOMBING
             }
         } else if (playerState == PlayerState.NORMAL) {
-            if (VK.BOMB.pressed()) {
+            if (game.bomb.completedCount > 0 && VK.BOMB.pressed()) {
                 onBomb(false)
                 playerState = PlayerState.BOMBING
             }
@@ -261,6 +261,7 @@ open class BasicPlayer(
     open fun onBomb(isDeathBomb: Boolean) {
         invulnerable = true
         SE.play("bomb")
+        game.bomb.completedCount--
         task {
             repeat(290) {
                 color = if (frame % 6 <= 1) {
@@ -362,16 +363,13 @@ open class BasicPlayer(
             } else {
                 if (game.credit > 0) {
                     game.credit--
-                    // delay life reset display
-                    task {
-                        yield()
-                        game.life.set(game.initialLife)
-                    }
+                    game.life.set(game.initialLife)
                     game.state = GameState.GAME_OVER
                 } else {
                     game.state = GameState.GAME_OVER_NO_CREDIT
                 }
             }
+            game.bomb.set(game.initialBomb)
             repeat(70) {
                 respawnAnimationPercentage += 1 / 70f
                 yield()

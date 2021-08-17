@@ -148,10 +148,11 @@ class KotoGame : Disposable {
     var maxScore: Long = 10000
     var maxScoreHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
-    val initialLife = FragmentCounter(3, 2, 0)
-    val life = FragmentCounter(initialLife)
     var credit: Int = difficultySelect(3, 3, 4, 5)
-    val bomb = FragmentCounter(3)
+    val initialLife = FragmentCounter(3, 2, 0)
+    val initialBomb = FragmentCounter(5, 3, 0)
+    val life = FragmentCounter(initialLife)
+    val bomb = FragmentCounter(initialBomb)
     var power: Float = 1f
     var graze: Int = 0
 
