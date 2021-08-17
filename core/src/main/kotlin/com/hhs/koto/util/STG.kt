@@ -37,7 +37,7 @@ import com.hhs.koto.stg.bullet.*
 
 lateinit var game: KotoGame
 
-lateinit var B: ShotSheet
+lateinit var defaultShotSheet: ShotSheet
 
 fun outOfFrame(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     if (x + rx < -worldOriginX) return true
@@ -86,7 +86,7 @@ fun create(
     color: Color = Color.WHITE,
     delay: Int = 8,
     setRotation: Boolean = true,
-): BasicBullet = create(B[name], x, y, speed, angle, color, delay, setRotation)
+): BasicBullet = create(defaultShotSheet[name], x, y, speed, angle, color, delay, setRotation)
 
 fun <T : Bullet> T.setSpeed(speed: Float): T {
     this.speed = speed
@@ -126,7 +126,7 @@ fun towards(
     color: Color = Color.WHITE,
     delay: Int = 8,
     setRotation: Boolean = true,
-): BasicBullet = towards(B[name], x, y, targetX, targetY, speed, color, delay, setRotation)
+): BasicBullet = towards(defaultShotSheet[name], x, y, targetX, targetY, speed, color, delay, setRotation)
 
 fun <T : Bullet> T.towards(targetX: Float, targetY: Float): T {
     angle = atan2(x, y, targetX, targetY)
@@ -174,7 +174,8 @@ fun ring(
     color: Color = Color.WHITE,
     delay: Int = 8,
     setRotation: Boolean = true,
-): BulletGroup = ring(B[name], x, y, radius, count, offsetAngle, startAngle, speed, color, delay, setRotation)
+): BulletGroup =
+    ring(defaultShotSheet[name], x, y, radius, count, offsetAngle, startAngle, speed, color, delay, setRotation)
 
 fun ring(
     data: BulletData,
@@ -213,7 +214,7 @@ fun ring(
     color: Color = Color.WHITE,
     delay: Int = 8,
     setRotation: Boolean = true,
-): BulletGroup = ring(B[name], x, y, radius, progression, speed, color, delay, setRotation)
+): BulletGroup = ring(defaultShotSheet[name], x, y, radius, progression, speed, color, delay, setRotation)
 
 inline fun ring(
     x: Float,

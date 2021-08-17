@@ -31,10 +31,14 @@ import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
+import com.hhs.koto.stg.GameBuilder
+import com.hhs.koto.stg.GameData
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.GameMode
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.collections.set
+import ktx.json.JsonSerializer
 import java.util.*
 
 var global = GdxMap<String, Any>()
@@ -52,20 +56,32 @@ object SystemFlag {
 val json = Json().apply {
     setUsePrototypes(false)
     setOutputType(JsonWriter.OutputType.json)
-    setSerializer(Locale::class.java, object : Json.Serializer<Locale> {
-        override fun write(json: Json, obj: Locale, knownType: Class<*>?) {
+    setSerializer(GameData.GameDataElement::class.java, object : JsonSerializer<GameData.GameDataElement> {
+        override fun write(json: Json, value: GameData.GameDataElement, type: Class<*>?) {
+            json.writeObjectStart()
+            json.writeValue("score", value.score, GdxArray::class.java, GameData.ScoreEntry::class.java)
+            json.writeValue("spell", value.spell, GdxMap::class.java, GameData.SpellHistory::class.java)
+            json.writeObjectEnd()
+        }
+
+        override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): GameData.GameDataElement {
+            return json.readValue(GameData.GameDataElement::class.java, jsonValue)
+        }
+    })
+    setSerializer(Locale::class.java, object : JsonSerializer<Locale> {
+        override fun write(json: Json, value: Locale, type: Class<*>?) {
             json.writeArrayStart()
-            json.writeValue(obj.language)
-            json.writeValue(obj.country)
-            json.writeValue(obj.variant)
+            json.writeValue(value.language)
+            json.writeValue(value.country)
+            json.writeValue(value.variant)
             json.writeArrayEnd()
         }
 
-        override fun read(json: Json, jsonData: JsonValue, type: Class<*>?): Locale {
+        override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): Locale {
             return Locale(
-                jsonData[0].asString(),
-                jsonData[1].asString(),
-                jsonData[2].asString(),
+                jsonValue[0].asString(),
+                jsonValue[1].asString(),
+                jsonValue[2].asString(),
             )
         }
     })
@@ -81,13 +97,13 @@ fun prettyPrintJson(obj: Any): String {
     return json.prettyPrint(obj, prettyPrintSettings)
 }
 
-fun prettyPrintJson(file: FileHandle, obj: Any) {
+fun prettyPrintJson(obj: Any, file: FileHandle) {
     file.writeString(prettyPrintJson(obj), false)
 }
 
 
 lateinit var options: Options
-
+lateinit var gameData: GameData
 lateinit var app: KotoApp
 
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
@@ -103,11 +119,45 @@ fun restartApp() {
 }
 
 fun loadOptions() {
-    options = app.callbacks.getOptions()
+    val tmpOptions = app.callbacks.loadOptions()
+    if (tmpOptions != null) {
+        options = tmpOptions
+    } else {
+        options = Options()
+        ResolutionMode.findOptimal(Gdx.graphics.displayMode).apply(options)
+        app.logger.info("Creating default options file...")
+        saveOptions()
+    }
 }
 
 fun saveOptions() {
     app.callbacks.saveOptions(options)
+}
+
+fun loadGameData() {
+    val tmpGameData = app.callbacks.loadGameData()
+    if (tmpGameData != null) {
+        gameData = tmpGameData
+    } else {
+        gameData = GameData()
+        app.logger.info("Creating empty game data file...")
+        for (player in GameBuilder.players.safeKeys()) {
+            val tmpMap = GdxMap<GameDifficulty, GameData.GameDataElement>()
+            for (difficulty in GameDifficulty.values()) {
+                val tmpElement = GameData.GameDataElement()
+                for (spell in GameBuilder.spells.safeIterator()) {
+                    tmpElement.spell[spell.name] = GameData.SpellHistory()
+                }
+                tmpMap[difficulty] = tmpElement
+            }
+            gameData.data[player] = tmpMap
+        }
+        saveGameData()
+    }
+}
+
+fun saveGameData() {
+    app.callbacks.saveGameData(gameData)
 }
 
 fun <T> GdxArray<T>.removeNull() {

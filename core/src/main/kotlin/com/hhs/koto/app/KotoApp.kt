@@ -44,6 +44,7 @@ import com.hhs.koto.demo.player.ReimuPlayer
 import com.hhs.koto.demo.stage1.Spell1
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.stg.GameBuilder
+import com.hhs.koto.stg.GameData
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen
@@ -115,7 +116,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("timeout1", "snd/se_timeout2.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
-        B = A[Config.defaultShotSheet]
+        defaultShotSheet = A[Config.defaultShotSheet]
 
         // TODO variants
         GameBuilder.players["reimuA"] = { ReimuPlayer() }
@@ -128,6 +129,8 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         GameBuilder.regularGame = RegularGame()
         GameBuilder.stages.add(Stage1())
         GameBuilder.spells.add(Spell1())
+
+        loadGameData()
 
         screens["blank"] = BlankScreen()
         screens["title"] = TitleScreen()
@@ -234,6 +237,8 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
 interface KotoCallbacks {
     fun restartCallback(restart: Boolean)
-    fun getOptions(): Options
+    fun loadOptions(): Options?
     fun saveOptions(options: Options)
+    fun loadGameData(): GameData?
+    fun saveGameData(gameData: GameData)
 }

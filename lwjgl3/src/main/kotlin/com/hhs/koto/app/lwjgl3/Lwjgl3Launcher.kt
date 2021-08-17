@@ -26,7 +26,6 @@
 package com.hhs.koto.app.lwjgl3
 
 import com.badlogic.gdx.Files
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle
@@ -35,10 +34,8 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.KotoCallbacks
 import com.hhs.koto.app.Options
-import com.hhs.koto.util.ResolutionMode
-import com.hhs.koto.util.getTrueFPSMultiplier
-import com.hhs.koto.util.json
-import com.hhs.koto.util.prettyPrintJson
+import com.hhs.koto.stg.GameData
+import com.hhs.koto.util.*
 import ktx.json.fromJson
 import java.util.*
 
@@ -46,7 +43,8 @@ object Lwjgl3Launcher {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val optionsFile = getOptionsFile()
+        val optionsFile = getFile("options.json")
+        val gameDataFile = getFile("game_data.json")
         var options = readOptions(optionsFile)
         var restart0 = false
 
@@ -55,14 +53,29 @@ object Lwjgl3Launcher {
                 restart0 = restart
             }
 
-            override fun getOptions(): Options = options
+            override fun loadOptions(): Options = options
 
             override fun saveOptions(options: Options) {
-                Gdx.app.log("Main", "Writing options to file")
+                app.logger.info("Writing options to file...")
                 if (!optionsFile.exists()) {
                     optionsFile.parent().mkdirs()
                 }
-                prettyPrintJson(optionsFile, options)
+                prettyPrintJson(options, optionsFile)
+            }
+
+            override fun loadGameData(): GameData? = if (gameDataFile.exists()) {
+                app.logger.info("Reading game data from file...")
+                json.fromJson(gameDataFile)
+            } else {
+                null
+            }
+
+            override fun saveGameData(gameData: GameData) {
+                app.logger.info("Writing game data to file...")
+                if (!gameDataFile.exists()) {
+                    gameDataFile.parent().mkdirs()
+                }
+                json.toJson(gameData, gameDataFile)
             }
         }
 
@@ -96,38 +109,38 @@ object Lwjgl3Launcher {
         configuration.setForegroundFPS((options.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
     }
 
-    private fun getOptionsFile(): FileHandle {
+    private fun getFile(fileName: String): FileHandle {
         val osName = System.getProperty("os.name").lowercase(Locale.getDefault())
         return when {
             "windows" in osName -> {
                 // Windows
-                Lwjgl3FileHandle("AppData/Roaming/koto/options.json", Files.FileType.External)
+                Lwjgl3FileHandle("AppData/Roaming/koto/$fileName", Files.FileType.External)
             }
             "linux" in osName -> {
                 // Linux
-                Lwjgl3FileHandle(".koto/options.json", Files.FileType.External)
+                Lwjgl3FileHandle(".koto/$fileName", Files.FileType.External)
             }
             "mac os x" in osName -> {
                 // MacOS
                 // TODO is this appropriate?
-                Lwjgl3FileHandle("Library/Application Support/koto/options.json", Files.FileType.External)
+                Lwjgl3FileHandle("Library/Application Support/koto/$fileName", Files.FileType.External)
             }
             else -> {
                 // what??
-                Lwjgl3FileHandle(".koto/options.json", Files.FileType.External)
+                Lwjgl3FileHandle(".koto/$fileName", Files.FileType.External)
             }
         }
     }
 
-    private fun readOptions(optionsFile: FileHandle) = if (optionsFile.exists()) {
-        println("Reading options from file...")
+    private fun readOptions(optionsFile: FileHandle): Options = if (optionsFile.exists()) {
+        println("[Main] Reading options from file...")
         json.fromJson(optionsFile)
     } else {
         val options = Options()
         ResolutionMode.findOptimal(Lwjgl3ApplicationConfiguration.getDisplayMode()).apply(options)
         optionsFile.parent().mkdirs()
-        println("Creating default options file...")
-        prettyPrintJson(optionsFile, options)
+        println("[Main] Creating default options file...")
+        prettyPrintJson(options, optionsFile)
         options
     }
 }
