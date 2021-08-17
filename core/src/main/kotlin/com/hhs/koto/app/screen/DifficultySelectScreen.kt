@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.ui.*
+import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.util.*
 
@@ -101,41 +102,15 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
     }
 
     init {
-        grid.add(
-            generateButton(
-                GameDifficulty.EASY,
-                0,
-                -4,
+        for (i in 0 until GameBuilder.usedDifficulties.size) {
+            grid.add(
+                generateButton(
+                    GameBuilder.usedDifficulties[i],
+                    0,
+                    -(GameBuilder.usedDifficulties.size - 1 - i),
+                )
             )
-        )
-        grid.add(
-            generateButton(
-                GameDifficulty.NORMAL,
-                0,
-                -3,
-            )
-        )
-        grid.add(
-            generateButton(
-                GameDifficulty.HARD,
-                0,
-                -2,
-            )
-        )
-        grid.add(
-            generateButton(
-                GameDifficulty.LUNATIC,
-                0,
-                -1,
-            )
-        )
-        grid.add(
-            generateButton(
-                GameDifficulty.EXTRA,
-                0,
-                0,
-            )
-        )
+        }
         grid.arrange(0f, 0f, 0f, -220f)
         grid.selectFirst()
         grid.finishAnimation()

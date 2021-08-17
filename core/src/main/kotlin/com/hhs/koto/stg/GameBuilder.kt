@@ -37,6 +37,13 @@ import ktx.collections.GdxMap
 import ktx.collections.filter
 
 object GameBuilder {
+    val usedDifficulties: GdxArray<GameDifficulty> = GdxArray.with(
+        GameDifficulty.EASY,
+        GameDifficulty.NORMAL,
+        GameDifficulty.HARD,
+        GameDifficulty.LUNATIC,
+        GameDifficulty.EXTRA,
+    )
     lateinit var regularGame: TaskBuilder
     lateinit var extraGame: TaskBuilder
     val stages = GdxArray<StageBuilder>()
