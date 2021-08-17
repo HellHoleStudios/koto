@@ -189,6 +189,14 @@ class KotoGame : Disposable {
         game.frame++
     }
 
+    fun end() {
+        state = if (SystemFlag.gamemode == GameMode.SPELL_PRACTICE || SystemFlag.gamemode == GameMode.STAGE_PRACTICE) {
+            GameState.FINISH_PRACTICE
+        } else {
+            GameState.FINISH
+        }
+    }
+
     fun draw() {
         backgroundVfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)

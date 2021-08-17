@@ -84,5 +84,6 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         attachAndWait(this@BasicSpell.build())
         game.bossNameDisplay.hide()
         boss.healthBar.visible = false
+        game.end()
     }
 }

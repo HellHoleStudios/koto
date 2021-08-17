@@ -23,13 +23,12 @@
  *
  */
 
-package com.hhs.koto.demo
+package com.hhs.koto.stg.task
 
-import com.hhs.koto.demo.stage1.Stage1
-import com.hhs.koto.stg.task.BuilderSequence
-import com.hhs.koto.stg.task.EndBuilder
-import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.util.game
 
-class RegularGame : TaskBuilder {
-    override fun build() = BuilderSequence(Stage1(), EndBuilder()).build()
+class EndBuilder : TaskBuilder {
+    override fun build(): Task = RunnableTask {
+        game.end()
+    }
 }
