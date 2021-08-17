@@ -51,6 +51,8 @@ import com.hhs.koto.util.*
 import ktx.app.clearScreen
 
 class KotoGame : Disposable {
+    var state: GameState = GameState.RUNNING
+
     val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
     val vfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
     val postVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
@@ -146,8 +148,10 @@ class KotoGame : Disposable {
     var maxScore: Long = 10000
     var maxScoreHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
-    val life = FragmentCounter()
-    val bomb = FragmentCounter()
+    val initialLife = FragmentCounter(3, 2, 0)
+    val life = FragmentCounter(initialLife)
+    var credit: Int = difficultySelect(3, 3, 4, 5)
+    val bomb = FragmentCounter(3)
     var power: Float = 1f
     var graze: Int = 0
 
@@ -172,6 +176,10 @@ class KotoGame : Disposable {
     }
 
     fun tick() {
+        if (VK.PAUSE.pressed()) {
+            state = GameState.PAUSED
+            return
+        }
         subFrameTime = 0f
         game.background.tick()
         game.stage.tick()

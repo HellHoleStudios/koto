@@ -37,6 +37,7 @@ import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision.collide
+import com.hhs.koto.stg.GameState
 import com.hhs.koto.stg.Player
 import com.hhs.koto.stg.PlayerState
 import com.hhs.koto.stg.particle.DeathParticle
@@ -356,6 +357,21 @@ open class BasicPlayer(
             respawnAnimationPercentage = 0f
             effect.start(x, y)
             wait(30)
+            if (game.life.completedCount > 0) {
+                game.life.removeCompleted(1)
+            } else {
+                if (game.credit > 0) {
+                    game.credit--
+                    // delay life reset display
+                    task {
+                        yield()
+                        game.life.set(game.initialLife)
+                    }
+                    game.state = GameState.GAME_OVER
+                } else {
+                    game.state = GameState.GAME_OVER_NO_CREDIT
+                }
+            }
             repeat(70) {
                 respawnAnimationPercentage += 1 / 70f
                 yield()

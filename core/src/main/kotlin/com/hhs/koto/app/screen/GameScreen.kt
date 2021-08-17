@@ -36,6 +36,7 @@ import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameMode
+import com.hhs.koto.stg.GameState
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
@@ -63,7 +64,7 @@ class GameScreen : BasicScreen(null, null) {
         blurEffect.amount = 10f
     }
 
-    private val confirmationMenu = ConfirmationMenu(staticX = 650f, staticY = 450f).register(st, input).apply {
+    private val confirmationMenu = ConfirmationMenu(staticX = 680f, staticY = 450f).register(st, input).apply {
         alpha = 0f
         deactivate()
         noRunnable = {
@@ -95,7 +96,24 @@ class GameScreen : BasicScreen(null, null) {
         pauseMenu.add(GridButton(bundle["ui.game.resume"], 36, gridX = 0, gridY = 1) {
             resumeGame()
         })
-        pauseMenu.add(GridButton(bundle["ui.game.restart"], 36, gridX = 0, gridY = 2) {
+        pauseMenu.add(GridButton(bundle["ui.game.continue"], 36, gridX = 0, gridY = 1) {
+            resumeGame()
+        }.apply {
+            disable()
+            isVisible = false
+        })
+        pauseMenu.add(GridButton(bundle["ui.game.saveScore"], 36, gridX = 0, gridY = 1) {
+            // TODO
+        }.apply {
+            disable()
+            isVisible = false
+        })
+        pauseMenu.add(GridButton(bundle["ui.game.saveReplay"], 36, gridX = 0, gridY = 2) {
+            // TODO
+        }.apply {
+            disable()
+        })
+        pauseMenu.add(GridButton(bundle["ui.game.restart"], 36, gridX = 0, gridY = 3) {
             confirmationMenu.activate()
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
@@ -114,18 +132,21 @@ class GameScreen : BasicScreen(null, null) {
                 gameFrame.alpha = 0f
             }
         })
-        pauseMenu.add(GridButton(bundle["ui.game.quit"], 36, gridX = 0, gridY = 3) {
+        pauseMenu.add(GridButton(bundle["ui.game.quit"], 36, gridX = 0, gridY = 4) {
             confirmationMenu.activate()
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
             confirmationMenu.yesRunnable = { quit() }
         })
         pauseMenu.arrange(0f, 200f, 0f, -55f)
-        pauseMenu.add(GridLabel(bundle["ui.game.paused"], 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 200f))
+        pauseMenu.add(
+            GridLabel(
+                "", 48, gridX = 0, gridY = 0, staticX = -20f, staticY = 200f
+            )
+        )
         pauseMenu.selectFirst()
     }
 
-    private var tryPause: Boolean = false
     private var paused: Boolean = false
     private var passCounter: Int = 0
     private var deltaTimeCounter: Float = 0f
@@ -135,16 +156,14 @@ class GameScreen : BasicScreen(null, null) {
             super.render(delta)
             return
         }
-        if (!paused && VK.PAUSE.justPressed()) {
-            tryPause = true
-        }
-        if (tryPause && game.frameScheduler.canPause) {
-            tryPause = false
+        if (!paused && game.state != GameState.RUNNING) {
             pauseGame()
         }
         if (paused) {
             deltaTimeCounter += delta
-            if (passCounter >= 30 && VK.PAUSE.justPressed() && !blurredGameFrame.hasActions()) {
+            if (game.state == GameState.PAUSED &&
+                passCounter >= 30 && VK.PAUSE.justPressed() && !blurredGameFrame.hasActions()
+            ) {
                 resumeGame()
             } else {
                 if (deltaTimeCounter >= 1 / 60f) {
@@ -174,7 +193,10 @@ class GameScreen : BasicScreen(null, null) {
 
     fun resumeGame() {
         blurredGameFrame.addAction(
-            fadeOut(0.5f, Interpolation.sine) then Actions.run { paused = false }
+            fadeOut(0.5f, Interpolation.sine) then Actions.run {
+                paused = false
+                game.state = GameState.RUNNING
+            }
         )
         pauseMenu.deactivate()
         SE.resume()
@@ -186,6 +208,24 @@ class GameScreen : BasicScreen(null, null) {
         paused = true
         passCounter = 0
         deltaTimeCounter = 0f
+        val resumeButton = pauseMenu[0] as GridButton
+        val continueButton = pauseMenu[1] as GridButton
+        val saveScoreButton = pauseMenu[2] as GridButton
+        resumeButton.enabled = game.state == GameState.PAUSED
+        resumeButton.isVisible = game.state == GameState.PAUSED
+        continueButton.enabled = game.state == GameState.GAME_OVER
+        continueButton.isVisible = game.state == GameState.GAME_OVER || game.state == GameState.GAME_OVER_NO_CREDIT
+        saveScoreButton.enabled = game.state == GameState.FINISH
+        saveScoreButton.isVisible = game.state == GameState.FINISH || game.state == GameState.FINISH_PRACTICE
+        (pauseMenu.grid.last() as GridLabel).setText(
+            when (game.state) {
+                GameState.PAUSED -> bundle["ui.game.paused"]
+                GameState.GAME_OVER, GameState.GAME_OVER_NO_CREDIT -> bundle["ui.game.gameOver"]
+                GameState.FINISH, GameState.FINISH_PRACTICE -> bundle["ui.game.finish"]
+                else -> ""
+            }
+        )
+        pauseMenu.selectFirst()
         pauseMenu.activate()
     }
 
@@ -210,7 +250,6 @@ class GameScreen : BasicScreen(null, null) {
         blurredGameFrame.alpha = 0f
 
         paused = false
-        tryPause = false
     }
 
     private fun quit() {

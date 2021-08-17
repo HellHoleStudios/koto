@@ -25,50 +25,6 @@
 
 package com.hhs.koto.stg
 
-import com.hhs.koto.util.safeMod
-
-class FragmentCounter(
-    var fragmentFactor: Int = 3,
-    var completedCount: Int = 0,
-    var fragmentCount: Int = 0,
-) {
-    constructor(other: FragmentCounter) : this() {
-        set(other)
-    }
-
-    fun set(other: FragmentCounter) {
-        fragmentFactor = other.fragmentFactor
-        completedCount = other.completedCount
-        fragmentCount = other.fragmentFactor
-    }
-
-    fun update() {
-        val remainder = safeMod(fragmentCount, fragmentFactor)
-        val quotient = (fragmentCount - remainder) / fragmentFactor
-        completedCount -= quotient
-        fragmentCount = remainder
-    }
-
-    fun clear() {
-        completedCount = 0
-        fragmentCount = 0
-    }
-
-    fun addFragment(count: Int) {
-        fragmentCount += count
-        update()
-    }
-
-    fun addCompleted(count: Int) {
-        completedCount += count
-    }
-
-    fun removeFragment(count: Int) {
-        fragmentCount -= count
-        update()
-    }
-
-    fun removeCompleted(count: Int) {
-        completedCount -= count
-    }
+enum class GameState {
+    RUNNING, PAUSED, GAME_OVER, GAME_OVER_NO_CREDIT, FINISH, FINISH_PRACTICE
 }
