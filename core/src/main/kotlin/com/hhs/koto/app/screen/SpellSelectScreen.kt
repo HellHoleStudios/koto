@@ -66,37 +66,38 @@ class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
 
         val spells = GameBuilder.getAvailableSpells()
         grid.clear()
-        for (i in 0 until spells.size) {
-            grid.add(GridButton(bundle["game.spell.${spells[i].name}.name"], 36, 0, i) {
-                SystemFlag.name = spells[i].name
-                SystemFlag.redirect = "game"
-                SystemFlag.redirectDuration = 0.5f
-                app.setScreen("blank", 0.5f)
-            }.apply {
-                activeAction = getActiveAction({
-                    forever(Actions.run {
-                        titleBackground.clearActions()
-                        titleBackground.addAction(
-                            parallel(
-                                hsvColor(
-                                    Color(i.toFloat() / spells.size, 0.5f, 1f, 0.5f),
-                                    0.5f,
-                                ),
-                                moveTo(
-                                    0f, y - grid.targetY - 2.5f,
-                                    1f,
-                                    Interpolation.pow5Out,
-                                ),
+        titleBackground.clearActions()
+        if (spells.size > 0) {
+            for (i in 0 until spells.size) {
+                grid.add(GridButton(bundle["game.spell.${spells[i].name}.name"], 36, 0, i) {
+                    SystemFlag.name = spells[i].name
+                    SystemFlag.redirect = "game"
+                    SystemFlag.redirectDuration = 0.5f
+                    app.setScreen("blank", 0.5f)
+                }.apply {
+                    activeAction = getActiveAction({
+                        forever(Actions.run {
+                            titleBackground.clearActions()
+                            titleBackground.addAction(
+                                parallel(
+                                    hsvColor(
+                                        Color(i.toFloat() / spells.size, 0.5f, 1f, 0.5f),
+                                        0.5f,
+                                    ),
+                                    moveTo(
+                                        0f, y - grid.targetY - 2.5f,
+                                        1f,
+                                        Interpolation.pow5Out,
+                                    ),
+                                )
                             )
-                        )
+                        })
                     })
                 })
-            })
-        }
-        grid.arrange(0f, 1000f, 0f, -45f)
-        grid.selectFirst()
-        grid.finishAnimation()
-        if (grid.grid.size > 0) {
+            }
+            grid.arrange(0f, 1000f, 0f, -45f)
+            grid.selectFirst()
+            grid.finishAnimation()
             titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
         } else {
             titleBackground.alpha = 0f

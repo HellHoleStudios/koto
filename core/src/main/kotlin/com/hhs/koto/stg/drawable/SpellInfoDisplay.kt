@@ -61,9 +61,6 @@ class SpellInfoDisplay(
     val historyText = Sprite(getRegion("ui/history_text.png")).apply {
         setSize(36f, 12f)
     }
-    val failedText = Sprite(getRegion("ui/failed_text.png")).apply {
-        setSize(36f, 12f)
-    }
     val nameFont = getFont(
         bundle["font.spellNameDisplay"], 24, Color.RED, borderWidth = 2f, borderColor = Color.BLACK
     )
@@ -100,23 +97,16 @@ class SpellInfoDisplay(
             spellHistory,
             10f / 20,
             x - 40f,
-            y + 3f,
+            y + 4f,
         )
-
-        if (failed) {
-            failedText.setPosition(x - 140f, y - 6f)
-            failedText.draw(batch, parentAlpha * alpha)
-        } else {
-            infoFont.draw(
-                batch,
-                parentAlpha * alpha,
-                bonus.toString(),
-                10f / 20,
-                x - 140f,
-                y + 3f,
-            )
-
-        }
+        infoFont.draw(
+            batch,
+            parentAlpha * alpha,
+            if (failed) "Failed" else bonus.toString(),
+            10f / 20,
+            x - 140f,
+            y + 4f,
+        )
     }
 
     override fun tick() {
