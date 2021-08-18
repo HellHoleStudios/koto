@@ -45,7 +45,9 @@ class BossNameDisplay(
     var spellCount: Int = 0
     var textAlpha = 0f
     var visible: Boolean = false
-    val font = getFont(bundle["font.bossNameDisplay"], 20, Color.RED, borderWidth = 1f, borderColor = Color.BLACK)
+    val font = getFont(
+        bundle["font.bossNameDisplay"], 20, Color.RED, borderWidth = 1f, borderColor = Color.BLACK
+    )
     val star = Sprite(getRegion("ui/star.png")).apply {
         color = GREEN_HSV
         setSize(12f, 12f)
@@ -73,12 +75,7 @@ class BossNameDisplay(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val oldScaleX = font.data.scaleX
-        val oldScaleY = font.data.scaleY
-        font.data.setScale(10f / 20)
-        font.setColor(textColor.r, textColor.g, textColor.b, textColor.a * textAlpha * parentAlpha)
-        font.draw(batch, bossName, x, y + 24)
-        font.data.setScale(oldScaleX, oldScaleY)
+        font.draw(batch, textAlpha * parentAlpha, bossName, 10f / 20, x, y + 24, textColor)
         repeat(spellCount) {
             star.setPosition(x + it * 12, y)
             star.draw(batch, parentAlpha)

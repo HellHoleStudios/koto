@@ -28,6 +28,7 @@ package com.hhs.koto.stg.task
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
 import com.hhs.koto.stg.drawable.SpellAttackOverlay
+import com.hhs.koto.stg.drawable.SpellInfoDisplay
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
 import com.hhs.koto.util.gameData
@@ -57,15 +58,14 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             val boss = getBoss()
             var t = 0
             var failedBonus = false
+            var spellInfoDisplay: SpellInfoDisplay? = null
             val bombListener = game.addListener("player.bomb") {
                 failedBonus = true
+                if (!isNonSpell) spellInfoDisplay!!.failed = true
             }
             val deathListener = game.addListener("player.death") {
                 failedBonus = true
-            }
-            if (!isNonSpell) {
-                gameData.currentElement.spell[name].totalAttempt++
-                saveGameData()
+                if (!isNonSpell) spellInfoDisplay!!.failed = true
             }
             task {
                 while (true) {
@@ -76,14 +76,19 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                     yield()
                     t++
                     game.spellTimer.tickTime()
+                    if (!isNonSpell) spellInfoDisplay!!.bonus = getBonus(t)
                 }
             }
             if (!isNonSpell) {
-                game.background.addDrawable(SpellAttackOverlay())
                 if (boss is BasicBoss) {
                     self.attachTask(boss.createSpellBackground())
                 }
+                spellInfoDisplay = SpellInfoDisplay(name, bonus)
+                game.background.addDrawable(SpellAttackOverlay())
+                game.hud.addDrawable(spellInfoDisplay)
                 game.bossNameDisplay.nextSpell()
+                gameData.currentElement.spell[name].totalAttempt++
+                saveGameData()
             }
             game.spellTimer.show(maxTime)
 
@@ -106,6 +111,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                     saveGameData()
                     game.score += getBonus(t)
                 }
+                spellInfoDisplay!!.finished = true
             }
             game.spellTimer.hide()
             game.removeListener("player.bomb", bombListener)
@@ -134,6 +140,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         attachAndWait(this@BasicSpell.build())
         game.bossNameDisplay.hide()
         boss.healthBar.visible = false
+        wait(60)
         game.end()
     }
 }

@@ -201,6 +201,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     }
 
     override fun dispose() {
+        saveGameData()
         batch.dispose()
         BGM.dispose()
         disposeA()

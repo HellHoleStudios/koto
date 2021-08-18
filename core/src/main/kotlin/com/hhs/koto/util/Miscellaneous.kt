@@ -151,13 +151,11 @@ lateinit var app: KotoApp
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
 
 fun exitApp() {
-    saveGameData()
     app.callbacks.restartCallback(false)
     Gdx.app.exit()
 }
 
 fun restartApp() {
-    saveGameData()
     app.callbacks.restartCallback(true)
     Gdx.app.exit()
 }

@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.stg.Drawable
+import com.hhs.koto.util.draw
 
 open class TextDrawable(
     val font: BitmapFont,
@@ -46,11 +47,6 @@ open class TextDrawable(
     override fun tick() = Unit
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val oldScaleX = font.data.scaleX
-        val oldScaleY = font.data.scaleY
-        font.data.setScale(fontScale)
-        font.setColor(color.r, color.g, color.b, color.a * parentAlpha)
-        font.draw(batch, text, x, y, targetWidth, halign, false)
-        font.data.setScale(oldScaleX, oldScaleY)
+        font.draw(batch, parentAlpha, text, fontScale, x, y, color, targetWidth, halign, false)
     }
 }

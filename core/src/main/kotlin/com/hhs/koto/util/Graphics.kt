@@ -30,7 +30,9 @@ import com.badlogic.gdx.Graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.utils.Align
 import com.crashinvaders.vfx.VfxManager
 import com.crashinvaders.vfx.effects.ChainVfxEffect
 import com.hhs.koto.app.Config
@@ -125,6 +127,26 @@ inline var Sprite.alpha: Float
     set(value) {
         this.setAlpha(value)
     }
+
+fun BitmapFont.draw(
+    batch: Batch,
+    alphaModulation: Float,
+    text: String,
+    fontScale: Float,
+    x: Float,
+    y: Float,
+    color: Color = WHITE_HSV,
+    targetWidth: Float = 0f,
+    halign: Int = Align.left,
+    wrap: Boolean = false,
+) {
+    val oldScaleX = data.scaleX
+    val oldScaleY = data.scaleY
+    data.setScale(oldScaleX * fontScale, oldScaleY * fontScale)
+    setColor(color.r, color.g, color.b, color.a * alphaModulation)
+    draw(batch, text, x, y, targetWidth, halign, wrap)
+    data.setScale(oldScaleX, oldScaleY)
+}
 
 fun darken(color: Color, factor: Float = 0.5f): Color =
     color.cpy().mul(1.0f, 1.0f, factor, 1.0f)

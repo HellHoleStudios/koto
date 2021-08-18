@@ -39,7 +39,7 @@ import com.hhs.koto.util.getFont
 
 class SpellTimer(
     override var x: Float = 0f,
-    override var y: Float = worldH - worldOriginY - 25f,
+    override var y: Float = worldH - worldOriginY - 30f,
     override val zIndex: Int = 0,
 ) : Drawable {
     override var alive: Boolean = true

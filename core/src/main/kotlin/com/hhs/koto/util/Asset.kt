@@ -134,6 +134,7 @@ fun getFont(
     A.logger.debug("Font not found in cache. Generating: $name")
     val generator: FreeTypeFontGenerator = A[name]
     val font = generator.generateFont(parameter)
+    font.setUseIntegerPositions(false)
     fontCache.put(key, font)
     return font
 }
