@@ -179,17 +179,22 @@ class KotoGame : Disposable {
     }
 
     fun tick() {
-        event.trigger("tick")
         if (VK.PAUSE.pressed()) {
             state = GameState.PAUSED
             return
         }
         subFrameTime = 0f
+        event.trigger("tick")
         game.background.tick()
         game.stage.tick()
         game.hud.tick()
         game.tasks.tick()
         game.frame++
+        if (SystemFlag.gamemode!!.isPractice()) {
+            gameData.practiceTime++
+        } else {
+            gameData.playTime++
+        }
     }
 
     fun end() {

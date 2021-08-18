@@ -62,8 +62,10 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             val deathListener = game.addListener("player.death") {
                 failedBonus = true
             }
-            gameData.currentElement.spell[name].totalAttempt++
-            saveGameData()
+            if (!isNonSpell) {
+                gameData.currentElement.spell[name].totalAttempt++
+                saveGameData()
+            }
             task {
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {

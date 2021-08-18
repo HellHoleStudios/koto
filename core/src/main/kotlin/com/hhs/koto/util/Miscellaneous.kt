@@ -76,11 +76,12 @@ val json = Json().apply {
                 data = data.next()
             }
             return GameData(
-                jsonValue["playTime"].asInt(),
+                jsonValue["playTime"].asLong(),
                 jsonValue["playCount"].asInt(),
-                jsonValue["practiceTime"].asInt(),
+                jsonValue["practiceTime"].asLong(),
                 jsonValue["practiceCount"].asInt(),
-                jsonValue["missCount"].asInt(),
+                jsonValue["deathCount"].asInt(),
+                jsonValue["bombCount"].asInt(),
                 jsonValue["clearCount"].asInt(),
                 tmpMap,
             )
@@ -150,11 +151,13 @@ lateinit var app: KotoApp
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
 
 fun exitApp() {
+    saveGameData()
     app.callbacks.restartCallback(false)
     Gdx.app.exit()
 }
 
 fun restartApp() {
+    saveGameData()
     app.callbacks.restartCallback(true)
     Gdx.app.exit()
 }

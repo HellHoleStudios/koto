@@ -27,9 +27,19 @@ package com.hhs.koto.demo
 
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.stg.task.BuilderSequence
-import com.hhs.koto.stg.task.EndBuilder
+import com.hhs.koto.stg.task.RunnableTask
 import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.stg.task.taskBuilder
+import com.hhs.koto.util.game
+import com.hhs.koto.util.gameData
+import com.hhs.koto.util.saveGameData
 
 class RegularGame : TaskBuilder {
-    override fun build() = BuilderSequence(Stage1(), EndBuilder()).build()
+    override fun build() = BuilderSequence(Stage1(), taskBuilder {
+        RunnableTask {
+            game.end()
+            gameData.clearCount++
+            saveGameData()
+        }
+    }).build()
 }

@@ -166,10 +166,10 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         fpsCounter.addValue(Gdx.graphics.deltaTime)
 
         autoSaveCounter += Gdx.graphics.deltaTime
-//        if (autoSaveCounter >= 60) {
-//            saveGameData()
-//            autoSaveCounter = 0f
-//        }
+        if (autoSaveCounter >= 60) {
+            saveGameData()
+            autoSaveCounter = 0f
+        }
 
         clearScreen(0f, 0f, 0f, 1f)
         var flag = false

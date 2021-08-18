@@ -31,11 +31,12 @@ import ktx.collections.GdxMap
 import java.util.*
 
 data class GameData(
-    var playTime: Int = 0,
+    var playTime: Long = 0,
     var playCount: Int = 0,
-    var practiceTime: Int = 0,
+    var practiceTime: Long = 0,
     var practiceCount: Int = 0,
-    var missCount: Int = 0,
+    var deathCount: Int = 0,
+    var bombCount: Int = 0,
     var clearCount: Int = 0,
     val data: GdxMap<String, GdxMap<String, GameDataElement>> = GdxMap(),
 ) {
