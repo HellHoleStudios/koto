@@ -29,10 +29,7 @@ import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
 import com.hhs.koto.stg.drawable.SpellAttackOverlay
 import com.hhs.koto.stg.drawable.SpellInfoDisplay
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.game
-import com.hhs.koto.util.gameData
-import com.hhs.koto.util.saveGameData
+import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
 import kotlin.math.roundToLong
 
@@ -83,12 +80,15 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 if (boss is BasicBoss) {
                     self.attachTask(boss.createSpellBackground())
                 }
+                SE.play("spellcard")
                 spellInfoDisplay = SpellInfoDisplay(name, bonus)
                 game.background.addDrawable(SpellAttackOverlay())
                 game.hud.addDrawable(spellInfoDisplay)
                 game.bossNameDisplay.nextSpell()
                 gameData.currentElement.spell[name].totalAttempt++
                 saveGameData()
+            } else {
+                SE.play("nonspell")
             }
             game.spellTimer.show(maxTime)
 
@@ -101,12 +101,16 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             game.enemies.forEach {
                 it.destroy()
             }
+            if (isNonSpell || failedBonus) {
+                SE.play("spellbreak")
+            }
             if (!isNonSpell) {
                 if (boss is BasicBoss) {
                     self.attachTask(boss.removeSpellBackground())
                 }
                 if (!failedBonus) {
                     // TODO Spell Bonus animation
+                    SE.play("cardget")
                     gameData.currentElement.spell[name].successfulAttempt++
                     saveGameData()
                     game.score += getBonus(t)

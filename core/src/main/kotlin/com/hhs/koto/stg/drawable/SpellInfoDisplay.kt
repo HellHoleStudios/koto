@@ -77,7 +77,7 @@ class SpellInfoDisplay(
         background.setPosition(x - 256f, y)
         background.color = backgroundColor
         background.draw(batch, parentAlpha * alpha)
-        historyText.setPosition(x - 80f, y - 6f)
+        historyText.setPosition(x - 85f, y - 6f)
         historyText.draw(batch, parentAlpha * alpha)
         bonusText.setPosition(x - 180f, y - 6f)
         bonusText.draw(batch, parentAlpha * alpha)
@@ -96,7 +96,7 @@ class SpellInfoDisplay(
             parentAlpha * alpha,
             spellHistory,
             10f / 20,
-            x - 40f,
+            x - 45f,
             y + 4f,
         )
         infoFont.draw(

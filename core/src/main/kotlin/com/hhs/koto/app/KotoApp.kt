@@ -100,6 +100,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         fps = FPSDisplay()
         st += fps
 
+        // TODO rename
         SE.register("cancel", "snd/se_cancel00.wav")
         SE.register("invalid", "snd/se_invalid.wav")
         SE.register("ok", "snd/se_ok00.wav")
@@ -111,10 +112,14 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("pause", "snd/se_pause.wav")
         SE.register("bomb", "snd/se_nep00.wav")
         SE.register("enemydead", "snd/se_enep00.wav")
+        SE.register("spellbreak", "snd/se_enep01.wav")
+        SE.register("nonspell", "snd/se_enep02.wav")
         SE.register("damage0", "snd/se_damage00.wav")
         SE.register("damage1", "snd/se_damage01.wav")
         SE.register("timeout0", "snd/se_timeout.wav")
         SE.register("timeout1", "snd/se_timeout2.wav")
+        SE.register("cardget", "snd/se_cardget.wav")
+        SE.register("spellcard", "snd/se_cat00.wav")
 
         BGM.register(LoopingMusic("mus/E0120.ogg", 2f, 58f))
         defaultShotSheet = A[Config.defaultShotSheet]
