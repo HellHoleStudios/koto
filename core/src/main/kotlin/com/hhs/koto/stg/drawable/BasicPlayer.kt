@@ -29,7 +29,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
@@ -112,12 +111,12 @@ open class BasicPlayer(
         game.normalBatch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
 
         val tmpX: Float = if (playerState == PlayerState.RESPAWNING) {
-            Interpolation.sine.apply(spawnX, spawnX, respawnAnimationPercentage)
+            smoothstep(spawnX, spawnX, respawnAnimationPercentage)
         } else {
             clampX(x + speed * dx * subFrameTime)
         }
         val tmpY: Float = if (playerState == PlayerState.RESPAWNING) {
-            Interpolation.sine.apply(spawnY - 96f, spawnY, respawnAnimationPercentage)
+            smoothstep(spawnY - 96f, spawnY, respawnAnimationPercentage)
         } else {
             clampY(y + speed * dy * subFrameTime)
         }

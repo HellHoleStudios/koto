@@ -26,10 +26,10 @@
 package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.drawable.SpriteDrawable
 import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.lerp
 
 class Explosion(
     x: Float,
@@ -58,8 +58,8 @@ class Explosion(
         super.tick()
         sprite.setAlpha((sprite.alpha - 1f / duration).coerceAtLeast(0f))
         sprite.setScale(
-            Interpolation.linear.apply(startSizeX, endSizeX, t.toFloat() / duration),
-            Interpolation.linear.apply(startSizeY, endSizeY, t.toFloat() / duration),
+            lerp(startSizeX, endSizeX, t.toFloat() / duration),
+            lerp(startSizeY, endSizeY, t.toFloat() / duration),
         )
         if (t >= duration) kill()
     }

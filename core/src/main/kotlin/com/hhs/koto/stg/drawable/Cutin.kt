@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.util.alpha
+import com.hhs.koto.util.lerp
 
 class Cutin(
     texture: TextureRegion,
@@ -80,7 +81,7 @@ class Cutin(
                     color.r,
                     color.g,
                     color.b,
-                    color.a * Interpolation.linear.apply(0f, 1f, t.toFloat() / fadeInTime),
+                    color.a * lerp(0f, 1f, t.toFloat() / fadeInTime),
                 )
             } else if (t > fadeInTime + sustainTime) {
                 x += Interpolation.sineIn.apply(
@@ -95,7 +96,7 @@ class Cutin(
                     color.r,
                     color.g,
                     color.b,
-                    color.a * Interpolation.linear.apply(
+                    color.a * lerp(
                         1f, 0f,
                         (t - fadeInTime - sustainTime).toFloat() / fadeOutTime,
                     ),

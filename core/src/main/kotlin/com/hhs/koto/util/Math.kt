@@ -25,6 +25,7 @@
 
 package com.hhs.koto.util
 
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import kotlin.math.sqrt
@@ -92,12 +93,18 @@ fun atan2(y: Float, x: Float): Float =
 fun atan2(x1: Float, y1: Float, x2: Float, y2: Float): Float =
     MathUtils.atan2(y2 - y1, x2 - x1) * MathUtils.radiansToDegrees
 
-fun sin(degrees: Float) = MathUtils.sinDeg(degrees)
+fun sin(degrees: Float): Float = MathUtils.sinDeg(degrees)
 
-fun cos(degrees: Float) = MathUtils.cosDeg(degrees)
+fun cos(degrees: Float): Float = MathUtils.cosDeg(degrees)
 
-fun tan(degrees: Float) =
-    MathUtils.radiansToDegrees * kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble())
+fun tan(degrees: Float): Float =
+    kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble()).toFloat() * MathUtils.radiansToDegrees
+
+fun lerp(start: Float, end: Float, a: Float): Float =
+    Interpolation.linear.apply(start, end, a)
+
+fun smoothstep(start: Float, end: Float, a: Float): Float =
+    Interpolation.smooth.apply(start, end, a)
 
 private val tmpRectangle = Rectangle()
 fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {

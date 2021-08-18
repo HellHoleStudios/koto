@@ -71,12 +71,12 @@ class AyaBoss(
         useDistortionEffect = false
         spellBackground = TileBackground(
             getRegion("st1/spell_background.png"),
-            100,
+            -100,
             color = Color(0f, 1f, 1f, 0f),
         )
         spellForeground = TileBackground(
             getRegion("st1/spell_foreground.png"),
-            100,
+            -100,
             -1f,
             1f,
             color = Color(0f, 1f, 1f, 0f),

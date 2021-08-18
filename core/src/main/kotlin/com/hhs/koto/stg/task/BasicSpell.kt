@@ -27,6 +27,7 @@ package com.hhs.koto.stg.task
 
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
+import com.hhs.koto.stg.drawable.SpellAttackOverlay
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
 import com.hhs.koto.util.gameData
@@ -77,10 +78,13 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                     game.spellTimer.tickTime()
                 }
             }
-            if (!isNonSpell && boss is BasicBoss) {
-                self.attachTask(boss.createSpellBackground())
+            if (!isNonSpell) {
+                game.background.addDrawable(SpellAttackOverlay())
+                if (boss is BasicBoss) {
+                    self.attachTask(boss.createSpellBackground())
+                }
+                game.bossNameDisplay.nextSpell()
             }
-            if (!isNonSpell) game.bossNameDisplay.nextSpell()
             game.spellTimer.show(maxTime)
 
             attachAndWait(spellTask)

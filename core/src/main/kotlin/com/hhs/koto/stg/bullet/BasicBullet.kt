@@ -28,7 +28,6 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.particle.BulletDestroyParticle
@@ -193,10 +192,10 @@ open class BasicBullet(
                     )
                 }
             } else {
-                val scaleFactor = Interpolation.linear.apply(2f, 0.8f, t.toFloat() / delay)
+                val scaleFactor = lerp(2f, 0.8f, t.toFloat() / delay)
                 val delayColor = data.delayColor.tintHSV(tint)
                 delayColor.a *= parentAlpha
-                delayColor.a *= Interpolation.linear.apply(0.2f, 1f, t.toFloat() / delay)
+                delayColor.a *= lerp(0.2f, 1f, t.toFloat() / delay)
                 batch.color = delayColor
                 batch.draw(
                     data.delayTexture,
