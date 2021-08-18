@@ -56,16 +56,57 @@ object SystemFlag {
 val json = Json().apply {
     setUsePrototypes(false)
     setOutputType(JsonWriter.OutputType.json)
+    setSerializer(GameData::class.java, object : JsonSerializer<GameData> {
+        override fun write(json: Json, value: GameData, type: Class<*>?) {
+            writeObjectStart()
+            writeFields(value)
+            writeObjectEnd()
+        }
+
+        override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): GameData {
+            val tmpMap = GdxMap<String, GdxMap<String, GameData.GameDataElement>>()
+            var data: JsonValue? = jsonValue.getChild("data")
+            while (data != null) {
+                @Suppress("UNCHECKED_CAST")
+                tmpMap[data.name] = json.readValue(
+                    GdxMap::class.java,
+                    GameData.GameDataElement::class.java,
+                    data,
+                ) as GdxMap<String, GameData.GameDataElement>
+                data = data.next()
+            }
+            return GameData(
+                jsonValue["playTime"].asInt(),
+                jsonValue["playCount"].asInt(),
+                jsonValue["practiceTime"].asInt(),
+                jsonValue["practiceCount"].asInt(),
+                jsonValue["missCount"].asInt(),
+                jsonValue["clearCount"].asInt(),
+                tmpMap,
+            )
+        }
+    })
     setSerializer(GameData.GameDataElement::class.java, object : JsonSerializer<GameData.GameDataElement> {
         override fun write(json: Json, value: GameData.GameDataElement, type: Class<*>?) {
-            json.writeObjectStart()
-            json.writeValue("score", value.score, GdxArray::class.java, GameData.ScoreEntry::class.java)
-            json.writeValue("spell", value.spell, GdxMap::class.java, GameData.SpellHistory::class.java)
-            json.writeObjectEnd()
+            writeObjectStart()
+            writeFields(value)
+            writeObjectEnd()
         }
 
         override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): GameData.GameDataElement {
-            return json.readValue(GameData.GameDataElement::class.java, jsonValue)
+            @Suppress("UNCHECKED_CAST")
+            return GameData.GameDataElement(
+                json.readValue(
+                    GdxArray::class.java,
+                    GameData.ScoreEntry::class.java,
+                    jsonValue["score"],
+                ) as GdxArray<GameData.ScoreEntry>,
+                json.readValue(
+                    GdxMap::class.java,
+                    GameData.SpellHistory::class.java,
+                    jsonValue["spell"],
+                ) as GdxMap<String, GameData.SpellHistory>,
+            )
         }
     })
     setSerializer(Locale::class.java, object : JsonSerializer<Locale> {
@@ -134,6 +175,8 @@ fun saveOptions() {
     app.callbacks.saveOptions(options)
 }
 
+private var gameDataHash: Int = 0
+
 fun loadGameData() {
     val tmpGameData = app.callbacks.loadGameData()
     if (tmpGameData != null) {
@@ -142,7 +185,7 @@ fun loadGameData() {
         gameData = GameData()
         app.logger.info("Creating empty game data file...")
         for (player in GameBuilder.players.safeKeys()) {
-            val tmpMap = GdxMap<GameDifficulty, GameData.GameDataElement>()
+            val tmpMap = GdxMap<String, GameData.GameDataElement>()
             for (difficulty in GameBuilder.usedDifficulties.safeIterator()) {
                 val tmpElement = GameData.GameDataElement()
                 for (spell in GameBuilder.spells.safeIterator()) {
@@ -150,16 +193,19 @@ fun loadGameData() {
                         tmpElement.spell[spell.name] = GameData.SpellHistory()
                     }
                 }
-                tmpMap[difficulty] = tmpElement
+                tmpMap[difficulty.name] = tmpElement
             }
             gameData.data[player] = tmpMap
         }
         saveGameData()
     }
+    gameDataHash = gameData.hashCode()
 }
 
 fun saveGameData() {
+    if (gameData.hashCode() == gameDataHash) return
     app.callbacks.saveGameData(gameData)
+    gameDataHash = gameData.hashCode()
 }
 
 fun <T> GdxArray<T>.removeNull() {

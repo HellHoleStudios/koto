@@ -27,6 +27,8 @@ package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.util.game
+import kotlin.math.roundToLong
 
 open class PlayerBullet(
     x: Float,
@@ -44,6 +46,7 @@ open class PlayerBullet(
 ) : BasicBullet(x, y, speed, angle, data, scaleX, scaleY, rotation, color, delay) {
     open fun hit(enemy: Enemy) {
         enemy.onHit(damage)
+        game.score += (damage * 10).roundToLong()
         penetration--
         if (penetration <= 0) {
             kill()

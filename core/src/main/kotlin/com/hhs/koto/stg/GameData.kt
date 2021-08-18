@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg
 
+import com.hhs.koto.util.SystemFlag
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import java.util.*
@@ -32,9 +33,15 @@ import java.util.*
 data class GameData(
     var playTime: Int = 0,
     var playCount: Int = 0,
+    var practiceTime: Int = 0,
+    var practiceCount: Int = 0,
+    var missCount: Int = 0,
     var clearCount: Int = 0,
-    val data: GdxMap<String, GdxMap<GameDifficulty, GameDataElement>> = GdxMap(),
+    val data: GdxMap<String, GdxMap<String, GameDataElement>> = GdxMap(),
 ) {
+    val currentElement: GameDataElement
+        get() = data[SystemFlag.player!!][SystemFlag.difficulty!!.name]
+
     data class GameDataElement(
         val score: GdxArray<ScoreEntry> = GdxArray(),
         val spell: GdxMap<String, SpellHistory> = GdxMap(),
@@ -52,4 +59,18 @@ data class GameData(
         var totalAttempt: Int = 0,
         var successfulAttempt: Int = 0,
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as GameData
+
+        if (playTime != other.playTime) return false
+        if (playCount != other.playCount) return false
+        if (clearCount != other.clearCount) return false
+        if (data != other.data) return false
+
+        return true
+    }
 }

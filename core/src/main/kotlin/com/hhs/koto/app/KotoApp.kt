@@ -63,6 +63,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     val screens = GdxMap<String, KotoScreen>()
     var input = InputMultiplexer()
     val logger = Logger("Main", Config.logLevel)
+    var autoSaveCounter: Float = 0f
 
     override fun create() {
         app = this
@@ -163,6 +164,12 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         }
 
         fpsCounter.addValue(Gdx.graphics.deltaTime)
+
+        autoSaveCounter += Gdx.graphics.deltaTime
+//        if (autoSaveCounter >= 60) {
+//            saveGameData()
+//            autoSaveCounter = 0f
+//        }
 
         clearScreen(0f, 0f, 0f, 1f)
         var flag = false

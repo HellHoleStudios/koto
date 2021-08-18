@@ -29,6 +29,8 @@ import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
+import com.hhs.koto.util.gameData
+import com.hhs.koto.util.saveGameData
 import kotlinx.coroutines.yield
 import kotlin.math.roundToLong
 
@@ -60,6 +62,8 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             val deathListener = game.addListener("player.death") {
                 failedBonus = true
             }
+            gameData.currentElement.spell[name].totalAttempt++
+            saveGameData()
             task {
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
@@ -86,10 +90,14 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             game.enemies.forEach {
                 it.destroy()
             }
-            if (!isNonSpell && boss is BasicBoss) {
-                self.attachTask(boss.removeSpellBackground())
+            if (!isNonSpell) {
+                if (boss is BasicBoss) {
+                    self.attachTask(boss.removeSpellBackground())
+                }
                 if (!failedBonus) {
                     // TODO Spell Bonus animation
+                    gameData.currentElement.spell[name].successfulAttempt++
+                    saveGameData()
                     game.score += getBonus(t)
                 }
             }
