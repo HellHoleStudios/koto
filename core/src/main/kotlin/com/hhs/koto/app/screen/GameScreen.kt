@@ -227,7 +227,8 @@ class GameScreen : BasicScreen(null, null) {
             when (game.state) {
                 GameState.PAUSED -> bundle["ui.game.paused"]
                 GameState.GAME_OVER, GameState.GAME_OVER_NO_CREDIT -> bundle["ui.game.gameOver"]
-                GameState.FINISH, GameState.FINISH_PRACTICE -> bundle["ui.game.finish"]
+                GameState.FINISH -> bundle["ui.game.finish"]
+                GameState.FINISH_PRACTICE -> bundle["ui.game.finishPractice"]
                 else -> ""
             }
         )

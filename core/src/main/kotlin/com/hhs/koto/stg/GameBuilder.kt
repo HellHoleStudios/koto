@@ -25,10 +25,7 @@
 
 package com.hhs.koto.stg
 
-import com.hhs.koto.stg.task.SpellBuilder
-import com.hhs.koto.stg.task.StageBuilder
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
@@ -97,7 +94,11 @@ object GameBuilder {
         if (difficulty !in stageBuilder.availableDifficulties) {
             throw KotoRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
         }
-        return buildGameWithTask(stageBuilder.build())
+        return buildGameWithTask(BuilderSequence(stageBuilder, taskBuilder {
+            RunnableTask {
+                game.end()
+            }
+        }).build())
     }
 
     fun buildSpellPractice(name: String, difficulty: GameDifficulty): KotoGame {

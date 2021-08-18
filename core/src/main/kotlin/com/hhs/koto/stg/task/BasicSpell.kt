@@ -94,15 +94,15 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
 
             attachAndWait(spellTask)
 
+            if (!boss.healthBar.currentSegmentDepleted()) {
+                failedBonus = true
+            }
             boss.healthBar.nextSegment()
             game.bullets.forEach {
                 it.destroy()
             }
             game.enemies.forEach {
                 it.destroy()
-            }
-            if (isNonSpell || failedBonus) {
-                SE.play("spellbreak")
             }
             if (!isNonSpell) {
                 if (boss is BasicBoss) {
@@ -116,6 +116,9 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                     game.score += getBonus(t)
                 }
                 spellInfoDisplay!!.finished = true
+            }
+            if (isNonSpell || failedBonus) {
+                SE.play("spellbreak")
             }
             game.spellTimer.hide()
             game.removeListener("player.bomb", bombListener)
