@@ -27,15 +27,24 @@ package com.hhs.koto.stg.task
 
 import com.hhs.koto.stg.drawable.BasicBoss
 import com.hhs.koto.stg.drawable.Boss
+import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
 import kotlinx.coroutines.yield
+import kotlin.math.roundToLong
 
 abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBuilder {
     abstract val health: Float
     abstract val maxTime: Int
+    abstract val bonus: Long
+    open val isNonSpell: Boolean = false
+    open val isSurvival: Boolean = false
+
     abstract fun spell(): Task
     open fun terminate(): Task = EmptyTask()
-    open val isNonSpell: Boolean = false
+
+    companion object {
+        fun defaultBonus(stage: Int): Long = (2 * stage + 3 * SystemFlag.difficulty!!.ordinal) * 1000000L
+    }
 
     fun getBoss(): T = game.findBoss(bossClass)!!
 
@@ -43,8 +52,15 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         CoroutineTask {
             val spellTask = spell()
             val boss = getBoss()
+            var t = 0
+            var failedBonus = false
+            val bombListener = game.addListener("player.bomb") {
+                failedBonus = true
+            }
+            val deathListener = game.addListener("player.death") {
+                failedBonus = true
+            }
             task {
-                var t = 0
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
                         if (spellTask.alive) spellTask.kill()
@@ -60,7 +76,9 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             }
             if (!isNonSpell) game.bossNameDisplay.nextSpell()
             game.spellTimer.show(maxTime)
+
             attachAndWait(spellTask)
+
             boss.healthBar.nextSegment()
             game.bullets.forEach {
                 it.destroy()
@@ -70,10 +88,28 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             }
             if (!isNonSpell && boss is BasicBoss) {
                 self.attachTask(boss.removeSpellBackground())
+                if (!failedBonus) {
+                    // TODO Spell Bonus animation
+                    game.score += getBonus(t)
+                }
             }
             game.spellTimer.hide()
+            game.removeListener("player.bomb", bombListener)
+            game.removeListener("player.death", deathListener)
+
             attachAndWait(terminate())
         }
+
+    open fun getBonus(time: Int): Long = if (isSurvival) {
+        bonus
+    } else {
+        if (time <= 300) {
+            bonus
+        } else {
+            val factor = 1 - (time - 300).toFloat() / (maxTime - 300) * 2f / 3f
+            (bonus * factor).roundToLong()
+        }
+    }
 
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
         val boss = bossBuilder()

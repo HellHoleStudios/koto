@@ -28,11 +28,12 @@ package com.hhs.koto.stg
 enum class GameMode {
     STORY, EXTRA, STAGE_PRACTICE, SPELL_PRACTICE;
 
-    fun hasExtraDifficulty(): Boolean {
-        return this == EXTRA || this == STAGE_PRACTICE || this == SPELL_PRACTICE
-    }
+    fun isPractice(): Boolean =
+        this == STAGE_PRACTICE || this == SPELL_PRACTICE
 
-    fun hasRegularDifficulty(): Boolean {
-        return this == STORY || this == STAGE_PRACTICE || this == SPELL_PRACTICE
-    }
+    fun hasExtraDifficulty(): Boolean =
+        this == EXTRA || this == STAGE_PRACTICE || this == SPELL_PRACTICE
+
+    fun hasRegularDifficulty(): Boolean =
+        this == STORY || this == STAGE_PRACTICE || this == SPELL_PRACTICE
 }

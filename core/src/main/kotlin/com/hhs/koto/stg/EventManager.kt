@@ -23,19 +23,30 @@
  *
  */
 
-package com.hhs.koto.stg.task
+package com.hhs.koto.stg
 
-import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.drawable.Boss
-import com.hhs.koto.util.KotoRuntimeException
-import ktx.collections.GdxArray
+import ktx.collections.GdxMap
+import ktx.collections.GdxSet
+import ktx.collections.contains
+import ktx.collections.set
 
-abstract class BasicNonspell<T : Boss>(bossClass: Class<T>) : BasicSpell<T>(bossClass) {
-    override val name: String = ""
-    override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.NONE_AVAILABLE
-    override val isNonSpell: Boolean = true
-    override val bonus: Long = 0
+class EventManager {
+    val listeners = GdxMap<String, GdxSet<(Array<out Any?>) -> Unit>>()
 
-    override fun buildSpellPractice(): Task =
-        throw KotoRuntimeException("Cannot practice a nonspell!")
+    fun addListener(event: String, listener: (Array<out Any?>) -> Unit) {
+        if (!listeners.contains(event)) {
+            listeners[event] = GdxSet()
+        }
+        listeners[event].add(listener)
+    }
+
+    fun removeListener(event: String, listener: (Array<out Any?>) -> Unit) {
+        listeners[event]?.remove(listener)
+    }
+
+    fun trigger(event: String, vararg parameter: Any?) {
+        listeners[event]?.forEach {
+            it(parameter)
+        }
+    }
 }

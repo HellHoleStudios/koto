@@ -259,6 +259,7 @@ open class BasicPlayer(
     }
 
     open fun onBomb(isDeathBomb: Boolean) {
+        game.event.trigger("player.bomb", isDeathBomb)
         invulnerable = true
         SE.play("bomb")
         game.bomb.completedCount--
@@ -334,6 +335,7 @@ open class BasicPlayer(
 
     open fun onDeath() {
         invulnerable = true
+        game.event.trigger("player.death")
         task {
             game.addParticle(Explosion(x, y, 64f, 64f, 384f, 384f, duration = 10))
             task {

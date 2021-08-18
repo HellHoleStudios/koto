@@ -71,10 +71,10 @@ suspend fun CoroutineScope.wander(
 ) {
     var targetX = target.x
     var targetY = target.y
-    repeat(100000) {
+    for (i in 0 until 10000) {
         targetX = random(targetMinX, targetMaxX)
         targetY = random(targetMinY, targetMaxY)
-        if (dist(target.x, target.y, targetX, targetY) >= 50f) return@repeat
+        if (dist(target.x, target.y, targetX, targetY) >= 50f) break
     }
     val task = Move(target, targetX, targetY, duration, interpolation)
     self.attachTask(task)

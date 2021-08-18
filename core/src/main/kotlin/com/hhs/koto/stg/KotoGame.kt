@@ -144,12 +144,14 @@ class KotoGame : Disposable {
         hud.addDrawable(this)
     }
 
+    val event = EventManager()
+
     lateinit var player: Player
     var maxScore: Long = 10000
     var maxScoreHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
     var credit: Int = difficultySelect(3, 3, 4, 5)
-    val initialLife = FragmentCounter(3, 2, 0)
+    val initialLife = FragmentCounter(3, if (SystemFlag.gamemode!!.isPractice()) 8 else 2, 0)
     val initialBomb = FragmentCounter(5, 3, 0)
     val life = FragmentCounter(initialLife)
     val bomb = FragmentCounter(initialBomb)
@@ -177,6 +179,7 @@ class KotoGame : Disposable {
     }
 
     fun tick() {
+        event.trigger("tick")
         if (VK.PAUSE.pressed()) {
             state = GameState.PAUSED
             return
@@ -198,6 +201,8 @@ class KotoGame : Disposable {
     }
 
     fun draw() {
+        event.trigger("draw")
+
         backgroundVfx.beginInputCapture()
         clearScreen(0f, 0f, 0f, 1f)
         batch.projectionMatrix = backgroundViewport.camera.combined
@@ -277,5 +282,15 @@ class KotoGame : Disposable {
     fun <T : Boss> addBoss(boss: T): T {
         bosses.addDrawable(boss)
         return boss
+    }
+
+    fun addListener(event: String, listener: (Array<out Any?>) -> Unit): (Array<out Any?>) -> Unit {
+        this.event.addListener(event, listener)
+        return listener
+    }
+
+    fun removeListener(event: String, listener: (Array<out Any?>) -> Unit): (Array<out Any?>) -> Unit {
+        this.event.removeListener(event, listener)
+        return listener
     }
 }

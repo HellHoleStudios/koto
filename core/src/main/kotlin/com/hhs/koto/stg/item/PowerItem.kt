@@ -66,6 +66,14 @@ class PowerItem(
                 )
             )
         } else {
+            game.score += 10
+            game.addParticle(
+                ScoreParticle(
+                    x + MathUtils.random(-20f, 20f),
+                    y + MathUtils.random(-10f, 10f),
+                    10
+                )
+            )
             game.power = (game.power + amount).coerceAtMost(4f)
         }
     }

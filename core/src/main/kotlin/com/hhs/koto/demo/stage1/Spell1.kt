@@ -45,6 +45,8 @@ class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
     override val health: Float
         get() = difficultySelect(1000f, 1200f, 1400f, 1600f)
     override val maxTime: Int = 1200
+    override val bonus: Long
+        get() = defaultBonus(1)
 
     override fun spell(): Task = CoroutineTask {
         val boss = getBoss()
