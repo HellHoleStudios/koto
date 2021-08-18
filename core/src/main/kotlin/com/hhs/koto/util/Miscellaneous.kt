@@ -76,9 +76,9 @@ val json = Json().apply {
                 data = data.next()
             }
             return GameData(
-                jsonValue["playTime"].asLong(),
+                jsonValue["playTime"].asDouble(),
                 jsonValue["playCount"].asInt(),
-                jsonValue["practiceTime"].asLong(),
+                jsonValue["practiceTime"].asDouble(),
                 jsonValue["practiceCount"].asInt(),
                 jsonValue["deathCount"].asInt(),
                 jsonValue["bombCount"].asInt(),

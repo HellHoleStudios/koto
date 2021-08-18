@@ -181,6 +181,12 @@ class GameScreen : BasicScreen(null, null) {
                 }
             }
         } else {
+            // TODO replay check
+            if (SystemFlag.gamemode!!.isPractice()) {
+                gameData.practiceTime += delta
+            } else {
+                gameData.playTime += delta
+            }
             game.update()
         }
         super.render(delta)

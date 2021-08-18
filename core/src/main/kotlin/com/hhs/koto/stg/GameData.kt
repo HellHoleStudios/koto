@@ -31,9 +31,9 @@ import ktx.collections.GdxMap
 import java.util.*
 
 data class GameData(
-    var playTime: Long = 0,
+    var playTime: Double = 0.0,
     var playCount: Int = 0,
-    var practiceTime: Long = 0,
+    var practiceTime: Double = 0.0,
     var practiceCount: Int = 0,
     var deathCount: Int = 0,
     var bombCount: Int = 0,

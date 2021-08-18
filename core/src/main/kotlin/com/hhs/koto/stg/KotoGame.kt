@@ -190,11 +190,6 @@ class KotoGame : Disposable {
         game.hud.tick()
         game.tasks.tick()
         game.frame++
-        if (SystemFlag.gamemode!!.isPractice()) {
-            gameData.practiceTime++
-        } else {
-            gameData.playTime++
-        }
     }
 
     fun end() {
