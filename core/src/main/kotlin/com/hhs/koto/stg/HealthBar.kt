@@ -54,7 +54,7 @@ class HealthBar(
     override var alive: Boolean = true
     var visible: Boolean = true
     val segments = GdxArray<Float>()
-    var currentSegment: Int = -1
+    var currentSegment: Int = 0
     var totalHealth: Float = 0f
     var currentHealth: Float = 0f
     var shapeDrawer = ShapeDrawer(game.batch, getRegion("ui/blank.png")).apply {
@@ -74,9 +74,9 @@ class HealthBar(
             shapeDrawer.circle(x, y, radius + 1.5f, 1f)
             shapeDrawer.circle(x, y, radius - 1.5f, 1f)
 
-            if (currentSegment > 0) {
-                var currentSum = segments[0]
-                for (i in 1..currentSegment) {
+            if (currentSegment < segments.size) {
+                var currentSum = segments.last()
+                for (i in segments.size - 2 downTo currentSegment) {
                     val angle = currentSum / totalHealth * 360f + 90f
                     batch.draw(
                         segmentDivider,
@@ -99,26 +99,28 @@ class HealthBar(
     override fun tick() = Unit
 
     fun addSegment(vararg health: Float) {
+        if (segments.isEmpty) {
+            currentHealth = health.first()
+        }
         health.forEach {
-            currentSegment++
             totalHealth += it
             segments.add(it)
         }
-        currentHealth = health.last()
     }
 
     fun addSpell(vararg spell: BasicSpell<*>) {
+        if (segments.isEmpty) {
+            currentHealth = spell.first().health
+        }
         spell.forEach {
-            currentSegment++
             totalHealth += it.health
             segments.add(it.health)
         }
-        currentHealth = spell.last().health
     }
 
     fun currentTotalHealth(): Float {
         var result = 0f
-        for (i in 0 until currentSegment) {
+        for (i in currentSegment + 1 until segments.size) {
             result += segments[i]
         }
         return result + currentHealth
@@ -131,8 +133,8 @@ class HealthBar(
     fun currentSegmentDepleted(): Boolean = currentHealth <= 0
 
     fun nextSegment() {
-        if (currentSegment > 0) {
-            currentSegment--
+        if (currentSegment < segments.size - 1) {
+            currentSegment++
             currentHealth = segments[currentSegment]
         } else {
             currentHealth = 0f
