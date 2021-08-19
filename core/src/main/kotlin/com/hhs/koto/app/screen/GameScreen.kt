@@ -217,12 +217,15 @@ class GameScreen : BasicScreen(null, null) {
         val resumeButton = pauseMenu[0] as GridButton
         val continueButton = pauseMenu[1] as GridButton
         val saveScoreButton = pauseMenu[2] as GridButton
+        val saveReplayButton = pauseMenu[4] as GridButton
         resumeButton.enabled = game.state == GameState.PAUSED
         resumeButton.isVisible = game.state == GameState.PAUSED
         continueButton.enabled = game.state == GameState.GAME_OVER
         continueButton.isVisible = game.state == GameState.GAME_OVER || game.state == GameState.GAME_OVER_NO_CREDIT
-        saveScoreButton.enabled = game.state == GameState.FINISH
+        saveScoreButton.enabled = !game.usedCredit && game.state == GameState.FINISH
         saveScoreButton.isVisible = game.state == GameState.FINISH || game.state == GameState.FINISH_PRACTICE
+        saveReplayButton.enabled = !game.usedCredit
+
         (pauseMenu.grid.last() as GridLabel).setText(
             when (game.state) {
                 GameState.PAUSED -> bundle["ui.game.paused"]
