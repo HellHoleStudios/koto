@@ -26,8 +26,8 @@
 package com.hhs.koto.demo.stage1
 
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.drawable.BasicEnemy
-import com.hhs.koto.stg.drawable.BasicEnemyTexture
+import com.hhs.koto.stg.graphics.BasicEnemy
+import com.hhs.koto.stg.graphics.BasicEnemyTexture
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*

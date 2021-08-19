@@ -26,7 +26,7 @@
 package com.hhs.koto.stg.task
 
 import com.hhs.koto.stg.bullet.Bullet
-import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.stg.graphics.Enemy
 import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.*
 import ktx.collections.GdxArray

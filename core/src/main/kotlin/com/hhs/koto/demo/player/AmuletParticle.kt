@@ -28,7 +28,7 @@ package com.hhs.koto.demo.player
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.stg.drawable.SpriteDrawable
+import com.hhs.koto.stg.graphics.SpriteDrawable
 import com.hhs.koto.util.alpha
 
 class AmuletParticle(

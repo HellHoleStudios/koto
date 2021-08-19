@@ -26,7 +26,7 @@
 package com.hhs.koto.stg.task
 
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.drawable.Boss
+import com.hhs.koto.stg.graphics.Boss
 import com.hhs.koto.util.KotoRuntimeException
 import ktx.collections.GdxArray
 

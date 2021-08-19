@@ -23,13 +23,13 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.graphics
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils.PI
 import com.badlogic.gdx.math.MathUtils.PI2
-import com.hhs.koto.stg.drawable.Boss
+import com.hhs.koto.stg.Drawable
 import com.hhs.koto.stg.task.BasicSpell
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray

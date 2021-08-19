@@ -23,29 +23,28 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.graphics
 
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Mesh
-import com.badlogic.gdx.graphics.VertexAttribute
-import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20
-import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.drawable.Boss
-import com.hhs.koto.util.*
+import com.hhs.koto.stg.Drawable
+import com.hhs.koto.util.game
+import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.lerp
 import ktx.math.vec2
 import space.earlygrey.shapedrawer.ShapeDrawer
-
 
 /**
  * aka. Timer Circle
  *
  * Change size according to boss timer
  */
-class SpellAttackCircle(val boss: Boss, val maxSize: Float = 300f, val setupTime: Int = 60, val numVertex: Int = 2) :
-    Drawable {
+class SpellAttackCircle(
+    val boss: Boss,
+    val maxSize: Float = 300f,
+    val setupTime: Int = 60,
+    val numVertex: Int = 2
+) : Drawable {
     val texture = getRegion("portrait/aya/attack.png")
 
     override var x = 0f
@@ -84,7 +83,6 @@ class SpellAttackCircle(val boss: Boss, val maxSize: Float = 300f, val setupTime
         this.maxTime = maxTime
     }
 
-
     fun getTimePercent() = nowTime / (0f + maxTime)
 
     fun halt() {
@@ -94,7 +92,6 @@ class SpellAttackCircle(val boss: Boss, val maxSize: Float = 300f, val setupTime
     }
 
     override fun tick() {
-
         val a = vec2(boss.x - x, boss.y - y).limit(3f)
         x += a.x
         y += a.y
@@ -109,7 +106,7 @@ class SpellAttackCircle(val boss: Boss, val maxSize: Float = 300f, val setupTime
                 }
             }
             1 -> {
-                size = Interpolation.linear.apply(maxSize, 0f, getTimePercent())
+                size = lerp(maxSize, 0f, getTimePercent())
             }
             2 -> {
                 size = Interpolation.pow5.apply(tmp, 0f, t / (0f + setupTime))
@@ -130,9 +127,7 @@ class SpellAttackCircle(val boss: Boss, val maxSize: Float = 300f, val setupTime
             shapeDrawer = ShapeDrawer(batch, texture)
             shapeDrawer.pixelSize = 0.5f
         }
-        
-        shapeDrawer.circle(x,y,size,5f)
+
+        shapeDrawer.circle(x, y, size, 5f)
     }
-
-
 }

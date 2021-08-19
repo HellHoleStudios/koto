@@ -28,8 +28,8 @@ package com.hhs.koto.demo.player
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.hhs.koto.stg.PlayerState
 import com.hhs.koto.stg.bullet.ShotSheet
-import com.hhs.koto.stg.drawable.BasicPlayer
-import com.hhs.koto.stg.drawable.BasicPlayerTexture
+import com.hhs.koto.stg.graphics.BasicPlayer
+import com.hhs.koto.stg.graphics.BasicPlayerTexture
 import com.hhs.koto.util.A
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.VK

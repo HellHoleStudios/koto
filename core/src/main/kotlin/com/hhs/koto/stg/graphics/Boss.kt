@@ -23,10 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
-
-import com.hhs.koto.stg.HealthBar
-import com.hhs.koto.stg.SpellAttackCircle
+package com.hhs.koto.stg.graphics
 
 interface Boss : Enemy {
     val healthBar: HealthBar

@@ -28,7 +28,7 @@ package com.hhs.koto.demo.player
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.hhs.koto.stg.bullet.PlayerBullet
 import com.hhs.koto.stg.bullet.ShotSheet
-import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.stg.graphics.Enemy
 import com.hhs.koto.util.game
 
 class HomingAmulet(

@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.stg.graphics
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera

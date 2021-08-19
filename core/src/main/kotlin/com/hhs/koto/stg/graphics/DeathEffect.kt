@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg.graphics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
@@ -37,15 +37,14 @@ import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.util.A
 
-class BossDistortionEffect : ShaderVfxEffect(
+class DeathEffect : ShaderVfxEffect(
     ShaderProgram(
         Gdx.files.classpath("gdxvfx/shaders/screenspace.vert").readString(),
-        A.get("shader/boss_distortion.frag"),
+        A.get("shader/death.frag"),
     )
 ), ChainVfxEffect {
-    var bossPositionX: Float = 0f
-    var bossPositionY: Float = 0f
-    var radius: Float = 50f
+    var playerPositionX: Float = 0f
+    var playerPositionY: Float = 0f
     var time: Float = 0f
     var enabled: Boolean = false
 
@@ -53,27 +52,22 @@ class BossDistortionEffect : ShaderVfxEffect(
         rebind()
     }
 
-    fun start() {
+    fun start(playerX: Float, playerY: Float) {
+        playerPositionX = playerX
+        playerPositionY = playerY
         time = 0f
         enabled = true
+        program.bind()
+        program.setUniformf(
+            "u_playerPosition",
+            playerPositionX + worldOriginX,
+            playerPositionY + worldOriginY,
+        )
     }
 
     fun end() {
         enabled = false
         rebind()
-    }
-
-    fun tick(bossX: Float, bossY: Float, radius: Float = 80f) {
-        bossPositionX = bossX
-        bossPositionY = bossY
-        this.radius = radius
-        program.bind()
-        program.setUniformf(
-            "u_bossPosition",
-            bossPositionX + worldOriginX,
-            bossPositionY + worldOriginY,
-        )
-        program.setUniformf("u_radius", radius)
     }
 
     override fun update(delta: Float) {
@@ -88,8 +82,7 @@ class BossDistortionEffect : ShaderVfxEffect(
         program.bind()
         program.setUniformi("u_texture", TEXTURE_HANDLE0)
         program.setUniformf("u_screenSize", worldW, worldH)
-        program.setUniformf("u_bossPosition", 2048f, 2048f)
-        program.setUniformf("u_radius", 50f)
+        program.setUniformf("u_playerPosition", 2048f, 2048f)
         program.setUniformf("u_time", 0f)
     }
 

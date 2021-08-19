@@ -26,7 +26,7 @@
 package com.hhs.koto.stg.bullet
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.drawable.Enemy
+import com.hhs.koto.stg.graphics.Enemy
 import com.hhs.koto.util.game
 import kotlin.math.roundToLong
 

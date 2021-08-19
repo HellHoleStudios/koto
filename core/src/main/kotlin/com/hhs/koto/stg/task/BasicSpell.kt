@@ -25,10 +25,10 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.drawable.BasicBoss
-import com.hhs.koto.stg.drawable.Boss
-import com.hhs.koto.stg.drawable.SpellAttackOverlay
-import com.hhs.koto.stg.drawable.SpellInfoDisplay
+import com.hhs.koto.stg.graphics.BasicBoss
+import com.hhs.koto.stg.graphics.Boss
+import com.hhs.koto.stg.graphics.SpellAttackOverlay
+import com.hhs.koto.stg.graphics.SpellInfoDisplay
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
 import kotlin.math.roundToLong

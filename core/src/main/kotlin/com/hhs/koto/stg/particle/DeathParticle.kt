@@ -26,7 +26,7 @@
 package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.drawable.SpriteDrawable
+import com.hhs.koto.stg.graphics.SpriteDrawable
 import com.hhs.koto.util.BLACK_HSV
 import com.hhs.koto.util.BlendingMode
 import com.hhs.koto.util.alpha

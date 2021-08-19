@@ -29,7 +29,7 @@ import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.drawable.TileBackground
+import com.hhs.koto.stg.graphics.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.CoroutineTask

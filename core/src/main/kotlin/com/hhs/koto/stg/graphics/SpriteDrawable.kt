@@ -23,49 +23,58 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg.graphics
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.*
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.sin
 
-class SpellAttackOverlay(
-    val duration: Int = 60,
-    override var x: Float = 0f,
-    override var y: Float = 0f,
-    var rotation: Float = 30f,
-    override val zIndex: Int = 100,
-) : Drawable {
-    var t: Int = 0
-    val sprite = Sprite(getRegion("ui/spell_attack_text.png")).apply {
-        setSize(128f, 16f)
+open class SpriteDrawable(
+    texture: TextureRegion,
+    override var x: Float,
+    override var y: Float,
+    var speed: Float,
+    var angle: Float,
+    scaleX: Float,
+    scaleY: Float,
+    width: Float,
+    height: Float,
+    rotation: Float,
+    originX: Float = width / 2f,
+    originY: Float = height / 2f,
+    color: Color = Color.WHITE,
+) : Drawable, Bounded {
+    protected val sprite = Sprite(texture).apply {
+        setOrigin(originX, originY)
+        setOriginBasedPosition(x, y)
+        setSize(width, height)
+        setScale(scaleX, scaleY)
+        setColor(color)
+        setRotation(rotation)
     }
-    var offset: Float = 0f
+    protected var t: Int = 0
+    override val boundingRadiusX: Float
+        get() = sprite.width * sprite.scaleX + sprite.height * sprite.scaleY
+    override val boundingRadiusY: Float
+        get() = sprite.width * sprite.scaleX + sprite.height * sprite.scaleY
     override var alive: Boolean = true
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val xOffset = 128f * cos(rotation)
-        val yOffset = 128f * sin(rotation)
-        sprite.rotation = rotation
-        for (row in -4..5) {
-            for (i in -3..3) {
-                val offsetFactor = i + if (row % 2 == 0) offset else -offset
-                sprite.setOriginBasedPosition(
-                    x + xOffset * offsetFactor,
-                    y + yOffset * offsetFactor + row * 30f,
-                )
-                sprite.draw(batch, parentAlpha)
-            }
-        }
+        sprite.setOriginBasedPosition(
+            x + subFrameTime * cos(angle) * speed,
+            y + subFrameTime * cos(angle) * speed,
+        )
+        sprite.draw(batch, parentAlpha)
     }
 
     override fun tick() {
-        if (t >= duration) {
-            sprite.alpha = lerp(1f, 0f, (t - duration) / 40f)
-        }
-        if (t >= duration + 40) kill()
-        offset = (offset + 0.015f) % 1f
         t++
+        x += cos(angle) * speed
+        y += sin(angle) * speed
     }
 }

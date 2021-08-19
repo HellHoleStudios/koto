@@ -23,30 +23,11 @@
  *
  */
 
-package com.hhs.koto.stg.drawable
+package com.hhs.koto.stg.graphics
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.utils.Align
 import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.draw
 
-open class TextDrawable(
-    val font: BitmapFont,
-    var fontScale: Float,
-    var text: String,
-    override var x: Float,
-    override var y: Float,
-    var targetWidth: Float = 512f,
-    var halign: Int = Align.left,
-    var color: Color = Color.WHITE,
-) : Drawable {
-    override var alive: Boolean = true
-
-    override fun tick() = Unit
-
-    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        font.draw(batch, parentAlpha, text, fontScale, x, y, color, targetWidth, halign, false)
-    }
+interface Enemy : Drawable {
+    fun onHit(damage: Float)
+    fun destroy()
 }
