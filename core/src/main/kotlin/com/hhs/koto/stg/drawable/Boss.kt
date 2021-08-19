@@ -26,7 +26,9 @@
 package com.hhs.koto.stg.drawable
 
 import com.hhs.koto.stg.HealthBar
+import com.hhs.koto.stg.SpellAttackCircle
 
 interface Boss : Enemy {
     val healthBar: HealthBar
+    val spellAttackCircle : SpellAttackCircle
 }

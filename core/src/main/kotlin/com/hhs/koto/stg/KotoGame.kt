@@ -168,6 +168,7 @@ class KotoGame : Disposable {
     var power: Float = 1f
     var graze: Int = 0
 
+
     init {
         logger.info("Game instance created.")
     }

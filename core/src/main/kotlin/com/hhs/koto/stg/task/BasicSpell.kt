@@ -68,11 +68,15 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
                         if (spellTask.alive) spellTask.kill()
+                        boss.spellAttackCircle.halt()
                         break
                     }
                     yield()
+
                     t++
+                    boss.spellAttackCircle.nowTime = t
                     game.spellTimer.tickTime()
+
                     if (!isNonSpell) spellInfoDisplay!!.bonus = getBonus(t)
                 }
             }
@@ -90,7 +94,9 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             } else {
                 SE.play("nonspell")
             }
+
             game.spellTimer.show(maxTime)
+            boss.spellAttackCircle.reset(maxTime)
 
             attachAndWait(spellTask)
 

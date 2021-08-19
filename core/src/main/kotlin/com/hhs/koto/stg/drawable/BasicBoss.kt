@@ -57,6 +57,11 @@ abstract class BasicBoss(
     override val healthBar = HealthBar(this).apply {
         game.hud.addDrawable(this)
     }
+
+    override val spellAttackCircle = SpellAttackCircle(this).apply {
+        game.hud.addDrawable(this)
+    }
+
     abstract val name: String
     open val nameColor = CYAN_HSV
     abstract val texture: TextureRegion
@@ -92,7 +97,10 @@ abstract class BasicBoss(
         ) {
             game.player.onHit()
         }
+
         magicCircle.tick()
+        spellAttackCircle.tick()
+
         if (useDistortionEffect) {
             if (!game.bossDistortionEffect.enabled) game.bossDistortionEffect.start()
             game.bossDistortionEffect.tick(x, y)
@@ -111,6 +119,8 @@ abstract class BasicBoss(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         magicCircle.draw(batch, parentAlpha, x, y)
+        spellAttackCircle.draw(batch,parentAlpha,subFrameTime)
+
         tmpColor.set(batch.color)
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
