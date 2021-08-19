@@ -154,6 +154,7 @@ class KotoGame : Disposable {
         GameMode.SPELL_PRACTICE -> 0
         else -> difficultySelect(3, 3, 4, 5)
     }
+    var usedCredit: Boolean = false
     val initialLife: FragmentCounter = when (SystemFlag.gamemode!!) {
         GameMode.SPELL_PRACTICE -> FragmentCounter(3, 0, 0)
         GameMode.STAGE_PRACTICE -> FragmentCounter(3, 8, 0)

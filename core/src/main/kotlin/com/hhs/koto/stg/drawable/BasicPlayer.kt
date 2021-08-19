@@ -368,12 +368,15 @@ open class BasicPlayer(
             } else {
                 if (game.credit > 0) {
                     game.credit--
+                    game.usedCredit = true
                     game.life.set(game.initialLife)
+                    game.bomb.set(game.initialBomb)
                     game.state = GameState.GAME_OVER
                 } else {
                     game.state = GameState.GAME_OVER_NO_CREDIT
                 }
             }
+            game.bomb.completedCount = game.initialBomb.completedCount
             game.bomb.set(game.initialBomb)
             repeat(70) {
                 respawnAnimationPercentage += 1 / 70f
