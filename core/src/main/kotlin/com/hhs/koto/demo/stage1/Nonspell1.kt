@@ -43,7 +43,7 @@ class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
                 create("DS_RICE_S_BLUE", boss.x, boss.y, 2f, i - f)
             }
             f += sin(frame / 2f) * 6f
-            wait(difficultySelect(16, 10, 5, 2))
+            wait(difficultySelect(16, 10, 6, 4))
         }
     }
 }

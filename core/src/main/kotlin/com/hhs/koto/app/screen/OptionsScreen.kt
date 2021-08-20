@@ -259,7 +259,7 @@ class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
                         Gdx.graphics.setFullscreenMode(displayMode)
                         if (!resolution.grid.last().enabled) {
                             var modeIndex = resolutionModes.indexOfFirst {
-                                displayMode.width <= it.windowWidth && displayMode.height <= it.windowHeight
+                                displayMode.width <= it.windowWidth || displayMode.height <= it.windowHeight
                             }
                             if (modeIndex == -1) modeIndex = resolutionModes.size - 1
                             resolutionModes[modeIndex].apply(options)

@@ -47,7 +47,7 @@ class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generi
     companion object {
         fun difficultyColor(difficulty: GameDifficulty): Color = when (difficulty) {
             GameDifficulty.EASY -> Color(0.29f, 1f, 0.72f, 1f)
-            GameDifficulty.NORMAL -> Color(0.46f, 1f, 0.72f, 1f)
+            GameDifficulty.NORMAL -> Color(0.5f, 1f, 0.72f, 1f)
             GameDifficulty.HARD -> Color(0.6f, 1f, 0.72f, 1f)
             GameDifficulty.LUNATIC -> Color(0.74f, 1f, 0.72f, 1f)
             GameDifficulty.EXTRA -> Color(0f, 1f, 0.72f, 1f)

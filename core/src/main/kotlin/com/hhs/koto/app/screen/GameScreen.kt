@@ -54,6 +54,7 @@ class GameScreen : BasicScreen(null, null) {
         setBounds(72f, 36f, 864f, 1008f)
         st += this
     }
+    var gameStatus: GameStatus? = null
 
     init {
         val gameBackground = Image(getRegion("bg/game.png"))
@@ -93,27 +94,27 @@ class GameScreen : BasicScreen(null, null) {
     }
 
     init {
-        pauseMenu.add(GridButton(bundle["ui.game.resume"], 36, gridX = 0, gridY = 1) {
+        pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.resume"], 36, gridX = 0, gridY = 1) {
             resumeGame()
         })
-        pauseMenu.add(GridButton(bundle["ui.game.continue"], 36, gridX = 0, gridY = 1) {
+        pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.continue"], 36, gridX = 0, gridY = 1) {
             resumeGame()
         }.apply {
             disable()
             isVisible = false
         })
-        pauseMenu.add(GridButton(bundle["ui.game.saveScore"], 36, gridX = 0, gridY = 1) {
+        pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.saveScore"], 36, gridX = 0, gridY = 1) {
             // TODO
         }.apply {
             disable()
             isVisible = false
         })
-        pauseMenu.add(GridButton(bundle["ui.game.saveReplay"], 36, gridX = 0, gridY = 2) {
+        pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.saveReplay"], 36, gridX = 0, gridY = 2) {
             // TODO
         }.apply {
             disable()
         })
-        pauseMenu.add(GridButton(bundle["ui.game.restart"], 36, gridX = 0, gridY = 3) {
+        pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.restart"], 36, gridX = 0, gridY = 3) {
             confirmationMenu.activate()
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
@@ -132,7 +133,7 @@ class GameScreen : BasicScreen(null, null) {
                 gameFrame.alpha = 0f
             }
         })
-        pauseMenu.add(GridButton(bundle["ui.game.quit"], 36, gridX = 0, gridY = 4) {
+        pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.quit"], 36, gridX = 0, gridY = 4) {
             confirmationMenu.activate()
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
@@ -228,10 +229,10 @@ class GameScreen : BasicScreen(null, null) {
 
         (pauseMenu.grid.last() as GridLabel).setText(
             when (game.state) {
-                GameState.PAUSED -> bundle["ui.game.paused"]
-                GameState.GAME_OVER, GameState.GAME_OVER_NO_CREDIT -> bundle["ui.game.gameOver"]
-                GameState.FINISH -> bundle["ui.game.finish"]
-                GameState.FINISH_PRACTICE -> bundle["ui.game.finishPractice"]
+                GameState.PAUSED -> bundle["ui.game.pauseMenu.paused"]
+                GameState.GAME_OVER, GameState.GAME_OVER_NO_CREDIT -> bundle["ui.game.pauseMenu.gameOver"]
+                GameState.FINISH -> bundle["ui.game.pauseMenu.finish"]
+                GameState.FINISH_PRACTICE -> bundle["ui.game.pauseMenu.finishPractice"]
                 else -> ""
             }
         )
@@ -252,6 +253,9 @@ class GameScreen : BasicScreen(null, null) {
         confirmationMenu.deactivate()
 
         GameBuilder.build()
+        gameStatus?.remove()
+        gameStatus = GameStatus(game)
+        st += gameStatus!!
 
         gameFrame.vfxManager = game.postVfx
         gameFrame.alpha = 1f
