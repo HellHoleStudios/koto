@@ -39,7 +39,7 @@ class FragmentCounter(
     fun set(other: FragmentCounter) {
         fragmentFactor = other.fragmentFactor
         completedCount = other.completedCount
-        fragmentCount = other.fragmentFactor
+        fragmentCount = other.fragmentCount
     }
 
     fun update() {

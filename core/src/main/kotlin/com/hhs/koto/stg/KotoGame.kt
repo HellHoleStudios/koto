@@ -147,8 +147,8 @@ class KotoGame : Disposable {
     val event = EventManager()
 
     lateinit var player: Player
-    var maxScore: Long = 10000
-    var maxScoreHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
+    var maxPoint: Long = 10000
+    var maxPointHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
     var credit: Int = when (SystemFlag.gamemode!!) {
         GameMode.SPELL_PRACTICE -> 0
@@ -166,6 +166,7 @@ class KotoGame : Disposable {
     }
     val life: FragmentCounter = FragmentCounter(initialLife)
     val bomb: FragmentCounter = FragmentCounter(initialBomb)
+    var maxPower: Float = 4f
     var power: Float = 1f
     var graze: Int = 0
 

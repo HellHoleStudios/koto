@@ -27,5 +27,5 @@ package com.hhs.koto.stg.graphics
 
 interface Boss : Enemy {
     val healthBar: HealthBar
-    val spellAttackCircle : SpellAttackCircle
+    val spellAttackCircle: SpellAttackCircle
 }

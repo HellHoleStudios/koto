@@ -58,11 +58,11 @@ class PointItem(
 ) {
     override fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         super.onCollected(collectPositionX, collectPositionY, autoCollected)
-        val amount: Long = if (autoCollected || collectPositionY >= game.maxScoreHeight) {
-            game.maxScore
+        val amount: Long = if (autoCollected || collectPositionY >= game.maxPointHeight) {
+            game.maxPoint
         } else {
-            (game.maxScore * 0.9f / (game.maxScoreHeight + worldOriginY) * (collectPositionY + worldOriginY)
-                    + game.maxScore * 0.1f).toLong()
+            (game.maxPoint * 0.9f / (game.maxPointHeight + worldOriginY) * (collectPositionY + worldOriginY)
+                    + game.maxPoint * 0.1f).toLong()
         }
         game.score += amount
         game.addParticle(
@@ -70,7 +70,7 @@ class PointItem(
                 x + random(-20f, 20f),
                 y + random(-10f, 10f),
                 amount,
-                if (amount == game.maxScore) {
+                if (amount == game.maxPoint) {
                     Color.YELLOW.toHSVColor()
                 } else {
                     WHITE_HSV

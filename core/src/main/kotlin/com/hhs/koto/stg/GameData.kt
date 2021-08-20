@@ -45,33 +45,21 @@ data class GameData(
 
     data class GameDataElement(
         val score: GdxArray<ScoreEntry> = GdxArray(),
-        val spell: GdxMap<String, SpellHistory> = GdxMap(),
+        val practiceHighScore: GdxMap<String, Long> = GdxMap(),
+        val spell: GdxMap<String, SpellEntry> = GdxMap(),
     )
 
     data class ScoreEntry(
         val name: String,
         val time: Date,
         val score: Long,
-        val retryCount: Int,
+        val creditCount: Int,
         val percentage: Float,
     )
 
-    data class SpellHistory(
+    data class SpellEntry(
+        var highScore: Long = 0L,
         var totalAttempt: Int = 0,
         var successfulAttempt: Int = 0,
     )
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as GameData
-
-        if (playTime != other.playTime) return false
-        if (playCount != other.playCount) return false
-        if (clearCount != other.clearCount) return false
-        if (data != other.data) return false
-
-        return true
-    }
 }

@@ -32,10 +32,7 @@ import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.SE
-import com.hhs.koto.util.WHITE_HSV
-import com.hhs.koto.util.bundle
-import com.hhs.koto.util.getFont
+import com.hhs.koto.util.*
 
 class SpellTimer(
     override var x: Float = 0f,
@@ -95,9 +92,9 @@ class SpellTimer(
             integer.color = WHITE_HSV
             fraction.color = WHITE_HSV
         }
-        val text = String.format("%.2f", time / 60f)
-        integer.text = text.substring(0, text.length - 2)
-        fraction.text = text.substring(text.length - 2)
+        val splitResult = splitDecimal(time / 60f)
+        integer.text = splitResult.integer
+        fraction.text = splitResult.fraction
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {

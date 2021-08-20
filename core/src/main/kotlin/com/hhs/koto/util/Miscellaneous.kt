@@ -104,9 +104,14 @@ val json = Json().apply {
                 ) as GdxArray<GameData.ScoreEntry>,
                 json.readValue(
                     GdxMap::class.java,
-                    GameData.SpellHistory::class.java,
+                    Long::class.java,
+                    jsonValue["practiceHighScore"],
+                ) as GdxMap<String, Long>,
+                json.readValue(
+                    GdxMap::class.java,
+                    GameData.SpellEntry::class.java,
                     jsonValue["spell"],
-                ) as GdxMap<String, GameData.SpellHistory>,
+                ) as GdxMap<String, GameData.SpellEntry>,
             )
         }
     })
@@ -191,7 +196,12 @@ fun loadGameData() {
                 val tmpElement = GameData.GameDataElement()
                 for (spell in GameBuilder.spells.safeIterator()) {
                     if (difficulty in spell.availableDifficulties) {
-                        tmpElement.spell[spell.name] = GameData.SpellHistory()
+                        tmpElement.spell[spell.name] = GameData.SpellEntry()
+                    }
+                }
+                for (stage in GameBuilder.stages.safeIterator()) {
+                    if (difficulty in stage.availableDifficulties) {
+                        tmpElement.practiceHighScore[stage.name] = 0L
                     }
                 }
                 tmpMap[difficulty.name] = tmpElement
@@ -234,8 +244,12 @@ fun getTrueFPSMultiplier(fpsMultiplier: Int): Float {
     return fpsMultiplier.toFloat()
 }
 
-fun <T> tri(condition: Boolean, a: T, b: T) = if (condition) {
-    a
-} else {
-    b
+data class SplitDecimal(val integer: String, val fraction: String)
+
+fun splitDecimal(value: Float, precision: Int = 2, includeDecimalPoint: Boolean = true): SplitDecimal {
+    val text = String.format("%.${precision}f", value)
+    return SplitDecimal(
+        text.substring(0, text.length - precision - if (includeDecimalPoint) 0 else 1),
+        text.substring(text.length - precision),
+    )
 }

@@ -56,7 +56,7 @@ class PowerItem(
 ) {
     override fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         super.onCollected(collectPositionX, collectPositionY, autoCollected)
-        if (game.power >= 4f) {
+        if (game.power >= game.maxPower) {
             game.score += 10000
             game.addParticle(
                 ScoreParticle(
@@ -74,7 +74,7 @@ class PowerItem(
                     10
                 )
             )
-            game.power = (game.power + amount).coerceAtMost(4f)
+            game.power = (game.power + amount).coerceAtMost(game.maxPower)
         }
     }
 }

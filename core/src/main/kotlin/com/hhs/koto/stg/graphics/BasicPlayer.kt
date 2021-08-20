@@ -369,9 +369,10 @@ open class BasicPlayer(
                 if (game.credit > 0) {
                     game.credit--
                     game.usedCredit = true
+                    game.state = GameState.GAME_OVER
+                    yield()
                     game.life.set(game.initialLife)
                     game.bomb.set(game.initialBomb)
-                    game.state = GameState.GAME_OVER
                 } else {
                     game.state = GameState.GAME_OVER_NO_CREDIT
                 }
