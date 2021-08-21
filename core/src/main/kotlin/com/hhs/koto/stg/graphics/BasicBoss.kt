@@ -163,6 +163,7 @@ abstract class BasicBoss(
 
     override fun destroy() {
         // TODO boss death animation
+        // TODO play boss death SE "dossdead"
     }
 
     override fun kill(): Boolean {

@@ -52,7 +52,6 @@ class SpellInfoDisplay(
     var finishCounter: Int = 0
     var failed: Boolean = false
     var finished: Boolean = false
-    var alpha: Float = 0f
 
     val background = Sprite(getRegion("ui/spell_info_bg.png")).apply {
         setSize(256f, 36f)

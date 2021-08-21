@@ -91,8 +91,6 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 game.bossNameDisplay.nextSpell()
                 gameData.currentElement.spell[name].totalAttempt++
                 saveGameData()
-            } else {
-                SE.play("nonspell")
             }
 
             game.spellTimer.show(maxTime)
@@ -123,9 +121,9 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 }
                 spellInfoDisplay!!.finished = true
             }
-            if (isNonSpell || failedBonus) {
-                SE.play("spellbreak")
-            }
+
+            SE.play("spellbreak")
+
             game.spellTimer.hide()
             game.removeListener("player.bomb", bombListener)
             game.removeListener("player.death", deathListener)
