@@ -160,9 +160,6 @@ class GridButton(
     fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(
-            alpha(1f)
-        )
-        ret.addAction(
             moveTo(staticX, staticY, 1f, Interpolation.pow5Out)
         )
         ret.addAction(

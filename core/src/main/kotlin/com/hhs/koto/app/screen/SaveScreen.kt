@@ -23,45 +23,29 @@
  *
  */
 
-package com.hhs.koto.stg
+package com.hhs.koto.app.screen
 
-import com.hhs.koto.util.SystemFlag
-import ktx.collections.GdxArray
-import ktx.collections.GdxMap
-import java.util.*
+import com.hhs.koto.app.ui.GridKeyboard
+import com.hhs.koto.app.ui.register
+import com.hhs.koto.stg.GameData
+import com.hhs.koto.util.*
 
-data class GameData(
-    var playTime: Double = 0.0,
-    var playCount: Int = 0,
-    var practiceTime: Double = 0.0,
-    var practiceCount: Int = 0,
-    var deathCount: Int = 0,
-    var bombCount: Int = 0,
-    var clearCount: Int = 0,
-    val data: GdxMap<String, GdxMap<String, GameDataElement>> = GdxMap(),
-) {
-    val currentElement: GameDataElement
-        get() = data[SystemFlag.player!!][SystemFlag.difficulty!!.name]
-
-    data class GameDataElement(
-        val score: GdxArray<ScoreEntry> = GdxArray(),
-        val practiceHighScore: GdxMap<String, Long> = GdxMap(),
-        val spell: GdxMap<String, SpellEntry> = GdxMap(),
-    )
-
-    data class ScoreEntry(
-        var name: String,
-        var date: Date,
-        var score: Long,
-        var stage: String,
-    ) {
-        @Suppress("unused")
-        private constructor() : this("", Date(), 0L, "")
+class SaveScreen : BasicScreen("", getRegion("bg/generic.png")) {
+    val keyboard = GridKeyboard {
+        val saveObject = SystemFlag.saveObject!!
+        if (saveObject is GameData.ScoreEntry) {
+            saveObject.name = it
+            gameData.currentElement.score.add(saveObject)
+            SystemFlag.saveObject = null
+            saveGameData()
+            onQuit()
+        }
+    }.register(st, input).apply {
+        setPosition(330f, 550f)
     }
 
-    data class SpellEntry(
-        var highScore: Long = 0L,
-        var totalAttempt: Int = 0,
-        var successfulAttempt: Int = 0,
-    )
+    override fun onQuit() {
+        super.onQuit()
+        app.setScreen("game", 0.5f)
+    }
 }

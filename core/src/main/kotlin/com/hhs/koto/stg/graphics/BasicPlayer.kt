@@ -366,9 +366,10 @@ open class BasicPlayer(
             if (game.life.completedCount > 0) {
                 game.life.removeCompleted(1)
             } else {
-                if (game.credit > 0) {
-                    game.credit--
-                    game.usedCredit = true
+                if (game.creditCount < game.maxCredit) {
+                    game.maxCredit--
+                    game.creditCount++
+                    game.score = 0L
                     game.state = GameState.GAME_OVER
                     task {
                         wait(10)

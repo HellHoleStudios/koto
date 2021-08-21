@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 
 class FontScaleAction : TemporalAction() {
-
     var startX = 0f
     var startY = 0f
     var endX = 0f
@@ -20,15 +19,12 @@ class FontScaleAction : TemporalAction() {
     override fun update(percent: Float) {
         val t = target as Label
         when (percent) {
-            0f -> {
-                t.setFontScale(startX, startY)
-            }
-            1f -> {
-                t.setFontScale(endX, endY)
-            }
-            else -> {
-                t.setFontScale(startX + (endX - startX) * percent, startY + (endY - startY) * percent)
-            }
+            0f -> t.setFontScale(startX, startY)
+            1f -> t.setFontScale(endX, endY)
+            else -> t.setFontScale(
+                startX + (endX - startX) * percent,
+                startY + (endY - startY) * percent,
+            )
         }
     }
 }

@@ -51,6 +51,7 @@ object SystemFlag {
     var name: String? = null
     var difficulty: GameDifficulty? = null
     var player: String? = null
+    var saveObject: Any? = null
 }
 
 val json = Json().apply {
@@ -130,6 +131,15 @@ val json = Json().apply {
                 jsonValue[1].asString(),
                 jsonValue[2].asString(),
             )
+        }
+    })
+    setSerializer(Date::class.java, object : JsonSerializer<Date> {
+        override fun write(json: Json, value: Date, type: Class<*>?) {
+            json.writeValue(value.time)
+        }
+
+        override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): Date {
+            return Date(jsonValue.asLong())
         }
     })
 }

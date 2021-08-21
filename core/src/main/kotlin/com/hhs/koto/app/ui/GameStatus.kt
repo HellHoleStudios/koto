@@ -28,10 +28,9 @@ package com.hhs.koto.app.ui
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -42,7 +41,6 @@ import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plus
-import ktx.actors.txt
 import ktx.graphics.copy
 import java.lang.Long.max
 import kotlin.math.roundToInt
@@ -64,27 +62,27 @@ class GameStatus(val game: KotoGame) : Group() {
     private val iconAtlas: TextureAtlas = A["ui/icon.atlas"]
 
     private var delay = 0.1f
-    private var delay1 = -1f
-    private var delay2 = -1f
+    private val lifeDelay: Float
+    private val bombDelay: Float
 
-    var tot = 0f
+    var counter = 0f
     var lifeAlpha = 0f
     var bombAlpha = 0f
 
-    fun addDelayAction(me: Actor) {
+    private fun addDelayAction(me: Actor) {
         me.alpha = 0f
-        me.addAction(Actions.delay(delay) + Actions.fadeIn(0.5f))
+        me.addAction(delay(delay) + fadeIn(0.5f))
         delay += 0.02f
     }
 
-    fun addScaleAction(me: Actor) {
+    private fun addScaleAction(me: Actor) {
         me.scaleX = 0f
         me.setOrigin(Align.center)
-        me.addAction(Actions.delay(delay) + Actions.scaleTo(1f, 1f, 0.5f))
+        me.addAction(delay(delay) + scaleTo(1f, 1f, 0.5f))
         delay += 0.1f
     }
 
-    fun getTempHighScore(): Long {
+    private fun getHighScore(): Long {
         var tmpHighScore = 0L
         when (SystemFlag.gamemode!!) {
             GameMode.STORY, GameMode.EXTRA -> {
@@ -99,12 +97,11 @@ class GameStatus(val game: KotoGame) : Group() {
                 tmpHighScore = gameData.currentElement.spell[SystemFlag.name!!].highScore
             }
         }
-
         return tmpHighScore
     }
 
     init {
-        //show difficulty
+        // difficulty
         addActor(Label(
             bundle["ui.game.status.difficulty.${SystemFlag.difficulty!!.name.lowercase()}"],
             Label.LabelStyle(
@@ -116,32 +113,19 @@ class GameStatus(val game: KotoGame) : Group() {
                 difficultyColor(SystemFlag.difficulty!!),
             ),
         ).apply {
-            setSize(410f,40f)
-            setPosition((72f+72f+864f)/2,36f+1008f,Align.top)
-            setAlignment(Align.top)
-            setOrigin(Align.center)
-            fontScaleY=0.1f
+            setBounds(980f, 1020f, 410f, 40f)
+            setAlignment(Align.bottom)
             addAction(
-                fontScaleTo(1f,1f,0.2f) + Actions.delay(2f) + Actions.moveTo(980f,1020f,0.5f, Interpolation.smooth)
+                repeat(
+                    4, sequence(
+                        alpha(0.1f, 0.2f),
+                        alpha(1f, 0.2f),
+                    )
+                )
             )
         })
-//
-//        addActor(Label(
-//            bundle["ui.game.status.difficulty.${SystemFlag.difficulty!!.name.lowercase()}"],
-//            Label.LabelStyle(
-//                getFont(
-//                    bundle["font.gameStatus.difficulty"],
-//                    32, Color.WHITE,
-//                    borderWidth = 3f, borderColor = Color(0.8f, 0f, 0f, 1f),
-//                ),
-//                difficultyColor(SystemFlag.difficulty!!),
-//            ),
-//        ).apply {
-//            setBounds(980f, 1020f, 410f, 40f)
-//            setAlignment(Align.bottom)
-//        })
 
-        //high score
+        // high score
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(930f, 960f, 500f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -160,7 +144,7 @@ class GameStatus(val game: KotoGame) : Group() {
         })
 
         highScore = Label(
-            String.format("%,d", getTempHighScore()),
+            String.format("%,d", getHighScore()),
             Label.LabelStyle(
                 getFont(bundle["font.gameStatus.value"], 36, Color.RED),
                 Color(0f, 0f, 0.7f, 1f),
@@ -172,7 +156,7 @@ class GameStatus(val game: KotoGame) : Group() {
         }
         addActor(highScore)
 
-        //score
+        // score
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(930f, 920f, 500f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -202,7 +186,7 @@ class GameStatus(val game: KotoGame) : Group() {
         }
         addActor(score)
 
-        //life
+        // life
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(930f, 810f, 500f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -243,9 +227,9 @@ class GameStatus(val game: KotoGame) : Group() {
         }
         addActor(lifePieces)
 
-        delay1 = delay
+        lifeDelay = delay
 
-        //bomb
+        // bomb
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(930f, 730f, 500f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -285,9 +269,9 @@ class GameStatus(val game: KotoGame) : Group() {
             addDelayAction(this)
         }
         addActor(bombPieces)
-        delay2 = delay
+        bombDelay = delay
 
-        //power
+        // power
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(1000f, 640f, 400f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -354,7 +338,7 @@ class GameStatus(val game: KotoGame) : Group() {
         }
         addActor(powerFraction)
 
-        //value
+        // value
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(1000f, 600f, 400f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -387,7 +371,7 @@ class GameStatus(val game: KotoGame) : Group() {
         }
         addActor(maxPoint)
 
-        //graze
+        // graze
         addActor(Image(getRegion("ui/bg.png")).apply {
             setBounds(1000f, 560f, 400f, 3f)
             color = Color(0f, 0f, 1f, 0.7f)
@@ -418,12 +402,12 @@ class GameStatus(val game: KotoGame) : Group() {
     }
 
     override fun act(delta: Float) {
-        tot += delta
-        lifeAlpha = lerp(0f, 1f, clamp(tot - delay1, 0f, 0.5f) / 0.5f)
-        bombAlpha = lerp(0f, 1f, clamp(tot - delay2, 0f, 0.5f) / 0.5f)
+        counter += delta
+        lifeAlpha = lerp(0f, 1f, clamp(counter - lifeDelay, 0f, 0.5f) / 0.5f)
+        bombAlpha = lerp(0f, 1f, clamp(counter - bombDelay, 0f, 0.5f) / 0.5f)
 
         score.setText(String.format("%,d", game.score))
-        highScore.setText(String.format("%,d", max(game.score, getTempHighScore())))
+        highScore.setText(String.format("%,d", max(game.score, getHighScore())))
         lifePieces.setText(String.format("%d / %d", game.life.fragmentCount, game.life.fragmentFactor))
         bombPieces.setText(String.format("%d / %d", game.bomb.fragmentCount, game.bomb.fragmentFactor))
         val (tmpInteger2, tmpFraction2) = splitDecimal(game.power)

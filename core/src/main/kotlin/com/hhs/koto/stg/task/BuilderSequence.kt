@@ -54,7 +54,7 @@ class BuilderSequence(vararg builder: TaskBuilder) : TaskBuilder {
                 }
             }
             if (currentIndex >= builders.size) {
-                alive = true
+                alive = false
                 return
             }
         }

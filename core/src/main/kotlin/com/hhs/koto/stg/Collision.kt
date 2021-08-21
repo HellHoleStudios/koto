@@ -28,7 +28,6 @@ package com.hhs.koto.stg
 import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.clamp
 import com.hhs.koto.util.dist2
-import com.hhs.koto.util.sqr
 import kotlin.math.abs
 
 object Collision {
@@ -49,21 +48,22 @@ object Collision {
         if (!squareSquare(x1, y1, r1 * 2, x2, y2, r2 * 2)) {
             return false
         }
-        return dist2(x1, y1, x2, y2) <= sqr(r1 + r2)
+        val r = r1 + r2
+        return dist2(x1, y1, x2, y2) <= r * r
     }
 
     fun circleCircleOrtho(x1: Float, y1: Float, r1: Float, x2: Float, y2: Float, r2: Float): Boolean {
         if (!squareSquare(x1, y1, r1 * 2, x2, y2, r2 * 2)) {
             return false
         }
-        return dist2(x1, y1, x2, y2) <= sqr(r1) + sqr(r2)
+        return dist2(x1, y1, x2, y2) <= r1 * r1 + r2 * r2
     }
 
     fun circleRect(x1: Float, y1: Float, r: Float, x2: Float, y2: Float, w: Float, h: Float) =
-        dist2(x1, y1, clamp(x1, x2 - w / 2, x2 + w / 2), clamp(y1, y2 - h / 2, y2 + h / 2)) <= sqr(r)
+        dist2(x1, y1, clamp(x1, x2 - w / 2, x2 + w / 2), clamp(y1, y2 - h / 2, y2 + h / 2)) <= r * r
 
     fun circleSquare(x1: Float, y1: Float, r: Float, x2: Float, y2: Float, s: Float) =
-        dist2(x1, y1, clamp(x1, x2 - s / 2, x2 + s / 2), clamp(y1, y2 - s / 2, y2 + s / 2)) <= sqr(r)
+        dist2(x1, y1, clamp(x1, x2 - s / 2, x2 + s / 2), clamp(y1, y2 - s / 2, y2 + s / 2)) <= r * r
 
     fun rectRect(x1: Float, y1: Float, w1: Float, h1: Float, x2: Float, y2: Float, w2: Float, h2: Float) =
         abs(x1 - x2) <= (w1 + w2) / 2 && abs(y1 - y2) <= (h1 + h2) / 2

@@ -28,9 +28,7 @@ package com.hhs.koto.stg.graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
@@ -38,7 +36,6 @@ import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
-import space.earlygrey.shapedrawer.ShapeDrawer
 
 class SpellInfoDisplay(
     name: String,
@@ -76,42 +73,43 @@ class SpellInfoDisplay(
         gameData.currentElement.spell[name].totalAttempt,
     )
 
-    var deltax1 = -384f
-    var deltax2 = 200f
-    var deltascale = 1.5f
-    var fontscale = 24f
-    var alpha1 = 0f
-    var alpha2 = 0f
+    var backgroundOffset = -384f
+    var nameOffset = 200f
+    var deltaScale = 1.5f
+    var fontScale = 24f
+    var alpha = 0f
+    var nameAlpha = 0f
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val aabb = Rectangle(x-256f,y-50f,300f,100f)
-        val alpha = if(t>=150 && aabb.contains(game.player.x,game.player.y)){
-            0.3f
-        }else{
-            1f
-        }
-        ShapeDrawer(batch, getRegion("ui/bg.png")).rectangle(aabb)
+        val distanceAlpha = lerp(
+            1f,
+            lerp(
+                0.1f, 1f,
+                Rectangle(x - 200f, y - 10f, 300f, 60f).distanceTo(playerX, playerY) / 30f,
+            ),
+            (t - 90f) / 60f,
+        )
 
-        background.setPosition(x + deltax1, y)
-        background.setScale(deltascale)
+        background.setPosition(x + backgroundOffset, y)
+        background.setScale(deltaScale)
         background.color = backgroundColor
-        background.draw(batch, parentAlpha * alpha1 * alpha)
+        background.draw(batch, parentAlpha * alpha * distanceAlpha)
         historyText.setPosition(x - 85f, y - 6f)
-        historyText.draw(batch, parentAlpha * alpha1 * alpha)
+        historyText.draw(batch, parentAlpha * alpha * distanceAlpha)
         bonusText.setPosition(x - 180f, y - 6f)
-        bonusText.draw(batch, parentAlpha * alpha1 * alpha)
+        bonusText.draw(batch, parentAlpha * alpha * distanceAlpha)
 
         nameFont.draw(
             batch,
-            parentAlpha * alpha2 * alpha,
+            parentAlpha * nameAlpha * distanceAlpha,
             spellName,
-            fontscale / 24,
-            x + deltax2,
+            fontScale / 24,
+            x + nameOffset,
             y + 20f,
             halign = Align.right,
         )
         infoFont.draw(
             batch,
-            parentAlpha * alpha1 * alpha,
+            parentAlpha * alpha * distanceAlpha,
             spellHistory,
             10f / 20,
             x - 45f,
@@ -119,7 +117,7 @@ class SpellInfoDisplay(
         )
         infoFont.draw(
             batch,
-            parentAlpha * alpha1 * alpha,
+            parentAlpha * alpha * distanceAlpha,
             if (failed) "Failed" else bonus.toString(),
             10f / 20,
             x - 140f,
@@ -129,14 +127,14 @@ class SpellInfoDisplay(
 
     override fun tick() {
         if (t <= 30) {
-            deltax2 = smoothstep(-128f,-10f,t/30f)
-            fontscale = smoothstep(36f,12f,t/30f)
-            alpha2 = lerp(0f, 1f, t / 30f)
+            nameOffset = smoothstep(-120f, -10f, t / 30f)
+            fontScale = smoothstep(36f, 12f, t / 30f)
+            nameAlpha = lerp(0f, 1f, t / 30f)
         }
-        if(t in 45..75){
-            deltax1 = smoothstep(-384f,-256f,(t-45f)/30f)
-            alpha1 = lerp(0f, 1f, (t-45f) / 30f)
-            deltascale = smoothstep(1.5f,1f,(t-45f)/30f)
+        if (t in 45..75) {
+            backgroundOffset = smoothstep(-384f, -256f, (t - 45f) / 30f)
+            deltaScale = smoothstep(1.5f, 1f, (t - 45f) / 30f)
+            alpha = lerp(0f, 1f, (t - 45f) / 30f)
         }
         if (t in 90..150) {
             y = smoothstep(targetY - worldH + 60, targetY, (t - 90f) / 60f)

@@ -32,18 +32,18 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move
+import com.hhs.koto.stg.task.BasicStage
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.StageBuilder
 import com.hhs.koto.stg.task.attachAndWait
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
-class Stage1 : StageBuilder {
+class Stage1 : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
     override val name = "stage1"
 
-    override fun build() = CoroutineTask {
+    override fun stage() = CoroutineTask {
         game.background.addDrawable(
             TileBackground(
                 getRegion("st1/water.png"),

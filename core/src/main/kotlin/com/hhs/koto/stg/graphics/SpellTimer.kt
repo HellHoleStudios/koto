@@ -34,7 +34,6 @@ import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
-import space.earlygrey.shapedrawer.ShapeDrawer
 
 class SpellTimer(
     override var x: Float = 0f,
@@ -100,22 +99,19 @@ class SpellTimer(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        val aabb = Rectangle(x-50f,y-50f,100f,100f)
-        val alpha = if(aabb.contains(game.player.x,game.player.y)){
-            0.3f
-        }else{
-            1f
-        }
-        ShapeDrawer(batch, getRegion("ui/bg.png")).rectangle(aabb)
+        val distanceAlpha = lerp(
+            0.1f, 1f,
+            Rectangle(x - 20f, y - 20f, 40f, 40f).distanceTo(playerX, playerY) / 30f,
+        )
 
         var oldScale = integer.fontScale
         integer.fontScale *= scale
-        integer.draw(batch, parentAlpha*alpha, subFrameTime)
+        integer.draw(batch, parentAlpha * distanceAlpha, subFrameTime)
         integer.fontScale = oldScale
 
         oldScale = fraction.fontScale
         fraction.fontScale *= scale
-        fraction.draw(batch, parentAlpha*alpha, subFrameTime)
+        fraction.draw(batch, parentAlpha * distanceAlpha, subFrameTime)
         fraction.fontScale = oldScale
     }
 

@@ -49,6 +49,7 @@ import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
+import java.util.*
 
 class KotoGame : Disposable {
     var state: GameState = GameState.RUNNING
@@ -147,14 +148,15 @@ class KotoGame : Disposable {
     val event = EventManager()
 
     lateinit var player: Player
+    lateinit var currentStage: String
     var maxPoint: Long = 10000
     var maxPointHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
-    var credit: Int = when (SystemFlag.gamemode!!) {
+    var maxCredit: Int = when (SystemFlag.gamemode!!) {
         GameMode.SPELL_PRACTICE -> 0
         else -> difficultySelect(3, 3, 4, 5)
     }
-    var usedCredit: Boolean = false
+    var creditCount: Int = 0
     val initialLife: FragmentCounter = when (SystemFlag.gamemode!!) {
         GameMode.SPELL_PRACTICE -> FragmentCounter(3, 0, 0)
         GameMode.STAGE_PRACTICE -> FragmentCounter(3, 8, 0)
@@ -174,6 +176,13 @@ class KotoGame : Disposable {
     init {
         logger.info("Game instance created.")
     }
+
+    fun createScoreEntry(): GameData.ScoreEntry = GameData.ScoreEntry(
+        "",
+        Date(),
+        game.score,
+        game.currentStage,
+    )
 
     fun update() {
         speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
@@ -206,6 +215,7 @@ class KotoGame : Disposable {
     }
 
     fun end() {
+        currentStage = "clear"
         state = if (SystemFlag.gamemode == GameMode.SPELL_PRACTICE || SystemFlag.gamemode == GameMode.STAGE_PRACTICE) {
             GameState.FINISH_PRACTICE
         } else {

@@ -35,12 +35,14 @@ import com.crashinvaders.vfx.effects.GaussianBlurEffect
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameBuilder
+import com.hhs.koto.stg.GameData
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.GameState
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.actors.then
+import java.util.*
 
 class GameScreen : BasicScreen(null, null) {
 
@@ -104,7 +106,8 @@ class GameScreen : BasicScreen(null, null) {
             isVisible = false
         })
         pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.saveScore"], 36, gridX = 0, gridY = 1) {
-            // TODO
+            SystemFlag.saveObject = game.createScoreEntry()
+            app.setScreen("save", 0.5f)
         }.apply {
             disable()
             isVisible = false
@@ -195,7 +198,7 @@ class GameScreen : BasicScreen(null, null) {
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
-        reset()
+        if (oldScreen !is SaveScreen) reset()
     }
 
     fun resumeGame() {
@@ -223,9 +226,9 @@ class GameScreen : BasicScreen(null, null) {
         resumeButton.isVisible = game.state == GameState.PAUSED
         continueButton.enabled = game.state == GameState.GAME_OVER
         continueButton.isVisible = game.state == GameState.GAME_OVER || game.state == GameState.GAME_OVER_NO_CREDIT
-        saveScoreButton.enabled = !game.usedCredit && game.state == GameState.FINISH
+        saveScoreButton.enabled = game.state == GameState.FINISH
         saveScoreButton.isVisible = game.state == GameState.FINISH || game.state == GameState.FINISH_PRACTICE
-        saveReplayButton.enabled = !game.usedCredit
+        saveReplayButton.enabled = game.creditCount == 0
 
         (pauseMenu.grid.last() as GridLabel).setText(
             when (game.state) {

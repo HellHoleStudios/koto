@@ -86,7 +86,6 @@ object GameBuilder {
         return spells.filter { SystemFlag.difficulty in it.availableDifficulties }
     }
 
-
     fun buildStagePractice(name: String, difficulty: GameDifficulty): KotoGame {
         gameData.practiceCount++
         saveGameData()
@@ -94,11 +93,12 @@ object GameBuilder {
         if (difficulty !in stageBuilder.availableDifficulties) {
             throw KotoRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
         }
-        return buildGameWithTask(BuilderSequence(stageBuilder, taskBuilder {
-            RunnableTask {
-                game.end()
-            }
-        }).build())
+        return buildGameWithTask(
+            BuilderSequence(
+                stageBuilder,
+                taskBuilder { RunnableTask { game.end() } },
+            ).build()
+        )
     }
 
     fun buildSpellPractice(name: String, difficulty: GameDifficulty): KotoGame {

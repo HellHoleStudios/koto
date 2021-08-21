@@ -25,7 +25,6 @@
 
 package com.hhs.koto.util
 
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import kotlin.math.sqrt
@@ -69,8 +68,21 @@ fun normalizeAngle(angle: Float): Float {
     return angle1
 }
 
-fun sqr(x: Float): Float =
-    x * x
+fun min(vararg x: Float): Float = x.minOrNull()!!
+
+fun min(vararg x: Double): Double = x.minOrNull()!!
+
+fun min(vararg x: Int): Int = x.minOrNull()!!
+
+fun min(vararg x: Long): Long = x.minOrNull()!!
+
+fun max(vararg x: Float): Float = x.maxOrNull()!!
+
+fun max(vararg x: Double): Double = x.maxOrNull()!!
+
+fun max(vararg x: Int): Int = x.maxOrNull()!!
+
+fun max(vararg x: Long): Long = x.maxOrNull()!!
 
 fun sqrt(x: Float): Float =
     sqrt(x.toDouble()).toFloat()
@@ -81,11 +93,17 @@ fun len2(x: Float, y: Float): Float =
 fun len(x: Float, y: Float): Float =
     sqrt(x * x + y * y)
 
-fun dist(x1: Float, y1: Float, x2: Float, y2: Float): Float =
-    sqrt(sqr(x1 - x2) + sqr(y1 - y2))
+fun dist(x1: Float, y1: Float, x2: Float, y2: Float): Float {
+    val deltaX = x1 - x2
+    val deltaY = y1 - y2
+    return sqrt(deltaX * deltaX + deltaY * deltaY)
+}
 
-fun dist2(x1: Float, y1: Float, x2: Float, y2: Float): Float =
-    sqr(x1 - x2) + sqr(y1 - y2)
+fun dist2(x1: Float, y1: Float, x2: Float, y2: Float): Float {
+    val deltaX = x1 - x2
+    val deltaY = y1 - y2
+    return deltaX * deltaX + deltaY * deltaY
+}
 
 fun atan2(y: Float, x: Float): Float =
     MathUtils.atan2(y, x) * MathUtils.radiansToDegrees
@@ -100,11 +118,18 @@ fun cos(degrees: Float): Float = MathUtils.cosDeg(degrees)
 fun tan(degrees: Float): Float =
     kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble()).toFloat() * MathUtils.radiansToDegrees
 
-fun lerp(start: Float, end: Float, a: Float): Float =
-    Interpolation.linear.apply(start, end, a)
+fun lerp(start: Float, end: Float, a: Float): Float {
+    if (a < 0f) return start
+    if (a > 1f) return end
+    return (end - start) * a + start
+}
 
-fun smoothstep(start: Float, end: Float, a: Float): Float =
-    Interpolation.smooth.apply(start, end, a)
+
+fun smoothstep(start: Float, end: Float, a: Float): Float {
+    if (a < 0f) return start
+    if (a > 1f) return end
+    return (end - start) * a * a * (3 - 2 * a) + start
+}
 
 private val tmpRectangle = Rectangle()
 fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {
@@ -115,4 +140,10 @@ fun Rectangle.contains(x: Float, y: Float, rx: Float, ry: Float): Boolean {
 fun Rectangle.overlaps(x: Float, y: Float, rx: Float, ry: Float): Boolean {
     tmpRectangle.set(x - rx, y - ry, rx * 2, ry * 2)
     return overlaps(tmpRectangle)
+}
+
+fun Rectangle.distanceTo(x: Float, y: Float): Float {
+    val deltaX = max(this.x - x, 0f, x - this.x - width)
+    val deltaY = max(this.y - y, 0f, y - this.y - height)
+    return sqrt(deltaX * deltaX + deltaY * deltaY)
 }
