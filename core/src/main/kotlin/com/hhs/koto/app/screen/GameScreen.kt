@@ -218,7 +218,7 @@ class GameScreen : BasicScreen(null, null) {
         val resumeButton = pauseMenu[0] as GridButton
         val continueButton = pauseMenu[1] as GridButton
         val saveScoreButton = pauseMenu[2] as GridButton
-        val saveReplayButton = pauseMenu[4] as GridButton
+        val saveReplayButton = pauseMenu[3] as GridButton
         resumeButton.enabled = game.state == GameState.PAUSED
         resumeButton.isVisible = game.state == GameState.PAUSED
         continueButton.enabled = game.state == GameState.GAME_OVER

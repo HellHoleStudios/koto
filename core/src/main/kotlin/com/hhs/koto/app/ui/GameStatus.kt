@@ -26,6 +26,8 @@
 package com.hhs.koto.app.ui
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -36,6 +38,7 @@ import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.util.*
 import ktx.graphics.copy
+import kotlin.math.roundToInt
 
 class GameStatus(val game: KotoGame) : Group() {
     companion object {
@@ -43,14 +46,15 @@ class GameStatus(val game: KotoGame) : Group() {
             DifficultySelectScreen.difficultyColor(difficulty).copy(blue = 1f)
     }
 
-    val highScore: Label
-    val score: Label
-    val lifePieces: Label
-    val bombPieces: Label
-    val powerInteger: Label
-    val powerFraction: Label
-    val maxPoint: Label
-    val graze: Label
+    private val highScore: Label
+    private val score: Label
+    private val lifePieces: Label
+    private val bombPieces: Label
+    private val powerInteger: Label
+    private val powerFraction: Label
+    private val maxPoint: Label
+    private val graze: Label
+    private val iconAtlas: TextureAtlas = A["ui/icon.atlas"]
 
     init {
         addActor(Label(
@@ -325,5 +329,54 @@ class GameStatus(val game: KotoGame) : Group() {
         maxPoint.setText(String.format("%,d", game.maxPoint))
         graze.setText(String.format("%,d", game.graze))
         super.act(delta)
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float) {
+        super.draw(batch, parentAlpha)
+        val tmpColor = batch.color.cpy()
+        batch.setColor(1f, 1f, 1f, parentAlpha)
+        for (i in 0 until 8) {
+            if (i < game.life.completedCount) {
+                batch.draw(
+                    iconAtlas.findRegion("life_icon", 5),
+                    x + 1130f + 32f * i, y + 840f, 32f, 36f,
+                )
+            } else if (i == game.life.completedCount) {
+                batch.draw(
+                    iconAtlas.findRegion(
+                        "life_icon",
+                        (game.life.fragmentCount.toFloat() / game.life.fragmentFactor * 5).roundToInt(),
+                    ),
+                    x + 1130f + 32f * i, y + 840f, 32f, 36f,
+                )
+            } else {
+                batch.draw(
+                    iconAtlas.findRegion("life_icon", 0),
+                    x + 1130f + 32f * i, y + 840f, 32f, 36f,
+                )
+            }
+        }
+        for (i in 0 until 8) {
+            if (i < game.bomb.completedCount) {
+                batch.draw(
+                    iconAtlas.findRegion("bomb_icon", 5),
+                    x + 1130f + 32f * i, y + 760f, 32f, 36f,
+                )
+            } else if (i == game.bomb.completedCount) {
+                batch.draw(
+                    iconAtlas.findRegion(
+                        "bomb_icon",
+                        (game.bomb.fragmentCount.toFloat() / game.bomb.fragmentFactor * 5).roundToInt(),
+                    ),
+                    x + 1130f + 32f * i, y + 760f, 32f, 36f,
+                )
+            } else {
+                batch.draw(
+                    iconAtlas.findRegion("bomb_icon", 0),
+                    x + 1130f + 32f * i, y + 760f, 32f, 36f,
+                )
+            }
+        }
+        batch.color = tmpColor
     }
 }

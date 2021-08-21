@@ -30,7 +30,10 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.*
+import com.hhs.koto.util.A
+import com.hhs.koto.util.WHITE_HSV
+import com.hhs.koto.util.bundle
+import com.hhs.koto.util.clamp
 import ktx.collections.GdxArray
 
 class ScoreParticle(
@@ -76,7 +79,7 @@ class ScoreParticle(
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         val baseX = x - boundingRadiusX / 2
         val baseY = y - boundingRadiusY / 2
-        tmpColor.set(batch.color)
+        val tmpColor = batch.color.cpy()
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         for (i in 0 until digits.size) {
             val stage = getStage(i)

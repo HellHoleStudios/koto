@@ -164,7 +164,7 @@ open class BasicBullet(
                 tmpY += deltaY * subFrameTime
             }
             val texture = data.texture.getFrame(t)
-            tmpColor.set(batch.color)
+            val tmpColor = batch.color.cpy()
             if (t >= delay) {
                 val bulletColor = data.color.tintHSV(tint)
                 bulletColor.a *= parentAlpha

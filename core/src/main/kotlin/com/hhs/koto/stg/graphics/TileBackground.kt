@@ -36,7 +36,6 @@ import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.safeMod
-import com.hhs.koto.util.tmpColor
 
 class TileBackground(
     val texture: TextureRegion,
@@ -77,7 +76,7 @@ class TileBackground(
             0
         }
         val endIndexY: Int = ceil((height - tmpOffsetY) / tileHeight)
-        tmpColor.set(batch.color)
+        val tmpColor = batch.color.cpy()
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         for (xIndex in startIndexX until endIndexX) {
             for (yIndex in startIndexY until endIndexY) {

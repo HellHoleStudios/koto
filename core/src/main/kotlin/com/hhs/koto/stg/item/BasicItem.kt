@@ -110,7 +110,7 @@ open class BasicItem(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         if (!outOfFrame(x, y, boundingRadiusX, boundingRadiusY)) {
-            tmpColor.set(batch.color)
+            val tmpColor = batch.color.cpy()
             batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
             var tmpX = x
             var tmpY = y

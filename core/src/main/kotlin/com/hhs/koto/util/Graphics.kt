@@ -102,8 +102,6 @@ fun Batch.setBlending(blending: BlendingMode) {
     Gdx.gl.glBlendEquationSeparate(blending.equationRGB, blending.equationAlpha)
 }
 
-var tmpColor: Color = Color.WHITE
-
 operator fun Color.plus(other: Color): Color = this.copy().add(other)
 
 operator fun Color.plusAssign(other: Color) {

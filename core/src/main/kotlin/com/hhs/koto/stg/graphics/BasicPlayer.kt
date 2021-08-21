@@ -107,7 +107,7 @@ open class BasicPlayer(
         game.normalBatch.projectionMatrix = batch.projectionMatrix
         game.normalBatch.begin()
 
-        tmpColor.set(game.normalBatch.color)
+        val tmpColor = game.normalBatch.color.cpy()
         game.normalBatch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
 
         val tmpX: Float = if (playerState == PlayerState.RESPAWNING) {
@@ -370,9 +370,11 @@ open class BasicPlayer(
                     game.credit--
                     game.usedCredit = true
                     game.state = GameState.GAME_OVER
-                    yield()
-                    game.life.set(game.initialLife)
-                    game.bomb.set(game.initialBomb)
+                    task {
+                        wait(10)
+                        game.life.set(game.initialLife)
+                        game.bomb.set(game.initialBomb)
+                    }
                 } else {
                     game.state = GameState.GAME_OVER_NO_CREDIT
                 }

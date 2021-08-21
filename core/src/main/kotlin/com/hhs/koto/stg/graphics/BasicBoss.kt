@@ -123,7 +123,7 @@ abstract class BasicBoss(
         magicCircle.draw(batch, parentAlpha, x, y)
         spellAttackCircle.draw(batch, parentAlpha, subFrameTime)
 
-        tmpColor.set(batch.color)
+        val tmpColor = batch.color.cpy()
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
         if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
             batch.draw(

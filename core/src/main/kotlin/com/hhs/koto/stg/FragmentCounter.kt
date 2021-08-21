@@ -45,7 +45,7 @@ class FragmentCounter(
     fun update() {
         val remainder = safeMod(fragmentCount, fragmentFactor)
         val quotient = (fragmentCount - remainder) / fragmentFactor
-        completedCount -= quotient
+        completedCount += quotient
         fragmentCount = remainder
     }
 
