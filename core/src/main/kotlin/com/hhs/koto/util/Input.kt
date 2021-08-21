@@ -104,6 +104,10 @@ enum class VK {
         override val keycodes
             get() = options.keyCustom
     },
+    RESTART {
+        override val keycodes
+            get() = options.keyRestart
+    },
     FULL_SCREEN {
         override val keycodes
             get() = options.keyFullScreen

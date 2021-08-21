@@ -169,21 +169,35 @@ class GameScreen : BasicScreen(null, null) {
                 passCounter >= 30 && VK.PAUSE.justPressed() && !blurredGameFrame.hasActions()
             ) {
                 resumeGame()
-            } else {
-                if (deltaTimeCounter >= 1 / 60f) {
-                    if (passCounter < 30) {
-                        if (passCounter == 0) {
-                            blurredGameFrame.alpha = 1f
-                            vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
-                        } else {
-                            vfxManager.useAsInput(vfxManager.resultBuffer.texture)
-                        }
-                        vfxManager.applyEffects()
-                        passCounter++
+            } else if (VK.RESTART.justPressed()) {
+                //same as above :) It's duplication!! Quick give me C!!
+                SE.play("ok")
+                confirmationMenu.deactivate()
+                pauseMenu.deactivate()
+                blurredGameFrame.addAction(
+                    sequence(
+                        fadeOut(0.5f, Interpolation.sine),
+                        Actions.run {
+                            game.dispose()
+                            reset()
+                        },
+                    )
+                )
+                gameFrame.alpha = 0f
+            } else if (deltaTimeCounter >= 1 / 60f) {
+                if (passCounter < 30) {
+                    if (passCounter == 0) {
+                        blurredGameFrame.alpha = 1f
+                        vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
+                    } else {
+                        vfxManager.useAsInput(vfxManager.resultBuffer.texture)
                     }
-                    deltaTimeCounter = 0f
+                    vfxManager.applyEffects()
+                    passCounter++
                 }
+                deltaTimeCounter = 0f
             }
+
         } else {
             // TODO replay check
             if (SystemFlag.gamemode!!.isPractice()) {

@@ -57,6 +57,7 @@ data class Options(
     var keyBomb: GdxArray<Int> = GdxArray.with(Keys.X),
     var keyPause: GdxArray<Int> = GdxArray.with(Keys.ESCAPE),
     var keyCustom: GdxArray<Int> = GdxArray.with(Keys.C),
+    var keyRestart: GdxArray<Int> = GdxArray.with(Keys.R),
     var keyFullScreen: GdxArray<Int> = GdxArray.with(Keys.F4),
     var keySpeedUp: GdxArray<Int> = GdxArray.with(Keys.CONTROL_LEFT),
     var locale: Locale = Locale.getDefault(),
