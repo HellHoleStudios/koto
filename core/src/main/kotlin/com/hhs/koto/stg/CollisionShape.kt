@@ -44,9 +44,9 @@ class CircleCollision(var radius: Float) : CollisionShape {
         return when (other) {
             is CircleCollision -> {
                 if (Config.orthoCircleCollision) {
-                    Collision.circleCircle(x1, y1, radius, x2, y2, other.radius)
-                } else {
                     Collision.circleCircleOrtho(x1, y1, radius, x2, y2, other.radius)
+                } else {
+                    Collision.circleCircle(x1, y1, radius, x2, y2, other.radius)
                 }
             }
             is AABBCollision -> Collision.circleRect(x1, y1, radius, x2, y2, other.boundingWidth, other.boundingHeight)
