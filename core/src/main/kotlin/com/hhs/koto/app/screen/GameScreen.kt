@@ -35,14 +35,12 @@ import com.crashinvaders.vfx.effects.GaussianBlurEffect
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameBuilder
-import com.hhs.koto.stg.GameData
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.GameState
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.actors.then
-import java.util.*
 
 class GameScreen : BasicScreen(null, null) {
 
@@ -172,7 +170,6 @@ class GameScreen : BasicScreen(null, null) {
             } else if (VK.RESTART.justPressed()) {
                 //same as above :) It's duplication!! Quick give me C!!
                 SE.play("ok")
-                confirmationMenu.deactivate()
                 pauseMenu.deactivate()
                 blurredGameFrame.addAction(
                     sequence(

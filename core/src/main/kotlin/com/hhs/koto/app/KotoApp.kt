@@ -64,6 +64,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     var input = InputMultiplexer()
     val logger = Logger("Main", Config.logLevel)
     var autoSaveCounter: Float = 0f
+    var currentScreen: KotoScreen? = null
 
     override fun create() {
         app = this
@@ -216,36 +217,36 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     }
 
     fun setScreen(name: String?) {
-        val scr: KotoScreen? = screens[name]
+        val newScreen: KotoScreen? = screens[name]
         screens.safeValues().filter { it.state.isRendered() }.forEach {
             it.hide()
             it.state = ScreenState.HIDDEN
         }
-        if (scr != null) {
+        if (newScreen != null) {
             logger.info("Switching to screen $name")
-            scr.resize(Gdx.graphics.width, Gdx.graphics.height)
-            scr.show()
-            scr.state = ScreenState.SHOWN
+            newScreen.resize(Gdx.graphics.width, Gdx.graphics.height)
+            newScreen.show()
+            newScreen.state = ScreenState.SHOWN
         } else {
             logger.info("Switching to no screen")
         }
+        currentScreen = newScreen
     }
 
     fun setScreen(name: String?, duration: Float) {
-        val scr: KotoScreen? = screens[name]
-        var oldScreen: KotoScreen? = null
+        val newScreen: KotoScreen? = screens[name]
         screens.safeValues().filter { it.state.isRendered() }.forEach {
-            it.fadeOut(scr, duration)
-            oldScreen = it
+            it.fadeOut(newScreen, duration)
         }
-        if (scr != null) {
+        if (newScreen != null) {
             logger.info("Switching to screen \"$name\" with fading time $duration")
-            scr.resize(Gdx.graphics.width, Gdx.graphics.height)
-            scr.fadeIn(oldScreen, duration)
-            scr.state = ScreenState.SHOWN
+            newScreen.resize(Gdx.graphics.width, Gdx.graphics.height)
+            newScreen.fadeIn(currentScreen, duration)
+            newScreen.state = ScreenState.SHOWN
         } else {
             logger.info("Switching to no screen")
         }
+        currentScreen = newScreen
     }
 }
 
