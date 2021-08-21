@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config.worldH
@@ -37,6 +38,7 @@ import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 class SpellInfoDisplay(
     name: String,
@@ -81,18 +83,26 @@ class SpellInfoDisplay(
     var alpha1 = 0f
     var alpha2 = 0f
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        val aabb = Rectangle(x-256f,y-50f,300f,100f)
+        val alpha = if(t>=150 && aabb.contains(game.player.x,game.player.y)){
+            0.3f
+        }else{
+            1f
+        }
+        ShapeDrawer(batch, getRegion("ui/bg.png")).rectangle(aabb)
+
         background.setPosition(x + deltax1, y)
         background.setScale(deltascale)
         background.color = backgroundColor
-        background.draw(batch, parentAlpha * alpha1)
+        background.draw(batch, parentAlpha * alpha1 * alpha)
         historyText.setPosition(x - 85f, y - 6f)
-        historyText.draw(batch, parentAlpha * alpha1)
+        historyText.draw(batch, parentAlpha * alpha1 * alpha)
         bonusText.setPosition(x - 180f, y - 6f)
-        bonusText.draw(batch, parentAlpha * alpha1)
+        bonusText.draw(batch, parentAlpha * alpha1 * alpha)
 
         nameFont.draw(
             batch,
-            parentAlpha * alpha2,
+            parentAlpha * alpha2 * alpha,
             spellName,
             fontscale / 24,
             x + deltax2,
@@ -101,7 +111,7 @@ class SpellInfoDisplay(
         )
         infoFont.draw(
             batch,
-            parentAlpha * alpha1,
+            parentAlpha * alpha1 * alpha,
             spellHistory,
             10f / 20,
             x - 45f,
@@ -109,7 +119,7 @@ class SpellInfoDisplay(
         )
         infoFont.draw(
             batch,
-            parentAlpha * alpha1,
+            parentAlpha * alpha1 * alpha,
             if (failed) "Failed" else bonus.toString(),
             10f / 20,
             x - 140f,

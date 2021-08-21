@@ -28,11 +28,13 @@ package com.hhs.koto.stg.graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 class SpellTimer(
     override var x: Float = 0f,
@@ -98,14 +100,22 @@ class SpellTimer(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        val aabb = Rectangle(x-50f,y-50f,100f,100f)
+        val alpha = if(aabb.contains(game.player.x,game.player.y)){
+            0.3f
+        }else{
+            1f
+        }
+        ShapeDrawer(batch, getRegion("ui/bg.png")).rectangle(aabb)
+
         var oldScale = integer.fontScale
         integer.fontScale *= scale
-        integer.draw(batch, parentAlpha, subFrameTime)
+        integer.draw(batch, parentAlpha*alpha, subFrameTime)
         integer.fontScale = oldScale
 
         oldScale = fraction.fontScale
         fraction.fontScale *= scale
-        fraction.draw(batch, parentAlpha, subFrameTime)
+        fraction.draw(batch, parentAlpha*alpha, subFrameTime)
         fraction.fontScale = oldScale
     }
 
