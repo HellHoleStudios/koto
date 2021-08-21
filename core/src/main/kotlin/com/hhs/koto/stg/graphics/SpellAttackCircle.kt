@@ -99,7 +99,12 @@ class SpellAttackCircle(
 
         when (state) {
             0 -> {
-                size = Interpolation.pow5.apply(0f, (1 - getTimePercent()) * maxSize, t / (0f + setupTime))
+                size = if(t<=setupTime/2){
+                    Interpolation.pow5Out.apply(0f, (1 - getTimePercent()) * maxSize*2, t / (0f + setupTime))
+                }else{
+                    Interpolation.pow5In.apply((1 - getTimePercent()) * maxSize * 2, (1 - getTimePercent()) * maxSize, t / (0f + setupTime))
+                }
+                
                 if (t == setupTime) {
                     state = 1
                     t = 0
