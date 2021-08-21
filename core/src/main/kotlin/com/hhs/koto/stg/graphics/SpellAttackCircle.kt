@@ -104,7 +104,7 @@ class SpellAttackCircle(
                 }else{
                     Interpolation.pow5In.apply((1 - getTimePercent()) * maxSize * 2, (1 - getTimePercent()) * maxSize, t / (0f + setupTime))
                 }
-                
+
                 if (t == setupTime) {
                     state = 1
                     t = 0
