@@ -28,6 +28,7 @@ package com.hhs.koto.app.ui
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -65,6 +66,10 @@ class GameStatus(val game: KotoGame) : Group() {
     private var delay = 0.1f
     private var delay1 = -1f
     private var delay2 = -1f
+
+    var tot = 0f
+    var lifeAlpha = 0f
+    var bombAlpha = 0f
 
     fun addDelayAction(me: Actor) {
         me.alpha = 0f
@@ -111,9 +116,30 @@ class GameStatus(val game: KotoGame) : Group() {
                 difficultyColor(SystemFlag.difficulty!!),
             ),
         ).apply {
-            setBounds(980f, 1020f, 410f, 40f)
-            setAlignment(Align.bottom)
+            setSize(410f,40f)
+            setPosition((72f+72f+864f)/2,36f+1008f,Align.top)
+            setAlignment(Align.top)
+            setOrigin(Align.center)
+            fontScaleY=0.1f
+            addAction(
+                fontScaleTo(1f,1f,0.2f) + Actions.delay(2f) + Actions.moveTo(980f,1020f,0.5f, Interpolation.smooth)
+            )
         })
+//
+//        addActor(Label(
+//            bundle["ui.game.status.difficulty.${SystemFlag.difficulty!!.name.lowercase()}"],
+//            Label.LabelStyle(
+//                getFont(
+//                    bundle["font.gameStatus.difficulty"],
+//                    32, Color.WHITE,
+//                    borderWidth = 3f, borderColor = Color(0.8f, 0f, 0f, 1f),
+//                ),
+//                difficultyColor(SystemFlag.difficulty!!),
+//            ),
+//        ).apply {
+//            setBounds(980f, 1020f, 410f, 40f)
+//            setAlignment(Align.bottom)
+//        })
 
         //high score
         addActor(Image(getRegion("ui/bg.png")).apply {
@@ -217,7 +243,7 @@ class GameStatus(val game: KotoGame) : Group() {
         }
         addActor(lifePieces)
 
-        delay1=delay
+        delay1 = delay
 
         //bomb
         addActor(Image(getRegion("ui/bg.png")).apply {
@@ -259,7 +285,7 @@ class GameStatus(val game: KotoGame) : Group() {
             addDelayAction(this)
         }
         addActor(bombPieces)
-        delay2=delay
+        delay2 = delay
 
         //power
         addActor(Image(getRegion("ui/bg.png")).apply {
@@ -391,14 +417,10 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(graze)
     }
 
-    var tot = 0f
-    var lifeAlpha = 0f
-    var bombAlpha = 0f
-
     override fun act(delta: Float) {
         tot += delta
-        lifeAlpha=lerp(0f,1f,clamp(tot-delay1,0f,0.5f)/0.5f)
-        bombAlpha=lerp(0f,1f,clamp(tot-delay2,0f,0.5f)/0.5f)
+        lifeAlpha = lerp(0f, 1f, clamp(tot - delay1, 0f, 0.5f) / 0.5f)
+        bombAlpha = lerp(0f, 1f, clamp(tot - delay2, 0f, 0.5f) / 0.5f)
 
         score.setText(String.format("%,d", game.score))
         highScore.setText(String.format("%,d", max(game.score, getTempHighScore())))
@@ -416,7 +438,7 @@ class GameStatus(val game: KotoGame) : Group() {
         super.draw(batch, parentAlpha)
         val tmpColor = batch.color.cpy()
 
-        batch.setColor(1f, 1f, 1f, parentAlpha*lifeAlpha)
+        batch.setColor(1f, 1f, 1f, parentAlpha * lifeAlpha)
         for (i in 0 until 8) {
             if (i < game.life.completedCount) {
                 batch.draw(
@@ -439,7 +461,7 @@ class GameStatus(val game: KotoGame) : Group() {
             }
         }
 
-        batch.setColor(1f, 1f, 1f, parentAlpha*bombAlpha)
+        batch.setColor(1f, 1f, 1f, parentAlpha * bombAlpha)
         for (i in 0 until 8) {
             if (i < game.bomb.completedCount) {
                 batch.draw(
