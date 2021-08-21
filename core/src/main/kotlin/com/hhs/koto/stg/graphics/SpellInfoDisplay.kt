@@ -28,6 +28,8 @@ package com.hhs.koto.stg.graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
@@ -73,8 +75,13 @@ class SpellInfoDisplay(
         gameData.currentElement.spell[name].totalAttempt,
     )
 
+    var deltax1 = -384f
+    var deltax2 = 200f
+    var deltascale = 1.5f
+
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        background.setPosition(x - 256f, y)
+        background.setPosition(x + deltax1, y)
+        background.setScale(deltascale)
         background.color = backgroundColor
         background.draw(batch, parentAlpha * alpha)
         historyText.setPosition(x - 85f, y - 6f)
@@ -87,7 +94,7 @@ class SpellInfoDisplay(
             parentAlpha * alpha,
             spellName,
             12f / 24,
-            x - 10f,
+            x + deltax2,
             y + 20f,
             halign = Align.right,
         )
@@ -111,9 +118,12 @@ class SpellInfoDisplay(
 
     override fun tick() {
         if (t <= 30) {
+            deltax1 = smoothstep(-384f,-256f,t/30f)
+            deltax2 = smoothstep(200f,-10f,t/30f)
             alpha = lerp(0f, 1f, t / 30f)
-        } else if (t <= 90) {
-            y = smoothstep(targetY - worldH + 60, targetY, (t - 30f) / 60f)
+            deltascale = smoothstep(1.5f,1f,t/30f)
+        } else if (t in 45..105) {
+            y = smoothstep(targetY - worldH + 60, targetY, (t - 45f) / 60f)
         }
         t++
         if (finished) {
