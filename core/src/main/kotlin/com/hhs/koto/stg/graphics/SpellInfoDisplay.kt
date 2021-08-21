@@ -78,29 +78,31 @@ class SpellInfoDisplay(
     var deltax1 = -384f
     var deltax2 = 200f
     var deltascale = 1.5f
-
+    var fontscale = 24f
+    var alpha1 = 0f
+    var alpha2 = 0f
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         background.setPosition(x + deltax1, y)
         background.setScale(deltascale)
         background.color = backgroundColor
-        background.draw(batch, parentAlpha * alpha)
+        background.draw(batch, parentAlpha * alpha1)
         historyText.setPosition(x - 85f, y - 6f)
-        historyText.draw(batch, parentAlpha * alpha)
+        historyText.draw(batch, parentAlpha * alpha1)
         bonusText.setPosition(x - 180f, y - 6f)
-        bonusText.draw(batch, parentAlpha * alpha)
+        bonusText.draw(batch, parentAlpha * alpha1)
 
         nameFont.draw(
             batch,
-            parentAlpha * alpha,
+            parentAlpha * alpha2,
             spellName,
-            12f / 24,
+            fontscale / 24,
             x + deltax2,
             y + 20f,
             halign = Align.right,
         )
         infoFont.draw(
             batch,
-            parentAlpha * alpha,
+            parentAlpha * alpha1,
             spellHistory,
             10f / 20,
             x - 45f,
@@ -108,7 +110,7 @@ class SpellInfoDisplay(
         )
         infoFont.draw(
             batch,
-            parentAlpha * alpha,
+            parentAlpha * alpha1,
             if (failed) "Failed" else bonus.toString(),
             10f / 20,
             x - 140f,
@@ -118,12 +120,17 @@ class SpellInfoDisplay(
 
     override fun tick() {
         if (t <= 30) {
-            deltax1 = smoothstep(-384f,-256f,t/30f)
-            deltax2 = smoothstep(200f,-10f,t/30f)
-            alpha = lerp(0f, 1f, t / 30f)
-            deltascale = smoothstep(1.5f,1f,t/30f)
-        } else if (t in 45..105) {
-            y = smoothstep(targetY - worldH + 60, targetY, (t - 45f) / 60f)
+            deltax2 = smoothstep(-128f,-10f,t/30f)
+            fontscale = smoothstep(36f,12f,t/30f)
+            alpha2 = lerp(0f, 1f, t / 30f)
+        }
+        if(t in 45..75){
+            deltax1 = smoothstep(-384f,-256f,(t-45f)/30f)
+            alpha1 = lerp(0f, 1f, (t-45f) / 30f)
+            deltascale = smoothstep(1.5f,1f,(t-45f)/30f)
+        }
+        if (t in 90..150) {
+            y = smoothstep(targetY - worldH + 60, targetY, (t - 90f) / 60f)
         }
         t++
         if (finished) {

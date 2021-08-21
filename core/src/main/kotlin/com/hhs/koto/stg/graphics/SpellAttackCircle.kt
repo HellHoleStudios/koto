@@ -41,7 +41,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer
  */
 class SpellAttackCircle(
     val boss: Boss,
-    val maxSize: Float = 300f,
+    val maxSize: Float = 128f,
     val setupTime: Int = 60,
     val numVertex: Int = 2
 ) : Drawable {
