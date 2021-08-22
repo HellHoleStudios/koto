@@ -62,7 +62,7 @@ class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
                     boss.y,
                     50f,
                     difficultySelect(8, 12, 16, 20),
-                    startAngle = random(0f, 360f),
+                    startAngle = game.layer.random(0f, 360f),
                     speed = 5f,
                 )
                 wait(20)

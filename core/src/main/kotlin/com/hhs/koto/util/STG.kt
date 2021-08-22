@@ -62,6 +62,8 @@ val playerX: Float
 val playerY: Float
     get() = game.player.y
 
+val replayKeyMask=arrayOf(VK.BOMB,VK.CANCEL,VK.CUSTOM,VK.SHOT,VK.SLOW,VK.UP,VK.DOWN,VK.LEFT,VK.RIGHT)
+
 fun create(
     data: BulletData,
     x: Float,

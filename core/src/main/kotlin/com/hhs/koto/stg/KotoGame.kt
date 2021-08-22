@@ -45,6 +45,7 @@ import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
 import com.hhs.koto.stg.graphics.*
 import com.hhs.koto.stg.item.Item
+import com.hhs.koto.stg.replay.ReplayLayer
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
@@ -172,6 +173,7 @@ class KotoGame : Disposable {
     var power: Float = 1f
     var graze: Int = 0
 
+    val layer = ReplayLayer()
 
     init {
         logger.info("Game instance created.")
@@ -211,6 +213,7 @@ class KotoGame : Disposable {
         game.stage.tick()
         game.hud.tick()
         game.tasks.tick()
+        game.layer.tick()
         game.frame++
     }
 
@@ -221,6 +224,7 @@ class KotoGame : Disposable {
         } else {
             GameState.FINISH
         }
+        layer.conclude()
     }
 
     fun draw() {

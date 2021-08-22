@@ -161,7 +161,7 @@ open class BasicPlayer(
         hitbox.rotate(4f)
         if (hitbox.rotation >= 360f) hitbox.rotation -= 360f
         if (playerState != PlayerState.RESPAWNING) {
-            if (VK.SLOW.pressed()) {
+            if (game.layer.pressed(VK.SLOW)) {
                 hitbox.alpha = 1f
                 hitbox.setScale((hitbox.scaleX - 0.02f).coerceAtLeast(1f))
             } else {
@@ -206,12 +206,12 @@ open class BasicPlayer(
             if (counter <= 0) {
                 playerState = PlayerState.RESPAWNING
                 onDeath()
-            } else if (game.bomb.completedCount > 0 && VK.BOMB.pressed()) {
+            } else if (game.bomb.completedCount > 0 && game.layer.pressed(VK.BOMB)) {
                 onBomb(true)
                 playerState = PlayerState.BOMBING
             }
         } else if (playerState == PlayerState.NORMAL) {
-            if (game.bomb.completedCount > 0 && VK.BOMB.pressed()) {
+            if (game.bomb.completedCount > 0 && game.layer.pressed(VK.BOMB)) {
                 onBomb(false)
                 playerState = PlayerState.BOMBING
             }
@@ -228,23 +228,23 @@ open class BasicPlayer(
     }
 
     open fun move() {
-        speed = if (VK.SLOW.pressed()) {
+        speed = if (game.layer.pressed(VK.SLOW)) {
             speedLow
         } else {
             speedHigh
         }
         dx = 0
         dy = 0
-        if (VK.LEFT.pressed()) {
+        if (game.layer.pressed(VK.LEFT)) {
             dx--
         }
-        if (VK.RIGHT.pressed()) {
+        if (game.layer.pressed(VK.RIGHT)) {
             dx++
         }
-        if (VK.DOWN.pressed()) {
+        if (game.layer.pressed(VK.DOWN)) {
             dy--
         }
-        if (VK.UP.pressed()) {
+        if (game.layer.pressed(VK.UP)) {
             dy++
         }
         if (dx.absoluteValue > 0 && dy.absoluteValue > 0) {
