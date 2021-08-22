@@ -30,7 +30,6 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.hhs.koto.util.safeIterator
 import java.lang.Float.min
 
 open class ConstrainedGrid(
@@ -84,10 +83,11 @@ open class ConstrainedGrid(
     }
 
     override fun updateComponent(): Grid {
-        for (i in grid.safeIterator()) {
-            if (i.active && i is Actor) {
-                targetX = calculateTarget(i.staticX, i.width, constraintX, constraintWidth, targetX)
-                targetY = calculateTarget(i.staticY, i.height, constraintY, constraintHeight, targetY)
+        for (i in 0 until grid.size) {
+            val component = grid[i]
+            if (component.active && component is Actor) {
+                targetX = calculateTarget(component.staticX, component.width, constraintX, constraintWidth, targetX)
+                targetY = calculateTarget(component.staticY, component.height, constraintY, constraintHeight, targetY)
                 startX = targetX
                 startY = targetY
                 break
@@ -101,12 +101,13 @@ open class ConstrainedGrid(
         var y: Float? = null
         var width = 0f
         var height = 0f
-        for (i in grid.safeIterator()) {
-            if (i.active && i is Actor) {
-                x = i.staticX
-                y = i.staticY
-                width = width.coerceAtLeast(i.width)
-                height = height.coerceAtLeast(i.height)
+        for (i in 0 until grid.size) {
+            val component = grid[i]
+            if (component.active && component is Actor) {
+                x = component.staticX
+                y = component.staticY
+                width = width.coerceAtLeast(component.width)
+                height = height.coerceAtLeast(component.height)
             }
         }
         if (x != null && y != null) {

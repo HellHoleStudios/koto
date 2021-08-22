@@ -201,14 +201,14 @@ fun loadGameData() {
         app.logger.info("Creating empty game data file...")
         for (player in GameBuilder.players.safeKeys()) {
             val tmpMap = GdxMap<String, GameData.GameDataElement>()
-            for (difficulty in GameBuilder.usedDifficulties.safeIterator()) {
+            GameBuilder.usedDifficulties.forEach { difficulty ->
                 val tmpElement = GameData.GameDataElement()
-                for (spell in GameBuilder.spells.safeIterator()) {
+                GameBuilder.spells.forEach { spell ->
                     if (difficulty in spell.availableDifficulties) {
                         tmpElement.spell[spell.name] = GameData.SpellEntry()
                     }
                 }
-                for (stage in GameBuilder.stages.safeIterator()) {
+                GameBuilder.stages.forEach { stage ->
                     if (difficulty in stage.availableDifficulties) {
                         tmpElement.practiceHighScore[stage.name] = 0L
                     }

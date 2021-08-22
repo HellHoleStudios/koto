@@ -34,7 +34,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.VK
 import com.hhs.koto.util.matchKey
-import com.hhs.koto.util.safeIterator
 import ktx.collections.GdxArray
 import kotlin.math.abs
 
@@ -89,13 +88,13 @@ open class Grid(
     }
 
     open fun updateComponent(): Grid {
-        for (component in grid.safeIterator()) {
-            if (component is Grid) {
-                component.updateComponent()
-            } else if (component is GridButtonBase) {
-                if (!component.ignoreParent) component.update()
+        grid.forEach {
+            if (it is Grid) {
+                it.updateComponent()
+            } else if (it is GridButtonBase) {
+                if (!it.ignoreParent) it.update()
             } else {
-                component.update()
+                it.update()
             }
         }
         return this
@@ -140,7 +139,8 @@ open class Grid(
 
     fun triggerButton(): Boolean {
         var flag = false
-        for (button in grid.safeIterator()) {
+        for (i in 0 until grid.size) {
+            val button = grid[i]
             if (button.active) {
                 button.trigger()
                 if (button is Grid) button.triggerButton()
@@ -198,17 +198,18 @@ open class Grid(
     open fun select(nx: Int, ny: Int, dx: Int, dy: Int, silent: Boolean = false): Grid {
         var closest: GridComponent? = null
         var dist = Int.MAX_VALUE
-        for (i in grid.safeIterator()) {
-            if (i.enabled) {
+        for (i in 0 until grid.size) {
+            val component = grid[i]
+            if (component.enabled) {
                 if (dx != 0) {
-                    if (i.gridY == selectedY && distanceX(nx, i.gridX, dx) < dist) {
-                        closest = i
-                        dist = distanceX(nx, i.gridX, dx)
+                    if (component.gridY == selectedY && distanceX(nx, component.gridX, dx) < dist) {
+                        closest = component
+                        dist = distanceX(nx, component.gridX, dx)
                     }
                 } else {
-                    if (i.gridX == selectedX && distanceY(ny, i.gridY, dy) < dist) {
-                        closest = i
-                        dist = distanceY(ny, i.gridY, dy)
+                    if (component.gridX == selectedX && distanceY(ny, component.gridY, dy) < dist) {
+                        closest = component
+                        dist = distanceY(ny, component.gridY, dy)
                     }
                 }
             }
@@ -221,12 +222,12 @@ open class Grid(
         }
         selectedX = closest.gridX
         selectedY = closest.gridY
-        for (i in grid.safeIterator()) {
-            if (i.active && i.enabled && (i.gridX != selectedX || i.gridY != selectedY)) {
-                i.active = false
+        grid.forEach {
+            if (it.active && it.enabled && (it.gridX != selectedX || it.gridY != selectedY)) {
+                it.active = false
             }
-            if (!i.active && i.enabled && i.gridX == selectedX && i.gridY == selectedY) {
-                i.active = true
+            if (!it.active && it.enabled && it.gridX == selectedX && it.gridY == selectedY) {
+                it.active = true
             }
         }
         return this
@@ -235,11 +236,12 @@ open class Grid(
     open fun select(nx: Int, ny: Int, silent: Boolean = false): Grid {
         var closest: GridComponent? = null
         var dist = Int.MAX_VALUE
-        for (i in grid.safeIterator()) {
-            if (i.enabled) {
-                if (distance(nx, ny, i.gridX, i.gridY) < dist) {
-                    closest = i
-                    dist = distance(nx, ny, i.gridX, i.gridY)
+        for (i in 0 until grid.size) {
+            val component = grid[i]
+            if (component.enabled) {
+                if (distance(nx, ny, component.gridX, component.gridY) < dist) {
+                    closest = component
+                    dist = distance(nx, ny, component.gridX, component.gridY)
                 }
             }
         }
@@ -251,12 +253,12 @@ open class Grid(
         }
         selectedX = closest.gridX
         selectedY = closest.gridY
-        for (i in grid.safeIterator()) {
-            if (i.enabled && (i.gridX != selectedX || i.gridY != selectedY)) {
-                i.active = false
+        grid.forEach {
+            if (it.enabled && (it.gridX != selectedX || it.gridY != selectedY)) {
+                it.active = false
             }
-            if (i.enabled && i.gridX == selectedX && i.gridY == selectedY) {
-                i.active = true
+            if (it.enabled && it.gridX == selectedX && it.gridY == selectedY) {
+                it.active = true
             }
         }
         return this
@@ -345,13 +347,13 @@ open class Grid(
     }
 
     open fun arrange(rootX: Float, rootY: Float, offsetX: Float, offsetY: Float): Grid {
-        for (i in grid.safeIterator()) {
-            if (i is Actor) {
-                i.setPosition(rootX + offsetX * i.gridX, rootY + offsetY * i.gridY)
+        grid.forEach {
+            if (it is Actor) {
+                it.setPosition(rootX + offsetX * it.gridX, rootY + offsetY * it.gridY)
             }
-            if (i is GridComponent) {
-                i.staticX = rootX + offsetX * i.gridX
-                i.staticY = rootY + offsetY * i.gridY
+            if (it is GridComponent) {
+                it.staticX = rootX + offsetX * it.gridX
+                it.staticY = rootY + offsetY * it.gridY
             }
         }
         return this

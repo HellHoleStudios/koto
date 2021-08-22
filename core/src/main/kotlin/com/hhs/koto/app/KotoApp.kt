@@ -153,7 +153,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     }
 
     override fun resize(width: Int, height: Int) {
-        screens.safeValues().filter { it.state.isRendered() }.forEach { it.resize(width, height) }
+        screens.safeValues().forEach { if (it.state.isRendered()) it.resize(width, height) }
         viewport.update(width, height)
     }
 
@@ -179,17 +179,23 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         clearScreen(0f, 0f, 0f, 1f)
         var flag = false
-        screens.safeValues().filter { it.state == ScreenState.FADING_IN }.forEach {
-            flag = true
-            it.render(safeDeltaTime())
+        screens.safeValues().forEach {
+            if (it.state == ScreenState.FADING_IN) {
+                flag = true
+                it.render(safeDeltaTime())
+            }
         }
-        screens.safeValues().filter { it.state == ScreenState.SHOWN }.forEach {
-            flag = true
-            it.render(safeDeltaTime())
+        screens.safeValues().forEach {
+            if (it.state == ScreenState.SHOWN) {
+                flag = true
+                it.render(safeDeltaTime())
+            }
         }
-        screens.safeValues().filter { it.state == ScreenState.FADING_OUT }.forEach {
-            flag = true
-            it.render(safeDeltaTime())
+        screens.safeValues().forEach {
+            if (it.state == ScreenState.FADING_OUT) {
+                flag = true
+                it.render(safeDeltaTime())
+            }
         }
         if (!flag) {
             exitApp()
@@ -199,11 +205,11 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     }
 
     override fun pause() {
-        screens.safeValues().filter { it.state.isRendered() }.forEach { it.pause() }
+        screens.safeValues().forEach { if (it.state.isRendered()) it.pause() }
     }
 
     override fun resume() {
-        screens.safeValues().filter { it.state.isRendered() }.forEach { it.resume() }
+        screens.safeValues().forEach { if (it.state.isRendered()) it.resume() }
     }
 
     override fun dispose() {
@@ -217,9 +223,11 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
     fun setScreen(name: String?) {
         val newScreen: KotoScreen? = screens[name]
-        screens.safeValues().filter { it.state.isRendered() }.forEach {
-            it.hide()
-            it.state = ScreenState.HIDDEN
+        screens.safeValues().forEach {
+            if (it.state.isRendered()) {
+                it.hide()
+                it.state = ScreenState.HIDDEN
+            }
         }
         if (newScreen != null) {
             logger.info("Switching to screen $name")

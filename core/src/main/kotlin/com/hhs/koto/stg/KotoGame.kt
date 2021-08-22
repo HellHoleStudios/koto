@@ -45,7 +45,6 @@ import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
 import com.hhs.koto.stg.graphics.*
 import com.hhs.koto.stg.item.Item
-import com.hhs.koto.stg.replay.ReplayLayer
 import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*

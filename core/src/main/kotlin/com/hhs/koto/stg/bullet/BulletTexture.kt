@@ -28,7 +28,6 @@ package com.hhs.koto.stg.bullet
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
-import com.hhs.koto.util.safeIterator
 
 class BulletTexture(atlas: TextureAtlas, name: String, frames: Array<Int>) {
 
@@ -58,8 +57,8 @@ class BulletTexture(atlas: TextureAtlas, name: String, frames: Array<Int>) {
     val maxWidth: Int
         get() {
             var ret = 0
-            for (i in frames.safeIterator()) {
-                ret = ret.coerceAtLeast(i.regionWidth)
+            frames.forEach {
+                ret = ret.coerceAtLeast(it.regionWidth)
             }
             return ret
         }
@@ -67,8 +66,8 @@ class BulletTexture(atlas: TextureAtlas, name: String, frames: Array<Int>) {
     val maxHeight: Int
         get() {
             var ret = 0
-            for (i in frames.safeIterator()) {
-                ret = ret.coerceAtLeast(i.regionHeight)
+            frames.forEach {
+                ret = ret.coerceAtLeast(it.regionHeight)
             }
             return ret
         }

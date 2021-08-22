@@ -1,4 +1,29 @@
-package com.hhs.koto.stg.replay
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 Hell Hole Studios
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+package com.hhs.koto.stg
 
 import com.badlogic.gdx.math.RandomXS128
 import com.hhs.koto.util.KotoRuntimeException
@@ -51,7 +76,6 @@ class ReplayLayer {
 
             replay.mask.add(mask)
 
-//            println("$frame = $mask")
             if (replay.mask.size - 1 != frame) {
                 throw KotoRuntimeException("Replay Dislocation! Expected $frame but found ${replay.mask.size - 1}")
             }
@@ -88,7 +112,7 @@ class ReplayLayer {
 
     fun justPressed(code: Int): Boolean {
         return if (SystemFlag.replay == true) {
-            (replay.mask[frame] and (1 shl code)) > 0 && (frame == 0 || (replay!!.mask[frame - 1] and (1 shl code)) == 0)
+            (replay.mask[frame] and (1 shl code)) > 0 && (frame == 0 || (replay.mask[frame - 1] and (1 shl code)) == 0)
         } else {
             replayKeyMask[code].justPressed()
         }

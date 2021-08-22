@@ -68,8 +68,8 @@ fun initA() {
     A.setLoader(String::class.java, TextAssetLoader(A.fileHandleResolver))
     A.registerFreeTypeFontLoaders()
     A.logger.level = Config.logLevel
-    for (i in json.fromJson<GdxArray<String>>(Gdx.files.internal(".charset.json")).safeIterator()) {
-        charset += i
+    json.fromJson<GdxArray<String>>(Gdx.files.internal(".charset.json")).forEach {
+        charset += it
     }
     // this seems to fix FreeTypeFontGenerator glitch
     packer = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 1, false)
@@ -261,8 +261,8 @@ fun getUILabelStyle(fontSize: Int): LabelStyle {
 
 fun loadAssetIndex(file: FileHandle) {
     A.logger.debug("Loading asset index from file $file")
-    for (i in json.fromJson<GdxArray<String>>(file).safeIterator()) {
-        loadSmart(i)
+    json.fromJson<GdxArray<String>>(file).forEach {
+        loadSmart(it)
     }
 }
 

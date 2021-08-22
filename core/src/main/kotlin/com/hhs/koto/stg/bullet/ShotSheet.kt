@@ -34,7 +34,10 @@ import com.hhs.koto.stg.AABBCollision
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.CollisionShape
 import com.hhs.koto.stg.NoCollision
-import com.hhs.koto.util.*
+import com.hhs.koto.util.BlendingMode
+import com.hhs.koto.util.KotoRuntimeException
+import com.hhs.koto.util.json
+import com.hhs.koto.util.toHSVColor
 import ktx.collections.GdxMap
 import ktx.json.fromJson
 
@@ -43,8 +46,8 @@ class ShotSheet(val atlas: TextureAtlas, raw: ShotSheetLoader.RawShotSheet) {
     var names = GdxMap<String, BulletData>()
 
     init {
-        for (i in raw.data.safeIterator()) {
-            val tmp = BulletData.fromShotSheet(this, i)
+        raw.data.forEach {
+            val tmp = BulletData.fromShotSheet(this, it)
             if (tmp.id != null) ids.put(tmp.id, tmp)
             if (tmp.name != null) names.put(tmp.name, tmp)
         }

@@ -28,7 +28,6 @@ package com.hhs.koto.app.ui
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.hhs.koto.util.safeIterator
 import java.lang.Float.min
 
 open class ScrollingGrid(
@@ -63,9 +62,10 @@ open class ScrollingGrid(
     inactiveAction
 ) {
     override fun updateTarget(delta: Float) {
-        for (i in grid.safeIterator()) {
-            if (i.active && i is Actor) {
-                if (targetX == i.staticX && targetY == i.staticY) {
+        for (i in 0 until grid.size) {
+            val component = grid[i]
+            if (component.active && component is Actor) {
+                if (targetX == component.staticX && targetY == component.staticY) {
                     if (t < animationDuration) {
                         t = min(animationDuration, t + delta)
                     }
@@ -73,8 +73,8 @@ open class ScrollingGrid(
                     startX = getCurrentX()
                     startY = getCurrentY()
                     t = 0f
-                    targetX = i.staticX
-                    targetY = i.staticY
+                    targetX = component.staticX
+                    targetY = component.staticY
                 }
                 break
             }
