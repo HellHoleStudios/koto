@@ -31,10 +31,8 @@ import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
-import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.BasicStage
 import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.attachAndWait
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
@@ -86,19 +84,19 @@ class Stage1 : BasicStage() {
         )
         interpolate(0f, 1f, 60) { game.background.alpha = it }
 
-        attachAndWait(MidStage1().build())
+//        attachAndWait(MidStage1().build())
         wait(240)
-
-        val boss = game.addBoss(AyaBoss())
-        game.bossNameDisplay.show(boss, 1)
-        boss.healthBar.addSpell(Nonspell1(), Spell1())
-        attachAndWait(boss.creationTask())
-
-        attachAndWait(Nonspell1().build())
-        attachAndWait(Spell1().build())
-
-        boss.healthBar.visible = false
-        game.bossNameDisplay.hide()
-        move(boss, -300f, 300f, 120)
+//
+//        val boss = game.addBoss(AyaBoss())
+//        game.bossNameDisplay.show(boss, 1)
+//        boss.healthBar.addSpell(Nonspell1(), Spell1())
+//        attachAndWait(boss.creationTask())
+//
+//        attachAndWait(Nonspell1().build())
+//        attachAndWait(Spell1().build())
+//
+//        boss.healthBar.visible = false
+//        game.bossNameDisplay.hide()
+//        move(boss, -300f, 300f, 120)
     }
 }

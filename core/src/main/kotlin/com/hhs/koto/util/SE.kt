@@ -51,7 +51,6 @@ object SE {
         } else {
             if (Config.noDuplicateSE) {
                 if (fired[name]) {
-//                    logger.debug("Same SE played in the same frame. Cancelled.")
                     return
                 }
                 fired[name] = true

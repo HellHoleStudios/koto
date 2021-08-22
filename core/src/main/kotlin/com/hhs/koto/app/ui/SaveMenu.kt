@@ -25,17 +25,31 @@
 
 package com.hhs.koto.app.ui
 
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.color
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.hhs.koto.util.darken
-import com.hhs.koto.util.getUILabelStyle
+import com.hhs.koto.stg.GameData
+import com.hhs.koto.util.*
+import ktx.actors.alpha
+import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 
-class GridKeyboard(val lengthLimit: Int = 10, val onConfirmation: (String) -> Unit) : Grid() {
+class SaveMenu(
+    st: Stage,
+    val input: InputMultiplexer,
+    val staticX: Float,
+    val staticY: Float,
+    var lengthLimit: Int = 10,
+    var onFinish: () -> Unit,
+) : Group() {
     companion object {
-        val rows = GdxArray.with(
+        @Suppress("SpellCheckingInspection")
+        val rows: GdxArray<String> = GdxArray.with(
             "ABCDEFGHIJKLM",
             "NOPQRSTUVWXYZ",
             "abcdefghijklm",
@@ -54,24 +68,36 @@ class GridKeyboard(val lengthLimit: Int = 10, val onConfirmation: (String) -> Un
                 color(darken(Color.WHITE, 0.5f))
             }
             setAlignment(Align.center)
-            width = 50f
+            width = 40f
             return this
         }
     }
 
     var text = ""
-    private val textLabel = Label("", getUILabelStyle(48)).apply {
-        setBounds(0f, 150f, 780f, 50f)
+    private val keyboardGrid = Grid().register(this)
+    private val textLabel = Label("", getUILabelStyle(36)).apply {
+        setBounds(10f, 100f, 500f, 50f)
         addActor(this)
     }
     private var counter: Float = 0f
+    lateinit var saveObject: Any
+    var active: Boolean = false
 
     init {
+        setPosition(staticX, staticY - 300f)
+        st += this
+
+        textLabel.alpha = 0f
+        keyboardGrid.alpha = 0f
+        keyboardGrid.activeAction = { fadeIn(0.5f, Interpolation.pow5Out) }
+        keyboardGrid.inactiveAction = { fadeOut(0.5f, Interpolation.pow5Out) }
+
         for (row in 0..6) {
+            @Suppress("SpellCheckingInspection")
             for (i in 0 until 13) {
                 val character = rows[row][i].toString()
-                add(
-                    GridButton(character, 48, i, row) {
+                keyboardGrid.add(
+                    GridButton(character, 36, i, row) {
                         addText(character)
                     }.setStyle()
                 )
@@ -79,39 +105,77 @@ class GridKeyboard(val lengthLimit: Int = 10, val onConfirmation: (String) -> Un
         }
         for (i in 0..2) {
             val character = rows[7][i].toString()
-            add(
-                GridButton(character, 48, i, 7) {
+            keyboardGrid.add(
+                GridButton(character, 36, i, 7) {
                     addText(character)
                 }.setStyle()
             )
         }
-        add(
-            GridButton("␣", 48, 3, 7) {
+        keyboardGrid.add(
+            GridButton("␣", 36, 3, 7) {
                 addText(" ")
             }.setStyle()
         )
-        add(
-            GridButton("⇦", 48, 11, 7) {
+        keyboardGrid.add(
+            GridButton("⇦", 36, 11, 7, triggerSound = "cancel") {
                 text = text.dropLast(1)
             }.setStyle()
         )
-        add(
-            GridButton("OK", 48, 12, 7) {
-                onConfirmation(text)
+        keyboardGrid.add(
+            GridButton("OK", 36, 12, 7) {
+                save()
             }.setStyle().apply {
                 setAlignment(Align.left)
             }
         )
-        arrange(0f, 0f, 60f, -60f)
-        selectFirst()
+        keyboardGrid.arrange(0f, 0f, 40f, -40f)
+        deactivate()
     }
 
     fun addText(newText: String) {
         text = (text + newText).take(lengthLimit)
     }
 
+    fun activate(saveObject: Any) {
+        this.saveObject = saveObject
+        keyboardGrid.selectFirst()
+        keyboardGrid.activate()
+        textLabel.addAction(fadeIn(0.5f, Interpolation.pow5Out))
+        addAction(moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out))
+        input.addProcessor(keyboardGrid)
+        active = true
+    }
+
+    fun deactivate() {
+        keyboardGrid.deactivate()
+        textLabel.addAction(fadeOut(0.5f, Interpolation.pow5Out))
+        addAction(moveTo(staticX, staticY - 300f, 0.5f, Interpolation.pow5Out))
+        input.removeProcessor(keyboardGrid)
+        active = false
+    }
+
+    fun save() {
+        val saveObject = saveObject
+        if (saveObject is GameData.ScoreEntry) {
+            saveObject.name = text
+            gameData.currentElement.score.add(saveObject)
+            saveGameData()
+        }
+        deactivate()
+        onFinish()
+    }
+
     override fun act(delta: Float) {
         super.act(delta)
+        if (active && VK.CANCEL.justPressed()) {
+            if (text.isNotEmpty()) {
+                SE.play("cancel")
+                text = text.dropLast(1)
+            } else {
+                deactivate()
+                onFinish()
+            }
+        }
         counter += delta
         if (counter >= 1f) {
             counter = 0f
@@ -125,5 +189,4 @@ class GridKeyboard(val lengthLimit: Int = 10, val onConfirmation: (String) -> Un
             textLabel.setText(newText)
         }
     }
-
 }

@@ -119,7 +119,7 @@ class GameScreen : BasicScreen(null, null) {
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
-        if (oldScreen !is SaveScreen) reset()
+        reset()
     }
 
     fun retryGame() {

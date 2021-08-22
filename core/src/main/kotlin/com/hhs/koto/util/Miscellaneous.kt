@@ -51,7 +51,6 @@ object SystemFlag {
     var name: String? = null
     var difficulty: GameDifficulty? = null
     var player: String? = null
-    var saveObject: Any? = null
 }
 
 val json = Json().apply {

@@ -32,8 +32,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.app.screen.GameScreen
 import com.hhs.koto.stg.GameState
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.app
 import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import ktx.actors.alpha
@@ -50,7 +48,6 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
         }
         exitRunnable = noRunnable
     }
-
     private val pauseMenu = Grid(staticX = 150f, staticY = 400f).register(st, input).apply {
         alpha = 0f
         deactivate()
@@ -68,6 +65,9 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
             )
         }
     }
+    private val saveMenu = SaveMenu(st, input, 240f, 400f) {
+        pauseMenu.activate()
+    }
 
     init {
         pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.resume"], 36, gridX = 0, gridY = 1) {
@@ -80,8 +80,8 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
             isVisible = false
         })
         pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.saveScore"], 36, gridX = 0, gridY = 1) {
-            SystemFlag.saveObject = game.createScoreEntry()
-            app.setScreen("save", 0.5f)
+            saveMenu.activate(game.createScoreEntry())
+            pauseMenu.deactivate()
         }.apply {
             disable()
             isVisible = false
