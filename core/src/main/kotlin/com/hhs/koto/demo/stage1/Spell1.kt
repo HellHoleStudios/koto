@@ -25,7 +25,6 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.Cutin
 import com.hhs.koto.stg.pattern.wander

@@ -50,6 +50,10 @@ open class BasicBullet(
     override var tint: Color = Color(0f, 1f, 1f, 1f),
     val delay: Int = 8,
 ) : Bullet, Bounded {
+    companion object {
+        val tmpColor = Color()
+    }
+
     override val blending
         get() = if (t >= delay) {
             data.blending
@@ -164,7 +168,7 @@ open class BasicBullet(
                 tmpY += deltaY * subFrameTime
             }
             val texture = data.texture.getFrame(t)
-            val tmpColor = batch.color.cpy()
+            tmpColor.set(batch.color)
             if (t >= delay) {
                 val bulletColor = data.color.tintHSV(tint)
                 bulletColor.a *= parentAlpha

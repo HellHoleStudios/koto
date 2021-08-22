@@ -1,7 +1,8 @@
 package com.hhs.koto.stg.replay
+
 import com.badlogic.gdx.utils.Array
 import com.hhs.koto.stg.GameMode
-import com.hhs.koto.util.*
+import com.hhs.koto.util.SystemFlag
 
 /**
  * Handles game replay. Need to be injected to the game using [ReplayLayer]
