@@ -194,8 +194,8 @@ enum class VK {
 
     companion object {
         private fun checkStick(controller: Controller, minAngle: Float, maxAngle: Float): Boolean {
-            val x = controller.getAxis(controller.mapping.axisRightX)
-            val y = -controller.getAxis(controller.mapping.axisRightY)
+            val x = controller.getAxis(controller.mapping.axisLeftX)
+            val y = -controller.getAxis(controller.mapping.axisLeftY)
             if (angleInRange(atan2(y, x), minAngle, maxAngle) && len(x, y) > options.deadzone) return true
             return false
         }
