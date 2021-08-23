@@ -28,7 +28,6 @@ package com.hhs.koto.util
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.InputProcessor
-import ktx.collections.GdxArray
 
 class InputBlocker : InputProcessor {
 
@@ -59,29 +58,11 @@ class InputBlocker : InputProcessor {
     override fun scrolled(amountX: Float, amountY: Float) = isBlocking
 }
 
-class KeyListener(private val keycodes: GdxArray<Int>, private var f: () -> Unit) : InputAdapter() {
+class KeyListener(private val vk: VK, private var action: () -> Unit) : InputAdapter() {
     override fun keyDown(keycode: Int): Boolean {
-        if (keycodes.contains(keycode)) {
-            f()
+        if (keycode == vk.uiKeycode) {
+            action()
         }
         return false
     }
-}
-
-fun matchKey(keycode: Int, key: GdxArray<Int>): Boolean {
-    return keycode in key
-}
-
-fun keyPressed(key: GdxArray<Int>): Boolean {
-    for (i in 0 until key.size) {
-        if (Gdx.input.isKeyPressed(key[i])) return true
-    }
-    return false
-}
-
-fun keyJustPressed(key: GdxArray<Int>): Boolean {
-    for (i in 0 until key.size) {
-        if (Gdx.input.isKeyJustPressed(key[i])) return true
-    }
-    return false
 }

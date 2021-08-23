@@ -27,7 +27,6 @@ package com.hhs.koto.app
 
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.WindowedMean
@@ -61,7 +60,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     lateinit var fpsCounter: WindowedMean
 
     val screens = GdxMap<String, KotoScreen>()
-    var input = InputMultiplexer()
+    var input = EmulatedInput()
     val logger = Logger("Main", Config.logLevel)
     var autoSaveCounter: Float = 0f
     var currentScreen: KotoScreen? = null
@@ -176,6 +175,8 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
             saveGameData()
             autoSaveCounter = 0f
         }
+
+        input.update(safeDeltaTime())
 
         clearScreen(0f, 0f, 0f, 1f)
         var flag = false

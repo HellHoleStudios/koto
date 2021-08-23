@@ -186,7 +186,7 @@ class KotoGame : Disposable {
     )
 
     fun update() {
-        speedUpMultiplier = if (keyPressed(options.keySpeedUp)) {
+        speedUpMultiplier = if (VK.SPEED_UP.pressed()) {
             options.speedUpMultiplier
         } else {
             1

@@ -55,17 +55,13 @@ fun safeMod(x: Float, mod: Float): Float {
     }
 }
 
-fun normalizeAngle(angle: Float): Float {
-    var angle1 = angle
-    angle1 = if (angle1 > 0) {
-        angle1 - MathUtils.round(angle1 / 360) * 360
+@Suppress("ConvertTwoComparisonsToRangeCheck")
+fun angleInRange(angle: Float, min: Float, max: Float): Boolean {
+    return if (min < max) {
+        min <= angle && angle <= max
     } else {
-        angle1 + MathUtils.round(-angle1 / 360) * 360
+        min <= angle || angle <= max
     }
-    if (angle1 == -180f) {
-        angle1 = 180f
-    }
-    return angle1
 }
 
 fun min(vararg x: Float): Float = x.minOrNull()!!

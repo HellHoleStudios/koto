@@ -33,7 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.VK
-import com.hhs.koto.util.matchKey
 import ktx.collections.GdxArray
 import kotlin.math.abs
 
@@ -104,13 +103,13 @@ open class Grid(
 
     override fun keyDown(keycode: Int): Boolean {
         if (!enabled || !active) return false
-        when {
-            matchKey(keycode, VK.UP.keycodes) -> select(selectedX, selectedY - 1, 0, -1)
-            matchKey(keycode, VK.DOWN.keycodes) -> select(selectedX, selectedY + 1, 0, 1)
-            matchKey(keycode, VK.LEFT.keycodes) -> select(selectedX - 1, selectedY, -1, 0)
-            matchKey(keycode, VK.RIGHT.keycodes) -> select(selectedX + 1, selectedY, 1, 0)
-            matchKey(keycode, VK.SELECT.keycodes) -> triggerButton()
-            matchKey(keycode, VK.CANCEL.keycodes) -> exit()
+        when (keycode) {
+            VK.UP.uiKeycode -> select(selectedX, selectedY - 1, 0, -1)
+            VK.DOWN.uiKeycode -> select(selectedX, selectedY + 1, 0, 1)
+            VK.LEFT.uiKeycode -> select(selectedX - 1, selectedY, -1, 0)
+            VK.RIGHT.uiKeycode -> select(selectedX + 1, selectedY, 1, 0)
+            VK.SELECT.uiKeycode -> triggerButton()
+            VK.CANCEL.uiKeycode -> exit()
         }
         return false
     }
