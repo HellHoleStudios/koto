@@ -55,12 +55,17 @@ fun safeMod(x: Float, mod: Float): Float {
     }
 }
 
+fun normalizeAngle(angle: Float): Float = safeMod(angle, 360f)
+
 @Suppress("ConvertTwoComparisonsToRangeCheck")
 fun angleInRange(angle: Float, min: Float, max: Float): Boolean {
-    return if (min < max) {
-        min <= angle && angle <= max
+    val angle0 = normalizeAngle(angle)
+    val min0 = normalizeAngle(min)
+    val max0 = normalizeAngle(max)
+    return if (min0 < max0) {
+        min0 <= angle0 && angle0 <= max0
     } else {
-        min <= angle || angle <= max
+        min0 <= angle0 || angle0 <= max0
     }
 }
 
@@ -102,17 +107,16 @@ fun dist2(x1: Float, y1: Float, x2: Float, y2: Float): Float {
 }
 
 fun atan2(y: Float, x: Float): Float =
-    MathUtils.atan2(y, x) * MathUtils.radiansToDegrees
+    normalizeAngle(MathUtils.atan2(y, x) * MathUtils.radiansToDegrees)
 
 fun atan2(x1: Float, y1: Float, x2: Float, y2: Float): Float =
-    MathUtils.atan2(y2 - y1, x2 - x1) * MathUtils.radiansToDegrees
+    normalizeAngle(MathUtils.atan2(y2 - y1, x2 - x1) * MathUtils.radiansToDegrees)
 
 fun sin(degrees: Float): Float = MathUtils.sinDeg(degrees)
 
 fun cos(degrees: Float): Float = MathUtils.cosDeg(degrees)
 
-fun tan(degrees: Float): Float =
-    kotlin.math.tan((degrees * MathUtils.degreesToRadians).toDouble()).toFloat() * MathUtils.radiansToDegrees
+fun tan(degrees: Float): Float = sin(degrees) / cos(degrees)
 
 fun lerp(start: Float, end: Float, a: Float): Float {
     if (a < 0f) return start

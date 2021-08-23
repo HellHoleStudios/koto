@@ -161,6 +161,8 @@ enum class VK {
             get() = options.keyRestart
 
         override fun checkController(controller: Controller): Boolean {
+            if (controller.getButton(controller.mapping.buttonL1)) return true
+            if (controller.getButton(controller.mapping.buttonL2)) return true
             return false
         }
     },
@@ -192,12 +194,9 @@ enum class VK {
 
     companion object {
         private fun checkStick(controller: Controller, minAngle: Float, maxAngle: Float): Boolean {
-            val x1 = controller.getAxis(controller.mapping.axisLeftX)
-            val y1 = -controller.getAxis(controller.mapping.axisLeftY)
-            val x2 = controller.getAxis(controller.mapping.axisRightX)
-            val y2 = -controller.getAxis(controller.mapping.axisRightY)
-            if (angleInRange(atan2(y1, x1), minAngle, maxAngle) && len(x1, y1) > options.deadzone) return true
-            if (angleInRange(atan2(y2, x2), minAngle, maxAngle) && len(x2, y2) > options.deadzone) return true
+            val x = controller.getAxis(controller.mapping.axisRightX)
+            val y = -controller.getAxis(controller.mapping.axisRightY)
+            if (angleInRange(atan2(y, x), minAngle, maxAngle) && len(x, y) > options.deadzone) return true
             return false
         }
     }
