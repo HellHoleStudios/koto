@@ -85,16 +85,16 @@ class GameStatus(val game: KotoGame) : Group() {
     private fun getHighScore(): Long {
         var tmpHighScore = 0L
         when (SystemFlag.gamemode!!) {
-            GameMode.STORY, GameMode.EXTRA -> {
+            GameMode.REGULAR, GameMode.EXTRA -> {
                 gameData.currentElement.score.forEach {
                     tmpHighScore = tmpHighScore.coerceAtLeast(it.score)
                 }
             }
             GameMode.STAGE_PRACTICE -> {
-                tmpHighScore = gameData.currentElement.practiceHighScore[SystemFlag.name!!]
+                tmpHighScore = gameData.currentElement.practiceHighScore[SystemFlag.sessionName!!]
             }
             GameMode.SPELL_PRACTICE -> {
-                tmpHighScore = gameData.currentElement.spell[SystemFlag.name!!].highScore
+                tmpHighScore = gameData.currentElement.spell[SystemFlag.sessionName!!].highScore
             }
         }
         return tmpHighScore

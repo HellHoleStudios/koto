@@ -11,6 +11,8 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+    implementation "com.esotericsoftware:kryo:$kryoVersion"
+    implementation "io.github.libktx:ktx-collections:$ktxVersion"
     implementation "io.github.libktx:ktx-json:$ktxVersion"
 }
 

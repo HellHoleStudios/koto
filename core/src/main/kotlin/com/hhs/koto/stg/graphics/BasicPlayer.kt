@@ -29,7 +29,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldOriginY
@@ -96,6 +95,7 @@ open class BasicPlayer(
     }
     override var x: Float = spawnX
     override var y: Float = spawnY
+    var frame: Int = 0
 
     init {
         game.stage.addDrawable(this)
@@ -158,10 +158,11 @@ open class BasicPlayer(
     }
 
     override fun tick() {
+        frame++
         hitbox.rotate(4f)
         if (hitbox.rotation >= 360f) hitbox.rotation -= 360f
         if (playerState != PlayerState.RESPAWNING) {
-            if (game.layer.pressed(VK.SLOW)) {
+            if (game.pressed(VK.SLOW)) {
                 hitbox.alpha = 1f
                 hitbox.setScale((hitbox.scaleX - 0.02f).coerceAtLeast(1f))
             } else {
@@ -206,12 +207,12 @@ open class BasicPlayer(
             if (counter <= 0) {
                 playerState = PlayerState.RESPAWNING
                 onDeath()
-            } else if (game.bomb.completedCount > 0 && game.layer.pressed(VK.BOMB)) {
+            } else if (game.bomb.completedCount > 0 && game.pressed(VK.BOMB)) {
                 onBomb(true)
                 playerState = PlayerState.BOMBING
             }
         } else if (playerState == PlayerState.NORMAL) {
-            if (game.bomb.completedCount > 0 && game.layer.pressed(VK.BOMB)) {
+            if (game.bomb.completedCount > 0 && game.pressed(VK.BOMB)) {
                 onBomb(false)
                 playerState = PlayerState.BOMBING
             }
@@ -228,23 +229,23 @@ open class BasicPlayer(
     }
 
     open fun move() {
-        speed = if (game.layer.pressed(VK.SLOW)) {
+        speed = if (game.pressed(VK.SLOW)) {
             speedLow
         } else {
             speedHigh
         }
         dx = 0
         dy = 0
-        if (game.layer.pressed(VK.LEFT)) {
+        if (game.pressed(VK.LEFT)) {
             dx--
         }
-        if (game.layer.pressed(VK.RIGHT)) {
+        if (game.pressed(VK.RIGHT)) {
             dx++
         }
-        if (game.layer.pressed(VK.DOWN)) {
+        if (game.pressed(VK.DOWN)) {
             dy--
         }
-        if (game.layer.pressed(VK.UP)) {
+        if (game.pressed(VK.UP)) {
             dy++
         }
         if (dx.absoluteValue > 0 && dy.absoluteValue > 0) {

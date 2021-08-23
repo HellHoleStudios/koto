@@ -26,13 +26,9 @@
 package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.stg.particle.ScoreParticle
-import com.hhs.koto.util.WHITE_HSV
-import com.hhs.koto.util.game
-import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.toHSVColor
+import com.hhs.koto.util.*
 
 class PointItem(
     x: Float,

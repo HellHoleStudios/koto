@@ -39,22 +39,23 @@ object GameBuilder {
         GameDifficulty.LUNATIC,
         GameDifficulty.EXTRA,
     )
-    lateinit var regularGame: TaskBuilder
-    lateinit var extraGame: TaskBuilder
-    val stages = GdxArray<StageBuilder>()
+    val regularStages = GdxArray<StageBuilder>()
+    var regularEnding: TaskBuilder? = null
+    val extraStages = GdxArray<StageBuilder>()
+    var extraEnding: TaskBuilder? = null
     val spells = GdxArray<SpellBuilder>()
     val players = GdxMap<String, () -> Player>()
 
     fun build(): KotoGame {
         game = when (SystemFlag.gamemode) {
-            GameMode.STORY -> buildRegularGame()
+            GameMode.REGULAR -> buildRegularGame()
             GameMode.EXTRA -> buildExtraGame()
             GameMode.STAGE_PRACTICE -> buildStagePractice(
-                SystemFlag.name ?: throw KotoRuntimeException("name flag is null!"),
+                SystemFlag.sessionName ?: throw KotoRuntimeException("sessionName flag is null!"),
                 SystemFlag.difficulty ?: throw KotoRuntimeException("difficulty flag is null!"),
             )
             GameMode.SPELL_PRACTICE -> buildSpellPractice(
-                SystemFlag.name ?: throw KotoRuntimeException("name flag is null!"),
+                SystemFlag.sessionName ?: throw KotoRuntimeException("sessionName flag is null!"),
                 SystemFlag.difficulty ?: throw KotoRuntimeException("difficulty flag is null!"),
             )
             null -> throw KotoRuntimeException("gameMode flag is null!")
@@ -67,18 +68,50 @@ object GameBuilder {
     fun buildRegularGame(): KotoGame {
         gameData.playCount++
         saveGameData()
-        return buildGameWithTask(regularGame.build())
+        val builder = BuilderSequence()
+        var startStageIndex = 0
+        if (SystemFlag.checkpoint != null) {
+            while (regularStages[startStageIndex].name != SystemFlag.checkpoint!!.name) startStageIndex++
+        }
+        for (i in startStageIndex until regularStages.size) {
+            builder.add(regularStages[i])
+        }
+        if (regularEnding != null) builder.add(regularEnding!!)
+        builder.add(taskBuilder {
+            RunnableTask {
+                game.end()
+                gameData.clearCount++
+                saveGameData()
+            }
+        })
+        return buildGameWithTask(builder.build())
     }
 
     fun buildExtraGame(): KotoGame {
         gameData.playCount++
         saveGameData()
-        return buildGameWithTask(extraGame.build())
+        val builder = BuilderSequence()
+        var startStageIndex = 0
+        if (SystemFlag.checkpoint != null) {
+            while (extraStages[startStageIndex].name != SystemFlag.checkpoint!!.name) startStageIndex++
+        }
+        for (i in startStageIndex until extraStages.size) {
+            builder.add(extraStages[i])
+        }
+        if (extraEnding != null) builder.add(extraEnding!!)
+        builder.add(taskBuilder {
+            RunnableTask {
+                game.end()
+                gameData.clearCount++
+                saveGameData()
+            }
+        })
+        return buildGameWithTask(builder.build())
     }
 
     fun getAvailableStages(): GdxArray<StageBuilder> {
         if (SystemFlag.difficulty == null) throw KotoRuntimeException("difficulty flag is null!")
-        return stages.filter { SystemFlag.difficulty in it.availableDifficulties }
+        return regularStages.filter { SystemFlag.difficulty in it.availableDifficulties }
     }
 
     fun getAvailableSpells(): GdxArray<SpellBuilder> {
@@ -89,7 +122,8 @@ object GameBuilder {
     fun buildStagePractice(name: String, difficulty: GameDifficulty): KotoGame {
         gameData.practiceCount++
         saveGameData()
-        val stageBuilder = stages.find { it.name == name } ?: throw KotoRuntimeException("Stage \"$name\" not found!")
+        val stageBuilder =
+            regularStages.find { it.name == name } ?: throw KotoRuntimeException("Stage \"$name\" not found!")
         if (difficulty !in stageBuilder.availableDifficulties) {
             throw KotoRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
         }
@@ -114,6 +148,9 @@ object GameBuilder {
 
     fun buildGameWithTask(task: Task): KotoGame {
         val game = KotoGame()
+        if (SystemFlag.checkpoint != null) {
+            SystemFlag.checkpoint!!.apply(game)
+        }
         game.tasks.addTask(task)
         return game
     }

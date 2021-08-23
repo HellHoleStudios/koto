@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.math.RandomXS128
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Logger
@@ -166,16 +167,27 @@ class KotoGame : Disposable {
         GameMode.SPELL_PRACTICE -> FragmentCounter(5, 0, 0)
         else -> FragmentCounter(5, 3, 0)
     }
-    val life: FragmentCounter = FragmentCounter(initialLife)
-    val bomb: FragmentCounter = FragmentCounter(initialBomb)
+    val life: FragmentCounter = initialLife.copy()
+    val bomb: FragmentCounter = initialBomb.copy()
     var maxPower: Float = 4f
     var power: Float = 1f
     var graze: Int = 0
 
-    val layer = ReplayLayer()
+    val random = RandomXS128()
+    val replay: Replay
+    val inReplay: Boolean
 
     init {
         logger.info("Game instance created.")
+        if (SystemFlag.replay != null) {
+            replay = SystemFlag.replay!!
+            inReplay = true
+            logger.info("Running in replay mode.")
+        } else {
+            replay = Replay()
+            replay.saveSystemFlags()
+            inReplay = false
+        }
     }
 
     fun createScoreEntry(): GameData.ScoreEntry = GameData.ScoreEntry(
@@ -202,9 +214,13 @@ class KotoGame : Disposable {
     }
 
     fun tick() {
+        // ensures game initialized properly before its state can be saved
         if (VK.PAUSE.pressed()) {
             state = GameState.PAUSED
             return
+        }
+        if (!inReplay) {
+            replay.logKeys()
         }
         subFrameTime = 0f
         event.trigger("tick")
@@ -212,7 +228,6 @@ class KotoGame : Disposable {
         game.stage.tick()
         game.hud.tick()
         game.tasks.tick()
-        game.layer.tick()
         game.frame++
     }
 
@@ -223,7 +238,6 @@ class KotoGame : Disposable {
         } else {
             GameState.FINISH
         }
-        layer.conclude()
     }
 
     fun draw() {
@@ -279,7 +293,6 @@ class KotoGame : Disposable {
         return null
     }
 
-
     fun <T : Task> addTask(task: T): T {
         tasks.addTask(task)
         return task
@@ -318,5 +331,13 @@ class KotoGame : Disposable {
     fun removeListener(event: String, listener: (Array<out Any?>) -> Unit): (Array<out Any?>) -> Unit {
         this.event.removeListener(event, listener)
         return listener
+    }
+
+    fun pressed(vk: VK): Boolean {
+        return replay.pressed(vk, frame)
+    }
+
+    fun justPressed(vk: VK): Boolean {
+        return replay.justPressed(vk, frame)
     }
 }

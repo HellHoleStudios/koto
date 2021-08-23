@@ -26,11 +26,11 @@
 package com.hhs.koto.stg.pattern
 
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.Movable
 import com.hhs.koto.stg.task.self
 import com.hhs.koto.stg.task.waitForFinish
 import com.hhs.koto.util.dist
+import com.hhs.koto.util.random
 import kotlinx.coroutines.CoroutineScope
 
 class Move(

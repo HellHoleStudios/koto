@@ -32,10 +32,7 @@ import com.hhs.koto.stg.task.BasicSpell
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.wait
-import com.hhs.koto.util.difficultySelect
-import com.hhs.koto.util.game
-import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.ring
+import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 
 class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
@@ -54,17 +51,23 @@ class Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
             wander(boss, 120)
             wait(30)
             boss.usingAction = true
-            repeat(3) {
-                ring(
-                    "DS_BALL_M_A_BLUE",
-                    boss.x,
-                    boss.y,
-                    50f,
-                    difficultySelect(8, 12, 16, 20),
-                    startAngle = game.layer.random(0f, 360f),
-                    speed = 5f,
-                )
-                wait(20)
+//            repeat(3) {
+//                ring(
+//                    "DS_BALL_M_A_BLUE",
+//                    boss.x,
+//                    boss.y,
+//                    50f,
+//                    difficultySelect(8, 12, 16, 20),
+//                    startAngle = random(0f, 360f),
+//                    speed = 5f,
+//                )
+//                wait(20)
+//            }
+            val hash = ((playerX.hashCode() + game.frame.hashCode()).toUInt() % 10u).toInt()
+            repeat(10) {
+                if (it != hash) {
+                    create("DS_BALL_M_A_BLUE", -150f + 30f * it, 0f, 2f, -90f)
+                }
             }
             boss.usingAction = false
             wait(30)

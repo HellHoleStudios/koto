@@ -25,66 +25,131 @@
 
 package com.hhs.koto.stg
 
-import com.badlogic.gdx.utils.Array
 import com.hhs.koto.util.SystemFlag
+import com.hhs.koto.util.VK
+import com.hhs.koto.util.app
+import java.util.*
 
-/**
- * Handles game replay. Need to be injected to the game using [ReplayLayer]
- *
- * @author XGN
- */
 class Replay {
-    /**
-     * Saved replay name
-     */
-    var user = "Untitled"
+    lateinit var name: String
+    lateinit var date: Date
+    var sessionName: String? = null
+    var gameMode: GameMode? = null
+    var difficulty: GameDifficulty? = null
+    var player: String? = null
+    private val pressed = ArrayList<BooleanArray>()
+    private val justPressed = ArrayList<BooleanArray>()
+    val checkPoints = ArrayList<CheckPoint>()
 
-    /**
-     * [SystemFlag.name]
-     */
-    var name = ""
-
-    /**
-     * [SystemFlag.difficulty]
-     */
-    var difficulty = ""
-
-    /**
-     * [SystemFlag.player]
-     */
-    var player = ""
-
-    /**
-     * [SystemFlag.gamemode]
-     */
-    var mode = GameMode.STORY
-
-    /**
-     * Replay save date
-     */
-    var date = 0L
-
-    /**
-     * Key mask for each frame
-     */
-    var mask = Array<Int>()
-
-    var startPoint = Array<StartPoint>()
-
-}
-
-/**
- * Specifies a start point
- * @author XGN
- */
-class StartPoint(var frame: Int, var rng: Long, var name: String) {
-    val mp = HashMap<String, String>()
-
-    operator fun get(index: String): String {
-        return mp[index]!!
+    fun saveSystemFlags() {
+        sessionName = SystemFlag.sessionName
+        gameMode = SystemFlag.gamemode
+        difficulty = SystemFlag.difficulty
+        player = SystemFlag.player
     }
 
-    operator fun set(index: String, value: String) {
-        mp[index] = value
+    fun applySystemFlags() {
+        SystemFlag.sessionName = sessionName
+        SystemFlag.gamemode = gameMode
+        SystemFlag.difficulty = difficulty
+        SystemFlag.player = player
+    }
+
+    fun logKeys() {
+        val pressedTmp = BooleanArray(VK.values().size)
+        val justPressedTmp = BooleanArray(VK.values().size)
+        VK.values().forEach {
+            pressedTmp[it.ordinal] = app.input.pressed(it)
+            justPressedTmp[it.ordinal] = app.input.justPressed(it)
+        }
+        pressed.add(pressedTmp)
+        justPressed.add(justPressedTmp)
+    }
+
+    fun createCheckpoint(game: KotoGame, name: String) {
+        checkPoints.add(
+            CheckPoint(
+                name,
+                game.frame,
+                game.maxPoint,
+                game.maxPointHeight,
+                game.score,
+                game.maxCredit,
+                game.creditCount,
+                game.initialLife.copy(),
+                game.initialBomb.copy(),
+                game.life.copy(),
+                game.bomb.copy(),
+                game.maxPower,
+                game.power,
+                game.graze,
+                game.random.getState(0),
+                game.random.getState(1),
+            )
+        )
+    }
+
+    fun pressed(vk: VK, frame: Int): Boolean {
+        return pressed[frame][vk.ordinal]
+    }
+
+    fun justPressed(vk: VK, frame: Int): Boolean {
+        return justPressed[frame][vk.ordinal]
+    }
+}
+
+data class CheckPoint(
+    var name: String,
+    var frame: Int,
+    var maxPoint: Long,
+    var maxPointHeight: Float,
+    var score: Long,
+    var maxCredit: Int,
+    var creditCount: Int,
+    var initialLife: FragmentCounter,
+    var initialBomb: FragmentCounter,
+    var life: FragmentCounter,
+    var bomb: FragmentCounter,
+    var maxPower: Float,
+    var power: Float,
+    var graze: Int,
+    var randomSeed0: Long,
+    var randomSeed1: Long,
+) {
+    @Suppress("unused")
+    private constructor() : this(
+        "",
+        0,
+        0L,
+        0f,
+        0L,
+        0,
+        0,
+        FragmentCounter(),
+        FragmentCounter(),
+        FragmentCounter(),
+        FragmentCounter(),
+        0f,
+        0f,
+        0,
+        0L,
+        0L,
+    )
+
+    fun apply(game: KotoGame) {
+        game.frame = frame
+        game.maxPoint = maxPoint
+        game.maxPointHeight = maxPointHeight
+        game.score = score
+        game.maxCredit = maxCredit
+        game.creditCount = creditCount
+        game.initialLife.set(initialLife)
+        game.initialBomb.set(initialBomb)
+        game.life.set(initialLife)
+        game.bomb.set(bomb)
+        game.maxPower = maxPower
+        game.power = power
+        game.graze = graze
+        game.random.setState(randomSeed0, randomSeed1)
     }
 }

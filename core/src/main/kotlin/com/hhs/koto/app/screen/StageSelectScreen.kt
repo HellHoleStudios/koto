@@ -69,9 +69,10 @@ class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
         if (stages.size > 0) {
             for (i in 0 until stages.size) {
                 grid.add(GridButton(bundle["game.stage.${stages[i].name}.name"], 48, 0, i) {
-                    SystemFlag.name = stages[i].name
+                    SystemFlag.sessionName = stages[i].name
                     SystemFlag.redirect = "game"
                     SystemFlag.redirectDuration = 0.5f
+                    SystemFlag.replay = null
                     app.setScreen("blank", 0.5f)
                 }.apply {
                     activeAction = getActiveAction({

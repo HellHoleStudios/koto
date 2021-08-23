@@ -143,6 +143,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
     }
 
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
+        game.replay.createCheckpoint(game, name)
         val boss = bossBuilder()
         game.addBoss(boss)
         game.bossNameDisplay.show(boss, 1)

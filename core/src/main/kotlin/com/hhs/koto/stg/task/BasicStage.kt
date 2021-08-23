@@ -29,7 +29,12 @@ import com.hhs.koto.util.game
 
 abstract class BasicStage : StageBuilder {
     override fun build(): Task = BuilderSequence(
-        taskBuilder { RunnableTask { game.currentStage = name } },
+        taskBuilder {
+            RunnableTask {
+                game.currentStage = name
+                game.replay.createCheckpoint(game, name)
+            }
+        },
         taskBuilder { stage() },
     ).build()
 

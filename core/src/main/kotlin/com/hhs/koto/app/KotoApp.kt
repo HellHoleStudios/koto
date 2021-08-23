@@ -37,16 +37,17 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
-import com.hhs.koto.demo.RegularGame
 import com.hhs.koto.demo.player.MarisaPlayer
 import com.hhs.koto.demo.player.ReimuPlayer
 import com.hhs.koto.demo.stage1.Spell1
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameData
+import com.hhs.koto.stg.Replay
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.app.clearScreen
+import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.set
 import java.util.*
@@ -132,8 +133,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         GameBuilder.players["marisaB"] = { MarisaPlayer() }
         GameBuilder.players["marisa"] = { MarisaPlayer() }
 
-        GameBuilder.regularGame = RegularGame()
-        GameBuilder.stages.add(Stage1())
+        GameBuilder.regularStages.add(Stage1())
         GameBuilder.spells.add(Spell1())
 
         loadGameData()
@@ -264,4 +264,6 @@ interface KotoCallbacks {
     fun saveOptions(options: Options)
     fun loadGameData(): GameData?
     fun saveGameData(gameData: GameData)
+    fun loadReplays(): GdxArray<Replay>
+    fun saveReplay(replay: Replay)
 }

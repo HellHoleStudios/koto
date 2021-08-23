@@ -385,6 +385,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
         if (switchTarget == "game") {
             SystemFlag.redirect = switchTarget
             SystemFlag.redirectDuration = 0.5f
+            SystemFlag.replay = null
             app.setScreen("blank", 0.5f)
         } else {
             app.setScreen(switchTarget, 0.5f)

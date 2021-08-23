@@ -70,9 +70,10 @@ class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
         if (spells.size > 0) {
             for (i in 0 until spells.size) {
                 grid.add(GridButton(bundle["game.spell.${spells[i].name}.name"], 36, 0, i) {
-                    SystemFlag.name = spells[i].name
+                    SystemFlag.sessionName = spells[i].name
                     SystemFlag.redirect = "game"
                     SystemFlag.redirectDuration = 0.5f
+                    SystemFlag.replay = null
                     app.setScreen("blank", 0.5f)
                 }.apply {
                     activeAction = getActiveAction({

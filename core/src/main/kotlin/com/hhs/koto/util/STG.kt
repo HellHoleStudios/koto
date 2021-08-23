@@ -26,7 +26,6 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldOriginY
@@ -61,8 +60,6 @@ val playerX: Float
     get() = game.player.x
 val playerY: Float
     get() = game.player.y
-
-val replayKeyMask = arrayOf(VK.BOMB, VK.CANCEL, VK.CUSTOM, VK.SHOT, VK.SLOW, VK.UP, VK.DOWN, VK.LEFT, VK.RIGHT)
 
 fun create(
     data: BulletData,

@@ -27,15 +27,11 @@ package com.hhs.koto.stg
 
 import com.hhs.koto.util.safeMod
 
-class FragmentCounter(
+data class FragmentCounter(
     var fragmentFactor: Int = 3,
     var completedCount: Int = 0,
     var fragmentCount: Int = 0,
 ) {
-    constructor(other: FragmentCounter) : this() {
-        set(other)
-    }
-
     fun set(other: FragmentCounter) {
         fragmentFactor = other.fragmentFactor
         completedCount = other.completedCount

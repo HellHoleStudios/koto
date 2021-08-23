@@ -29,12 +29,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
+import com.esotericsoftware.kryo.Kryo
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
-import com.hhs.koto.stg.GameBuilder
-import com.hhs.koto.stg.GameData
-import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.GameMode
+import com.hhs.koto.stg.*
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.set
@@ -47,8 +45,9 @@ object SystemFlag {
     var redirect: String? = null
     var redirectDuration: Float? = null
     var gamemode: GameMode? = null
-    var replay: Boolean? = null
-    var name: String? = null
+    var replay: Replay? = null
+    var checkpoint: CheckPoint? = null
+    var sessionName: String? = null
     var difficulty: GameDifficulty? = null
     var player: String? = null
 }
@@ -157,6 +156,17 @@ fun prettyPrintJson(obj: Any, file: FileHandle) {
     file.writeString(prettyPrintJson(obj), false)
 }
 
+val kryo = Kryo().apply {
+    register(Replay::class.java)
+    register(Date::class.java)
+    register(HashMap::class.java)
+    register(ArrayList::class.java)
+    register(BooleanArray::class.java)
+    register(CheckPoint::class.java)
+    register(FragmentCounter::class.java)
+    register(GameMode::class.java)
+    register(GameDifficulty::class.java)
+}
 
 lateinit var options: Options
 lateinit var gameData: GameData
@@ -190,6 +200,14 @@ fun saveOptions() {
     app.callbacks.saveOptions(options)
 }
 
+fun loadReplays(): GdxArray<Replay> {
+    return app.callbacks.loadReplays()
+}
+
+fun saveReplay(replay: Replay) {
+    app.callbacks.saveReplay(replay)
+}
+
 private var gameDataHash: Int = 0
 
 fun loadGameData() {
@@ -208,7 +226,7 @@ fun loadGameData() {
                         tmpElement.spell[spell.name] = GameData.SpellEntry()
                     }
                 }
-                GameBuilder.stages.forEach { stage ->
+                GameBuilder.regularStages.forEach { stage ->
                     if (difficulty in stage.availableDifficulties) {
                         tmpElement.practiceHighScore[stage.name] = 0L
                     }

@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
+import com.hhs.koto.util.random
 
 class PowerItem(
     x: Float,
@@ -60,8 +61,8 @@ class PowerItem(
             game.score += 10000
             game.addParticle(
                 ScoreParticle(
-                    x + MathUtils.random(-20f, 20f),
-                    y + MathUtils.random(-10f, 10f),
+                    x + random(-20f, 20f),
+                    y + random(-10f, 10f),
                     10000
                 )
             )
@@ -69,8 +70,8 @@ class PowerItem(
             game.score += 10
             game.addParticle(
                 ScoreParticle(
-                    x + MathUtils.random(-20f, 20f),
-                    y + MathUtils.random(-10f, 10f),
+                    x + random(-20f, 20f),
+                    y + random(-10f, 10f),
                     10
                 )
             )

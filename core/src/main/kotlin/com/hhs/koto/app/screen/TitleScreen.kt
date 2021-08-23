@@ -58,12 +58,17 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
 
     init {
         grid.add(GridButton(bundle["ui.title.startStory"], 36, 0, -8) {
-            SystemFlag.gamemode = GameMode.STORY
+            SystemFlag.gamemode = GameMode.REGULAR
             app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton(bundle["ui.title.startExtra"], 36, 0, -7) {
-            SystemFlag.gamemode = GameMode.EXTRA
-            app.setScreen("difficultySelect", 0.5f)
+//            SystemFlag.gamemode = GameMode.EXTRA
+//            app.setScreen("difficultySelect", 0.5f)
+            val replay = loadReplays().first()
+            replay.applySystemFlags()
+            SystemFlag.replay = replay
+            SystemFlag.checkpoint = replay.checkPoints.first()
+            app.setScreen("game", 0.5f)
         })
         grid.add(GridButton(bundle["ui.title.startStagePractice"], 36, 0, -6) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE

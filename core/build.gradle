@@ -10,6 +10,7 @@ dependencies {
     implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
     implementation "com.crashinvaders.vfx:gdx-vfx-core:$gdxVfxVersion"
     implementation "com.crashinvaders.vfx:gdx-vfx-effects:$gdxVfxVersion"
+    implementation "com.esotericsoftware:kryo:$kryoVersion"
     implementation "io.github.libktx:ktx-style:$ktxVersion"
     implementation "io.github.libktx:ktx-async:$ktxVersion"
     implementation "io.github.libktx:ktx-i18n:$ktxVersion"

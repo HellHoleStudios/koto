@@ -88,6 +88,7 @@ object Config {
     val textureMagFilter: TextureFilter = TextureFilter.Linear
     const val genMipMaps: Boolean = true
     const val windowTitle: String = "Koto"
+    const val replayPrefix: String = "koto"
     const val screenWidth: Float = 1440f
     const val screenHeight: Float = 1080f
     const val allowFullScreen: Boolean = true

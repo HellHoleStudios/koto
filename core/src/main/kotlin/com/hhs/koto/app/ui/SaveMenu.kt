@@ -34,10 +34,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.stg.GameData
+import com.hhs.koto.stg.Replay
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
+import java.util.*
 
 class SaveMenu(
     st: Stage,
@@ -160,6 +162,10 @@ class SaveMenu(
             saveObject.name = text
             gameData.currentElement.score.add(saveObject)
             saveGameData()
+        } else if (saveObject is Replay) {
+            saveObject.name = text
+            saveObject.date = Date()
+            saveReplay(saveObject)
         }
         deactivate()
         onFinish()
@@ -168,8 +174,8 @@ class SaveMenu(
     override fun act(delta: Float) {
         super.act(delta)
         if (active && VK.CANCEL.justPressed()) {
+            SE.play("cancel")
             if (text.isNotEmpty()) {
-                SE.play("cancel")
                 text = text.dropLast(1)
             } else {
                 deactivate()

@@ -27,7 +27,6 @@ package com.hhs.koto.stg.graphics
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.math.MathUtils.random
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision
 import com.hhs.koto.stg.PlayerState

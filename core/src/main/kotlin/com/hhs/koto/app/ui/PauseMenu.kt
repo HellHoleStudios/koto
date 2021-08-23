@@ -32,9 +32,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.hhs.koto.app.screen.GameScreen
 import com.hhs.koto.stg.GameState
+import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import ktx.actors.alpha
+
 
 class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplexer) : Group() {
 
@@ -87,7 +89,8 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
             isVisible = false
         })
         pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.saveReplay"], 36, gridX = 0, gridY = 2) {
-            // TODO
+            saveMenu.activate(game.replay)
+            pauseMenu.deactivate()
         }.apply {
             disable()
         })
@@ -126,7 +129,7 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
         continueButton.isVisible = game.state == GameState.GAME_OVER || game.state == GameState.GAME_OVER_NO_CREDIT
         saveScoreButton.enabled = game.state == GameState.FINISH
         saveScoreButton.isVisible = game.state == GameState.FINISH || game.state == GameState.FINISH_PRACTICE
-        saveReplayButton.enabled = game.creditCount == 0
+        saveReplayButton.enabled = game.creditCount == 0 && SystemFlag.replay == null
 
         (pauseMenu.grid.last() as GridLabel).setText(
             when (game.state) {

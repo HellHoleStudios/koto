@@ -30,13 +30,18 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle
 import com.badlogic.gdx.files.FileHandle
+import com.esotericsoftware.kryo.io.ByteBufferInput
+import com.esotericsoftware.kryo.io.ByteBufferOutput
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.KotoCallbacks
 import com.hhs.koto.app.Options
 import com.hhs.koto.stg.GameData
+import com.hhs.koto.stg.Replay
 import com.hhs.koto.util.*
+import ktx.collections.GdxArray
 import ktx.json.fromJson
+import java.text.SimpleDateFormat
 import java.util.*
 
 object Lwjgl3Launcher {
@@ -49,6 +54,8 @@ object Lwjgl3Launcher {
         var restart0 = false
 
         val callbacks = object : KotoCallbacks {
+            val dateFormat = SimpleDateFormat("yyyy_MM_dd")
+
             override fun restartCallback(restart: Boolean) {
                 restart0 = restart
             }
@@ -76,6 +83,37 @@ object Lwjgl3Launcher {
                     gameDataFile.parent().mkdirs()
                 }
                 json.toJson(gameData, gameDataFile)
+            }
+
+            override fun loadReplays(): GdxArray<Replay> {
+                val result = GdxArray<Replay>()
+                val replayFolder = getFile("replay")
+                if (!replayFolder.exists()) replayFolder.mkdirs()
+                replayFolder.list().forEach {
+                    if (it.extension() == "ktr") {
+                        val input = ByteBufferInput(it.read())
+                        result.add(kryo.readObject(input, Replay::class.java))
+                        input.close()
+                    }
+                }
+                return result
+            }
+
+            override fun saveReplay(replay: Replay) {
+                val replayFolder = getFile("replay")
+                var replayName = Config.replayPrefix + "_" + dateFormat.format(replay.date)
+                if (replayFolder.child("$replayName.ktr").exists()) {
+                    for (i in 1..1000) {
+                        if (!replayFolder.child("${replayName}_$i.ktr").exists()) {
+                            replayName = "${replayName}_$i"
+                            break
+                        }
+                    }
+                }
+                val replayFile = replayFolder.child("$replayName.ktr")
+                val output = ByteBufferOutput(replayFile.write(false))
+                kryo.writeObject(output, replay)
+                output.close()
             }
         }
 
