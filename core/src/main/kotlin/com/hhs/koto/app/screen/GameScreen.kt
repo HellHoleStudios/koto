@@ -178,11 +178,12 @@ class GameScreen : BasicScreen(null, null) {
         SE.stop()
         SE.play("cancel")
         game.dispose()
-        SystemFlag.redirect = when (SystemFlag.gamemode!!) {
+        SystemFlag.redirect = if (SystemFlag.replay == null) when (SystemFlag.gamemode!!) {
             GameMode.STAGE_PRACTICE -> "stageSelect"
             GameMode.SPELL_PRACTICE -> "spellSelect"
             else -> "playerSelect"
         }
+        else "replay"
         SystemFlag.redirectDuration = 0.5f
         app.setScreen("blank", 0.5f)
     }

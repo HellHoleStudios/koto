@@ -37,14 +37,17 @@ class Replay {
     var sessionName: String? = null
     var gameMode: GameMode? = null
     var difficulty: GameDifficulty? = null
-    var player: String? = null
+    var shotType: String? = null
 
     @Transient
     private val keyHistory = ArrayList<BooleanArray>()
     var frameCount: Int = 0
     private lateinit var encodedHistory: ArrayList<KeyChangeEvent>
 
-    val checkPoints = ArrayList<CheckPoint>()
+    @Transient
+    var decoded: Boolean = false
+
+    val checkpoints = ArrayList<Checkpoint>()
 
     data class KeyChangeEvent(
         val frame: Int,
@@ -59,14 +62,14 @@ class Replay {
         sessionName = SystemFlag.sessionName
         gameMode = SystemFlag.gamemode
         difficulty = SystemFlag.difficulty
-        player = SystemFlag.player
+        shotType = SystemFlag.shotType
     }
 
     fun applySystemFlags() {
         SystemFlag.sessionName = sessionName
         SystemFlag.gamemode = gameMode
         SystemFlag.difficulty = difficulty
-        SystemFlag.player = player
+        SystemFlag.shotType = shotType
     }
 
     fun logKeys() {
@@ -93,6 +96,7 @@ class Replay {
     }
 
     fun decodeKeys() {
+        if (decoded) return
         val vkCount = VK.values().size
         val currentState = BooleanArray(vkCount)
         var i = 0
@@ -104,11 +108,12 @@ class Replay {
             }
             keyHistory.add(currentState.copyOf())
         }
+        decoded = true
     }
 
     fun createCheckpoint(game: KotoGame, name: String) {
-        checkPoints.add(
-            CheckPoint(
+        checkpoints.add(
+            Checkpoint(
                 name,
                 game.frame,
                 game.maxPoint,
@@ -140,7 +145,7 @@ class Replay {
     }
 }
 
-data class CheckPoint(
+data class Checkpoint(
     var name: String,
     var frame: Int,
     var maxPoint: Long,

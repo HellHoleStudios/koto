@@ -41,7 +41,7 @@ data class GameData(
     val data: GdxMap<String, GdxMap<String, GameDataElement>> = GdxMap(),
 ) {
     val currentElement: GameDataElement
-        get() = data[SystemFlag.player!!][SystemFlag.difficulty!!.name]
+        get() = data[SystemFlag.shotType!!][SystemFlag.difficulty!!.name]
 
     data class GameDataElement(
         val score: GdxArray<ScoreEntry> = GdxArray(),

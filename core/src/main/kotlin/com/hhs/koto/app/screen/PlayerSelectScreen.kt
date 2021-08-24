@@ -88,7 +88,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                 tint = Color(1f, 1f, 0f, 0.8f),
             ) {
                 if (shotTypes.size == 0) {
-                    SystemFlag.player = name
+                    SystemFlag.shotType = name
                     screen.switch()
                 } else {
                     screen.selectedPlayer = name
@@ -333,7 +333,7 @@ class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.pn
                     staticX = 100f,
                     staticY = baseY - i * 250f,
                 ) {
-                    SystemFlag.player = shotTypes[i]
+                    SystemFlag.shotType = shotTypes[i]
                     switch()
                 }.apply {
                     activeAction = getActiveAction({

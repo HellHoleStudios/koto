@@ -147,6 +147,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         screens["playerSelect"] = PlayerSelectScreen()
         screens["stageSelect"] = StageSelectScreen()
         screens["spellSelect"] = SpellSelectScreen()
+        screens["replay"] = ReplayScreen()
         screens["musicRoom"] = MusicRoomScreen()
         screens["options"] = OptionsScreen()
         setScreen("blank")

@@ -62,14 +62,8 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
             app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton(bundle["ui.title.startExtra"], 36, 0, -7) {
-//            SystemFlag.gamemode = GameMode.EXTRA
-//            app.setScreen("difficultySelect", 0.5f)
-            val replay = loadReplays().first()
-            replay.applySystemFlags()
-            replay.decodeKeys()
-            SystemFlag.replay = replay
-            SystemFlag.checkpoint = replay.checkPoints.first()
-            app.setScreen("game", 0.5f)
+            SystemFlag.gamemode = GameMode.EXTRA
+            app.setScreen("difficultySelect", 0.5f)
         })
         grid.add(GridButton(bundle["ui.title.startStagePractice"], 36, 0, -6) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE
@@ -79,7 +73,9 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
             SystemFlag.gamemode = GameMode.SPELL_PRACTICE
             app.setScreen("difficultySelect", 0.5f)
         })
-        grid.add(GridButton(bundle["ui.title.replay"], 36, 0, -4, enabled = false))
+        grid.add(GridButton(bundle["ui.title.replay"], 36, 0, -4) {
+            app.setScreen("replay", 0.5f)
+        })
         grid.add(GridButton(bundle["ui.title.playerData"], 36, 0, -3, enabled = false))
         grid.add(GridButton(bundle["ui.title.musicRoom"], 36, 0, -2) {
             app.setScreen("musicRoom", 0.5f)

@@ -93,9 +93,8 @@ object Lwjgl3Launcher {
                     if (it.extension() == "ktr") {
                         val input = ByteBufferInput(it.read())
                         val replay = kryo.readObject(input, Replay::class.java)
-                        replay.decodeKeys()
-                        result.add(replay)
                         input.close()
+                        result.add(replay)
                     }
                 }
                 return result

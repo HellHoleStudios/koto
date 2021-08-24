@@ -54,7 +54,7 @@ class StageSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png
     private val grid = ConstrainedGrid(
         120f,
         200f,
-        1200f,
+        10000f,
         630f,
         animationDuration = 0.5f,
         interpolation = Interpolation.pow5Out,

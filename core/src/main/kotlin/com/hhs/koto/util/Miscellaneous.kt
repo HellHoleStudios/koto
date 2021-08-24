@@ -47,10 +47,10 @@ object SystemFlag {
     var redirectDuration: Float? = null
     var gamemode: GameMode? = null
     var replay: Replay? = null
-    var checkpoint: CheckPoint? = null
+    var checkpoint: Checkpoint? = null
     var sessionName: String? = null
     var difficulty: GameDifficulty? = null
-    var player: String? = null
+    var shotType: String? = null
 }
 
 val json = Json().apply {
@@ -164,7 +164,7 @@ val kryo = Kryo().apply {
     register(ArrayList::class.java)
     register(BooleanArray::class.java)
     register(Replay.KeyChangeEvent::class.java)
-    register(CheckPoint::class.java)
+    register(Checkpoint::class.java)
     register(FragmentCounter::class.java)
     register(GameMode::class.java)
     register(GameDifficulty::class.java)
@@ -207,6 +207,7 @@ fun loadReplays(): GdxArray<Replay> {
 }
 
 fun saveReplay(replay: Replay) {
+    replay.encodeKeys()
     app.callbacks.saveReplay(replay)
 }
 
