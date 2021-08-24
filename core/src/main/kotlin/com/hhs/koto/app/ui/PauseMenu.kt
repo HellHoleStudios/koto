@@ -132,13 +132,15 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
         saveReplayButton.enabled = game.creditCount == 0 && SystemFlag.replay == null
 
         (pauseMenu.grid.last() as GridLabel).setText(
-            when (game.state) {
-                GameState.PAUSED -> bundle["ui.game.pauseMenu.paused"]
-                GameState.GAME_OVER, GameState.GAME_OVER_NO_CREDIT -> bundle["ui.game.pauseMenu.gameOver"]
-                GameState.FINISH -> bundle["ui.game.pauseMenu.finish"]
-                GameState.FINISH_PRACTICE -> bundle["ui.game.pauseMenu.finishPractice"]
-                else -> ""
-            }
+            if (SystemFlag.replay == null)
+                when (game.state) {
+                    GameState.PAUSED -> bundle["ui.game.pauseMenu.paused"]
+                    GameState.GAME_OVER, GameState.GAME_OVER_NO_CREDIT -> bundle["ui.game.pauseMenu.gameOver"]
+                    GameState.FINISH -> bundle["ui.game.pauseMenu.finish"]
+                    GameState.FINISH_PRACTICE -> bundle["ui.game.pauseMenu.finishPractice"]
+                    else -> ""
+                }
+            else bundle["ui.game.pauseMenu.finishReplay"]
         )
         pauseMenu.selectFirst()
         pauseMenu.activate()

@@ -39,7 +39,7 @@ import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
-class Stage1 : BasicStage() {
+object Stage1 : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
     override val name = "stage1"
 
@@ -86,16 +86,17 @@ class Stage1 : BasicStage() {
         )
         interpolate(0f, 1f, 60) { game.background.alpha = it }
 
-        attachAndWait(MidStage1().build())
+        attachAndWait(MidStage1.build())
         wait(240)
 
         val boss = game.addBoss(AyaBoss())
         game.bossNameDisplay.show(boss, 1)
-        boss.healthBar.addSpell(Nonspell1(), Spell1())
+        boss.healthBar.addSpell(Nonspell1, Spell1, Spell2)
         attachAndWait(boss.creationTask())
 
-        attachAndWait(Nonspell1().build())
-        attachAndWait(Spell1().build())
+        attachAndWait(Nonspell1.build())
+        attachAndWait(Spell1.build())
+        attachAndWait(Spell2.build())
 
         boss.healthBar.visible = false
         game.bossNameDisplay.hide()

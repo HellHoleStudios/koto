@@ -221,6 +221,11 @@ class KotoGame : Disposable {
         }
         if (!inReplay) {
             replay.logKeys()
+        } else {
+            if (frame >= replay.frameCount) {
+                end()
+                return
+            }
         }
         subFrameTime = 0f
         event.trigger("tick")

@@ -32,7 +32,7 @@ import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
 
-class MidStage1 : TaskBuilder {
+object MidStage1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
         task {
             repeat(3) {

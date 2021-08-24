@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg
 
+import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.VK
 import com.hhs.koto.util.app
@@ -37,9 +38,22 @@ class Replay {
     var gameMode: GameMode? = null
     var difficulty: GameDifficulty? = null
     var player: String? = null
-    private val pressed = ArrayList<BooleanArray>()
-    private val justPressed = ArrayList<BooleanArray>()
+
+    @Transient
+    private val keyHistory = ArrayList<BooleanArray>()
+    var frameCount: Int = 0
+    private lateinit var encodedHistory: ArrayList<KeyChangeEvent>
+
     val checkPoints = ArrayList<CheckPoint>()
+
+    data class KeyChangeEvent(
+        val frame: Int,
+        val vk: Byte,
+        val change: Boolean,
+    ) {
+        @Suppress("unused")
+        private constructor() : this(0, 0, false)
+    }
 
     fun saveSystemFlags() {
         sessionName = SystemFlag.sessionName
@@ -56,14 +70,40 @@ class Replay {
     }
 
     fun logKeys() {
-        val pressedTmp = BooleanArray(VK.values().size)
-        val justPressedTmp = BooleanArray(VK.values().size)
+        val pressed = BooleanArray(VK.values().size)
         VK.values().forEach {
-            pressedTmp[it.ordinal] = app.input.pressed(it)
-            justPressedTmp[it.ordinal] = app.input.justPressed(it)
+            pressed[it.ordinal] = app.input.pressed(it)
         }
-        pressed.add(pressedTmp)
-        justPressed.add(justPressedTmp)
+        keyHistory.add(pressed)
+        frameCount++
+    }
+
+    fun encodeKeys() {
+        val vkCount = VK.values().size
+        var currentState = BooleanArray(vkCount)
+        encodedHistory = ArrayList()
+        for (frame in 0 until frameCount) {
+            for (vk in 0 until vkCount) {
+                if (keyHistory[frame][vk] != currentState[vk]) {
+                    encodedHistory.add(KeyChangeEvent(frame, vk.toByte(), keyHistory[frame][vk]))
+                }
+            }
+            currentState = keyHistory[frame]
+        }
+    }
+
+    fun decodeKeys() {
+        val vkCount = VK.values().size
+        val currentState = BooleanArray(vkCount)
+        var i = 0
+        keyHistory.clear()
+        for (frame in 0 until frameCount) {
+            while (i < encodedHistory.size && frame >= encodedHistory[i].frame) {
+                currentState[encodedHistory[i].vk.toInt()] = encodedHistory[i].change
+                i++
+            }
+            keyHistory.add(currentState.copyOf())
+        }
     }
 
     fun createCheckpoint(game: KotoGame, name: String) {
@@ -90,11 +130,13 @@ class Replay {
     }
 
     fun pressed(vk: VK, frame: Int): Boolean {
-        return pressed[frame][vk.ordinal]
+        if (frame < 0) return false
+        if (frame >= keyHistory.size) throw KotoRuntimeException("frame $frame has not been recorded!")
+        return keyHistory[frame][vk.ordinal]
     }
 
     fun justPressed(vk: VK, frame: Int): Boolean {
-        return justPressed[frame][vk.ordinal]
+        return pressed(vk, frame) && (!pressed(vk, frame - 1))
     }
 }
 

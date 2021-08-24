@@ -40,6 +40,7 @@ import com.hhs.koto.app.ui.FPSDisplay
 import com.hhs.koto.demo.player.MarisaPlayer
 import com.hhs.koto.demo.player.ReimuPlayer
 import com.hhs.koto.demo.stage1.Spell1
+import com.hhs.koto.demo.stage1.Spell2
 import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameData
@@ -133,8 +134,9 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         GameBuilder.players["marisaB"] = { MarisaPlayer() }
         GameBuilder.players["marisa"] = { MarisaPlayer() }
 
-        GameBuilder.regularStages.add(Stage1())
-        GameBuilder.spells.add(Spell1())
+        GameBuilder.regularStages.add(Stage1)
+        GameBuilder.spells.add(Spell1)
+        GameBuilder.spells.add(Spell2)
 
         loadGameData()
 

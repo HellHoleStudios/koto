@@ -30,7 +30,7 @@ import com.hhs.koto.util.create
 import com.hhs.koto.util.difficultySelect
 import com.hhs.koto.util.sin
 
-class Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
+object Nonspell1 : BasicNonspell<AyaBoss>(AyaBoss::class.java) {
     override val health: Float = 1000f
     override val maxTime: Int = 1200
 

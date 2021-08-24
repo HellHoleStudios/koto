@@ -32,6 +32,7 @@ import ktx.collections.GdxArray
 enum class VK {
     DOWN {
         override val uiKeycode: Int = Input.Keys.DOWN
+        override val canRepeat: Boolean = true
         override val keycodes
             get() = options.keyDown
 
@@ -43,6 +44,7 @@ enum class VK {
     },
     UP {
         override val uiKeycode: Int = Input.Keys.UP
+        override val canRepeat: Boolean = true
         override val keycodes
             get() = options.keyUp
 
@@ -54,6 +56,7 @@ enum class VK {
     },
     LEFT {
         override val uiKeycode: Int = Input.Keys.LEFT
+        override val canRepeat: Boolean = true
         override val keycodes
             get() = options.keyLeft
 
@@ -65,6 +68,7 @@ enum class VK {
     },
     RIGHT {
         override val uiKeycode: Int = Input.Keys.RIGHT
+        override val canRepeat: Boolean = true
         override val keycodes
             get() = options.keyRight
 
@@ -188,6 +192,7 @@ enum class VK {
     abstract val keycodes: GdxArray<Int>
     abstract fun checkController(controller: Controller): Boolean
     open val uiKeycode: Int = 0
+    open val canRepeat: Boolean = false
 
     fun pressed(): Boolean = app.input.pressed(this)
     fun justPressed(): Boolean = app.input.justPressed(this)

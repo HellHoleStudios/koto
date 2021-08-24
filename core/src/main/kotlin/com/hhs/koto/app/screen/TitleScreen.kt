@@ -66,6 +66,7 @@ class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
 //            app.setScreen("difficultySelect", 0.5f)
             val replay = loadReplays().first()
             replay.applySystemFlags()
+            replay.decodeKeys()
             SystemFlag.replay = replay
             SystemFlag.checkpoint = replay.checkPoints.first()
             app.setScreen("game", 0.5f)

@@ -54,7 +54,7 @@ object Lwjgl3Launcher {
         var restart0 = false
 
         val callbacks = object : KotoCallbacks {
-            val dateFormat = SimpleDateFormat("yyyy_MM_dd")
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")
 
             override fun restartCallback(restart: Boolean) {
                 restart0 = restart
@@ -92,7 +92,9 @@ object Lwjgl3Launcher {
                 replayFolder.list().forEach {
                     if (it.extension() == "ktr") {
                         val input = ByteBufferInput(it.read())
-                        result.add(kryo.readObject(input, Replay::class.java))
+                        val replay = kryo.readObject(input, Replay::class.java)
+                        replay.decodeKeys()
+                        result.add(replay)
                         input.close()
                     }
                 }

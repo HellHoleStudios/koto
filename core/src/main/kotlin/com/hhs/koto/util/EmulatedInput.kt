@@ -73,7 +73,7 @@ class EmulatedInput : InputMultiplexer() {
                     fireDown(vk)
                 }
                 pressedTime[vk.ordinal] += delta
-                if (pressedTime[vk.ordinal] >= options.keyRepeatDelay) {
+                if (vk.canRepeat && pressedTime[vk.ordinal] >= options.keyRepeatDelay) {
                     repeatCounter[vk.ordinal] += delta
                     if (repeatCounter[vk.ordinal] >= options.keyRepeatInterval) {
                         fireDown(vk)

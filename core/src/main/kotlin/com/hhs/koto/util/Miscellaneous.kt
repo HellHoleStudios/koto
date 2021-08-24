@@ -35,6 +35,7 @@ import com.hhs.koto.app.Options
 import com.hhs.koto.stg.*
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.collections.contains
 import ktx.collections.set
 import ktx.json.JsonSerializer
 import java.util.*
@@ -162,6 +163,7 @@ val kryo = Kryo().apply {
     register(HashMap::class.java)
     register(ArrayList::class.java)
     register(BooleanArray::class.java)
+    register(Replay.KeyChangeEvent::class.java)
     register(CheckPoint::class.java)
     register(FragmentCounter::class.java)
     register(GameMode::class.java)
@@ -217,27 +219,35 @@ fun loadGameData() {
     } else {
         gameData = GameData()
         app.logger.info("Creating empty game data file...")
-        for (player in GameBuilder.players.safeKeys()) {
-            val tmpMap = GdxMap<String, GameData.GameDataElement>()
-            GameBuilder.usedDifficulties.forEach { difficulty ->
-                val tmpElement = GameData.GameDataElement()
-                GameBuilder.spells.forEach { spell ->
-                    if (difficulty in spell.availableDifficulties) {
+    }
+    gameDataHash = gameData.hashCode()
+    for (player in GameBuilder.players.safeKeys()) {
+        if (!gameData.data.contains(player)) {
+            gameData.data[player] = GdxMap()
+        }
+        val tmpMap = gameData.data[player]
+        GameBuilder.usedDifficulties.forEach { difficulty ->
+            if (!tmpMap.contains(difficulty.name)) {
+                tmpMap[difficulty.name] = GameData.GameDataElement()
+            }
+            val tmpElement = tmpMap[difficulty.name]
+            GameBuilder.spells.forEach { spell ->
+                if (difficulty in spell.availableDifficulties) {
+                    if (!tmpElement.spell.contains(spell.name)) {
                         tmpElement.spell[spell.name] = GameData.SpellEntry()
                     }
                 }
-                GameBuilder.regularStages.forEach { stage ->
-                    if (difficulty in stage.availableDifficulties) {
+            }
+            GameBuilder.regularStages.forEach { stage ->
+                if (difficulty in stage.availableDifficulties) {
+                    if (!tmpElement.practiceHighScore.contains(stage.name)) {
                         tmpElement.practiceHighScore[stage.name] = 0L
                     }
                 }
-                tmpMap[difficulty.name] = tmpElement
             }
-            gameData.data[player] = tmpMap
         }
-        saveGameData()
     }
-    gameDataHash = gameData.hashCode()
+    saveGameData()
 }
 
 fun saveGameData() {
