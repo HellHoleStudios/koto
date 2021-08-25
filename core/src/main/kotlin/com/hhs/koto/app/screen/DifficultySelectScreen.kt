@@ -37,7 +37,7 @@ import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.util.*
 
-class DifficultySelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
+class DifficultySelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     val grid = ScrollingGrid(
         staticX = 420f,
         staticY = 360f,

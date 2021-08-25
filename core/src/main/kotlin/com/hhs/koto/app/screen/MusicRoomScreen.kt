@@ -54,8 +54,8 @@ class MusicRoomScreen : BasicScreen(-1, getRegion("bg/music_room.png")) {
     }
 
     init {
-        for (i in 0 until Config.musicCount) {
-            titles.add(GridButton(bundle["music.$i.title"], 36, 0, i) {
+        for (i in 0 until Config.bgmCount) {
+            titles.add(GridButton("#${i + 1} " + bundle["music.$i.title"], 36, 0, i) {
                 BGM.stop()
                 BGM.play(bundle["music.$i.file"])
                 comment.txt = bundle["music.$i.comment"]

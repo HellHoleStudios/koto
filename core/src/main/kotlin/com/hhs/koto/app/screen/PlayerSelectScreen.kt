@@ -42,7 +42,7 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 
-class PlayerSelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
+class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     private var difficultyLabel: Grid? = null
     private val portraits = Grid(selectSound = null).register(st, input)
     private val descriptions = Grid().register(st, input)

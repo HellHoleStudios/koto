@@ -42,7 +42,7 @@ import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 
-class StageSelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
+class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     private val titleBackground = Image(getRegion("ui/blank.png")).apply {
         color = Color(0f, 0.5f, 1f, 0.5f)
         setSize(1440f, 60f)

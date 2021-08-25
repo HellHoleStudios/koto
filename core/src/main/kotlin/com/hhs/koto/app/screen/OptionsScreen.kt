@@ -43,7 +43,7 @@ import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
-class OptionsScreen : BasicScreen(Config.uiBGM, getRegion("bg/title.png")) {
+class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     private val grid = ConstrainedGrid(
         -2048f,
         72f,

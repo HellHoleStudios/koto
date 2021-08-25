@@ -89,7 +89,8 @@ object Config {
     const val genMipMaps: Boolean = true
     const val windowTitle: String = "Koto"
     const val replayPrefix: String = "koto"
-    const val uiBGM: Int = 0
+    const val bgmCount: Int = 2
+    const val uiBgm: Int = 0
     const val uiBackground: String = "bg/generic.png"
     const val screenWidth: Float = 1440f
     const val screenHeight: Float = 1080f
@@ -107,7 +108,6 @@ object Config {
     const val cleanupBlankCount: Int = 512
     const val defaultShotSheet: String = "danmakufu_shot.shot"
     const val allowSpeedUpOutOfReplay: Boolean = true
-    const val musicCount: Int = 1
     const val noDuplicateSE: Boolean = true
     lateinit var UIFont: String
     lateinit var UIFontSmall: String

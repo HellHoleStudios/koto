@@ -41,7 +41,7 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 import java.text.SimpleDateFormat
 
-class ReplayScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
+class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
 
     companion object {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")

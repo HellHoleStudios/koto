@@ -124,6 +124,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("spellcard", "snd/se_cat00.wav")
 
         BGM.register(LoopingMusic(bundle["music.0.file"], 2f, 58f))
+        BGM.register(LoopingMusic(bundle["music.1.file"], 0f, 12f))
         defaultShotSheet = A[Config.defaultShotSheet]
 
         // TODO variants

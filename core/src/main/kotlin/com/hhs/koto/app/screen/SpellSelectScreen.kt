@@ -42,7 +42,7 @@ import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 
-class SpellSelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
+class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     private val title = Label(bundle["ui.spellSelect.title"], getUILabelStyle(72)).apply {
         setPosition(80f, 900f)
         st += this

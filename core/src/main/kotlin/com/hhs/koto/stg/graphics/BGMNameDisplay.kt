@@ -25,28 +25,34 @@
 
 package com.hhs.koto.stg.graphics
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.utils.Align
-import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.draw
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.app.Config.worldW
+import com.hhs.koto.util.bundle
+import com.hhs.koto.util.getFont
+import com.hhs.koto.util.lerp
 
-open class TextDrawable(
-    val font: BitmapFont,
-    var fontScale: Float,
-    var text: String,
-    override var x: Float,
-    override var y: Float,
-    var targetWidth: Float = 512f,
-    var halign: Int = Align.left,
-    var color: Color = Color.WHITE.cpy(),
-) : Drawable {
-    override var alive: Boolean = true
+class BGMNameDisplay(bgmId: Int) : TextDrawable(
+    getFont(bundle["font.BGMNameDisplay"], 24),
+    12f / 24,
+    "BGM: " + bundle["music.$bgmId.title"],
+    worldW - worldOriginX - 10f,
+    -worldOriginY - 15f,
+    halign = Align.right,
+    targetWidth = 0f,
+) {
+    var t: Int = 0
 
-    override fun tick() = Unit
-
-    override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        font.draw(batch, parentAlpha, text, fontScale, x, y, color, targetWidth, halign, false)
+    override fun tick() {
+        if (t <= 30) {
+            y = -worldOriginY + Interpolation.pow5Out.apply(0f, 15f, t / 30f)
+        } else if (t >= 90) {
+            color.a = lerp(1f, 0f, (t - 90) / 30f)
+        } else if (t >= 120) {
+            kill()
+        }
+        t++
     }
 }

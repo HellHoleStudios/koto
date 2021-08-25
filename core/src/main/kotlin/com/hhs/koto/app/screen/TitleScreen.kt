@@ -39,7 +39,7 @@ import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 
-class TitleScreen : BasicScreen(Config.uiBGM, getRegion("bg/title.png")) {
+class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     private val grid = Grid().register(st, input)
     private val titles = Group().apply { st += this }
     private val title = Label(

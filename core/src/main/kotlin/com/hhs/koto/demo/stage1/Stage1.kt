@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
+import com.hhs.koto.stg.graphics.BGMNameDisplay
 import com.hhs.koto.stg.graphics.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move
@@ -36,6 +37,7 @@ import com.hhs.koto.stg.task.BasicStage
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.attachAndWait
 import com.hhs.koto.stg.task.wait
+import com.hhs.koto.util.BGM
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
@@ -86,6 +88,9 @@ object Stage1 : BasicStage() {
                 width = 128f,
             )
         )
+        BGM.play(1)
+        game.hud.addDrawable(BGMNameDisplay(1))
+
         interpolate(0f, 1f, 60) { game.background.alpha = it }
 
         attachAndWait(MidStage1.build())
