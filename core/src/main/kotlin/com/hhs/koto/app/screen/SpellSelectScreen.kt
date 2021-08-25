@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.hsvColor
@@ -41,7 +42,7 @@ import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
 
-class SpellSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+class SpellSelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
     private val title = Label(bundle["ui.spellSelect.title"], getUILabelStyle(72)).apply {
         setPosition(80f, 900f)
         st += this

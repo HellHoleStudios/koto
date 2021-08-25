@@ -38,7 +38,7 @@ import ktx.actors.plusAssign
 
 
 open class BasicScreen(
-    private val backgroundMusic: String? = "",
+    private val bgmId: Int? = -1,
     backgroundTexture: TextureRegion? = null,
 ) : KotoScreen {
     val blocker = InputBlocker()
@@ -68,7 +68,9 @@ open class BasicScreen(
     }
 
     override fun show() {
-        BGM.play(backgroundMusic)
+        if (bgmId == null || bgmId != -1) {
+            BGM.play(bgmId)
+        }
     }
 
     override fun hide() {

@@ -31,12 +31,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.util.*
 
-class DifficultySelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+class DifficultySelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
     val grid = ScrollingGrid(
         staticX = 420f,
         staticY = 360f,

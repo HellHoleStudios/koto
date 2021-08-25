@@ -89,8 +89,10 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 game.background.addDrawable(SpellAttackOverlay())
                 game.hud.addDrawable(spellInfoDisplay)
                 game.bossNameDisplay.nextSpell()
-                gameData.currentElement.spell[name].totalAttempt++
-                saveGameData()
+                if (SystemFlag.replay == null) {
+                    gameData.currentElement.spell[name].totalAttempt++
+                    saveGameData()
+                }
             }
 
             game.spellTimer.show(maxTime)
@@ -115,8 +117,10 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 if (!failedBonus) {
                     // TODO Spell Bonus animation
                     SE.play("cardget")
-                    gameData.currentElement.spell[name].successfulAttempt++
-                    saveGameData()
+                    if (SystemFlag.replay == null) {
+                        gameData.currentElement.spell[name].successfulAttempt++
+                        saveGameData()
+                    }
                     game.score += getBonus(t)
                 }
                 spellInfoDisplay!!.finished = true

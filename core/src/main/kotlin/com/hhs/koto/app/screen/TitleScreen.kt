@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.register
@@ -38,7 +39,7 @@ import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 
-class TitleScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
+class TitleScreen : BasicScreen(Config.uiBGM, getRegion("bg/title.png")) {
     private val grid = Grid().register(st, input)
     private val titles = Group().apply { st += this }
     private val title = Label(

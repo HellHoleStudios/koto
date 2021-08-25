@@ -66,8 +66,10 @@ object GameBuilder {
     }
 
     fun buildRegularGame(): KotoGame {
-        gameData.playCount++
-        saveGameData()
+        if (SystemFlag.replay == null) {
+            gameData.playCount++
+            saveGameData()
+        }
         val builder = BuilderSequence()
         var startStageIndex = 0
         if (SystemFlag.checkpoint != null) {
@@ -80,16 +82,20 @@ object GameBuilder {
         builder.add(taskBuilder {
             RunnableTask {
                 game.end()
-                gameData.clearCount++
-                saveGameData()
+                if (SystemFlag.replay == null) {
+                    gameData.clearCount++
+                    saveGameData()
+                }
             }
         })
         return buildGameWithTask(builder.build())
     }
 
     fun buildExtraGame(): KotoGame {
-        gameData.playCount++
-        saveGameData()
+        if (SystemFlag.replay == null) {
+            gameData.playCount++
+            saveGameData()
+        }
         val builder = BuilderSequence()
         var startStageIndex = 0
         if (SystemFlag.checkpoint != null) {
@@ -102,8 +108,10 @@ object GameBuilder {
         builder.add(taskBuilder {
             RunnableTask {
                 game.end()
-                gameData.clearCount++
-                saveGameData()
+                if (SystemFlag.replay == null) {
+                    gameData.clearCount++
+                    saveGameData()
+                }
             }
         })
         return buildGameWithTask(builder.build())
@@ -120,8 +128,10 @@ object GameBuilder {
     }
 
     fun buildStagePractice(name: String, difficulty: GameDifficulty): KotoGame {
-        gameData.practiceCount++
-        saveGameData()
+        if (SystemFlag.replay == null) {
+            gameData.practiceCount++
+            saveGameData()
+        }
         val stageBuilder =
             regularStages.find { it.name == name } ?: throw KotoRuntimeException("Stage \"$name\" not found!")
         if (difficulty !in stageBuilder.availableDifficulties) {
@@ -136,8 +146,10 @@ object GameBuilder {
     }
 
     fun buildSpellPractice(name: String, difficulty: GameDifficulty): KotoGame {
-        gameData.practiceCount++
-        saveGameData()
+        if (SystemFlag.replay == null) {
+            gameData.practiceCount++
+            saveGameData()
+        }
         val spellBuilder =
             spells.find { it.name == name } ?: throw KotoRuntimeException("Spell \"$name\" not found!")
         if (difficulty !in spellBuilder.availableDifficulties) {

@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.Checkpoint
 import com.hhs.koto.stg.GameMode
@@ -40,7 +41,7 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 import java.text.SimpleDateFormat
 
-class ReplayScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+class ReplayScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
 
     companion object {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")

@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameMode
 import com.hhs.koto.util.*
@@ -41,7 +42,7 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 
-class PlayerSelectScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/generic.png")) {
+class PlayerSelectScreen : BasicScreen(Config.uiBGM, getRegion(Config.uiBackground)) {
     private var difficultyLabel: Grid? = null
     private val portraits = Grid(selectSound = null).register(st, input)
     private val descriptions = Grid().register(st, input)

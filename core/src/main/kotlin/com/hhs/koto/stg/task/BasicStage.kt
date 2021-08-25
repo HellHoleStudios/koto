@@ -28,6 +28,24 @@ package com.hhs.koto.stg.task
 import com.hhs.koto.util.game
 
 abstract class BasicStage : StageBuilder {
+    abstract val bonus: Long
+    abstract fun stage(): Task
+
+    companion object {
+        fun defaultBonus(stage: Int, isFinalStage: Boolean = false, isExtraStage: Boolean = false): Long {
+            var result = stage * 5000000L
+            if (isFinalStage) {
+                result += game.life.completedCount * 10000000L
+                result += game.life.completedCount * 3000000L
+            }
+            if (isExtraStage) {
+                result += game.life.completedCount * 40000000L
+                result += game.life.completedCount * 4000000L
+            }
+            return result
+        }
+    }
+
     override fun build(): Task = BuilderSequence(
         taskBuilder {
             RunnableTask {
@@ -37,6 +55,4 @@ abstract class BasicStage : StageBuilder {
         },
         taskBuilder { stage() },
     ).build()
-
-    abstract fun stage(): Task
 }

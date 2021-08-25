@@ -33,6 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.utils.I18NBundle
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.Config.resolutionModes
 import com.hhs.koto.app.Options
 import com.hhs.koto.app.ui.ConstrainedGrid
@@ -42,7 +43,7 @@ import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
 import kotlin.math.roundToInt
 
-class OptionsScreen : BasicScreen("mus/E0120.ogg", getRegion("bg/title.png")) {
+class OptionsScreen : BasicScreen(Config.uiBGM, getRegion("bg/title.png")) {
     private val grid = ConstrainedGrid(
         -2048f,
         72f,

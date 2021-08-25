@@ -36,7 +36,7 @@ import com.hhs.koto.util.*
 import ktx.actors.plusAssign
 import ktx.actors.txt
 
-class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
+class MusicRoomScreen : BasicScreen(-1, getRegion("bg/music_room.png")) {
     private val titles = ConstrainedGrid(
         120f,
         400f,
@@ -48,13 +48,13 @@ class MusicRoomScreen : BasicScreen("", getRegion("bg/music_room.png")) {
     private val comment = Label("", getUILabelStyle(36)).apply {
         setAlignment(Align.topLeft)
         wrap = true
-        txt = bundle["music.1.comment"]
+        txt = bundle["music.0.comment"]
         setBounds(120f, 100f, 1200f, 300f)
         st += this
     }
 
     init {
-        for (i in 1..Config.musicCount) {
+        for (i in 0 until Config.musicCount) {
             titles.add(GridButton(bundle["music.$i.title"], 36, 0, i) {
                 BGM.stop()
                 BGM.play(bundle["music.$i.file"])

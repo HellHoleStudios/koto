@@ -89,6 +89,8 @@ object Config {
     const val genMipMaps: Boolean = true
     const val windowTitle: String = "Koto"
     const val replayPrefix: String = "koto"
+    const val uiBGM: Int = 0
+    const val uiBackground: String = "bg/generic.png"
     const val screenWidth: Float = 1440f
     const val screenHeight: Float = 1080f
     const val allowFullScreen: Boolean = true

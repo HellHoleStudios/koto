@@ -35,13 +35,17 @@ object BGM {
     private val bgms = GdxMap<String, LoopingMusic>()
     val logger = Logger("BGM", Config.logLevel)
 
+    fun play(id: Int?) {
+        if (id == null) {
+            stop()
+        } else {
+            play(bundle["music.$id.file"])
+        }
+    }
+
     fun play(name: String?) {
         if (name == null) {
             stop()
-            return
-        }
-        if (name == "") {
-            logger.debug("Keep original BGM.")
             return
         }
         if (bgm != null) {

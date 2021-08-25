@@ -42,6 +42,8 @@ import com.hhs.koto.util.getRegion
 object Stage1 : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
     override val name = "stage1"
+    override val bonus: Long
+        get() = defaultBonus(1)
 
     override fun stage() = CoroutineTask {
         game.background.addDrawable(

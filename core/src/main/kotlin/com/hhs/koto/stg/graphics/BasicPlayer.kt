@@ -260,8 +260,10 @@ open class BasicPlayer(
 
     open fun onBomb(isDeathBomb: Boolean) {
         game.event.trigger("player.bomb", isDeathBomb)
-        gameData.bombCount++
-        saveGameData()
+        if (SystemFlag.replay == null) {
+            gameData.bombCount++
+            saveGameData()
+        }
         invulnerable = true
         SE.play("bomb")
         game.bomb.completedCount--
@@ -338,8 +340,10 @@ open class BasicPlayer(
     open fun onDeath() {
         invulnerable = true
         game.event.trigger("player.death")
-        gameData.deathCount++
-        saveGameData()
+        if (SystemFlag.replay == null) {
+            gameData.deathCount++
+            saveGameData()
+        }
         task {
             game.addParticle(Explosion(x, y, 64f, 64f, 384f, 384f, duration = 10))
             task {
