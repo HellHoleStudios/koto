@@ -25,32 +25,40 @@
 
 package com.hhs.koto.stg.graphics
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.utils.Align
-import com.hhs.koto.app.Config.worldOriginX
-import com.hhs.koto.app.Config.worldOriginY
-import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.util.bundle
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.lerp
 
-class BGMNameDisplay(bgmId: Int, override val zIndex: Int = 1000) : TextDrawable(
-    getFont(bundle["font.BGMNameDisplay"], 24),
-    12f / 24,
-    bundle["game.bgmPrefix"] + bundle["music.$bgmId.title"],
-    worldW - worldOriginX - 10f,
-    -worldOriginY - 15f,
-    halign = Align.right,
-    targetWidth = 0f,
+class TextNotification(
+    text: String,
+    val targetY: Float = 150f,
+    color: Color = Color.WHITE.cpy(),
+    fontSize: Int = 48,
+    font: String = bundle["font.notification"],
+    val duration: Int = 60,
+    override val zIndex: Int = 1000,
+) : TextDrawable(
+    getFont(font, fontSize, color),
+    0.5f,
+    text,
+    0f,
+    targetY + 30f,
+    0f,
+    Align.center,
 ) {
     var t: Int = 0
 
     override fun tick() {
         if (t <= 30) {
-            y = -worldOriginY + Interpolation.pow5Out.apply(0f, 15f, t / 30f)
-        } else if (t >= 90) {
-            color.a = lerp(1f, 0f, (t - 90) / 30f)
-        } else if (t >= 120) {
+            y = targetY + Interpolation.pow5Out.apply(30f, 0f, t / 30f)
+            color.a = lerp(0f, 1f, t / 15f)
+        } else if (t >= duration) {
+            color.a = lerp(1f, 0f, (t - duration) / 30f)
+        }
+        if (t >= duration + 30) {
             kill()
         }
         t++

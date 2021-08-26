@@ -118,7 +118,7 @@ class SpellInfoDisplay(
         infoFont.draw(
             batch,
             parentAlpha * alpha * distanceAlpha,
-            if (failed) "Failed" else bonus.toString(),
+            if (failed) "Failed" else String.format("%d", bonus),
             10f / 20,
             x - 140f,
             y + 4f,

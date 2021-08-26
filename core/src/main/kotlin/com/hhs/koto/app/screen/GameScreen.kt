@@ -142,15 +142,17 @@ class GameScreen : BasicScreen(null, null) {
             fadeOut(0.5f, Interpolation.sine) then Actions.run {
                 paused = false
                 game.state = GameState.RUNNING
+                SE.resume()
+                BGM.resume()
             }
         )
         pauseMenu.deactivate()
-        SE.resume()
     }
 
     fun pauseGame() {
         SE.pause()
         SE.play("pause")
+        BGM.pause()
         paused = true
         passCounter = 0
         deltaTimeCounter = 0f

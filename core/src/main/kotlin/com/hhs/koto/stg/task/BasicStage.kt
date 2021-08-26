@@ -25,6 +25,8 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.stg.graphics.TextNotification
+import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 
 abstract class BasicStage : StageBuilder {
@@ -54,5 +56,21 @@ abstract class BasicStage : StageBuilder {
             }
         },
         taskBuilder { stage() },
+        taskBuilder {
+            RunnableTask {
+                val bonus = bonus
+                game.score += bonus
+                game.hud.addDrawable(TextNotification(bundle["game.stageClear"]))
+                game.hud.addDrawable(
+                    TextNotification(
+                        String.format("%,d", bonus),
+                        100f,
+                        font = bundle["font.numerical"],
+                        fontSize = 36,
+                    )
+                )
+            }
+        },
+        taskBuilder { DelayTask(120) },
     ).build()
 }
