@@ -42,7 +42,8 @@ class PointItem(
 ) : BasicItem(
     x,
     y,
-    getRegion("item/point.png"),
+    A["item/item.atlas"],
+    "point",
     16f,
     16f,
     speed,

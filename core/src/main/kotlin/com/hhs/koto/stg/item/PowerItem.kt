@@ -27,8 +27,8 @@ package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.particle.ScoreParticle
+import com.hhs.koto.util.A
 import com.hhs.koto.util.game
-import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.random
 
 class PowerItem(
@@ -44,7 +44,8 @@ class PowerItem(
 ) : BasicItem(
     x,
     y,
-    getRegion("item/power.png"),
+    A["item/item.atlas"],
+    "power",
     16f,
     16f,
     speed,

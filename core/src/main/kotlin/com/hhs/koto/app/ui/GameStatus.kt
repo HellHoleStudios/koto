@@ -288,7 +288,7 @@ class GameStatus(val game: KotoGame) : Group() {
             setBounds(1030f, 640f, 350f, 40f)
             addDelayAction(this)
         })
-        addActor(Image(getRegion("item/power.png")).apply {
+        addActor(Image(A.get<TextureAtlas>("item/item.atlas").findRegion("power")).apply {
             setBounds(980f, 640f, 40f, 40f)
             addDelayAction(this)
         })
@@ -354,7 +354,7 @@ class GameStatus(val game: KotoGame) : Group() {
             setBounds(1030f, 600f, 360f, 40f)
             addDelayAction(this)
         })
-        addActor(Image(getRegion("item/point.png")).apply {
+        addActor(Image(A.get<TextureAtlas>("item/item.atlas").findRegion("point")).apply {
             setBounds(980f, 600f, 40f, 40f)
             addDelayAction(this)
         })
