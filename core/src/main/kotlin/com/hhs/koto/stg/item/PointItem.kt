@@ -27,6 +27,7 @@ package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.app.Config.worldOriginY
+import com.hhs.koto.stg.graphics.TextNotification
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.*
 

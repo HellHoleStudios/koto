@@ -26,10 +26,8 @@
 package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.graphics.TextNotification
 import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.A
-import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.random
 
@@ -78,16 +76,6 @@ class PowerItem(
                 )
             )
             game.power = (game.power + amount).coerceAtMost(game.maxPower)
-            if (game.power >= game.maxPower) {
-                game.hud.addDrawable(
-                    TextNotification(
-                        bundle["game.fullPower"],
-                        80f,
-                        font = bundle["font.numerical"],
-                        fontSize = 36,
-                    )
-                )
-            }
         }
     }
 }

@@ -125,6 +125,8 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         SE.register("timeout1", "snd/se_timeout2.wav")
         SE.register("cardget", "snd/se_cardget.wav")
         SE.register("spellcard", "snd/se_cat00.wav")
+        SE.register("bonus", "snd/se_bonus.wav")
+        SE.register("extend", "snd/se_extend.wav")
 
         BGM.register(LoopingMusic(bundle["music.0.file"], 2f, 58f))
         BGM.register(LoopingMusic(bundle["music.1.file"], 0f, 12f))

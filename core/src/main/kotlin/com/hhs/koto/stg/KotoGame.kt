@@ -178,6 +178,8 @@ class KotoGame : Disposable {
     val replay: Replay
     val inReplay: Boolean
 
+    var highScoreAchieved: Boolean = false
+
     init {
         logger.info("Game instance created.")
         if (SystemFlag.replay != null) {
@@ -243,6 +245,17 @@ class KotoGame : Disposable {
         }
         subFrameTime = 0f
         event.trigger("tick")
+        if (!highScoreAchieved && game.score > game.highScore) {
+            highScoreAchieved = true
+            game.hud.addDrawable(
+                TextNotification(
+                    bundle["game.highScore"],
+                    100f,
+                    font = bundle["font.notification"],
+                    fontSize = 36,
+                )
+            )
+        }
         game.background.tick()
         game.stage.tick()
         game.hud.tick()
