@@ -77,7 +77,7 @@ open class BasicPlayer(
     var dx: Int = 0
     var dy: Int = 0
     var speed: Float = 0f
-    var invulnerable: Boolean = false
+    var invincible: Boolean = false
     var rotation: Float = 0f
     var scaleX = 1f
     var scaleY = 1f
@@ -190,7 +190,7 @@ open class BasicPlayer(
             }
         }
         if (playerState == PlayerState.NORMAL) {
-            if (!invulnerable) {
+            if (!invincible) {
                 var hit = false
                 game.bullets.forEach {
                     if (collide(it.collision, it.x, it.y, hitCollision, x, y)) {
@@ -264,7 +264,7 @@ open class BasicPlayer(
             gameData.bombCount++
             saveGameData()
         }
-        invulnerable = true
+        invincible = true
         SE.play("bomb")
         game.bomb.removeCompleted(1)
         task {
@@ -297,7 +297,7 @@ open class BasicPlayer(
             }
             wait(290)
             playerState = PlayerState.NORMAL
-            invulnerable = false
+            invincible = false
         }
     }
 
@@ -338,7 +338,7 @@ open class BasicPlayer(
     }
 
     open fun onDeath() {
-        invulnerable = true
+        invincible = true
         game.event.trigger("player.death")
         if (SystemFlag.replay == null) {
             gameData.deathCount++
@@ -405,7 +405,7 @@ open class BasicPlayer(
                 yield()
             }
             color = Color.WHITE
-            invulnerable = false
+            invincible = false
             playerState = PlayerState.NORMAL
         }
     }

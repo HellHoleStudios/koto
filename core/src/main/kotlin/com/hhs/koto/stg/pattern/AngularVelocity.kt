@@ -33,8 +33,6 @@ class AngularVelocity(
     var omega: Float = 0f,
     duration: Int = Int.MAX_VALUE,
 ) : TemporalPattern(duration) {
-    override var alive: Boolean = false
-
     override fun action() {
         bullet.angle += omega
     }

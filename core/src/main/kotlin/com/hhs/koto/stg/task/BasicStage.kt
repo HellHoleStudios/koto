@@ -25,11 +25,9 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 
 abstract class BasicStage : StageBuilder {
-    abstract val bonus: Long
     abstract fun stage(): Task
 
     companion object {
@@ -55,11 +53,6 @@ abstract class BasicStage : StageBuilder {
             }
         },
         taskBuilder { stage() },
-        taskBuilder {
-            RunnableTask {
-                game.bonus(bundle["game.stageClear"], bonus)
-            }
-        },
         taskBuilder { DelayTask(120) },
     ).build()
 }

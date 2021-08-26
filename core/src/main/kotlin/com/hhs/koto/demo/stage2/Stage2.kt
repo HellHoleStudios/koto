@@ -23,11 +23,9 @@
  *
  */
 
-package com.hhs.koto.demo.stage1
+package com.hhs.koto.demo.stage2
 
-import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.app.Config.worldOriginX
-import com.hhs.koto.app.Config.worldW
+import com.hhs.koto.demo.stage1.AyaBoss
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.BGMNameDisplay
 import com.hhs.koto.stg.graphics.TileBackground
@@ -42,49 +40,15 @@ import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
-object Stage1 : BasicStage() {
+object Stage2 : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
-    override val name = "stage1"
+    override val name = "stage2"
 
     override fun stage() = CoroutineTask {
         game.background.addDrawable(
             TileBackground(
-                getRegion("st1/water.png"),
+                getRegion("st2/sunset.png"),
                 -10000,
-                speedY = -4f,
-                tileWidth = 128f,
-                tileHeight = 256f,
-            )
-        )
-        game.background.addDrawable(
-            TileBackground(
-                getRegion("st1/water_overlay.png"),
-                -10000,
-                speedY = -6f,
-                tileWidth = 128f,
-                tileHeight = 128f,
-                color = Color(1f, 1f, 1f, 0.3f)
-            )
-        )
-        game.background.addDrawable(
-            TileBackground(
-                getRegion("st1/shore_left.png"),
-                -10000,
-                speedY = -5f,
-                tileWidth = 128f,
-                tileHeight = 256f,
-                width = 128f,
-            )
-        )
-        game.background.addDrawable(
-            TileBackground(
-                getRegion("st1/shore_right.png"),
-                -10000,
-                speedY = -5f,
-                x = worldW - 128f - worldOriginX,
-                tileWidth = 128f,
-                tileHeight = 256f,
-                width = 128f,
             )
         )
         BGM.play(1, true)
@@ -92,23 +56,19 @@ object Stage1 : BasicStage() {
 
         interpolate(0f, 1f, 60) { game.background.alpha = it }
 
-        attachAndWait(MidStage1.build())
-        wait(240)
+        attachAndWait(MidStage2.build())
 
         val boss = game.addBoss(AyaBoss())
         game.bossNameDisplay.show(boss, 1)
-        boss.healthBar.addSpell(Nonspell1, Stage1Spell1)
+        boss.healthBar.addSpell(Stage2Spell1)
         attachAndWait(boss.creationTask())
 
-        attachAndWait(Nonspell1.build())
-        attachAndWait(Stage1Spell1.build())
+        attachAndWait(Stage2Spell1.build())
 
         boss.healthBar.visible = false
         game.bossNameDisplay.hide()
         move(boss, -300f, 300f, 120)
         boss.kill()
-
-        game.bonus(bundle["game.stageClear"], defaultBonus(1))
-        interpolate(1f, 0f, 60) { game.background.alpha = it }
+        game.bonus(bundle["game.stageClear"], defaultBonus(2, isFinalStage = true))
     }
 }

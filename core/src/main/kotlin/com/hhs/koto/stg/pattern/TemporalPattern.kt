@@ -35,11 +35,11 @@ abstract class TemporalPattern(val duration: Int = Int.MAX_VALUE) : Task {
 
     override fun tick() {
         if (!alive) return
-        t++
         if (t >= duration) {
             alive = false
         } else {
             action()
         }
+        t++
     }
 }

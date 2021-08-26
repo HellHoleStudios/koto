@@ -23,8 +23,9 @@
  *
  */
 
-package com.hhs.koto.demo.stage1
+package com.hhs.koto.demo.stage2
 
+import com.hhs.koto.demo.stage1.AyaBoss
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.Cutin
 import com.hhs.koto.stg.pattern.wander
@@ -35,12 +36,13 @@ import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 
-object Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
-    override val name: String = "stage1.spell1"
+object Stage2Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
+    override val name: String = "stage2.spell1"
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
+
     override val health: Float
-        get() = difficultySelect(1000f, 1200f, 1400f, 1600f)
-    override val maxTime: Int = 1200
+        get() = difficultySelect(100f, 150f, 200f, 250f)
+    override val maxTime: Int = 3000
     override val bonus: Long
         get() = defaultBonus(1)
 
@@ -48,25 +50,17 @@ object Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
         val boss = getBoss()
         game.stage.addDrawable(Cutin(getRegion("portrait/aya/attack.png")))
         repeat(20) {
-            wander(boss, 120)
-            wait(30)
-            boss.usingAction = true
-            repeat(3) {
-                ring(
-                    "DS_BALL_M_A_BLUE",
-                    boss.x,
-                    boss.y,
-                    50f,
-                    difficultySelect(8, 12, 16, 20),
-                    startAngle = random(0f, 360f),
-                    speed = 5f,
-                )
-                wait(20)
+            wander(boss, 60)
+            val hash = ((playerX.hashCode() + boss.x.hashCode() + game.frame.hashCode()) and 0xf) + 1
+            repeat(18) {
+                if (it != hash) {
+                    create("DS_BALL_M_A_BLUE", -180f + 20f * it, 0f, 2f, -90f)
+                }
             }
-            boss.usingAction = false
             wait(30)
         }
     }
 
     override fun buildSpellPractice(): Task = buildSpellPractice { AyaBoss() }
+
 }
