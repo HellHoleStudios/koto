@@ -153,6 +153,7 @@ class KotoGame : Disposable {
     var maxPoint: Long = 10000
     var maxPointHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
+    var highScore: Long = 0
     var maxCredit: Int = when (SystemFlag.gamemode!!) {
         GameMode.SPELL_PRACTICE -> 0
         else -> difficultySelect(3, 3, 4, 5)
@@ -187,6 +188,19 @@ class KotoGame : Disposable {
             replay = Replay()
             replay.saveSystemFlags()
             inReplay = false
+            when (SystemFlag.gamemode!!) {
+                GameMode.REGULAR, GameMode.EXTRA -> {
+                    gameData.currentElement.score.forEach {
+                        highScore = highScore.coerceAtLeast(it.score)
+                    }
+                }
+                GameMode.STAGE_PRACTICE -> {
+                    highScore = gameData.currentElement.practiceHighScore[SystemFlag.sessionName!!]
+                }
+                GameMode.SPELL_PRACTICE -> {
+                    highScore = gameData.currentElement.spell[SystemFlag.sessionName!!].highScore
+                }
+            }
         }
     }
 
@@ -286,6 +300,19 @@ class KotoGame : Disposable {
         disposeRegisteredEffects()
         batch.shader.dispose()
         logger.info("Game instance disposed.")
+    }
+
+    fun bonus(text: String, bonus: Long) {
+        game.score += bonus
+        game.hud.addDrawable(TextNotification(text))
+        game.hud.addDrawable(
+            TextNotification(
+                String.format("%,d", bonus),
+                100f,
+                font = bundle["font.numerical"],
+                fontSize = 36,
+            )
+        )
     }
 
     @Suppress("UNCHECKED_CAST")

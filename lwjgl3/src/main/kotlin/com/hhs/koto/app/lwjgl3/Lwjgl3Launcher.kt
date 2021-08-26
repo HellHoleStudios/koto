@@ -87,9 +87,13 @@ object Lwjgl3Launcher {
                 replayFolder.list().forEach {
                     if (it.extension() == "ktr") {
                         val input = ByteBufferInput(it.read())
-                        val replay = kryo.readObject(input, Replay::class.java)
+                        try {
+                            val replay = kryo.readObject(input, Replay::class.java)
+                            result.add(replay)
+                        } catch (e: Exception) {
+                            app.logger.error("Corrupt replay: $it", e)
+                        }
                         input.close()
-                        result.add(replay)
                     }
                 }
                 return result

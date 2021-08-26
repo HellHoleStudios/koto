@@ -48,6 +48,7 @@ class TextNotification(
     targetY + 30f,
     0f,
     Align.center,
+    Color(0f, 1f, 1f, 0f),
 ) {
     var t: Int = 0
 

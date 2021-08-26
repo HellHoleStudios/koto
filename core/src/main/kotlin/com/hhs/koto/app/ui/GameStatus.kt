@@ -36,7 +36,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.screen.DifficultySelectScreen
 import com.hhs.koto.stg.GameDifficulty
-import com.hhs.koto.stg.GameMode
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.util.*
 import ktx.actors.alpha
@@ -80,24 +79,6 @@ class GameStatus(val game: KotoGame) : Group() {
         me.setOrigin(Align.center)
         me.addAction(delay(delay) + scaleTo(1f, 1f, 0.5f))
         delay += 0.1f
-    }
-
-    private fun getHighScore(): Long {
-        var tmpHighScore = 0L
-        when (SystemFlag.gamemode!!) {
-            GameMode.REGULAR, GameMode.EXTRA -> {
-                gameData.currentElement.score.forEach {
-                    tmpHighScore = tmpHighScore.coerceAtLeast(it.score)
-                }
-            }
-            GameMode.STAGE_PRACTICE -> {
-                tmpHighScore = gameData.currentElement.practiceHighScore[SystemFlag.sessionName!!]
-            }
-            GameMode.SPELL_PRACTICE -> {
-                tmpHighScore = gameData.currentElement.spell[SystemFlag.sessionName!!].highScore
-            }
-        }
-        return tmpHighScore
     }
 
     init {
@@ -144,7 +125,7 @@ class GameStatus(val game: KotoGame) : Group() {
         })
 
         highScore = Label(
-            String.format("%,d", getHighScore()),
+            String.format("%,d", max(game.highScore, game.score)),
             Label.LabelStyle(
                 getFont(bundle["font.gameStatus.value"], 36, Color.RED),
                 Color(0f, 0f, 0.7f, 1f),
@@ -407,7 +388,7 @@ class GameStatus(val game: KotoGame) : Group() {
         bombAlpha = lerp(0f, 1f, clamp(counter - bombDelay, 0f, 0.5f) / 0.5f)
 
         score.setText(String.format("%,d", game.score))
-        highScore.setText(String.format("%,d", max(game.score, getHighScore())))
+        highScore.setText(String.format("%,d", max(game.score, game.highScore)))
         lifePieces.setText(String.format("%d / %d", game.life.fragmentCount, game.life.fragmentFactor))
         bombPieces.setText(String.format("%d / %d", game.bomb.fragmentCount, game.bomb.fragmentFactor))
         val (tmpInteger2, tmpFraction2) = splitDecimal(game.power)

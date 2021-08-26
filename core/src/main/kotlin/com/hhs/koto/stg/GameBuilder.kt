@@ -30,6 +30,7 @@ import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.filter
+import ktx.collections.set
 
 object GameBuilder {
     val usedDifficulties: GdxArray<GameDifficulty> = GdxArray.with(
@@ -140,7 +141,16 @@ object GameBuilder {
         return buildGameWithTask(
             BuilderSequence(
                 stageBuilder,
-                taskBuilder { RunnableTask { game.end() } },
+                taskBuilder {
+                    RunnableTask {
+                        game.end()
+                        if (SystemFlag.replay == null) {
+                            gameData.currentElement.practiceHighScore[name] =
+                                gameData.currentElement.practiceHighScore[name].coerceAtLeast(game.score)
+                            saveGameData()
+                        }
+                    }
+                },
             ).build()
         )
     }

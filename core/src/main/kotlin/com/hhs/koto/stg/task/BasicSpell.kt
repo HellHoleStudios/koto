@@ -25,7 +25,10 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.graphics.*
+import com.hhs.koto.stg.graphics.BasicBoss
+import com.hhs.koto.stg.graphics.Boss
+import com.hhs.koto.stg.graphics.SpellAttackOverlay
+import com.hhs.koto.stg.graphics.SpellInfoDisplay
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
 import kotlin.math.roundToLong
@@ -118,17 +121,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                         gameData.currentElement.spell[name].successfulAttempt++
                         saveGameData()
                     }
-                    val bonus = getBonus(t)
-                    game.score += bonus
-                    game.hud.addDrawable(TextNotification(bundle["game.spellClear"]))
-                    game.hud.addDrawable(
-                        TextNotification(
-                            String.format("%,d", bonus),
-                            100f,
-                            font = bundle["font.numerical"],
-                            fontSize = 36,
-                        )
-                    )
+                    game.bonus(bundle["game.spellClear"], getBonus(t))
                 }
                 spellInfoDisplay!!.finished = true
             }
@@ -165,5 +158,10 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         boss.healthBar.visible = false
         wait(60)
         game.end()
+        if (SystemFlag.replay == null) {
+            gameData.currentElement.spell[name].highScore =
+                gameData.currentElement.spell[name].highScore.coerceAtLeast(game.score)
+            saveGameData()
+        }
     }
 }
