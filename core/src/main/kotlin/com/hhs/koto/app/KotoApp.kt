@@ -71,17 +71,20 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         app = this
 
         loadOptions()
-        initA()
+
+        Locale.setDefault(Locale.ROOT)
+        bundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locale, "UTF-8")
+        Config.UIFont = bundle["font.ui"]
+        Config.UIFontSmall = bundle["font.uiSmall"]
+
+        initAsset()
 
         loadAssetIndex(Gdx.files.internal(".assets.json"))
         A.finishLoading()
 
         Gdx.app.logLevel = Config.logLevel
         logger.info("Game start.")
-        Locale.setDefault(Locale.ROOT)
-        bundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locale, "UTF-8")
-        Config.UIFont = bundle["font.ui"]
-        Config.UIFontSmall = bundle["font.uiSmall"]
+
 
         batch = SpriteBatch(
             1000,
@@ -221,7 +224,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         saveGameData()
         batch.dispose()
         BGM.dispose()
-        disposeA()
+        disposeAsset()
         screens.safeValues().forEach { it.dispose() }
         batch.shader.dispose()
     }
@@ -263,7 +266,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 }
 
 interface KotoCallbacks {
-    fun restartCallback(restart: Boolean)
     fun loadOptions(): Options?
     fun saveOptions(options: Options)
     fun loadGameData(): GameData?

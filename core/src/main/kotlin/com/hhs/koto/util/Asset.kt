@@ -48,6 +48,7 @@ import ktx.assets.TextAssetLoader
 import ktx.assets.load
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.collections.GdxSet
 import ktx.collections.contains
 import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.json.fromJson
@@ -60,7 +61,7 @@ private lateinit var fontCache: GdxMap<FreeTypeFontParameterWrapper, BitmapFont>
 private var charset: String = ""
 lateinit var bundle: I18NBundle
 
-fun initA() {
+fun initAsset() {
     textureReflect = GdxMap()
     fontCache = GdxMap()
     A = AssetManager()
@@ -68,14 +69,30 @@ fun initA() {
     A.setLoader(String::class.java, TextAssetLoader(A.fileHandleResolver))
     A.registerFreeTypeFontLoaders()
     A.logger.level = Config.logLevel
-    json.fromJson<GdxArray<String>>(Gdx.files.internal(".charset.json")).forEach {
+    val tmpCharset = GdxSet<Char>()
+    (FreeTypeFontGenerator.DEFAULT_CHARS + "\u2423\u21e6").forEach {
+        tmpCharset.add(it)
+    }
+    options.locales.forEach {
+        val tmpBundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), it)
+        tmpBundle["locale.name"].forEach { char ->
+            tmpCharset.add(char)
+        }
+    }
+    bundle["locale.charset"].split(",").forEach {
+        Gdx.files.internal(it.trim()).readString().forEach { char ->
+            tmpCharset.add(char)
+        }
+    }
+    charset = ""
+    tmpCharset.forEach {
         charset += it
     }
     // this seems to fix FreeTypeFontGenerator glitch
     packer = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 1, false)
 }
 
-fun disposeA() {
+fun disposeAsset() {
     A.dispose()
     packer.dispose()
 }

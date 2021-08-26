@@ -51,14 +51,9 @@ object Lwjgl3Launcher {
         val optionsFile = getFile("options.json")
         val gameDataFile = getFile("game_data.json")
         var options = readOptions(optionsFile)
-        var restart0 = false
 
         val callbacks = object : KotoCallbacks {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")
-
-            override fun restartCallback(restart: Boolean) {
-                restart0 = restart
-            }
 
             override fun loadOptions(): Options = options
 
@@ -118,19 +113,11 @@ object Lwjgl3Launcher {
             }
         }
 
-        val configuration = Lwjgl3ApplicationConfiguration()
-        configure(configuration, options)
-
-        Lwjgl3Application(KotoApp(callbacks), configuration)
-        while (restart0) {
-            restart0 = false
-            options = readOptions(optionsFile)
-            configure(configuration, options)
-            Lwjgl3Application(KotoApp(callbacks), configuration)
-        }
+        Lwjgl3Application(KotoApp(callbacks), getConfiguration(options))
     }
 
-    private fun configure(configuration: Lwjgl3ApplicationConfiguration, options: Options) {
+    private fun getConfiguration(options: Options): Lwjgl3ApplicationConfiguration {
+        val configuration = Lwjgl3ApplicationConfiguration()
         configuration.setResizable(Config.allowResize)
         configuration.setTitle(Config.windowTitle)
         configuration.setWindowIcon(
@@ -146,6 +133,7 @@ object Lwjgl3Launcher {
         }
         configuration.useVsync(options.vsyncEnabled)
         configuration.setForegroundFPS((options.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
+        return configuration
     }
 
     private fun getFile(fileName: String): FileHandle {

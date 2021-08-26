@@ -114,12 +114,12 @@ class SaveMenu(
             )
         }
         keyboardGrid.add(
-            GridButton("␣", 36, 3, 7) {
+            GridButton("\u2423", 36, 3, 7) {
                 addText(" ")
             }.setStyle()
         )
         keyboardGrid.add(
-            GridButton("⇦", 36, 11, 7, triggerSound = "cancel") {
+            GridButton("\u21e6", 36, 11, 7, triggerSound = "cancel") {
                 text = text.dropLast(1)
             }.setStyle()
         )

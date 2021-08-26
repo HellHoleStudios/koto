@@ -88,7 +88,7 @@ object Stage1 : BasicStage() {
                 width = 128f,
             )
         )
-        BGM.play(1)
+        BGM.play(1, true)
         game.hud.addDrawable(BGMNameDisplay(1))
 
         interpolate(0f, 1f, 60) { game.background.alpha = it }

@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.I18NBundle
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.Config.resolutionModes
@@ -41,6 +42,8 @@ import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
+import ktx.actors.alpha
+import ktx.actors.plusAssign
 import kotlin.math.roundToInt
 
 class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
@@ -52,6 +55,14 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         animationDuration = 0.5f,
         interpolation = Interpolation.sine
     ).register(st, input)
+    private val restartNotification = Label(
+        bundle["ui.options.restartRequired"],
+        Label.LabelStyle(getFont(Config.UIFont, 36, Color.RED), Color.WHITE)
+    ).apply {
+        st += this
+        setPosition(950f, 550f)
+        alpha = 0f
+    }
     private val language = Grid(0, -9, false).register(st, input)
     private val musicVolume = Grid(0, -8, false).register(st, input)
     private val SEVolume = Grid(0, -7, false).register(st, input)
@@ -301,6 +312,15 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         grid.selectFirst()
     }
 
+    override fun render(delta: Float) {
+        if (oldOptions!!.locale != options.locale) {
+            restartNotification.alpha = 1f
+        } else {
+            restartNotification.alpha = 0f
+        }
+        super.render(delta)
+    }
+
     private fun reset() {
         language.select(options.locales.indexOf(options.locale, false), 0, true)
         musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
@@ -340,13 +360,7 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         if (grid.selectedY == 0) {
             super.onQuit()
             saveOptions()
-            if (oldOptions!!.fpsMultiplier != options.fpsMultiplier ||
-                oldOptions!!.locale != options.locale
-            ) {
-                restartApp()
-            } else {
-                app.setScreen("title", 0.5f)
-            }
+            app.setScreen("title", 0.5f)
         } else {
             grid.select(0, 0)
         }

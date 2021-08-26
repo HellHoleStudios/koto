@@ -40,8 +40,6 @@ import ktx.collections.set
 import ktx.json.JsonSerializer
 import java.util.*
 
-var global = GdxMap<String, Any>()
-
 object SystemFlag {
     var redirect: String? = null
     var redirectDuration: Float? = null
@@ -177,12 +175,6 @@ lateinit var app: KotoApp
 fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
 
 fun exitApp() {
-    app.callbacks.restartCallback(false)
-    Gdx.app.exit()
-}
-
-fun restartApp() {
-    app.callbacks.restartCallback(true)
     Gdx.app.exit()
 }
 

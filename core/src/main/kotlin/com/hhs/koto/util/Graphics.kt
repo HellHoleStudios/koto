@@ -196,4 +196,5 @@ fun disposeRegisteredEffects() {
     registeredEffects.forEach {
         it.dispose()
     }
+    registeredEffects.clear()
 }
