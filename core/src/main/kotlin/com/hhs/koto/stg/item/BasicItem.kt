@@ -53,6 +53,7 @@ open class BasicItem(
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
     var rotation: Float = 0f,
+    val rotateOnCreation: Boolean = false,
     var color: Color = Color.WHITE,
 ) : Item {
     val texture: TextureRegion = atlas.findRegion(baseName)
@@ -92,7 +93,7 @@ open class BasicItem(
                 deltaX = 0f
             }
         }
-        if (t <= 32 && t % 4 == 0) {
+        if (rotateOnCreation && t <= 32 && t % 4 == 0) {
             rotation += 45f
         }
         x += deltaX

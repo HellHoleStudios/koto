@@ -150,8 +150,9 @@ class KotoGame : Disposable {
 
     lateinit var player: Player
     lateinit var currentStage: String
-    var maxPoint: Long = 10000
-    var maxPointHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
+    var pointValue: Long = 10000
+    var maxPointValue: Long = difficultySelect(100000L, 250000L, 500000L, 500000L, 500000L)
+    var pointValueHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
     var highScore: Long = 0
     var maxCredit: Int = when (SystemFlag.gamemode!!) {
@@ -160,13 +161,13 @@ class KotoGame : Disposable {
     }
     var creditCount: Int = 0
     val initialLife: FragmentCounter = when (SystemFlag.gamemode!!) {
-        GameMode.SPELL_PRACTICE -> FragmentCounter(3, 0, 0)
-        GameMode.STAGE_PRACTICE -> FragmentCounter(3, 8, 0)
-        else -> FragmentCounter(3, 2, 0)
+        GameMode.SPELL_PRACTICE -> FragmentCounter(3, 0, 0, 8)
+        GameMode.STAGE_PRACTICE -> FragmentCounter(3, 8, 0, 8)
+        else -> FragmentCounter(3, 2, 0, 8)
     }
     val initialBomb: FragmentCounter = when (SystemFlag.gamemode!!) {
-        GameMode.SPELL_PRACTICE -> FragmentCounter(5, 0, 0)
-        else -> FragmentCounter(5, 3, 0)
+        GameMode.SPELL_PRACTICE -> FragmentCounter(5, 0, 0, 8)
+        else -> FragmentCounter(5, 3, 0, 8)
     }
     val life: FragmentCounter = initialLife.copy()
     val bomb: FragmentCounter = initialBomb.copy()
@@ -250,7 +251,7 @@ class KotoGame : Disposable {
             game.hud.addDrawable(
                 TextNotification(
                     bundle["game.highScore"],
-                    100f,
+                    80f,
                     font = bundle["font.notification"],
                     fontSize = 36,
                 )
@@ -321,11 +322,31 @@ class KotoGame : Disposable {
         game.hud.addDrawable(
             TextNotification(
                 String.format("%,d", bonus),
-                100f,
+                120f,
                 font = bundle["font.numerical"],
                 fontSize = 36,
             )
         )
+    }
+
+    fun addLife(completedCount: Int = 0, fragmentCount: Int = 0) {
+        val oldCompleted = game.life.completedCount
+        game.life.add(completedCount, fragmentCount)
+        if (game.life.completedCount != oldCompleted) {
+            SE.play("extend")
+            game.hud.addDrawable(
+                TextNotification(
+                    bundle["game.extend"],
+                    100f,
+                    font = bundle["font.notification"],
+                    fontSize = 36,
+                )
+            )
+        }
+    }
+
+    fun addBomb(completedCount: Int = 0, fragmentCount: Int = 0) {
+        game.bomb.add(completedCount, fragmentCount)
     }
 
     @Suppress("UNCHECKED_CAST")

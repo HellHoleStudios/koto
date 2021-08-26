@@ -56,6 +56,17 @@ fun <T> difficultySelect(easy: T, normal: T, hard: T, lunatic: T): T {
     }
 }
 
+fun <T> difficultySelect(easy: T, normal: T, hard: T, lunatic: T, extra: T): T {
+    return when (SystemFlag.difficulty) {
+        GameDifficulty.EASY -> easy
+        GameDifficulty.NORMAL -> normal
+        GameDifficulty.HARD -> hard
+        GameDifficulty.LUNATIC -> lunatic
+        GameDifficulty.EXTRA -> extra
+        else -> throw KotoRuntimeException("Difficulty select: current difficulty is not regular")
+    }
+}
+
 val playerX: Float
     get() = game.player.x
 val playerY: Float

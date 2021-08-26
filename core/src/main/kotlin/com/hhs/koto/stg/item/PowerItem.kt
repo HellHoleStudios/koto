@@ -30,6 +30,7 @@ import com.hhs.koto.stg.particle.ScoreParticle
 import com.hhs.koto.util.A
 import com.hhs.koto.util.game
 import com.hhs.koto.util.random
+import kotlin.math.roundToLong
 
 class PowerItem(
     x: Float,
@@ -45,37 +46,34 @@ class PowerItem(
     x,
     y,
     A["item/item.atlas"],
-    "power",
-    16f,
-    16f,
+    if (amount < 0.04f) "power" else "power_large",
+    if (amount < 0.04f) 16f else 32f,
+    if (amount < 0.04f) 16f else 32f,
     speed,
     angle,
     radius,
     scaleX = scaleX,
     scaleY = scaleY,
     color = color,
+    rotateOnCreation = true,
 ) {
     override fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         super.onCollected(collectPositionX, collectPositionY, autoCollected)
+        var score: Long = 0
         if (game.power >= game.maxPower) {
-            game.score += 10000
-            game.addParticle(
-                ScoreParticle(
-                    x + random(-20f, 20f),
-                    y + random(-10f, 10f),
-                    10000
-                )
-            )
+            score = (100 * amount).roundToLong()
+
         } else {
-            game.score += 10
-            game.addParticle(
-                ScoreParticle(
-                    x + random(-20f, 20f),
-                    y + random(-10f, 10f),
-                    10
-                )
-            )
+            score += (10 * amount).roundToLong()
             game.power = (game.power + amount).coerceAtMost(game.maxPower)
         }
+        game.score += score
+        game.addParticle(
+            ScoreParticle(
+                x + random(-20f, 20f),
+                y + random(-10f, 10f),
+                score,
+            )
+        )
     }
 }

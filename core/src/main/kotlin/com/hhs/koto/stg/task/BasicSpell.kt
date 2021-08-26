@@ -25,10 +25,7 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.stg.graphics.BasicBoss
-import com.hhs.koto.stg.graphics.Boss
-import com.hhs.koto.stg.graphics.SpellAttackOverlay
-import com.hhs.koto.stg.graphics.SpellInfoDisplay
+import com.hhs.koto.stg.graphics.*
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
 import kotlin.math.roundToLong
@@ -121,7 +118,9 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                         gameData.currentElement.spell[name].successfulAttempt++
                         saveGameData()
                     }
-                    game.bonus(bundle["game.spellClear"], getBonus(t))
+                    game.bonus(bundle["game.getSpell"], getBonus(t))
+                } else {
+                    game.hud.addDrawable(TextNotification(bundle["game.bonusFailed"]))
                 }
                 spellInfoDisplay!!.finished = true
             }

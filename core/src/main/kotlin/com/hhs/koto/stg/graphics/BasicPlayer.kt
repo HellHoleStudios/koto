@@ -266,7 +266,7 @@ open class BasicPlayer(
         }
         invulnerable = true
         SE.play("bomb")
-        game.bomb.completedCount--
+        game.bomb.removeCompleted(1)
         task {
             repeat(290) {
                 color = if (frame % 6 <= 1) {

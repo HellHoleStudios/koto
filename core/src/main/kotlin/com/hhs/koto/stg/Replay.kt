@@ -116,8 +116,9 @@ class Replay {
             Checkpoint(
                 name,
                 game.frame,
-                game.maxPoint,
-                game.maxPointHeight,
+                game.pointValue,
+                game.maxPointValue,
+                game.pointValueHeight,
                 game.score,
                 game.highScore,
                 game.maxCredit,
@@ -149,8 +150,9 @@ class Replay {
 data class Checkpoint(
     var name: String,
     var frame: Int,
-    var maxPoint: Long,
-    var maxPointHeight: Float,
+    var pointValue: Long,
+    var maxPointValue: Long,
+    var pointValueHeight: Float,
     var score: Long,
     var highScore: Long,
     var maxCredit: Int,
@@ -170,6 +172,7 @@ data class Checkpoint(
         "",
         0,
         0L,
+        0L,
         0f,
         0L,
         0L,
@@ -188,8 +191,9 @@ data class Checkpoint(
 
     fun apply(game: KotoGame) {
         game.frame = frame
-        game.maxPoint = maxPoint
-        game.maxPointHeight = maxPointHeight
+        game.pointValue = pointValue
+        game.maxPointValue = maxPointValue
+        game.pointValueHeight = pointValueHeight
         game.score = score
         game.highScore = highScore
         game.maxCredit = maxCredit

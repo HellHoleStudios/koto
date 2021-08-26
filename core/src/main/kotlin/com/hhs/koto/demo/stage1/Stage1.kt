@@ -30,7 +30,6 @@ import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.BGMNameDisplay
-import com.hhs.koto.stg.graphics.TextNotification
 import com.hhs.koto.stg.graphics.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move

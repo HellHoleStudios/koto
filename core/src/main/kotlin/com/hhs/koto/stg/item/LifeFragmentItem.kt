@@ -26,11 +26,10 @@
 package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.app.Config.worldOriginY
-import com.hhs.koto.stg.particle.ScoreParticle
-import com.hhs.koto.util.*
+import com.hhs.koto.util.A
+import com.hhs.koto.util.game
 
-class PointItem(
+class LifeFragmentItem(
     x: Float,
     y: Float,
     speed: Float = 2f,
@@ -43,37 +42,18 @@ class PointItem(
     x,
     y,
     A["item/item.atlas"],
-    "point",
-    16f,
-    16f,
+    "life_fragment",
+    32f,
+    32f,
     speed,
     angle,
     radius,
     scaleX = scaleX,
     scaleY = scaleY,
     color = color,
-    rotateOnCreation = true,
 ) {
     override fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         super.onCollected(collectPositionX, collectPositionY, autoCollected)
-        val amount: Long = if (autoCollected || collectPositionY >= game.pointValueHeight) {
-            game.pointValue
-        } else {
-            (game.pointValue * 0.9f / (game.pointValueHeight + worldOriginY) * (collectPositionY + worldOriginY)
-                    + game.pointValue * 0.1f).toLong()
-        }
-        game.score += amount
-        game.addParticle(
-            ScoreParticle(
-                x + random(-20f, 20f),
-                y + random(-10f, 10f),
-                amount,
-                if (amount == game.pointValue) {
-                    Color.YELLOW.toHSVColor()
-                } else {
-                    WHITE_HSV
-                },
-            )
-        )
+        game.addLife(fragmentCount = 1)
     }
 }

@@ -31,6 +31,7 @@ data class FragmentCounter(
     var fragmentFactor: Int = 3,
     var completedCount: Int = 0,
     var fragmentCount: Int = 0,
+    var limit: Int = 8,
 ) {
     fun set(other: FragmentCounter) {
         fragmentFactor = other.fragmentFactor
@@ -43,11 +44,21 @@ data class FragmentCounter(
         val quotient = (fragmentCount - remainder) / fragmentFactor
         completedCount += quotient
         fragmentCount = remainder
+        if (completedCount >= limit) {
+            completedCount = limit
+            fragmentCount = 0
+        }
     }
 
     fun clear() {
         completedCount = 0
         fragmentCount = 0
+    }
+
+    fun add(completedCount: Int, fragmentCount: Int) {
+        this.completedCount += completedCount
+        this.fragmentCount += fragmentCount
+        update()
     }
 
     fun addFragment(count: Int) {
@@ -57,6 +68,7 @@ data class FragmentCounter(
 
     fun addCompleted(count: Int) {
         completedCount += count
+        update()
     }
 
     fun removeFragment(count: Int) {
@@ -66,5 +78,6 @@ data class FragmentCounter(
 
     fun removeCompleted(count: Int) {
         completedCount -= count
+        update()
     }
 }

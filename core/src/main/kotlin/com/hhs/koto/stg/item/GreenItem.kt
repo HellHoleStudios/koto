@@ -26,13 +26,13 @@
 package com.hhs.koto.stg.item
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.app.Config.worldOriginY
-import com.hhs.koto.stg.particle.ScoreParticle
-import com.hhs.koto.util.*
+import com.hhs.koto.util.A
+import com.hhs.koto.util.game
 
-class PointItem(
+class GreenItem(
     x: Float,
     y: Float,
+    val amount: Long = 5,
     speed: Float = 2f,
     angle: Float = 90f,
     radius: Float = 10f,
@@ -43,7 +43,7 @@ class PointItem(
     x,
     y,
     A["item/item.atlas"],
-    "point",
+    if (amount <= 50) "green" else "green_large",
     16f,
     16f,
     speed,
@@ -56,24 +56,6 @@ class PointItem(
 ) {
     override fun onCollected(collectPositionX: Float, collectPositionY: Float, autoCollected: Boolean) {
         super.onCollected(collectPositionX, collectPositionY, autoCollected)
-        val amount: Long = if (autoCollected || collectPositionY >= game.pointValueHeight) {
-            game.pointValue
-        } else {
-            (game.pointValue * 0.9f / (game.pointValueHeight + worldOriginY) * (collectPositionY + worldOriginY)
-                    + game.pointValue * 0.1f).toLong()
-        }
-        game.score += amount
-        game.addParticle(
-            ScoreParticle(
-                x + random(-20f, 20f),
-                y + random(-10f, 10f),
-                amount,
-                if (amount == game.pointValue) {
-                    Color.YELLOW.toHSVColor()
-                } else {
-                    WHITE_HSV
-                },
-            )
-        )
+        game.pointValue = (game.pointValue + amount).coerceAtMost(game.maxPointValue)
     }
 }

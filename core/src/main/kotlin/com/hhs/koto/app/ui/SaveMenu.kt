@@ -167,6 +167,7 @@ class SaveMenu(
             saveObject.date = Date()
             saveReplay(saveObject)
         }
+        SE.play("extend")
         deactivate()
         onFinish()
     }

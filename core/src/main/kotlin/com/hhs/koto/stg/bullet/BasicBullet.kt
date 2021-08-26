@@ -154,6 +154,7 @@ open class BasicBullet(
         if (grazeCounter <= 0) {
             grazeCounter++
             game.graze++
+            game.pointValue = (game.pointValue + 1L).coerceAtMost(game.maxPointValue)
             SE.play("graze")
             game.addParticle(GrazeParticle(x, y))
         }

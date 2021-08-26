@@ -2,7 +2,7 @@
 item.png
 size: 512, 64
 format: RGBA8888
-filter: Nearest, Nearest
+filter: MipMapLinearLinear, Linear
 repeat: none
 bomb
   rotate: false
@@ -20,7 +20,7 @@ bomb_fragment
   index: -1
 bomb_fragment_indicator
   rotate: false
-  xy: 36, 20
+  xy: 2, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -62,7 +62,7 @@ green_indicator
   index: -1
 life
   rotate: false
-  xy: 70, 20
+  xy: 36, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -74,9 +74,9 @@ life_fragment
   orig: 32, 32
   offset: 0, 0
   index: -1
-life_fragment_indicaor
+life_fragment_indicator
   rotate: false
-  xy: 2, 20
+  xy: 70, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

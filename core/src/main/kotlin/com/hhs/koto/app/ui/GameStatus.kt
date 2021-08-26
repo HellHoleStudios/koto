@@ -56,7 +56,7 @@ class GameStatus(val game: KotoGame) : Group() {
     private val bombPieces: Label
     private val powerInteger: Label
     private val powerFraction: Label
-    private val maxPoint: Label
+    private val pointValue: Label
     private val graze: Label
     private val iconAtlas: TextureAtlas = A["ui/icon.atlas"]
 
@@ -339,8 +339,8 @@ class GameStatus(val game: KotoGame) : Group() {
             setBounds(980f, 600f, 40f, 40f)
             addDelayAction(this)
         })
-        maxPoint = Label(
-            String.format("%,d", game.maxPoint),
+        pointValue = Label(
+            String.format("%,d", game.pointValue),
             Label.LabelStyle(
                 getFont(bundle["font.gameStatus.value"], 40, Color.RED),
                 Color(0.6f, 0.5f, 0.8f, 1f),
@@ -350,7 +350,7 @@ class GameStatus(val game: KotoGame) : Group() {
             setAlignment(Align.right)
             addDelayAction(this)
         }
-        addActor(maxPoint)
+        addActor(pointValue)
 
         // graze
         addActor(Image(getRegion("ui/bg.png")).apply {
@@ -394,7 +394,7 @@ class GameStatus(val game: KotoGame) : Group() {
         val (tmpInteger2, tmpFraction2) = splitDecimal(game.power)
         powerInteger.setText(tmpInteger2)
         powerFraction.setText(tmpFraction2)
-        maxPoint.setText(String.format("%,d", game.maxPoint))
+        pointValue.setText(String.format("%,d", game.pointValue))
         graze.setText(String.format("%,d", game.graze))
         super.act(delta)
     }
@@ -404,7 +404,7 @@ class GameStatus(val game: KotoGame) : Group() {
         val tmpColor = batch.color.cpy()
 
         batch.setColor(1f, 1f, 1f, parentAlpha * lifeAlpha)
-        for (i in 0 until 8) {
+        for (i in 0 until game.life.limit) {
             if (i < game.life.completedCount) {
                 batch.draw(
                     iconAtlas.findRegion("life_icon", 5),
@@ -427,7 +427,7 @@ class GameStatus(val game: KotoGame) : Group() {
         }
 
         batch.setColor(1f, 1f, 1f, parentAlpha * bombAlpha)
-        for (i in 0 until 8) {
+        for (i in 0 until game.bomb.limit) {
             if (i < game.bomb.completedCount) {
                 batch.draw(
                     iconAtlas.findRegion("bomb_icon", 5),
