@@ -69,32 +69,44 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         titleBackground.clearActions()
         if (stages.size > 0) {
             for (i in 0 until stages.size) {
-                grid.add(GridButton(bundle["game.stage.${stages[i].name}.name"], 48, 0, i) {
-                    SystemFlag.sessionName = stages[i].name
-                    SystemFlag.redirect = "game"
-                    SystemFlag.redirectDuration = 0.5f
-                    SystemFlag.replay = null
-                    app.setScreen("blank", 0.5f)
-                }.apply {
-                    activeAction = getActiveAction({
-                        forever(Actions.run {
-                            titleBackground.clearActions()
-                            titleBackground.addAction(
-                                parallel(
-                                    hsvColor(
-                                        Color(i.toFloat() / stages.size, 0.5f, 1f, 0.5f),
-                                        0.5f,
-                                    ),
-                                    moveTo(
-                                        0f, y - grid.targetY - 7.5f,
-                                        1f,
-                                        Interpolation.pow5Out,
-                                    ),
+                val unlocked = gameData.currentElement.practiceUnlocked[stages[i].name]
+                grid.add(
+                    GridButton(
+                        if (unlocked) {
+                            bundle["game.stage.${stages[i].name}.name"]
+                        } else {
+                            bundle["ui.stageSelect.lockedName"]
+                        },
+                        48, 0, i,
+                        triggerSound = if (unlocked) "ok" else "invalid",
+                    ) {
+                        if (unlocked) {
+                            SystemFlag.sessionName = stages[i].name
+                            SystemFlag.redirect = "game"
+                            SystemFlag.redirectDuration = 0.5f
+                            SystemFlag.replay = null
+                            app.setScreen("blank", 0.5f)
+                        }
+                    }.apply {
+                        activeAction = getActiveAction({
+                            forever(Actions.run {
+                                titleBackground.clearActions()
+                                titleBackground.addAction(
+                                    parallel(
+                                        hsvColor(
+                                            Color(i.toFloat() / stages.size, 0.5f, 1f, 0.5f),
+                                            0.5f,
+                                        ),
+                                        moveTo(
+                                            0f, y - grid.targetY - 7.5f,
+                                            1f,
+                                            Interpolation.pow5Out,
+                                        ),
+                                    )
                                 )
-                            )
+                            })
                         })
                     })
-                })
             }
             grid.arrange(0f, 1000f, 0f, -60f)
             grid.selectFirst()

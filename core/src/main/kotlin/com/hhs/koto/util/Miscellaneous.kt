@@ -72,7 +72,7 @@ val json = Json().apply {
             )
         }
     })
-    
+
     setSerializer(Date::class.java, object : JsonSerializer<Date> {
         override fun write(json: Json, value: Date, type: Class<*>?) {
             json.writeValue(value.time)

@@ -78,6 +78,8 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         grid.add(GridButton(bundle["ui.title.startSpellPractice"], 36, 0, -5) {
             SystemFlag.gamemode = GameMode.SPELL_PRACTICE
             app.setScreen("difficultySelect", 0.5f)
+        }.apply {
+            enabled = gameData.spellPracticeUnlocked
         })
         grid.add(GridButton(bundle["ui.title.replay"], 36, 0, -4) {
             app.setScreen("replay", 0.5f)

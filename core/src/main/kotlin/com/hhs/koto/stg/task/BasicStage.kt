@@ -28,6 +28,8 @@ package com.hhs.koto.stg.task
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
 import com.hhs.koto.util.gameData
+import com.hhs.koto.util.saveGameData
+import ktx.collections.set
 
 abstract class BasicStage : StageBuilder {
     abstract fun stage(): Task
@@ -58,8 +60,13 @@ abstract class BasicStage : StageBuilder {
         taskBuilder { stage() },
         taskBuilder {
             RunnableTask {
-                if (isFinalStage && SystemFlag.replay == null && game.creditCount == 0) {
-                    gameData.data[SystemFlag.shotType!!].extraUnlocked = true
+                if (SystemFlag.replay == null) {
+                    if (isFinalStage && game.creditCount == 0) {
+                        gameData.data[SystemFlag.shotType!!].extraUnlocked = true
+                        gameData.spellPracticeUnlocked = true
+                    }
+                    gameData.currentElement.practiceUnlocked[name] = true
+                    saveGameData()
                 }
             }
         },

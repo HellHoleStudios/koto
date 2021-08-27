@@ -111,6 +111,10 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 if (boss is BasicBoss) {
                     self.attachTask(boss.removeSpellBackground())
                 }
+                if (SystemFlag.replay == null) {
+                    gameData.currentElement.spell[name].practiceUnlocked = true
+                    saveGameData()
+                }
                 if (!failedBonus) {
                     // TODO Spell Bonus animation
                     SE.play("cardget")
