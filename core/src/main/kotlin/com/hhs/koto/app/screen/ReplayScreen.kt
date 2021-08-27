@@ -203,6 +203,17 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                 )
                 grid.add(
                     GridButton(
+                        bundle["ui.replay.difficulty.${replay.difficulty!!.name.lowercase()}"],
+                        28,
+                        0,
+                        i,
+                        staticY = 1000f - i * 35f,
+                        staticX = 550f,
+                        triggerSound = null,
+                    )
+                )
+                grid.add(
+                    GridButton(
                         bundle["ui.replay.shotType.${replay.shotType!!}.name"],
                         28,
                         0,
