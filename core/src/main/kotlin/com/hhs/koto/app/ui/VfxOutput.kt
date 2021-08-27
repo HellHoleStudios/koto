@@ -84,7 +84,10 @@ class VfxOutputDrawable(
         if (vfxManager.resultBuffer == null) return
         vfxOutput.setRegion(vfxManager.resultBuffer.texture)
         vfxOutput.flip(false, true)
+        val tmpColor = batch.color.cpy()
+        batch.setColor(1f, 1f, 1f, parentAlpha)
         batch.draw(vfxOutput, x, y, width, height)
+        batch.color = tmpColor
     }
 
     override fun tick() = Unit

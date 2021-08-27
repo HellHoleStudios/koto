@@ -91,6 +91,7 @@ class KotoGame : Disposable {
     val hud = DrawableLayer<Drawable>().apply {
         addDrawable(VfxOutputDrawable(vfx, -worldOriginX, -worldOriginY, worldW, worldH))
     }
+    var globalAlpha: Float = 1f
 
     private var subFrameTime: Float = 0f
     var frame: Int = 0
@@ -155,9 +156,10 @@ class KotoGame : Disposable {
     var pointValueHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
     var score: Long = 0
     var highScore: Long = 0
+    var highScoreAchieved: Boolean = false
     var maxCredit: Int = when (SystemFlag.gamemode!!) {
         GameMode.SPELL_PRACTICE -> 0
-        else -> difficultySelect(3, 3, 4, 5)
+        else -> difficultySelect(3, 3, 4, 5, 0)
     }
     var creditCount: Int = 0
     val initialLife: FragmentCounter = when (SystemFlag.gamemode!!) {
@@ -178,8 +180,6 @@ class KotoGame : Disposable {
     val random = RandomXS128()
     val replay: Replay
     val inReplay: Boolean
-
-    var highScoreAchieved: Boolean = false
 
     init {
         logger.info("Game instance created.")
@@ -207,12 +207,14 @@ class KotoGame : Disposable {
         }
     }
 
-    fun createScoreEntry(): GameData.ScoreEntry = GameData.ScoreEntry(
-        "",
-        Date(),
-        game.score,
-        game.currentStage,
-    )
+    fun resetPlayer() {
+        if (this::player.isInitialized) player.kill()
+        val playerName = SystemFlag.shotType ?: throw KotoRuntimeException("player flag is null!")
+        game.player =
+            (GameBuilder.players[playerName] ?: throw KotoRuntimeException("player \"$playerName\" not found!"))()
+    }
+
+    fun createScoreEntry(): GameData.ScoreEntry = GameData.ScoreEntry("", Date(), score, currentStage)
 
     fun update() {
         speedUpMultiplier = if (VK.SPEED_UP.pressed()) {
@@ -224,9 +226,9 @@ class KotoGame : Disposable {
     }
 
     fun act(delta: Float) {
-        game.backgroundVfx.update(delta)
-        game.vfx.update(delta)
-        game.postVfx.update(delta)
+        backgroundVfx.update(delta)
+        vfx.update(delta)
+        postVfx.update(delta)
         subFrameTime += delta
     }
 
@@ -246,9 +248,9 @@ class KotoGame : Disposable {
         }
         subFrameTime = 0f
         event.trigger("tick")
-        if (!highScoreAchieved && game.score > game.highScore) {
+        if (!highScoreAchieved && score > highScore) {
             highScoreAchieved = true
-            game.hud.addDrawable(
+            hud.addDrawable(
                 TextNotification(
                     bundle["game.highScore"],
                     80f,
@@ -257,11 +259,11 @@ class KotoGame : Disposable {
                 )
             )
         }
-        game.background.tick()
-        game.stage.tick()
-        game.hud.tick()
-        game.tasks.tick()
-        game.frame++
+        background.tick()
+        stage.tick()
+        hud.tick()
+        tasks.tick()
+        frame++
     }
 
     fun end() {
@@ -299,7 +301,7 @@ class KotoGame : Disposable {
         clearScreen(0f, 0f, 0f, 1f)
         batch.projectionMatrix = hudViewport.camera.combined
         batch.begin()
-        hud.draw(batch, 1f, subFrameTime)
+        hud.draw(batch, globalAlpha, subFrameTime)
         batch.end()
         postVfx.endInputCapture()
         postVfx.applyEffects()
@@ -317,9 +319,9 @@ class KotoGame : Disposable {
     }
 
     fun bonus(text: String, bonus: Long) {
-        game.score += bonus
-        game.hud.addDrawable(TextNotification(text))
-        game.hud.addDrawable(
+        score += bonus
+        hud.addDrawable(TextNotification(text))
+        hud.addDrawable(
             TextNotification(
                 String.format("%,d", bonus),
                 120f,
@@ -330,11 +332,11 @@ class KotoGame : Disposable {
     }
 
     fun addLife(completedCount: Int = 0, fragmentCount: Int = 0) {
-        val oldCompleted = game.life.completedCount
-        game.life.add(completedCount, fragmentCount)
-        if (game.life.completedCount != oldCompleted) {
+        val oldCompleted = life.completedCount
+        life.add(completedCount, fragmentCount)
+        if (life.completedCount != oldCompleted) {
             SE.play("extend")
-            game.hud.addDrawable(
+            hud.addDrawable(
                 TextNotification(
                     bundle["game.extend"],
                     100f,
@@ -346,7 +348,7 @@ class KotoGame : Disposable {
     }
 
     fun addBomb(completedCount: Int = 0, fragmentCount: Int = 0) {
-        game.bomb.add(completedCount, fragmentCount)
+        bomb.add(completedCount, fragmentCount)
     }
 
     @Suppress("UNCHECKED_CAST")

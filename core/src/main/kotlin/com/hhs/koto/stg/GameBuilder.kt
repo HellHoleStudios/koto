@@ -61,8 +61,6 @@ object GameBuilder {
             )
             null -> throw KotoRuntimeException("gameMode flag is null!")
         }
-        val playerName = SystemFlag.shotType ?: throw KotoRuntimeException("player flag is null!")
-        game.player = (players[playerName] ?: throw KotoRuntimeException("player \"$playerName\" not found!"))()
         return game
     }
 

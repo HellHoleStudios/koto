@@ -63,6 +63,10 @@ class DrawableLayer<T : Drawable>(override val zIndex: Int = 0) : Drawable {
         drawables.removeValue(drawable, true)
     }
 
+    fun clear() {
+        drawables.clear()
+    }
+
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         var currentBlending = BlendingMode.ALPHA
         for (i in 0 until drawables.size) {

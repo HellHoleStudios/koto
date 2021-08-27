@@ -25,6 +25,7 @@
 
 package com.hhs.koto.stg.bullet
 
+import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.CoroutineScope
 import ktx.collections.GdxArray
 
@@ -43,6 +44,7 @@ class BulletGroup {
                 bullets[i] = null
             }
         }
+        bullets.removeNull()
     }
 
     fun taskEach(block: suspend CoroutineScope.() -> Unit): BulletGroup {
@@ -53,6 +55,7 @@ class BulletGroup {
                 bullets[i] = null
             }
         }
+        bullets.removeNull()
         return this
     }
 }

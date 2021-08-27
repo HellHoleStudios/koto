@@ -48,9 +48,9 @@ object MidStage2 : TaskBuilder {
                     )
                 ).task {
                     val enemy = enemy as BasicEnemy
-                    move(enemy, 0f, 0f, 60, Interpolation.sine)
+                    move(enemy, 0f, 0f, 120, Interpolation.sine)
                     wait(120)
-                    move(enemy, 250f, 250f, 60, Interpolation.sine)
+                    move(enemy, 250f, 250f, 120, Interpolation.sine)
                     enemy.kill()
                 }.task {
                     val way = difficultySelect(10, 12, 16, 24)
@@ -73,7 +73,7 @@ object MidStage2 : TaskBuilder {
                 wait(20)
             }
         }.waitForFinish()
-        wait(240)
+        wait(300)
         game.bullets.forEach {
             it.destroy()
         }

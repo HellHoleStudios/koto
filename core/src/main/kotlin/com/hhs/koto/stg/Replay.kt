@@ -121,6 +121,7 @@ class Replay {
                 game.pointValueHeight,
                 game.score,
                 game.highScore,
+                game.highScoreAchieved,
                 game.maxCredit,
                 game.creditCount,
                 game.initialLife.copy(),
@@ -155,6 +156,7 @@ data class Checkpoint(
     var pointValueHeight: Float,
     var score: Long,
     var highScore: Long,
+    var highScoreAchieved: Boolean,
     var maxCredit: Int,
     var creditCount: Int,
     var initialLife: FragmentCounter,
@@ -176,6 +178,7 @@ data class Checkpoint(
         0f,
         0L,
         0L,
+        false,
         0,
         0,
         FragmentCounter(),
@@ -196,6 +199,7 @@ data class Checkpoint(
         game.pointValueHeight = pointValueHeight
         game.score = score
         game.highScore = highScore
+        game.highScoreAchieved = highScoreAchieved
         game.maxCredit = maxCredit
         game.creditCount = creditCount
         game.initialLife.set(initialLife)

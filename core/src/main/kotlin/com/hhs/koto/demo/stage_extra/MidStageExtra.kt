@@ -23,37 +23,46 @@
  *
  */
 
-package com.hhs.koto.stg.task
+package com.hhs.koto.demo.stage_extra
 
-import com.hhs.koto.util.game
+import com.hhs.koto.stg.bullet.BulletGroup
+import com.hhs.koto.stg.task.*
+import com.hhs.koto.util.create
+import com.hhs.koto.util.defaultShotSheet
+import com.hhs.koto.util.min
+import kotlinx.coroutines.yield
 
-abstract class BasicStage : StageBuilder {
-    abstract fun stage(): Task
-
-    companion object {
-        fun defaultBonus(stage: Int, isFinalStage: Boolean = false, isExtraStage: Boolean = false): Long {
-            var result = stage * 5000000L
-            if (isFinalStage) {
-                result += game.life.completedCount * 10000000L
-                result += game.life.completedCount * 3000000L
+object MidStageExtra : TaskBuilder {
+    override fun build(): Task = CoroutineTask {
+        var offset = 0f
+        val group = BulletGroup()
+        task {
+            wait(8 * 60)
+            repeat(180) {
+                group.forEach {
+                    it.angle += 0.5f
+                }
+                yield()
             }
-            if (isExtraStage) {
-                result += game.life.completedCount * 40000000L
-                result += game.life.completedCount * 4000000L
-            }
-            return result
         }
-    }
-
-    override fun build(): Task = BuilderSequence(
-        taskBuilder {
-            RunnableTask {
-                game.currentStage = name
-                game.resetPlayer()
-                game.replay.createCheckpoint(game, name)
+        repeat(15 * 60) {
+            if (frame % 3 == 0) {
+                for (i in 0..6) {
+                    group.addBullet(
+                        create(
+                            defaultShotSheet[i + 9],
+                            0f,
+                            100f,
+                            min(frame % 60, 60 - frame % 60) / 60f + 1,
+                            i * 360f / 7f + offset,
+                        )
+                    )
+                }
             }
-        },
-        taskBuilder { stage() },
-        taskBuilder { DelayTask(120) },
-    ).build()
+            offset += (frame / 30) / 8f + 1
+            yield()
+        }
+        wait(180)
+        group.forEach { it.destroy() }
+    }
 }

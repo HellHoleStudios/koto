@@ -54,7 +54,7 @@ object Stage2 : BasicStage() {
         BGM.play(1, true)
         game.hud.addDrawable(BGMNameDisplay(1))
 
-        interpolate(0f, 1f, 60) { game.background.alpha = it }
+        interpolate(0f, 1f, 60) { game.globalAlpha = it }
 
         attachAndWait(MidStage2.build())
 
@@ -70,5 +70,6 @@ object Stage2 : BasicStage() {
         move(boss, -300f, 300f, 120)
         boss.kill()
         game.bonus(bundle["game.stageClear"], defaultBonus(2, isFinalStage = true))
+        wait(60)
     }
 }

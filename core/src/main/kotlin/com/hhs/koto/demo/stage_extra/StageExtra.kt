@@ -23,7 +23,7 @@
  *
  */
 
-package com.hhs.koto.demo.stage1
+package com.hhs.koto.demo.stage_extra
 
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.app.Config.worldOriginX
@@ -32,7 +32,6 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.BGMNameDisplay
 import com.hhs.koto.stg.graphics.TileBackground
 import com.hhs.koto.stg.pattern.interpolate
-import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.BasicStage
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.attachAndWait
@@ -42,9 +41,9 @@ import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
-object Stage1 : BasicStage() {
+object StageExtra : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
-    override val name = "stage1"
+    override val name = "stageExtra"
 
     override fun stage() = CoroutineTask {
         game.background.addDrawable(
@@ -90,27 +89,10 @@ object Stage1 : BasicStage() {
         BGM.play(1, true)
         game.hud.addDrawable(BGMNameDisplay(1))
 
-        interpolate(0f, 1f, 60) { game.globalAlpha = it }
+        interpolate(0f, 1f, 60) { game.background.alpha = it }
 
-        attachAndWait(MidStage1.build())
+        attachAndWait(MidStageExtra.build())
         wait(240)
-
-        val boss = game.addBoss(AyaBoss())
-        game.bossNameDisplay.show(boss, 1)
-        boss.healthBar.addSpell(Nonspell1, Stage1Spell1)
-        attachAndWait(boss.creationTask())
-
-        attachAndWait(Nonspell1.build())
-        attachAndWait(Stage1Spell1.build())
-
-        boss.healthBar.visible = false
-        game.bossNameDisplay.hide()
-        move(boss, -300f, 300f, 120)
-        boss.kill()
-
-        game.bonus(bundle["game.stageClear"], defaultBonus(1))
-        wait(60)
-        interpolate(1f, 0f, 60) { game.globalAlpha = it }
-        game.background.clear()
+        game.bonus(bundle["game.stageClear"], defaultBonus(7, isExtraStage = true))
     }
 }

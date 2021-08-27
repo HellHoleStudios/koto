@@ -30,6 +30,9 @@ import ktx.collections.GdxArray
 enum class GameDifficulty {
     EASY, NORMAL, HARD, LUNATIC, EXTRA, PHANTASM;
 
+    fun isRegular(): Boolean =
+        this == EASY || this == NORMAL || this == HARD || this == LUNATIC
+
     companion object {
         val REGULAR_AVAILABLE: GdxArray<GameDifficulty> = GdxArray.with(EASY, NORMAL, HARD, LUNATIC)
         val EXTRA_AVAILABLE: GdxArray<GameDifficulty> = GdxArray.with(EXTRA)

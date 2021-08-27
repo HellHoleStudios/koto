@@ -127,7 +127,8 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
         resumeButton.isVisible = game.state == GameState.PAUSED
         continueButton.enabled = game.state == GameState.GAME_OVER && SystemFlag.replay == null
         continueButton.isVisible = game.state == GameState.GAME_OVER || game.state == GameState.GAME_OVER_NO_CREDIT
-        saveScoreButton.enabled = game.state == GameState.FINISH && SystemFlag.replay == null
+        saveScoreButton.enabled =
+            game.state == GameState.FINISH && SystemFlag.replay == null && SystemFlag.difficulty!!.isRegular()
         saveScoreButton.isVisible = game.state == GameState.FINISH || game.state == GameState.FINISH_PRACTICE
         saveReplayButton.enabled = game.creditCount == 0 && SystemFlag.replay == null
 

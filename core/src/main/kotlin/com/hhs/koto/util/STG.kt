@@ -63,7 +63,7 @@ fun <T> difficultySelect(easy: T, normal: T, hard: T, lunatic: T, extra: T): T {
         GameDifficulty.HARD -> hard
         GameDifficulty.LUNATIC -> lunatic
         GameDifficulty.EXTRA -> extra
-        else -> throw KotoRuntimeException("Difficulty select: current difficulty is not regular")
+        else -> throw KotoRuntimeException("Difficulty select: current difficulty is not regular or extra")
     }
 }
 

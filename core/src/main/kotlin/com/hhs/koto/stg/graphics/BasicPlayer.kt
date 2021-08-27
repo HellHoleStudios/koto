@@ -423,6 +423,8 @@ open class BasicPlayer(
     override fun kill(): Boolean {
         alive = false
         attachedTasks.forEach { it.kill() }
+        effect.dispose()
+        game.vfx.removeEffectRegistered(effect)
         return true
     }
 
