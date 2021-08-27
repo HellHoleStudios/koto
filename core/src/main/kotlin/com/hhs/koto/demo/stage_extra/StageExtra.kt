@@ -42,7 +42,7 @@ import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
 object StageExtra : BasicStage() {
-    override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
+    override val availableDifficulties = GameDifficulty.EXTRA_AVAILABLE
     override val name = "stageExtra"
     override val isExtraStage: Boolean = true
 

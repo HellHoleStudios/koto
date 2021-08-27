@@ -95,6 +95,7 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
                         SystemFlag.redirect = "game"
                         SystemFlag.redirectDuration = 0.5f
                         SystemFlag.replay = null
+                        SystemFlag.checkpoint = null
                         app.setScreen("blank", 0.5f)
                     }
                 }.apply {

@@ -204,7 +204,7 @@ data class Checkpoint(
         game.creditCount = creditCount
         game.initialLife.set(initialLife)
         game.initialBomb.set(initialBomb)
-        game.life.set(initialLife)
+        game.life.set(life)
         game.bomb.set(bomb)
         game.maxPower = maxPower
         game.power = power

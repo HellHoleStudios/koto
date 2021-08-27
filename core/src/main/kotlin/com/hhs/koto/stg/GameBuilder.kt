@@ -29,7 +29,6 @@ import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
-import ktx.collections.filter
 import ktx.collections.set
 
 object GameBuilder {
@@ -118,12 +117,29 @@ object GameBuilder {
 
     fun getAvailableStages(): GdxArray<StageBuilder> {
         if (SystemFlag.difficulty == null) throw KotoRuntimeException("difficulty flag is null!")
-        return regularStages.filter { SystemFlag.difficulty in it.availableDifficulties }
+        val result = GdxArray<StageBuilder>()
+        regularStages.forEach {
+            if (SystemFlag.difficulty!! in it.availableDifficulties) {
+                result.add(it)
+            }
+        }
+        extraStages.forEach {
+            if (SystemFlag.difficulty!! in it.availableDifficulties) {
+                result.add(it)
+            }
+        }
+        return result
     }
 
     fun getAvailableSpells(): GdxArray<SpellBuilder> {
         if (SystemFlag.difficulty == null) throw KotoRuntimeException("difficulty flag is null!")
-        return spells.filter { SystemFlag.difficulty in it.availableDifficulties }
+        val result = GdxArray<SpellBuilder>()
+        spells.forEach {
+            if (SystemFlag.difficulty!! in it.availableDifficulties) {
+                result.add(it)
+            }
+        }
+        return result
     }
 
     fun buildStagePractice(name: String, difficulty: GameDifficulty): KotoGame {
@@ -132,7 +148,8 @@ object GameBuilder {
             saveGameData()
         }
         val stageBuilder =
-            regularStages.find { it.name == name } ?: throw KotoRuntimeException("Stage \"$name\" not found!")
+            regularStages.find { it.name == name } ?: extraStages.find { it.name == name }
+            ?: throw KotoRuntimeException("Stage \"$name\" not found!")
         if (difficulty !in stageBuilder.availableDifficulties) {
             throw KotoRuntimeException("Stage \"$name\" does not support difficulty \"$difficulty\"")
         }
