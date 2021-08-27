@@ -289,6 +289,9 @@ open class BasicPlayer(
                     game.enemies.forEach {
                         if (it is BasicEnemy && collide(collision, x, y, it.bulletCollision, it.x, it.y)) it.destroy()
                     }
+                    game.bosses.forEach {
+                        it.onHit(16f)
+                    }
                     yield()
                 }
             }
