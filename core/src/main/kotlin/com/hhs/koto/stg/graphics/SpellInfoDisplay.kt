@@ -62,10 +62,10 @@ class SpellInfoDisplay(
         setSize(36f, 12f)
     }
     val nameFont = getFont(
-        bundle["font.spellNameDisplay"], 24, Color.RED, borderWidth = 2f, borderColor = Color.BLACK
+        24, bundle["font.spellNameDisplay"], Color.RED, borderWidth = 2f, borderColor = Color.BLACK
     )
     val infoFont = getFont(
-        bundle["font.spellInfoDisplay"], 20, Color.RED, borderWidth = 1f, borderColor = Color.BLACK
+        20, bundle["font.spellInfoDisplay"], Color.RED, borderWidth = 1f, borderColor = Color.BLACK
     )
     val spellName = bundle["game.spell.$name.name"]
     val spellHistory = "%d / %d".format(

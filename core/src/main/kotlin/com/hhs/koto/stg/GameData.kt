@@ -38,13 +38,19 @@ data class GameData(
     var deathCount: Int = 0,
     var bombCount: Int = 0,
     var clearCount: Int = 0,
-    val data: GdxMap<String, GdxMap<String, GameDataElement>> = GdxMap(),
+    val data: GdxMap<String, ShottypeElement> = GdxMap(),
 ) {
     val currentElement: GameDataElement
-        get() = data[SystemFlag.shotType!!][SystemFlag.difficulty!!.name]
+        get() = data[SystemFlag.shotType!!].data[SystemFlag.difficulty!!.name]
+
+    data class ShottypeElement(
+        var extraUnlocked: Boolean = false,
+        val data: GdxMap<String, GameDataElement> = GdxMap(),
+    )
 
     data class GameDataElement(
         val score: GdxArray<ScoreEntry> = GdxArray(),
+        val practiceUnlocked: GdxMap<String, Boolean> = GdxMap(),
         val practiceHighScore: GdxMap<String, Long> = GdxMap(),
         val spell: GdxMap<String, SpellEntry> = GdxMap(),
     )
@@ -60,6 +66,7 @@ data class GameData(
     }
 
     data class SpellEntry(
+        var practiceUnlocked: Boolean = false,
         var highScore: Long = 0L,
         var totalAttempt: Int = 0,
         var successfulAttempt: Int = 0,

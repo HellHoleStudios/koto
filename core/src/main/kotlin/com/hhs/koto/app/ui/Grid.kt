@@ -173,8 +173,7 @@ open class Grid(
     }
 
     open fun selectFirst(): Grid {
-        if (grid.size == 0) return this
-        val component = grid.first { it.enabled }
+        val component = grid.firstOrNull { it.enabled } ?: return this
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY, true)
@@ -183,8 +182,7 @@ open class Grid(
     }
 
     open fun selectLast(): Grid {
-        if (grid.size == 0) return this
-        val component = grid.last { it.enabled }
+        val component = grid.lastOrNull { it.enabled } ?: return this
         selectedX = component.gridX
         selectedY = component.gridY
         select(selectedX, selectedY, true)

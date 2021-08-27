@@ -69,167 +69,164 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
             "sanae" -> Color(0f, 0.5f, 1f, 1f)
             else -> Color.WHITE
         }
-
-        fun generatePortrait(
-            screen: PlayerSelectScreen,
-            name: String,
-            selectPortrait: TextureRegion,
-            shotTypes: GdxArray<String>,
-            gridX: Int,
-            gridY: Int,
-            staticX: Float,
-            staticY: Float,
-            width: Float = selectPortrait.regionWidth.toFloat(),
-            height: Float = width / selectPortrait.regionWidth * selectPortrait.regionHeight,
-        ) = Grid(staticX = staticX, staticY = staticY, gridX = gridX, gridY = gridY).add(
-            GridImage(
-                selectPortrait,
-                width = width,
-                height = height,
-                tint = Color(1f, 1f, 0f, 0.8f),
-            ) {
-                if (shotTypes.size == 0) {
-                    SystemFlag.shotType = name
-                    screen.switch()
-                } else {
-                    screen.selectedPlayer = name
-                    screen.showShotType(name, shotTypes)
-                }
-            }.apply {
-                activeAction = {
-                    sequence(
-                        moveTo(this.staticX, this.staticY),
-                        moveTo(this.staticX + 30f, this.staticY, 1f, Interpolation.pow5Out),
-                    )
-                }
-            }
-        ).add(
-            GridImage(selectPortrait, width = width, height = height, triggerSound = null).apply {
-                activeAction = {
-                    sequence(
-                        moveTo(this.staticX, this.staticY),
-                        moveTo(this.staticX - 30f, this.staticY, 1f, Interpolation.pow5Out),
-                    )
-                }
-            }
-        ).apply {
-            activeAction = { show() }
-            inactiveAction = { hide() }
-        }.selectFirst()
-
-        fun generateDescription(
-            name: String,
-            gridX: Int,
-            gridY: Int,
-            staticX: Float = 150f,
-            staticY: Float = 300f,
-        ) = Grid(staticX = staticX, staticY = staticY, gridX = gridX, gridY = gridY).add(
-            GridImage(
-                getRegion("ui/arrow.png"),
-                width = 48f,
-                staticX = -80f,
-                staticY = 425f,
-                activeAction = null,
-                triggerSound = null,
-            )
-        ).add(
-            GridImage(
-                getRegion("ui/arrow.png"),
-                width = 48f,
-                staticX = 680f,
-                staticY = 425f,
-                activeAction = null,
-                triggerSound = null,
-            ).apply {
-                setScale(-1f, 1f)
-            }
-        ).add(
-            GridLabel(
-                bundle["ui.playerSelect.player.$name.title"],
-                width = 600f,
-                height = 50f,
-                staticY = 500f,
-                style = Label.LabelStyle(
-                    getFont(
-                        bundle["font.subtitle"],
-                        36,
-                        Color.WHITE,
-                        borderColor = Color.BLACK
-                    ), Color.WHITE
-                ),
-            ).apply {
-                setAlignment(Align.bottom)
-            }
-        ).add(
-            GridLabel(
-                bundle["ui.playerSelect.player.$name.name"],
-                width = 600f,
-                height = 100f,
-                staticY = 400f,
-                style = Label.LabelStyle(
-                    getFont(
-                        bundle["font.title"],
-                        72,
-                        playerColor(name),
-                        borderColor = Color.BLACK
-                    ), Color.WHITE
-                ),
-            ).apply {
-                setAlignment(Align.center)
-            }
-        ).add(
-            GridLabel(bundle["ui.playerSelect.player.$name.description"], 24, width = 600f, height = 400f).apply {
-                setAlignment(Align.center)
-            }
-        ).apply {
-            activeAction = { show() }
-            inactiveAction = { hide() }
-        }.selectFirst()
     }
 
-    init {
+    private fun generatePlayer(
+        screen: PlayerSelectScreen,
+        name: String,
+        selectPortrait: TextureRegion,
+        shotTypes: GdxArray<String>,
+        gridX: Int,
+        gridY: Int,
+        portraitStaticX: Float,
+        portraitStaticY: Float,
+        portraitWidth: Float = selectPortrait.regionWidth.toFloat(),
+        portraitHeight: Float = portraitWidth / selectPortrait.regionWidth * selectPortrait.regionHeight,
+        descriptionStaticX: Float = 150f,
+        descriptionStaticY: Float = 300f,
+    ) {
+        if (SystemFlag.gamemode!! == GameMode.EXTRA) {
+            var extraUnlocked = false
+            shotTypes.forEach {
+                extraUnlocked = extraUnlocked || gameData.data[it].extraUnlocked
+            }
+            if (!extraUnlocked) return
+        }
         portraits.add(
-            generatePortrait(
-                this, "reimu", getRegion("portrait/reimu/select.png"),
-                GdxArray.with("reimuA", "reimuB", "reimu"), 0, 0, 850f, 50f, 560f,
-            )
+            Grid(staticX = portraitStaticX, staticY = portraitStaticY, gridX = gridX, gridY = gridY).add(
+                GridImage(
+                    selectPortrait,
+                    width = portraitWidth,
+                    height = portraitHeight,
+                    tint = Color(1f, 1f, 0f, 0.8f),
+                ) {
+                    if (shotTypes.size == 0) {
+                        SystemFlag.shotType = name
+                        screen.switch()
+                    } else {
+                        screen.selectedPlayer = name
+                        screen.showShotType(name, shotTypes)
+                    }
+                }.apply {
+                    activeAction = {
+                        sequence(
+                            moveTo(this.staticX, this.staticY),
+                            moveTo(this.staticX + 30f, this.staticY, 1f, Interpolation.pow5Out),
+                        )
+                    }
+                }
+            ).add(
+                GridImage(selectPortrait, width = portraitWidth, height = portraitHeight, triggerSound = null).apply {
+                    activeAction = {
+                        sequence(
+                            moveTo(this.staticX, this.staticY),
+                            moveTo(this.staticX - 30f, this.staticY, 1f, Interpolation.pow5Out),
+                        )
+                    }
+                }
+            ).apply {
+                activeAction = { Actions.show() }
+                inactiveAction = { Actions.hide() }
+            }.selectFirst()
         )
-        portraits.add(
-            generatePortrait(
-                this, "marisa", getRegion("portrait/marisa/select.png"),
-                GdxArray.with("marisaA", "marisaB", "marisa"), 1, 0, 850f, 50f, 560f,
-            )
+        descriptions.add(
+            Grid(staticX = descriptionStaticX, staticY = descriptionStaticY, gridX = gridX, gridY = gridY).add(
+                GridImage(
+                    getRegion("ui/arrow.png"),
+                    width = 48f,
+                    staticX = -80f,
+                    staticY = 425f,
+                    activeAction = null,
+                    triggerSound = null,
+                )
+            ).add(
+                GridImage(
+                    getRegion("ui/arrow.png"),
+                    width = 48f,
+                    staticX = 680f,
+                    staticY = 425f,
+                    activeAction = null,
+                    triggerSound = null,
+                ).apply {
+                    setScale(-1f, 1f)
+                }
+            ).add(
+                GridLabel(
+                    bundle["ui.playerSelect.player.$name.title"],
+                    width = 600f,
+                    height = 50f,
+                    staticY = 500f,
+                    style = Label.LabelStyle(
+                        getFont(
+                            36,
+                            bundle["font.subtitle"],
+                            Color.WHITE,
+                            borderColor = Color.BLACK
+                        ), Color.WHITE
+                    ),
+                ).apply {
+                    setAlignment(Align.bottom)
+                }
+            ).add(
+                GridLabel(
+                    bundle["ui.playerSelect.player.$name.name"],
+                    width = 600f,
+                    height = 100f,
+                    staticY = 400f,
+                    style = Label.LabelStyle(
+                        getFont(
+                            72,
+                            bundle["font.title"],
+                            playerColor(name),
+                            borderColor = Color.BLACK
+                        ), Color.WHITE
+                    ),
+                ).apply {
+                    setAlignment(Align.center)
+                }
+            ).add(
+                GridLabel(bundle["ui.playerSelect.player.$name.description"], 24, width = 600f, height = 400f).apply {
+                    setAlignment(Align.center)
+                }
+            ).apply {
+                activeAction = { Actions.show() }
+                inactiveAction = { Actions.hide() }
+            }.selectFirst()
         )
-        portraits.add(
-            generatePortrait(
-                this, "sakuya", getRegion("portrait/sakuya/select.png"),
-                GdxArray.with("sakuyaA", "sakuyaB", "sakuya"), 2, 0, 900f, 50f, 460f,
-            )
-        )
-        portraits.add(
-            generatePortrait(
-                this, "youmu", getRegion("portrait/youmu/select.png"),
-                GdxArray.with("youmuA", "youmuB", "youmu"), 3, 0, 800f, 50f, 720f,
-            )
-        )
-        portraits.add(
-            generatePortrait(
-                this, "sanae", getRegion("portrait/sanae/select.png"),
-                GdxArray.with("sanaeA", "sanaeB", "sanae"), 4, 0, 770f, 50f, 680f,
-            )
-        )
-        portraits.selectFirst()
-
-        descriptions.add(generateDescription("reimu", 0, 0))
-        descriptions.add(generateDescription("marisa", 1, 0))
-        descriptions.add(generateDescription("sakuya", 2, 0))
-        descriptions.add(generateDescription("youmu", 3, 0))
-        descriptions.add(generateDescription("sanae", 4, 0))
-        descriptions.selectFirst()
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
+
+        portraits.clear()
+        descriptions.clear()
+        generatePlayer(
+            this, "reimu", getRegion("portrait/reimu/select.png"),
+            GdxArray.with("reimuA", "reimuB", "reimu"),
+            0, 0, 850f, 50f, 560f,
+        )
+        generatePlayer(
+            this, "marisa", getRegion("portrait/marisa/select.png"),
+            GdxArray.with("marisaA", "marisaB", "marisa"),
+            1, 0, 850f, 50f, 560f,
+        )
+        generatePlayer(
+            this, "sakuya", getRegion("portrait/sakuya/select.png"),
+            GdxArray.with("sakuyaA", "sakuyaB", "sakuya"),
+            2, 0, 900f, 50f, 460f,
+        )
+        generatePlayer(
+            this, "youmu", getRegion("portrait/youmu/select.png"),
+            GdxArray.with("youmuA", "youmuB", "youmu"),
+            3, 0, 800f, 50f, 720f,
+        )
+        generatePlayer(
+            this, "sanae", getRegion("portrait/sanae/select.png"),
+            GdxArray.with("sanaeA", "sanaeB", "sanae"),
+            4, 0, 770f, 50f, 680f,
+        )
+        portraits.selectFirst()
+        descriptions.selectFirst()
 
         switchTarget = when (SystemFlag.gamemode) {
             GameMode.SPELL_PRACTICE -> "spellSelect"
@@ -325,6 +322,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
         shotTypeBackground.y = baseY - 180f
 
         for (i in 0 until shotTypes.size) {
+            val extraUnlocked = SystemFlag.gamemode!! != GameMode.EXTRA || gameData.data[shotTypes[i]].extraUnlocked
             shotTypeGrid.add(
                 GridButton(
                     bundle["ui.playerSelect.shotType.${shotTypes[i]}.name"],
@@ -350,6 +348,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                             )
                         }
                     })
+                    enabled = extraUnlocked
                 }
             )
             shotTypeGrid.add(
@@ -364,6 +363,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                     triggerSound = null,
                 ).apply {
                     setAlignment(Align.left)
+                    enabled = extraUnlocked
                 }
             )
         }

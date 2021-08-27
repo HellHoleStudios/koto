@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.ConstrainedGrid
 import com.hhs.koto.app.ui.GridButton
@@ -70,12 +71,32 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         titleBackground.clearActions()
         if (spells.size > 0) {
             for (i in 0 until spells.size) {
-                grid.add(GridButton(bundle["game.spell.${spells[i].name}.name"], 36, 0, i) {
-                    SystemFlag.sessionName = spells[i].name
-                    SystemFlag.redirect = "game"
-                    SystemFlag.redirectDuration = 0.5f
-                    SystemFlag.replay = null
-                    app.setScreen("blank", 0.5f)
+                val spellEntry = gameData.currentElement.spell[spells[i].name]
+                val unlocked: Boolean = spellEntry.practiceUnlocked
+                val labelStyle = Label.LabelStyle(
+                    getFont(36, color = Color.RED), if (unlocked && spellEntry.successfulAttempt > 0) {
+                        CYAN_HSV
+                    } else {
+                        WHITE_HSV
+                    }
+                )
+                grid.add(GridButton(
+                    if (unlocked) {
+                        bundle["game.spell.${spells[i].name}.name"]
+                    } else {
+                        bundle["ui.spellSelect.lockedName"]
+                    },
+                    0, i, activeStyle = labelStyle,
+                    staticY = 1000f - i * 45f, width = 1000f, height = 36f,
+                    triggerSound = if (unlocked) "ok" else "invalid",
+                ) {
+                    if (unlocked) {
+                        SystemFlag.sessionName = spells[i].name
+                        SystemFlag.redirect = "game"
+                        SystemFlag.redirectDuration = 0.5f
+                        SystemFlag.replay = null
+                        app.setScreen("blank", 0.5f)
+                    }
                 }.apply {
                     activeAction = getActiveAction({
                         forever(Actions.run {
@@ -96,8 +117,20 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
                         })
                     })
                 })
+                grid.add(
+                    GridButton(
+                        if (unlocked) {
+                            String.format("%d / %d", spellEntry.successfulAttempt, spellEntry.totalAttempt)
+                        } else {
+                            bundle["ui.spellSelect.lockedHistory"]
+                        },
+                        0, i, staticX = 1000f, staticY = 1000f - i * 45f, width = 100f, height = 36f,
+                        activeStyle = labelStyle, triggerSound = null,
+                    ).apply {
+                        setAlignment(Align.right)
+                    }
+                )
             }
-            grid.arrange(0f, 1000f, 0f, -45f)
             grid.selectFirst()
             grid.finishAnimation()
             titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)

@@ -211,7 +211,7 @@ class KotoGame : Disposable {
         if (this::player.isInitialized) player.kill()
         val playerName = SystemFlag.shotType ?: throw KotoRuntimeException("player flag is null!")
         game.player =
-            (GameBuilder.players[playerName] ?: throw KotoRuntimeException("player \"$playerName\" not found!"))()
+            (GameBuilder.shottypes[playerName] ?: throw KotoRuntimeException("player \"$playerName\" not found!"))()
     }
 
     fun createScoreEntry(): GameData.ScoreEntry = GameData.ScoreEntry("", Date(), score, currentStage)

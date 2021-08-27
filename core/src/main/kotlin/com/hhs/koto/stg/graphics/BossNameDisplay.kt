@@ -46,7 +46,7 @@ class BossNameDisplay(
     var textAlpha = 0f
     var visible: Boolean = false
     val font = getFont(
-        bundle["font.bossNameDisplay"], 20, Color.RED, borderWidth = 1f, borderColor = Color.BLACK
+        20, bundle["font.bossNameDisplay"], Color.RED, borderWidth = 1f, borderColor = Color.BLACK
     )
     val star = Sprite(getRegion("ui/star.png")).apply {
         color = GREEN_HSV

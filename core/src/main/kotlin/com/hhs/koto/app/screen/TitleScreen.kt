@@ -44,14 +44,14 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     private val titles = Group().apply { st += this }
     private val title = Label(
         "Koto Demonstration",
-        LabelStyle(getFont(bundle["font.title"], 120, Color.BLACK, 5f, Color.WHITE), Color.WHITE),
+        LabelStyle(getFont(120, bundle["font.title"], Color.BLACK, 5f, Color.WHITE), Color.WHITE),
     ).apply {
         setPosition(80f, 860f)
         titles += this
     }
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont(bundle["font.subtitle"], 40, Color.WHITE, borderColor = null), Color.BLACK),
+        LabelStyle(getFont(40, bundle["font.subtitle"], Color.WHITE, borderColor = null), Color.BLACK),
     ).apply {
         setPosition(100f, 820f)
         titles += this
@@ -65,6 +65,11 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         grid.add(GridButton(bundle["ui.title.startExtra"], 36, 0, -7) {
             SystemFlag.gamemode = GameMode.EXTRA
             app.setScreen("difficultySelect", 0.5f)
+        }.apply {
+            enabled = false
+            gameData.data.safeValues().forEach {
+                enabled = enabled || it.extraUnlocked
+            }
         })
         grid.add(GridButton(bundle["ui.title.startStagePractice"], 36, 0, -6) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE

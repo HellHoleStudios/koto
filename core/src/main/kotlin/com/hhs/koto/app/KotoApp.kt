@@ -135,12 +135,21 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         defaultShotSheet = A[Config.defaultShotSheet]
 
         // TODO variants
-        GameBuilder.players["reimuA"] = { ReimuPlayer() }
-        GameBuilder.players["reimuB"] = { ReimuPlayer() }
-        GameBuilder.players["reimu"] = { ReimuPlayer() }
-        GameBuilder.players["marisaA"] = { MarisaPlayer() }
-        GameBuilder.players["marisaB"] = { MarisaPlayer() }
-        GameBuilder.players["marisa"] = { MarisaPlayer() }
+        GameBuilder.shottypes["reimuA"] = { ReimuPlayer() }
+        GameBuilder.shottypes["reimuB"] = { ReimuPlayer() }
+        GameBuilder.shottypes["reimu"] = { ReimuPlayer() }
+        GameBuilder.shottypes["marisaA"] = { MarisaPlayer() }
+        GameBuilder.shottypes["marisaB"] = { MarisaPlayer() }
+        GameBuilder.shottypes["marisa"] = { MarisaPlayer() }
+        GameBuilder.shottypes["sakuyaA"] = { ReimuPlayer() }
+        GameBuilder.shottypes["sakuyaB"] = { ReimuPlayer() }
+        GameBuilder.shottypes["sakuya"] = { ReimuPlayer() }
+        GameBuilder.shottypes["youmuA"] = { ReimuPlayer() }
+        GameBuilder.shottypes["youmuB"] = { ReimuPlayer() }
+        GameBuilder.shottypes["youmu"] = { ReimuPlayer() }
+        GameBuilder.shottypes["sanaeA"] = { ReimuPlayer() }
+        GameBuilder.shottypes["sanaeB"] = { ReimuPlayer() }
+        GameBuilder.shottypes["sanae"] = { ReimuPlayer() }
 
         GameBuilder.regularStages.add(Stage1)
         GameBuilder.regularStages.add(Stage2)

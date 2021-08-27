@@ -112,9 +112,29 @@ fun getRegion(fileName: String): TextureRegion {
     }
 }
 
+fun getUILabelStyle(fontSize: Int): LabelStyle {
+    return LabelStyle(
+        getFont(
+            fontSize,
+            if (fontSize <= 28) {
+                Config.UIFontSmall
+            } else {
+                Config.UIFont
+            },
+            Config.UIFontColor,
+            Config.UIFontBorderWidthFunction(fontSize),
+            Config.UIFontBorderColor
+        ), Color.WHITE
+    )
+}
+
 fun getFont(
-    name: String,
     fontSize: Int,
+    name: String = if (fontSize <= 28) {
+        Config.UIFontSmall
+    } else {
+        Config.UIFont
+    },
     color: Color = Config.UIFontColor,
     borderWidth: Float = Config.UIFontBorderWidthFunction(fontSize),
     borderColor: Color? = Config.UIFontBorderColor,
@@ -258,22 +278,6 @@ private class FreeTypeFontParameterWrapper(val name: String, parameter0: FreeTyp
         result = 31 * result + parameter.incremental.hashCode()
         return result
     }
-}
-
-fun getUILabelStyle(fontSize: Int): LabelStyle {
-    return LabelStyle(
-        getFont(
-            if (fontSize <= 28) {
-                Config.UIFontSmall
-            } else {
-                Config.UIFont
-            },
-            fontSize,
-            Config.UIFontColor,
-            Config.UIFontBorderWidthFunction(fontSize),
-            Config.UIFontBorderColor
-        ), Color.WHITE
-    )
 }
 
 fun loadAssetIndex(file: FileHandle) {

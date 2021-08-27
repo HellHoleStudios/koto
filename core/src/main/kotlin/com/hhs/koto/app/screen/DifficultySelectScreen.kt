@@ -87,7 +87,7 @@ class DifficultySelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBack
                 width = 600f,
                 height = 30f,
                 activeStyle = Label.LabelStyle(
-                    getFont(bundle["font.subtitle"], 48, borderColor = null), Color.WHITE
+                    getFont(48, bundle["font.subtitle"], borderColor = null), Color.WHITE
                 ),
                 triggerSound = null,
             ).apply {

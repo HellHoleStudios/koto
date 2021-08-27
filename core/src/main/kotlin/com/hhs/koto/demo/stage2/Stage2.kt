@@ -43,6 +43,7 @@ import com.hhs.koto.util.getRegion
 object Stage2 : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
     override val name = "stage2"
+    override val isFinalStage: Boolean = true
 
     override fun stage() = CoroutineTask {
         game.background.addDrawable(
@@ -69,7 +70,7 @@ object Stage2 : BasicStage() {
         game.bossNameDisplay.hide()
         move(boss, -300f, 300f, 120)
         boss.kill()
-        game.bonus(bundle["game.stageClear"], defaultBonus(2, isFinalStage = true))
+        game.bonus(bundle["game.stageClear"], defaultBonus(2))
         wait(60)
     }
 }

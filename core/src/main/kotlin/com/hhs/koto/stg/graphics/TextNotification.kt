@@ -41,7 +41,7 @@ class TextNotification(
     val duration: Int = 60,
     override val zIndex: Int = 1000,
 ) : TextDrawable(
-    getFont(font, fontSize, color),
+    getFont(fontSize, font, color),
     0.5f,
     text,
     0f,

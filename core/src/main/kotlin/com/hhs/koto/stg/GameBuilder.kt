@@ -45,7 +45,7 @@ object GameBuilder {
     val extraStages = GdxArray<StageBuilder>()
     var extraEnding: TaskBuilder? = null
     val spells = GdxArray<SpellBuilder>()
-    val players = GdxMap<String, () -> Player>()
+    val shottypes = GdxMap<String, () -> Player>()
 
     fun build(): KotoGame {
         game = when (SystemFlag.gamemode) {

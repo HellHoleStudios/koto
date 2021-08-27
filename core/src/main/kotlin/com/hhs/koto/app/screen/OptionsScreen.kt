@@ -57,7 +57,7 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     ).register(st, input)
     private val restartNotification = Label(
         bundle["ui.options.restartRequired"],
-        Label.LabelStyle(getFont(Config.UIFont, 36, Color.RED), Color.WHITE)
+        Label.LabelStyle(getFont(36, color = Color.RED), Color.WHITE)
     ).apply {
         st += this
         setPosition(950f, 550f)

@@ -44,6 +44,7 @@ import com.hhs.koto.util.getRegion
 object StageExtra : BasicStage() {
     override val availableDifficulties = GameDifficulty.REGULAR_AVAILABLE
     override val name = "stageExtra"
+    override val isExtraStage: Boolean = true
 
     override fun stage() = CoroutineTask {
         game.background.addDrawable(
@@ -93,6 +94,6 @@ object StageExtra : BasicStage() {
 
         attachAndWait(MidStageExtra.build())
         wait(240)
-        game.bonus(bundle["game.stageClear"], defaultBonus(7, isExtraStage = true))
+        game.bonus(bundle["game.stageClear"], defaultBonus(7))
     }
 }

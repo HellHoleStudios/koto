@@ -54,65 +54,7 @@ object SystemFlag {
 val json = Json().apply {
     setUsePrototypes(false)
     setOutputType(JsonWriter.OutputType.json)
-    setSerializer(GameData::class.java, object : JsonSerializer<GameData> {
-        override fun write(json: Json, value: GameData, type: Class<*>?) {
-            writeObjectStart()
-            writeFields(value)
-            writeObjectEnd()
-        }
 
-        override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): GameData {
-            val tmpMap = GdxMap<String, GdxMap<String, GameData.GameDataElement>>()
-            var data: JsonValue? = jsonValue.getChild("data")
-            while (data != null) {
-                @Suppress("UNCHECKED_CAST")
-                tmpMap[data.name] = json.readValue(
-                    GdxMap::class.java,
-                    GameData.GameDataElement::class.java,
-                    data,
-                ) as GdxMap<String, GameData.GameDataElement>
-                data = data.next()
-            }
-            return GameData(
-                jsonValue["playTime"].asDouble(),
-                jsonValue["playCount"].asInt(),
-                jsonValue["practiceTime"].asDouble(),
-                jsonValue["practiceCount"].asInt(),
-                jsonValue["deathCount"].asInt(),
-                jsonValue["bombCount"].asInt(),
-                jsonValue["clearCount"].asInt(),
-                tmpMap,
-            )
-        }
-    })
-    setSerializer(GameData.GameDataElement::class.java, object : JsonSerializer<GameData.GameDataElement> {
-        override fun write(json: Json, value: GameData.GameDataElement, type: Class<*>?) {
-            writeObjectStart()
-            writeFields(value)
-            writeObjectEnd()
-        }
-
-        override fun read(json: Json, jsonValue: JsonValue, type: Class<*>?): GameData.GameDataElement {
-            @Suppress("UNCHECKED_CAST")
-            return GameData.GameDataElement(
-                json.readValue(
-                    GdxArray::class.java,
-                    GameData.ScoreEntry::class.java,
-                    jsonValue["score"],
-                ) as GdxArray<GameData.ScoreEntry>,
-                json.readValue(
-                    GdxMap::class.java,
-                    Long::class.java,
-                    jsonValue["practiceHighScore"],
-                ) as GdxMap<String, Long>,
-                json.readValue(
-                    GdxMap::class.java,
-                    GameData.SpellEntry::class.java,
-                    jsonValue["spell"],
-                ) as GdxMap<String, GameData.SpellEntry>,
-            )
-        }
-    })
     setSerializer(Locale::class.java, object : JsonSerializer<Locale> {
         override fun write(json: Json, value: Locale, type: Class<*>?) {
             json.writeArrayStart()
@@ -130,6 +72,7 @@ val json = Json().apply {
             )
         }
     })
+    
     setSerializer(Date::class.java, object : JsonSerializer<Date> {
         override fun write(json: Json, value: Date, type: Class<*>?) {
             json.writeValue(value.time)
@@ -214,11 +157,11 @@ fun loadGameData() {
         app.logger.info("Creating empty game data file...")
     }
     gameDataHash = gameData.hashCode()
-    for (player in GameBuilder.players.safeKeys()) {
-        if (!gameData.data.contains(player)) {
-            gameData.data[player] = GdxMap()
+    for (shottype in GameBuilder.shottypes.safeKeys()) {
+        if (!gameData.data.contains(shottype)) {
+            gameData.data[shottype] = GameData.ShottypeElement()
         }
-        val tmpMap = gameData.data[player]
+        val tmpMap = gameData.data[shottype].data
         GameBuilder.usedDifficulties.forEach { difficulty ->
             if (!tmpMap.contains(difficulty.name)) {
                 tmpMap[difficulty.name] = GameData.GameDataElement()
@@ -235,6 +178,19 @@ fun loadGameData() {
                 if (difficulty in stage.availableDifficulties) {
                     if (!tmpElement.practiceHighScore.contains(stage.name)) {
                         tmpElement.practiceHighScore[stage.name] = 0L
+                    }
+                    if (!tmpElement.practiceUnlocked.contains(stage.name)) {
+                        tmpElement.practiceUnlocked[stage.name] = false
+                    }
+                }
+            }
+            GameBuilder.extraStages.forEach { stage ->
+                if (difficulty in stage.availableDifficulties) {
+                    if (!tmpElement.practiceHighScore.contains(stage.name)) {
+                        tmpElement.practiceHighScore[stage.name] = 0L
+                    }
+                    if (!tmpElement.practiceUnlocked.contains(stage.name)) {
+                        tmpElement.practiceUnlocked[stage.name] = false
                     }
                 }
             }

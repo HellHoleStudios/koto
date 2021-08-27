@@ -25,24 +25,26 @@
 
 package com.hhs.koto.stg.task
 
+import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.game
+import com.hhs.koto.util.gameData
 
 abstract class BasicStage : StageBuilder {
     abstract fun stage(): Task
+    open val isFinalStage: Boolean = false
+    open val isExtraStage: Boolean = false
 
-    companion object {
-        fun defaultBonus(stage: Int, isFinalStage: Boolean = false, isExtraStage: Boolean = false): Long {
-            var result = stage * 5000000L
-            if (isFinalStage) {
-                result += game.life.completedCount * 10000000L
-                result += game.life.completedCount * 3000000L
-            }
-            if (isExtraStage) {
-                result += game.life.completedCount * 40000000L
-                result += game.life.completedCount * 4000000L
-            }
-            return result
+    fun defaultBonus(stage: Int): Long {
+        var result = stage * 5000000L
+        if (isFinalStage) {
+            result += game.life.completedCount * 10000000L
+            result += game.life.completedCount * 3000000L
         }
+        if (isExtraStage) {
+            result += game.life.completedCount * 40000000L
+            result += game.life.completedCount * 4000000L
+        }
+        return result
     }
 
     override fun build(): Task = BuilderSequence(
@@ -54,6 +56,13 @@ abstract class BasicStage : StageBuilder {
             }
         },
         taskBuilder { stage() },
+        taskBuilder {
+            RunnableTask {
+                if (isFinalStage && SystemFlag.replay == null && game.creditCount == 0) {
+                    gameData.data[SystemFlag.shotType!!].extraUnlocked = true
+                }
+            }
+        },
         taskBuilder { DelayTask(120) },
     ).build()
 }
