@@ -25,10 +25,8 @@
 
 package com.hhs.koto.stg.task
 
-import com.hhs.koto.util.SystemFlag
-import com.hhs.koto.util.game
-import com.hhs.koto.util.gameData
-import com.hhs.koto.util.saveGameData
+import com.badlogic.gdx.graphics.Color
+import com.hhs.koto.util.*
 import ktx.collections.set
 
 abstract class BasicStage : StageBuilder {
@@ -36,17 +34,17 @@ abstract class BasicStage : StageBuilder {
     open val isFinalStage: Boolean = false
     open val isExtraStage: Boolean = false
 
-    fun defaultBonus(stage: Int): Long {
-        var result = stage * 5000000L
+    fun defaultBonus(stage: Int) {
+        var amount = stage * 5000000L
         if (isFinalStage) {
-            result += game.life.completedCount * 10000000L
-            result += game.life.completedCount * 3000000L
+            amount += game.life.completedCount * 10000000L
+            amount += game.life.completedCount * 3000000L
         }
         if (isExtraStage) {
-            result += game.life.completedCount * 40000000L
-            result += game.life.completedCount * 4000000L
+            amount += game.life.completedCount * 40000000L
+            amount += game.life.completedCount * 4000000L
         }
-        return result
+        game.bonus(bundle["game.stageClear"], amount, Color(0.1f, 1f, 1f, 1f))
     }
 
     override fun build(): Task = BuilderSequence(

@@ -26,6 +26,7 @@
 package com.hhs.koto.stg
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -318,9 +319,9 @@ class KotoGame : Disposable {
         logger.info("Game instance disposed.")
     }
 
-    fun bonus(text: String, bonus: Long) {
+    fun bonus(text: String, bonus: Long, color: Color = WHITE_HSV) {
         score += bonus
-        hud.addDrawable(TextNotification(text))
+        hud.addDrawable(TextNotification(text, color = color))
         hud.addDrawable(
             TextNotification(
                 String.format("%,d", bonus),

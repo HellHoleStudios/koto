@@ -94,6 +94,6 @@ object StageExtra : BasicStage() {
 
         attachAndWait(MidStageExtra.build())
         wait(240)
-        game.bonus(bundle["game.stageClear"], defaultBonus(7))
+        defaultBonus(7)
     }
 }

@@ -162,14 +162,22 @@ fun fromHsv(h: Float, s: Float, v: Float, a: Float): Color {
     return color
 }
 
-val WHITE_HSV: Color get() = Color.WHITE.toHSVColor()
-val BLACK_HSV: Color get() = Color.BLACK.toHSVColor()
-val RED_HSV: Color get() = Color.RED.toHSVColor()
-val GREEN_HSV: Color get() = Color.GREEN.toHSVColor()
-val BLUE_HSV: Color get() = Color.BLUE.toHSVColor()
-val CYAN_HSV: Color get() = Color.CYAN.toHSVColor()
-val MAGENTA_HSV: Color get() = Color.MAGENTA.toHSVColor()
-val YELLOW_HSV: Color get() = Color.YELLOW.toHSVColor()
+val WHITE_HSV: Color = Color.WHITE.toHSVColor()
+    get() = field.cpy()
+val BLACK_HSV: Color = Color.BLACK.toHSVColor()
+    get() = field.cpy()
+val RED_HSV: Color = Color.RED.toHSVColor()
+    get() = field.cpy()
+val GREEN_HSV: Color = Color.GREEN.toHSVColor()
+    get() = field.cpy()
+val BLUE_HSV: Color = Color.BLUE.toHSVColor()
+    get() = field.cpy()
+val CYAN_HSV: Color = Color.CYAN.toHSVColor()
+    get() = field.cpy()
+val MAGENTA_HSV: Color = Color.MAGENTA.toHSVColor()
+    get() = field.cpy()
+val YELLOW_HSV: Color = Color.YELLOW.toHSVColor()
+    get() = field.cpy()
 
 fun Color.toHSVColor(): Color {
     toHsv(tmpHSVArray)

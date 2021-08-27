@@ -28,27 +28,29 @@ package com.hhs.koto.stg.graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.utils.Align
+import com.hhs.koto.util.WHITE_HSV
 import com.hhs.koto.util.bundle
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.lerp
+import ktx.graphics.copy
 
 class TextNotification(
     text: String,
     val targetY: Float = 150f,
-    color: Color = Color.WHITE.cpy(),
+    color: Color = WHITE_HSV,
     fontSize: Int = 48,
     font: String = bundle["font.notification"],
     val duration: Int = 60,
     override val zIndex: Int = 1000,
 ) : TextDrawable(
-    getFont(fontSize, font, color),
+    getFont(fontSize, font, Color.RED),
     0.5f,
     text,
     0f,
     targetY + 30f,
     0f,
     Align.center,
-    Color(0f, 1f, 1f, 0f),
+    color.copy(alpha = 0f),
 ) {
     var t: Int = 0
 

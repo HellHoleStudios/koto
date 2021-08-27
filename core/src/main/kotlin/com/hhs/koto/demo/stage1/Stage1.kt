@@ -38,7 +38,6 @@ import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.attachAndWait
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.BGM
-import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 
@@ -108,7 +107,7 @@ object Stage1 : BasicStage() {
         move(boss, -300f, 300f, 120)
         boss.kill()
 
-        game.bonus(bundle["game.stageClear"], defaultBonus(1))
+        defaultBonus(1)
         wait(60)
         interpolate(1f, 0f, 60) { game.globalAlpha = it }
         game.background.clear()
