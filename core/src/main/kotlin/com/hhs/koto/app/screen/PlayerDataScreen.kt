@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -59,7 +60,15 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
         bundle["ui.playerData.title"],
         Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
-        setPosition(80f, 900f)
+        setPosition(80f, 920f)
+        st += this
+    }
+    private val toggleNotice = Label(
+        bundle["ui.playerData.toggleNotice"],
+        getUILabelStyle(28),
+    ).apply {
+        setAlignment(Align.center)
+        setBounds(550f, 980f, 750f, 40f)
         st += this
     }
     private val shottypeGrid = Grid().register(st)
@@ -86,7 +95,7 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
     }
     private val grid = ConstrainedGrid(
         120f,
-        300f,
+        320f,
         10000f,
         530f,
         animationDuration = 0.5f,
@@ -96,8 +105,8 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
         st += this
     }
 
-    lateinit var selectedDifficulty: GameDifficulty
-    lateinit var selectedShottype: String
+    private lateinit var selectedDifficulty: GameDifficulty
+    private lateinit var selectedShottype: String
 
     companion object {
         fun getAlternativeActiveAction(button: GridButton, vararg actions: () -> Action): () -> Action = {
@@ -408,10 +417,13 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                 setBounds(900f, 105f, 150f, 45f)
             }
         )
+        statistics.setPosition(0f, -200f)
+        statistics.addAction(moveTo(0f, 0f, 0.5f, Interpolation.pow5Out))
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
+        statistics.addAction(moveTo(0f, -200f, 0.5f, Interpolation.pow5Out))
     }
 
     override fun onQuit() {
