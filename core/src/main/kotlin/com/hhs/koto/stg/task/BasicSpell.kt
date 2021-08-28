@@ -25,7 +25,6 @@
 
 package com.hhs.koto.stg.task
 
-import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.graphics.*
 import com.hhs.koto.util.*
 import kotlinx.coroutines.yield
@@ -151,6 +150,9 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
     }
 
     fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
+        if (SystemFlag.replay == null) {
+            game.replay.stage = name
+        }
         game.resetPlayer()
         game.replay.createCheckpoint(game, name)
         val boss = bossBuilder()

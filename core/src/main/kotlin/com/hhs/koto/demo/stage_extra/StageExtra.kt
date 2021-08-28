@@ -37,7 +37,6 @@ import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.attachAndWait
 import com.hhs.koto.stg.task.wait
 import com.hhs.koto.util.BGM
-import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 

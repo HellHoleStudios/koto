@@ -43,12 +43,15 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 
 class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
-    private val titleBackground = Image(getRegion("ui/blank.png")).apply {
+    private val selectionBackground = Image(getRegion("ui/blank.png")).apply {
         color = Color(0f, 0.5f, 1f, 0.5f)
         setSize(1440f, 60f)
         st += this
     }
-    private val title = Label(bundle["ui.stageSelect.title"], getUILabelStyle(72)).apply {
+    private val title = Label(
+        bundle["ui.stageSelect.title"],
+        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+    ).apply {
         setPosition(80f, 900f)
         st += this
     }
@@ -66,7 +69,7 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         val stages = GameBuilder.getAvailableStages()
 
         grid.clear()
-        titleBackground.clearActions()
+        selectionBackground.clearActions()
         if (stages.size > 0) {
             for (i in 0 until stages.size) {
                 val unlocked = gameData.currentElement.practiceUnlocked[stages[i].name]
@@ -91,8 +94,8 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
                     }.apply {
                         activeAction = getActiveAction({
                             forever(Actions.run {
-                                titleBackground.clearActions()
-                                titleBackground.addAction(
+                                selectionBackground.clearActions()
+                                selectionBackground.addAction(
                                     parallel(
                                         hsvColor(
                                             Color(i.toFloat() / stages.size, 0.5f, 1f, 0.5f),
@@ -112,9 +115,9 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
             grid.arrange(0f, 1000f, 0f, -60f)
             grid.selectFirst()
             grid.finishAnimation()
-            titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 7.5f)
+            selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 7.5f)
         } else {
-            titleBackground.alpha = 0f
+            selectionBackground.alpha = 0f
         }
     }
 

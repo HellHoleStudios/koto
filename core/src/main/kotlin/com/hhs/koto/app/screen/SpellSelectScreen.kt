@@ -44,11 +44,14 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 
 class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
-    private val title = Label(bundle["ui.spellSelect.title"], getUILabelStyle(72)).apply {
+    private val title = Label(
+        bundle["ui.spellSelect.title"],
+        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+    ).apply {
         setPosition(80f, 900f)
         st += this
     }
-    private val titleBackground = Image(getRegion("ui/blank.png")).apply {
+    private val selectionBackground = Image(getRegion("ui/blank.png")).apply {
         color = Color(0f, 0f, 1f, 0.5f)
         setSize(1440f, 45f)
         st += this
@@ -68,7 +71,7 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
 
         val spells = GameBuilder.getAvailableSpells()
         grid.clear()
-        titleBackground.clearActions()
+        selectionBackground.clearActions()
         if (spells.size > 0) {
             for (i in 0 until spells.size) {
                 val spellEntry = gameData.currentElement.spell[spells[i].name]
@@ -101,8 +104,8 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
                 }.apply {
                     activeAction = getActiveAction({
                         forever(Actions.run {
-                            titleBackground.clearActions()
-                            titleBackground.addAction(
+                            selectionBackground.clearActions()
+                            selectionBackground.addAction(
                                 parallel(
                                     hsvColor(
                                         Color(i.toFloat() / spells.size, 0.5f, 1f, 0.5f),
@@ -134,9 +137,9 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
             }
             grid.selectFirst()
             grid.finishAnimation()
-            titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+            selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
         } else {
-            titleBackground.alpha = 0f
+            selectionBackground.alpha = 0f
         }
     }
 

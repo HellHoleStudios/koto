@@ -28,7 +28,6 @@ package com.hhs.koto.stg
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
-import ktx.collections.GdxMap
 import ktx.collections.set
 
 object GameBuilder {
@@ -44,7 +43,7 @@ object GameBuilder {
     val extraStages = GdxArray<StageBuilder>()
     var extraEnding: TaskBuilder? = null
     val spells = GdxArray<SpellBuilder>()
-    val shottypes = GdxMap<String, () -> Player>()
+    val shottypes = GdxArray<Pair<String, () -> Player>>()
 
     fun build(): KotoGame {
         game = when (SystemFlag.gamemode) {
@@ -81,6 +80,7 @@ object GameBuilder {
             RunnableTask {
                 game.end()
                 if (SystemFlag.replay == null) {
+                    game.replay.stage = "clear"
                     gameData.clearCount++
                     saveGameData()
                 }

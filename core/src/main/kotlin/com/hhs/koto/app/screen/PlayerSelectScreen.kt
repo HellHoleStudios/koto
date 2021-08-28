@@ -43,19 +43,19 @@ import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 
 class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
-    private var difficultyLabel: Grid? = null
+    private lateinit var difficultyLabel: Grid
     private val portraits = Grid(selectSound = null).register(st, input)
     private val descriptions = Grid().register(st, input)
 
-    private val shotType = Group().apply {
+    private val shottypes = Group().apply {
         st += this
         alpha = 0f
     }
-    private val shotTypeBackground = Image(getRegion("ui/bg.png")).apply {
+    private val shottypeBackground = Image(getRegion("ui/bg.png")).apply {
         setSize(850f, 250f)
-        shotType += this
+        shottypes += this
     }
-    private val shotTypeGrid = Grid().apply { shotType += this }
+    private val shottypeGrid = Grid().apply { shottypes += this }
 
     private var switchTarget: String? = null
     var selectedPlayer: String? = null
@@ -75,7 +75,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
         screen: PlayerSelectScreen,
         name: String,
         selectPortrait: TextureRegion,
-        shotTypes: GdxArray<String>,
+        shottypes: GdxArray<String>,
         gridX: Int,
         gridY: Int,
         portraitStaticX: Float,
@@ -87,7 +87,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
     ) {
         if (SystemFlag.gamemode!! == GameMode.EXTRA) {
             var extraUnlocked = false
-            shotTypes.forEach {
+            shottypes.forEach {
                 extraUnlocked = extraUnlocked || gameData.data[it].extraUnlocked
             }
             if (!extraUnlocked) return
@@ -100,12 +100,12 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                     height = portraitHeight,
                     tint = Color(1f, 1f, 0f, 0.8f),
                 ) {
-                    if (shotTypes.size == 0) {
-                        SystemFlag.shotType = name
+                    if (shottypes.size == 0) {
+                        SystemFlag.shottype = name
                         screen.switch()
                     } else {
                         screen.selectedPlayer = name
-                        screen.showShotType(name, shotTypes)
+                        screen.showShotType(name, shottypes)
                     }
                 }.apply {
                     activeAction = {
@@ -235,18 +235,18 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
         }
 
         if (selectedPlayer == null) {
-            difficultyLabel?.remove()
+            if (this::difficultyLabel.isInitialized) difficultyLabel.remove()
             difficultyLabel = DifficultySelectScreen.generateButton(SystemFlag.difficulty!!, 0, 0)
-            st += difficultyLabel!!
-            difficultyLabel!!.staticX = 150f
-            difficultyLabel!!.staticY = 50f
-            difficultyLabel!!.setScale(0.5f)
-            difficultyLabel!!.clearActions()
-            difficultyLabel!!.setPosition(difficultyLabel!!.staticX, difficultyLabel!!.staticY - 300f)
-            difficultyLabel!!.addAction(
+            st += difficultyLabel
+            difficultyLabel.staticX = 150f
+            difficultyLabel.staticY = 50f
+            difficultyLabel.setScale(0.5f)
+            difficultyLabel.clearActions()
+            difficultyLabel.setPosition(difficultyLabel.staticX, difficultyLabel.staticY - 300f)
+            difficultyLabel.addAction(
                 moveTo(
-                    difficultyLabel!!.staticX,
-                    difficultyLabel!!.staticY,
+                    difficultyLabel.staticX,
+                    difficultyLabel.staticY,
                     duration,
                     Interpolation.pow5Out
                 )
@@ -273,11 +273,11 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
         super.fadeOut(newScreen, duration)
 
         if (selectedPlayer == null) {
-            difficultyLabel!!.clearActions()
-            difficultyLabel!!.addAction(
+            difficultyLabel.clearActions()
+            difficultyLabel.addAction(
                 moveTo(
-                    difficultyLabel!!.staticX,
-                    difficultyLabel!!.staticY - 300f,
+                    difficultyLabel.staticX,
+                    difficultyLabel.staticY - 300f,
                     duration,
                     Interpolation.pow5Out
                 )
@@ -305,40 +305,40 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
         }
     }
 
-    private fun showShotType(name: String, shotTypes: GdxArray<String>) {
-        shotType.clearActions()
-        shotType.addAction(fadeIn(0.5f, Interpolation.pow5Out))
-        input.addProcessor(shotTypeGrid)
+    private fun showShotType(name: String, shottypes: GdxArray<String>) {
+        this.shottypes.clearActions()
+        this.shottypes.addAction(fadeIn(0.5f, Interpolation.pow5Out))
+        input.addProcessor(shottypeGrid)
 
         descriptions.clearActions()
         descriptions.addAction(fadeOut(0.5f, Interpolation.pow5Out))
         input.removeProcessor(descriptions)
         input.removeProcessor(portraits)
 
-        shotTypeGrid.clear()
+        shottypeGrid.clear()
 
-        val baseY = (250f * shotTypes.size - 50f) / 2f + 600f
-        shotTypeBackground.color = playerColor(name).toHSVColor()
-        shotTypeBackground.y = baseY - 180f
+        val baseY = (250f * shottypes.size - 50f) / 2f + 600f
+        shottypeBackground.color = playerColor(name).toHSVColor()
+        shottypeBackground.y = baseY - 180f
 
-        for (i in 0 until shotTypes.size) {
-            val extraUnlocked = SystemFlag.gamemode!! != GameMode.EXTRA || gameData.data[shotTypes[i]].extraUnlocked
-            shotTypeGrid.add(
+        for (i in 0 until shottypes.size) {
+            val extraUnlocked = SystemFlag.gamemode!! != GameMode.EXTRA || gameData.data[shottypes[i]].extraUnlocked
+            shottypeGrid.add(
                 GridButton(
-                    bundle["ui.playerSelect.shotType.${shotTypes[i]}.name"],
+                    bundle["ui.playerSelect.shottype.${shottypes[i]}.name"],
                     48,
                     0,
                     i,
                     staticX = 100f,
                     staticY = baseY - i * 250f,
                 ) {
-                    SystemFlag.shotType = shotTypes[i]
+                    SystemFlag.shottype = shottypes[i]
                     switch()
                 }.apply {
                     activeAction = getActiveAction({
                         Actions.run {
-                            shotTypeBackground.clearActions()
-                            shotTypeBackground.addAction(
+                            shottypeBackground.clearActions()
+                            shottypeBackground.addAction(
                                 moveTo(
                                     0f,
                                     baseY - i * 250f - 180f,
@@ -351,9 +351,9 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                     enabled = extraUnlocked
                 }
             )
-            shotTypeGrid.add(
+            shottypeGrid.add(
                 GridButton(
-                    bundle["ui.playerSelect.shotType.${shotTypes[i]}.description"],
+                    bundle["ui.playerSelect.shottype.${shottypes[i]}.description"],
                     28,
                     0,
                     i,
@@ -367,13 +367,13 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                 }
             )
         }
-        shotTypeGrid.selectFirst()
+        shottypeGrid.selectFirst()
     }
 
     private fun hideShotType() {
-        shotType.clearActions()
-        shotType.addAction(fadeOut(0.5f, Interpolation.pow5Out))
-        input.removeProcessor(shotTypeGrid)
+        shottypes.clearActions()
+        shottypes.addAction(fadeOut(0.5f, Interpolation.pow5Out))
+        input.removeProcessor(shottypeGrid)
 
         descriptions.clearActions()
         descriptions.setPosition(descriptions.staticX, descriptions.staticY)

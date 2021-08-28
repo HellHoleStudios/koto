@@ -50,7 +50,9 @@ abstract class BasicStage : StageBuilder {
     override fun build(): Task = BuilderSequence(
         taskBuilder {
             RunnableTask {
-                game.currentStage = name
+                if (SystemFlag.replay == null) {
+                    game.replay.stage = name
+                }
                 game.resetPlayer()
                 game.replay.createCheckpoint(game, name)
             }
@@ -60,7 +62,7 @@ abstract class BasicStage : StageBuilder {
             RunnableTask {
                 if (SystemFlag.replay == null) {
                     if (isFinalStage && game.creditCount == 0) {
-                        gameData.data[SystemFlag.shotType!!].extraUnlocked = true
+                        gameData.data[SystemFlag.shottype!!].extraUnlocked = true
                         gameData.spellPracticeUnlocked = true
                     }
                     gameData.currentElement.practiceUnlocked[name] = true

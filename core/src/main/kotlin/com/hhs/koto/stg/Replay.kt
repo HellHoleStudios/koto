@@ -34,10 +34,11 @@ import java.util.*
 class Replay {
     lateinit var name: String
     lateinit var date: Date
+    lateinit var stage: String
     var sessionName: String? = null
     var gameMode: GameMode? = null
     var difficulty: GameDifficulty? = null
-    var shotType: String? = null
+    var shottype: String? = null
 
     @Transient
     private val keyHistory = ArrayList<BooleanArray>()
@@ -58,18 +59,34 @@ class Replay {
         private constructor() : this(0, 0, false)
     }
 
+    fun copy(): Replay {
+        val result = Replay()
+        result.name = name
+        result.date = date
+        result.stage = stage
+        result.sessionName = sessionName
+        result.gameMode = gameMode
+        result.difficulty = difficulty
+        result.shottype = shottype
+        result.keyHistory.addAll(keyHistory)
+        result.frameCount = frameCount
+        result.decoded = decoded
+        result.checkpoints.addAll(checkpoints)
+        return result
+    }
+
     fun saveSystemFlags() {
         sessionName = SystemFlag.sessionName
         gameMode = SystemFlag.gamemode
         difficulty = SystemFlag.difficulty
-        shotType = SystemFlag.shotType
+        shottype = SystemFlag.shottype
     }
 
     fun applySystemFlags() {
         SystemFlag.sessionName = sessionName
         SystemFlag.gamemode = gameMode
         SystemFlag.difficulty = difficulty
-        SystemFlag.shotType = shotType
+        SystemFlag.shottype = shottype
     }
 
     fun logKeys() {

@@ -151,7 +151,6 @@ class KotoGame : Disposable {
     val event = EventManager()
 
     lateinit var player: Player
-    lateinit var currentStage: String
     var pointValue: Long = 10000
     var maxPointValue: Long = difficultySelect(100000L, 250000L, 500000L, 500000L, 500000L)
     var pointValueHeight: Float = worldH / 4f * 3f - 50f - worldOriginY
@@ -210,12 +209,14 @@ class KotoGame : Disposable {
 
     fun resetPlayer() {
         if (this::player.isInitialized) player.kill()
-        val playerName = SystemFlag.shotType ?: throw KotoRuntimeException("player flag is null!")
+        val playerName = SystemFlag.shottype ?: throw KotoRuntimeException("player flag is null!")
         game.player =
-            (GameBuilder.shottypes[playerName] ?: throw KotoRuntimeException("player \"$playerName\" not found!"))()
+            (GameBuilder.shottypes.find { it.first == playerName }
+                ?: throw KotoRuntimeException("player \"$playerName\" not found!")).second()
     }
 
-    fun createScoreEntry(): GameData.ScoreEntry = GameData.ScoreEntry("", Date(), score, currentStage)
+    fun createScoreEntry(): GameData.ScoreEntry =
+        GameData.ScoreEntry("", Date(), score, creditCount)
 
     fun update() {
         speedUpMultiplier = if (VK.SPEED_UP.pressed()) {
@@ -268,7 +269,6 @@ class KotoGame : Disposable {
     }
 
     fun end() {
-        currentStage = "clear"
         state = if (SystemFlag.gamemode == GameMode.SPELL_PRACTICE || SystemFlag.gamemode == GameMode.STAGE_PRACTICE) {
             GameState.FINISH_PRACTICE
         } else {

@@ -65,11 +65,6 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         grid.add(GridButton(bundle["ui.title.startExtra"], 36, 0, -7) {
             SystemFlag.gamemode = GameMode.EXTRA
             app.setScreen("difficultySelect", 0.5f)
-        }.apply {
-            enabled = false
-            gameData.data.safeValues().forEach {
-                enabled = enabled || it.extraUnlocked
-            }
         })
         grid.add(GridButton(bundle["ui.title.startStagePractice"], 36, 0, -6) {
             SystemFlag.gamemode = GameMode.STAGE_PRACTICE
@@ -78,13 +73,13 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         grid.add(GridButton(bundle["ui.title.startSpellPractice"], 36, 0, -5) {
             SystemFlag.gamemode = GameMode.SPELL_PRACTICE
             app.setScreen("difficultySelect", 0.5f)
-        }.apply {
-            enabled = gameData.spellPracticeUnlocked
         })
         grid.add(GridButton(bundle["ui.title.replay"], 36, 0, -4) {
             app.setScreen("replay", 0.5f)
         })
-        grid.add(GridButton(bundle["ui.title.playerData"], 36, 0, -3, enabled = false))
+        grid.add(GridButton(bundle["ui.title.playerData"], 36, 0, -3) {
+            app.setScreen("playerData", 0.5f)
+        })
         grid.add(GridButton(bundle["ui.title.musicRoom"], 36, 0, -2) {
             app.setScreen("musicRoom", 0.5f)
         })
@@ -106,6 +101,13 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         titles.clearActions()
         titles.setPosition(0f, 400f)
         titles.addAction(moveTo(0f, 0f, duration, Interpolation.pow5Out))
+
+        val extraButton = grid[1] as GridButton
+        extraButton.enabled = false
+        gameData.data.safeValues().forEach {
+            extraButton.enabled = extraButton.enabled || it.extraUnlocked
+        }
+        grid[3].enabled = gameData.spellPracticeUnlocked
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {

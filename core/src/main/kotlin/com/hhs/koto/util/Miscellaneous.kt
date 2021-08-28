@@ -48,7 +48,7 @@ object SystemFlag {
     var checkpoint: Checkpoint? = null
     var sessionName: String? = null
     var difficulty: GameDifficulty? = null
-    var shotType: String? = null
+    var shottype: String? = null
 }
 
 val json = Json().apply {
@@ -142,8 +142,9 @@ fun loadReplays(): GdxArray<Replay> {
 }
 
 fun saveReplay(replay: Replay) {
-    replay.encodeKeys()
-    app.callbacks.saveReplay(replay)
+    val tmpReplay = replay.copy()
+    tmpReplay.encodeKeys()
+    app.callbacks.saveReplay(tmpReplay)
 }
 
 private var gameDataHash: Int = 0
@@ -157,7 +158,8 @@ fun loadGameData() {
         app.logger.info("Creating empty game data file...")
     }
     gameDataHash = gameData.hashCode()
-    for (shottype in GameBuilder.shottypes.safeKeys()) {
+    GameBuilder.shottypes.forEach {
+        val shottype = it.first
         if (!gameData.data.contains(shottype)) {
             gameData.data[shottype] = GameData.ShottypeElement()
         }

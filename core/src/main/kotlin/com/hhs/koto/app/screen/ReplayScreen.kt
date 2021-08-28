@@ -46,11 +46,11 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     companion object {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
 
-        fun getDisplayName(replay: Replay, checkpoint: Checkpoint): String =
+        fun getDisplayName(replay: Replay, name: String): String =
             if (replay.gameMode!! == GameMode.SPELL_PRACTICE) {
-                bundle["game.spell.${checkpoint.name}.name"]
+                bundle["game.spell.${name}.name"]
             } else {
-                bundle["game.stage.${checkpoint.name}.name"]
+                bundle["game.stage.${name}.name"]
             }
 
         fun launchGame(replay: Replay, checkpoint: Checkpoint) {
@@ -64,11 +64,14 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
         }
     }
 
-    private val title = Label(bundle["ui.replay.title"], getUILabelStyle(72)).apply {
+    private val title = Label(
+        bundle["ui.replay.title"],
+        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+    ).apply {
         setPosition(80f, 900f)
         st += this
     }
-    private val titleBackground = Image(getRegion("ui/blank.png")).apply {
+    private val selectionBackground = Image(getRegion("ui/blank.png")).apply {
         color = Color(0f, 0f, 1f, 0.5f)
         setSize(1440f, 35f)
         st += this
@@ -113,7 +116,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
             val checkpoint = replay.checkpoints[i]
             checkpointSelectMenu.add(
                 GridButton(
-                    getDisplayName(replay, checkpoint),
+                    getDisplayName(replay, checkpoint.name),
                     36,
                     0,
                     i,
@@ -153,7 +156,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
 
         val replays = loadReplays()
         grid.clear()
-        titleBackground.clearActions()
+        selectionBackground.clearActions()
         if (replays.size > 0) {
             for (i in 0 until replays.size) {
                 val replay = replays[i]
@@ -173,8 +176,8 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                 }.apply {
                     activeAction = getActiveAction({
                         Actions.forever(Actions.run {
-                            titleBackground.clearActions()
-                            titleBackground.addAction(
+                            selectionBackground.clearActions()
+                            selectionBackground.addAction(
                                 Actions.parallel(
                                     hsvColor(
                                         Color(i.toFloat() / replays.size, 0.5f, 1f, 0.5f),
@@ -214,7 +217,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                 )
                 grid.add(
                     GridButton(
-                        bundle["ui.replay.shotType.${replay.shotType!!}.name"],
+                        bundle["ui.replay.shottype.${replay.shottype!!}"],
                         28,
                         0,
                         i,
@@ -225,7 +228,11 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                 )
                 grid.add(
                     GridButton(
-                        getDisplayName(replay, replay.checkpoints.last()),
+                        if (replay.stage == "clear") {
+                            bundle["ui.replay.clear"]
+                        } else {
+                            getDisplayName(replay, replay.stage)
+                        },
                         28,
                         0,
                         i,
@@ -237,9 +244,9 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
             }
             grid.selectFirst()
             grid.finishAnimation()
-            titleBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+            selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
         } else {
-            titleBackground.alpha = 0f
+            selectionBackground.alpha = 0f
         }
     }
 

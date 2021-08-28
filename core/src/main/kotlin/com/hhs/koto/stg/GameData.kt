@@ -42,7 +42,7 @@ data class GameData(
     val data: GdxMap<String, ShottypeElement> = GdxMap(),
 ) {
     val currentElement: GameDataElement
-        get() = data[SystemFlag.shotType!!].data[SystemFlag.difficulty!!.name]
+        get() = data[SystemFlag.shottype!!].data[SystemFlag.difficulty!!.name]
 
     data class ShottypeElement(
         var extraUnlocked: Boolean = false,
@@ -60,10 +60,10 @@ data class GameData(
         var name: String,
         var date: Date,
         var score: Long,
-        var stage: String,
+        var creditCount: Int,
     ) {
         @Suppress("unused")
-        private constructor() : this("", Date(), 0L, "")
+        private constructor() : this("", Date(), 0L, 0)
     }
 
     data class SpellEntry(

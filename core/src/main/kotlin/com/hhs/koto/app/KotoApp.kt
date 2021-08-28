@@ -135,21 +135,21 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         defaultShotSheet = A[Config.defaultShotSheet]
 
         // TODO variants
-        GameBuilder.shottypes["reimuA"] = { ReimuPlayer() }
-        GameBuilder.shottypes["reimuB"] = { ReimuPlayer() }
-        GameBuilder.shottypes["reimu"] = { ReimuPlayer() }
-        GameBuilder.shottypes["marisaA"] = { MarisaPlayer() }
-        GameBuilder.shottypes["marisaB"] = { MarisaPlayer() }
-        GameBuilder.shottypes["marisa"] = { MarisaPlayer() }
-        GameBuilder.shottypes["sakuyaA"] = { ReimuPlayer() }
-        GameBuilder.shottypes["sakuyaB"] = { ReimuPlayer() }
-        GameBuilder.shottypes["sakuya"] = { ReimuPlayer() }
-        GameBuilder.shottypes["youmuA"] = { ReimuPlayer() }
-        GameBuilder.shottypes["youmuB"] = { ReimuPlayer() }
-        GameBuilder.shottypes["youmu"] = { ReimuPlayer() }
-        GameBuilder.shottypes["sanaeA"] = { ReimuPlayer() }
-        GameBuilder.shottypes["sanaeB"] = { ReimuPlayer() }
-        GameBuilder.shottypes["sanae"] = { ReimuPlayer() }
+        GameBuilder.shottypes.add("reimuA" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("reimuB" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("reimu" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("marisaA" to { MarisaPlayer() })
+        GameBuilder.shottypes.add("marisaB" to { MarisaPlayer() })
+        GameBuilder.shottypes.add("marisa" to { MarisaPlayer() })
+        GameBuilder.shottypes.add("sakuyaA" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("sakuyaB" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("sakuya" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("youmuA" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("youmuB" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("youmu" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("sanaeA" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("sanaeB" to { ReimuPlayer() })
+        GameBuilder.shottypes.add("sanae" to { ReimuPlayer() })
 
         GameBuilder.regularStages.add(Stage1)
         GameBuilder.regularStages.add(Stage2)
@@ -168,6 +168,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         screens["stageSelect"] = StageSelectScreen()
         screens["spellSelect"] = SpellSelectScreen()
         screens["replay"] = ReplayScreen()
+        screens["playerData"] = PlayerDataScreen()
         screens["musicRoom"] = MusicRoomScreen()
         screens["options"] = OptionsScreen()
         setScreen("blank")
