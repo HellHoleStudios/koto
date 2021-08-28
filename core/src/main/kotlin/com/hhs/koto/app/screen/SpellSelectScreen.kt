@@ -75,7 +75,12 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         if (spells.size > 0) {
             for (i in 0 until spells.size) {
                 val spellEntry = gameData.currentElement.spell[spells[i].name]
-                val unlocked: Boolean = spellEntry.practiceUnlocked
+
+                // I don't understand ZUN logic...
+                var unlocked: Boolean = spellEntry.practiceUnlocked
+                gameData.data.safeValues().forEach {
+                    unlocked = unlocked || it.data[SystemFlag.difficulty!!.name].spell[spells[i].name].practiceUnlocked
+                }
                 val labelStyle = getUILabelStyle(
                     36,
                     if (unlocked && spellEntry.successfulAttempt > 0) {
