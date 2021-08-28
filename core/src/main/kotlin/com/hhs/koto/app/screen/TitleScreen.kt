@@ -44,14 +44,14 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     private val titles = Group().apply { st += this }
     private val title = Label(
         "Koto Demonstration",
-        LabelStyle(getFont(120, bundle["font.title"], Color.BLACK, 5f, Color.WHITE), Color.WHITE),
+        LabelStyle(getFont(120, bundle["font.title"], Color.BLACK, 5f, Color.WHITE), WHITE_HSV),
     ).apply {
         setPosition(80f, 860f)
         titles += this
     }
     private val subtitle = Label(
         "by Hell Hole Studios 2021",
-        LabelStyle(getFont(40, bundle["font.subtitle"], Color.WHITE, borderColor = null), Color.BLACK),
+        LabelStyle(getFont(40, bundle["font.subtitle"], borderColor = null), BLACK_HSV),
     ).apply {
         setPosition(100f, 820f)
         titles += this

@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.stg.Drawable
+import com.hhs.koto.util.WHITE_HSV
 import com.hhs.koto.util.draw
 
 open class TextDrawable(
@@ -40,7 +41,7 @@ open class TextDrawable(
     override var y: Float,
     var targetWidth: Float = 512f,
     var halign: Int = Align.left,
-    var color: Color = Color.WHITE.cpy(),
+    var color: Color = WHITE_HSV,
 ) : Drawable {
     override var alive: Boolean = true
 

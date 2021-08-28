@@ -46,9 +46,17 @@ import ktx.graphics.copy
 import java.text.SimpleDateFormat
 
 class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
+    private val noEntry = Label(
+        bundle["ui.playerData.noEntry"],
+        Label.LabelStyle(getFont(120), Color(0f, 0f, 1f, 0.5f)),
+    ).apply {
+        st += this
+        setAlignment(Align.center)
+        setBounds(200f, 300f, 1040f, 500f)
+    }
     private val title = Label(
         bundle["ui.playerData.title"],
-        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+        Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
         setPosition(80f, 900f)
         st += this
@@ -139,7 +147,7 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                     height = 48f,
                     ignoreParent = true,
                     activeStyle = Label.LabelStyle(
-                        getFont(48, color = Color.RED),
+                        getFont(48),
                         DifficultySelectScreen.difficultyColor(difficulty).copy(blue = 1f),
                     )
                 ) {
@@ -172,7 +180,7 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                     height = 48f,
                     ignoreParent = true,
                     activeStyle = Label.LabelStyle(
-                        getFont(48, color = Color.RED),
+                        getFont(48),
                         shottypeColor(shottype),
                     )
                 ) {
@@ -267,8 +275,10 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
             grid.selectFirst()
             grid.finishAnimation()
             selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+            noEntry.alpha = 0f
         } else {
             selectionBackground.alpha = 0f
+            noEntry.alpha = 1f
         }
     }
 

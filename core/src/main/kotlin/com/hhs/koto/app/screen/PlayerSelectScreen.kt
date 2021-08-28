@@ -160,9 +160,9 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                         getFont(
                             36,
                             bundle["font.subtitle"],
-                            Color.WHITE,
+                            Color.RED,
                             borderColor = Color.BLACK
-                        ), Color.WHITE
+                        ), WHITE_HSV
                     ),
                 ).apply {
                     setAlignment(Align.bottom)
@@ -177,9 +177,9 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
                         getFont(
                             72,
                             bundle["font.title"],
-                            playerColor(name),
-                            borderColor = Color.BLACK
-                        ), Color.WHITE
+                            Color.RED,
+                            borderColor = Color.BLACK,
+                        ), playerColor(name).toHSVColor()
                     ),
                 ).apply {
                     setAlignment(Align.center)

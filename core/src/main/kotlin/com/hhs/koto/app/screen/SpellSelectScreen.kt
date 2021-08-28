@@ -46,7 +46,7 @@ import ktx.actors.plusAssign
 class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     private val title = Label(
         bundle["ui.spellSelect.title"],
-        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+        Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
         setPosition(80f, 900f)
         st += this
@@ -77,7 +77,7 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
                 val spellEntry = gameData.currentElement.spell[spells[i].name]
                 val unlocked: Boolean = spellEntry.practiceUnlocked
                 val labelStyle = Label.LabelStyle(
-                    getFont(36, color = Color.RED), if (unlocked && spellEntry.successfulAttempt > 0) {
+                    getFont(36), if (unlocked && spellEntry.successfulAttempt > 0) {
                         CYAN_HSV
                     } else {
                         WHITE_HSV

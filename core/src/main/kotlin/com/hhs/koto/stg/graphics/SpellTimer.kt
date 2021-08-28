@@ -44,7 +44,7 @@ class SpellTimer(
     var scale: Float = 1f
 
     val integer = TextDrawable(
-        getFont(40, bundle["font.spellTimer"], Color.RED, 3f, Color.BLACK),
+        getFont(40, bundle["font.spellTimer"], borderWidth = 3f, borderColor = Color.BLACK),
         20f / 40,
         "",
         x,
@@ -54,7 +54,7 @@ class SpellTimer(
         Color(0f, 0f, 1f, 0f),
     )
     val fraction = TextDrawable(
-        getFont(20, bundle["font.spellTimer"], Color.RED, 3f, Color.BLACK),
+        getFont(20, bundle["font.spellTimer"], borderWidth = 3f, borderColor = Color.BLACK),
         10f / 20,
         "",
         x,

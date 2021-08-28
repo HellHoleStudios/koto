@@ -50,7 +50,7 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
     }
     private val title = Label(
         bundle["ui.stageSelect.title"],
-        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+        Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
         setPosition(80f, 900f)
         st += this

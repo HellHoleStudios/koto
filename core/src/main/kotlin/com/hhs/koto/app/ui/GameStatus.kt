@@ -116,7 +116,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.highScore"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 Color(0f, 0f, 0.7f, 1f),
             ),
         ).apply {
@@ -127,7 +127,7 @@ class GameStatus(val game: KotoGame) : Group() {
         highScore = Label(
             String.format("%,d", max(game.highScore, game.score)),
             Label.LabelStyle(
-                getFont(36, bundle["font.gameStatus.value"], Color.RED),
+                getFont(36, bundle["font.gameStatus.value"]),
                 Color(0f, 0f, 0.7f, 1f),
             ),
         ).apply {
@@ -147,7 +147,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.score"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 WHITE_HSV,
             ),
         ).apply {
@@ -157,7 +157,7 @@ class GameStatus(val game: KotoGame) : Group() {
         score = Label(
             String.format("%,d", game.score),
             Label.LabelStyle(
-                getFont(36, bundle["font.gameStatus.value"], Color.RED),
+                getFont(36, bundle["font.gameStatus.value"]),
                 WHITE_HSV,
             ),
         ).apply {
@@ -176,7 +176,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.life"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 Color(0.85f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -187,7 +187,7 @@ class GameStatus(val game: KotoGame) : Group() {
             Label(
                 bundle["ui.game.status.lifePieces"],
                 Label.LabelStyle(
-                    getFont(24, bundle["font.gameStatus.label"], Color.RED),
+                    getFont(24, bundle["font.gameStatus.label"]),
                     WHITE_HSV,
                 ),
             ).apply {
@@ -198,7 +198,7 @@ class GameStatus(val game: KotoGame) : Group() {
         lifePieces = Label(
             String.format("%d / %d", game.life.fragmentCount, game.life.fragmentFactor),
             Label.LabelStyle(
-                getFont(24, bundle["font.gameStatus.value"], Color.RED),
+                getFont(24, bundle["font.gameStatus.value"]),
                 WHITE_HSV,
             ),
         ).apply {
@@ -219,7 +219,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.bomb"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 Color(0.4f, 0.3f, 0.8f, 1f),
             ),
         ).apply {
@@ -230,7 +230,7 @@ class GameStatus(val game: KotoGame) : Group() {
             Label(
                 bundle["ui.game.status.lifePieces"],
                 Label.LabelStyle(
-                    getFont(24, bundle["font.gameStatus.label"], Color.RED),
+                    getFont(24, bundle["font.gameStatus.label"]),
                     WHITE_HSV,
                 ),
             ).apply {
@@ -241,7 +241,7 @@ class GameStatus(val game: KotoGame) : Group() {
         bombPieces = Label(
             String.format("%d / %d", game.bomb.fragmentCount, game.bomb.fragmentFactor),
             Label.LabelStyle(
-                getFont(24, bundle["font.gameStatus.value"], Color.RED),
+                getFont(24, bundle["font.gameStatus.value"]),
                 WHITE_HSV,
             ),
         ).apply {
@@ -262,7 +262,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.power"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 Color(0f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -278,7 +278,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             "/ $tmpInteger",
             Label.LabelStyle(
-                getFont(40, bundle["font.gameStatus.value"], Color.RED),
+                getFont(40, bundle["font.gameStatus.value"]),
                 Color(0f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -288,7 +288,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             tmpFraction,
             Label.LabelStyle(
-                getFont(28, bundle["font.gameStatus.value"], Color.RED),
+                getFont(28, bundle["font.gameStatus.value"]),
                 Color(0f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -299,7 +299,7 @@ class GameStatus(val game: KotoGame) : Group() {
         powerInteger = Label(
             tmpInteger2,
             Label.LabelStyle(
-                getFont(40, bundle["font.gameStatus.value"], Color.RED),
+                getFont(40, bundle["font.gameStatus.value"]),
                 Color(0f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -310,7 +310,7 @@ class GameStatus(val game: KotoGame) : Group() {
         powerFraction = Label(
             tmpFraction2,
             Label.LabelStyle(
-                getFont(28, bundle["font.gameStatus.value"], Color.RED),
+                getFont(28, bundle["font.gameStatus.value"]),
                 Color(0f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -328,7 +328,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.maxPoint"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 Color(0.6f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -342,7 +342,7 @@ class GameStatus(val game: KotoGame) : Group() {
         pointValue = Label(
             String.format("%,d", game.pointValue),
             Label.LabelStyle(
-                getFont(40, bundle["font.gameStatus.value"], Color.RED),
+                getFont(40, bundle["font.gameStatus.value"]),
                 Color(0.6f, 0.5f, 0.8f, 1f),
             ),
         ).apply {
@@ -361,7 +361,7 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(Label(
             bundle["ui.game.status.graze"],
             Label.LabelStyle(
-                getFont(32, bundle["font.gameStatus.label"], Color.RED),
+                getFont(32, bundle["font.gameStatus.label"]),
                 Color(0f, 0f, 0.7f, 1f),
             ),
         ).apply {
@@ -371,7 +371,7 @@ class GameStatus(val game: KotoGame) : Group() {
         graze = Label(
             String.format("%,d", game.graze),
             Label.LabelStyle(
-                getFont(40, bundle["font.gameStatus.value"], Color.RED),
+                getFont(40, bundle["font.gameStatus.value"]),
                 WHITE_HSV,
             ),
         ).apply {

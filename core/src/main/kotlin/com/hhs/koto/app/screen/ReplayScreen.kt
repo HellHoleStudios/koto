@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.Checkpoint
@@ -42,7 +43,6 @@ import ktx.actors.plusAssign
 import java.text.SimpleDateFormat
 
 class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
-
     companion object {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
 
@@ -64,9 +64,17 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
         }
     }
 
+    private val noEntry = Label(
+        bundle["ui.replay.noEntry"],
+        Label.LabelStyle(getFont(120), Color(0f, 0f, 1f, 0.5f)),
+    ).apply {
+        st += this
+        setAlignment(Align.center)
+        setBounds(200f, 300f, 1040f, 500f)
+    }
     private val title = Label(
         bundle["ui.replay.title"],
-        Label.LabelStyle(getFont(72, bundle["font.title"]), Color.WHITE),
+        Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
         setPosition(80f, 900f)
         st += this
@@ -245,8 +253,10 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
             grid.selectFirst()
             grid.finishAnimation()
             selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+            noEntry.alpha = 0f
         } else {
             selectionBackground.alpha = 0f
+            noEntry.alpha = 1f
         }
     }
 

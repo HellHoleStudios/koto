@@ -121,10 +121,10 @@ fun getUILabelStyle(fontSize: Int): LabelStyle {
             } else {
                 Config.UIFont
             },
-            Config.UIFontColor,
+            Color.RED,
             Config.UIFontBorderWidthFunction(fontSize),
             Config.UIFontBorderColor
-        ), Color.WHITE
+        ), Config.UIFontColor.toHSVColor()
     )
 }
 
@@ -135,7 +135,7 @@ fun getFont(
     } else {
         Config.UIFont
     },
-    color: Color = Config.UIFontColor,
+    color: Color = Color.RED,
     borderWidth: Float = Config.UIFontBorderWidthFunction(fontSize),
     borderColor: Color? = Config.UIFontBorderColor,
     borderOutside: Boolean = true,
@@ -168,7 +168,7 @@ fun getFont(
     if (key in fontCache) {
         return fontCache[key]
     }
-    A.logger.debug("Font not found in cache. Generating: $name")
+    A.logger.debug("Font not found in cache. Generating: $fontSize #$color $name")
     val generator: FreeTypeFontGenerator = A[name]
     val font = generator.generateFont(parameter)
     font.setUseIntegerPositions(false)
