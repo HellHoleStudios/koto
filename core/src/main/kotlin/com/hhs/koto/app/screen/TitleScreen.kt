@@ -102,12 +102,14 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         titles.setPosition(0f, 400f)
         titles.addAction(moveTo(0f, 0f, duration, Interpolation.pow5Out))
 
-        val extraButton = grid[1] as GridButton
-        extraButton.enabled = false
+        var extraEnabled = false
         gameData.data.safeValues().forEach {
-            extraButton.enabled = extraButton.enabled || it.extraUnlocked
+            extraEnabled = extraEnabled || it.extraUnlocked
         }
+        grid[1].enabled = extraEnabled
+        grid[1].update()
         grid[3].enabled = gameData.spellPracticeUnlocked
+        grid[3].update()
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {

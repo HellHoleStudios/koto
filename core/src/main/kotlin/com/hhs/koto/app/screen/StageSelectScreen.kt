@@ -66,6 +66,8 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
+        title.addAction(moveTo(80f, 900f, 0.5f, Interpolation.pow5Out))
+
         val stages = GameBuilder.getAvailableStages()
 
         grid.clear()
@@ -119,6 +121,11 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         } else {
             selectionBackground.alpha = 0f
         }
+    }
+
+    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
+        super.fadeOut(newScreen, duration)
+        title.addAction(moveTo(80f, 1100f, 0.5f, Interpolation.pow5Out))
     }
 
     override fun onQuit() {
