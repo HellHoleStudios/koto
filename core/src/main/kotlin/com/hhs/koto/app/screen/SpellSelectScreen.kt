@@ -48,7 +48,7 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         bundle["ui.spellSelect.title"],
         Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
-        setPosition(80f, 900f)
+        setPosition(80f, 1100f)
         st += this
     }
     private val selectionBackground = Image(getRegion("ui/blank.png")).apply {
@@ -76,12 +76,13 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
             for (i in 0 until spells.size) {
                 val spellEntry = gameData.currentElement.spell[spells[i].name]
                 val unlocked: Boolean = spellEntry.practiceUnlocked
-                val labelStyle = Label.LabelStyle(
-                    getFont(36), if (unlocked && spellEntry.successfulAttempt > 0) {
+                val labelStyle = getUILabelStyle(
+                    36,
+                    if (unlocked && spellEntry.successfulAttempt > 0) {
                         CYAN_HSV
                     } else {
                         WHITE_HSV
-                    }
+                    },
                 )
                 grid.add(GridButton(
                     if (unlocked) {

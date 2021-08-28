@@ -44,11 +44,12 @@ import ktx.actors.alpha
 import ktx.actors.plusAssign
 import ktx.graphics.copy
 import java.text.SimpleDateFormat
+import kotlin.math.roundToLong
 
 class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     private val noEntry = Label(
         bundle["ui.playerData.noEntry"],
-        Label.LabelStyle(getFont(120), Color(0f, 0f, 1f, 0.5f)),
+        getUILabelStyle(120, Color(0f, 0f, 1f, 0.5f)),
     ).apply {
         st += this
         setAlignment(Align.center)
@@ -85,12 +86,15 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
     }
     private val grid = ConstrainedGrid(
         120f,
-        400f,
+        300f,
         10000f,
-        430f,
+        530f,
         animationDuration = 0.5f,
         interpolation = Interpolation.pow5Out,
     ).setCullingToConstraint().register(st, input)
+    private val statistics = Group().apply {
+        st += this
+    }
 
     lateinit var selectedDifficulty: GameDifficulty
     lateinit var selectedShottype: String
@@ -132,6 +136,11 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
             }
             return result.toHSVColor()
         }
+
+        fun formatTime(time: Double): String {
+            val s = time.roundToLong()
+            return String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
+        }
     }
 
     init {
@@ -146,8 +155,8 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                     width = 250f,
                     height = 48f,
                     ignoreParent = true,
-                    activeStyle = Label.LabelStyle(
-                        getFont(48),
+                    activeStyle = getUILabelStyle(
+                        48,
                         DifficultySelectScreen.difficultyColor(difficulty).copy(blue = 1f),
                     )
                 ) {
@@ -179,8 +188,8 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                     width = 300f,
                     height = 48f,
                     ignoreParent = true,
-                    activeStyle = Label.LabelStyle(
-                        getFont(48),
+                    activeStyle = getUILabelStyle(
+                        48,
                         shottypeColor(shottype),
                     )
                 ) {
@@ -208,6 +217,7 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
         grid.clear()
         selectionBackground.clearActions()
         val scores = gameData.data[selectedShottype].data[selectedDifficulty.name].score
+        scores.sort { o1, o2 -> -compareValues(o1.score, o2.score) }
         if (scores.size > 0) {
             for (i in 0 until scores.size) {
                 val score = scores[i]
@@ -280,6 +290,128 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
             selectionBackground.alpha = 0f
             noEntry.alpha = 1f
         }
+    }
+
+    override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
+        super.fadeIn(oldScreen, duration)
+        statistics.clear()
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.playTime"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(100f, 195f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                formatTime(gameData.playTime),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(400f, 195f, 150f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.playCount"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(100f, 150f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                String.format("%d", gameData.playCount),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(400f, 150f, 150f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.practiceTime"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(100f, 105f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                formatTime(gameData.practiceTime),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(400f, 105f, 150f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.practiceCount"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(100f, 60f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                String.format("%d", gameData.practiceCount),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(400f, 60f, 150f, 45f)
+            }
+        )
+
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.deathCount"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(600f, 195f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                String.format("%d", gameData.deathCount),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(900f, 195f, 150f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.bombCount"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(600f, 150f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                String.format("%d", gameData.bombCount),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(900f, 150f, 150f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                bundle["ui.playerData.clearCount"],
+                getUILabelStyle(36, LIGHT_GRAY_HSV),
+            ).apply {
+                setBounds(600f, 105f, 300f, 45f)
+            }
+        )
+        statistics.addActor(
+            Label(
+                String.format("%d", gameData.clearCount),
+                getUILabelStyle(36),
+            ).apply {
+                setBounds(900f, 105f, 150f, 45f)
+            }
+        )
+    }
+
+    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
+        super.fadeOut(newScreen, duration)
     }
 
     override fun onQuit() {

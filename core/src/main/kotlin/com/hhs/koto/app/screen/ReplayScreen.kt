@@ -66,7 +66,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
 
     private val noEntry = Label(
         bundle["ui.replay.noEntry"],
-        Label.LabelStyle(getFont(120), Color(0f, 0f, 1f, 0.5f)),
+        getUILabelStyle(120, Color(0f, 0f, 1f, 0.5f)),
     ).apply {
         st += this
         setAlignment(Align.center)
@@ -76,7 +76,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
         bundle["ui.replay.title"],
         Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
-        setPosition(80f, 900f)
+        setPosition(80f, 1100f)
         st += this
     }
     private val selectionBackground = Image(getRegion("ui/blank.png")).apply {

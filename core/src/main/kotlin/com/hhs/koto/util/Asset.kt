@@ -112,7 +112,7 @@ fun getRegion(fileName: String): TextureRegion {
     }
 }
 
-fun getUILabelStyle(fontSize: Int): LabelStyle {
+fun getUILabelStyle(fontSize: Int, color: Color = Config.UIFontColor.toHSVColor()): LabelStyle {
     return LabelStyle(
         getFont(
             fontSize,
@@ -124,7 +124,7 @@ fun getUILabelStyle(fontSize: Int): LabelStyle {
             Color.RED,
             Config.UIFontBorderWidthFunction(fontSize),
             Config.UIFontBorderColor
-        ), Config.UIFontColor.toHSVColor()
+        ), color
     )
 }
 

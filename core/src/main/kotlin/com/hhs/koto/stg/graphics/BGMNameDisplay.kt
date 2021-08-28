@@ -37,7 +37,7 @@ import com.hhs.koto.util.lerp
 class BGMNameDisplay(bgmId: Int, override val zIndex: Int = 1000) : TextDrawable(
     getFont(24, bundle["font.BGMNameDisplay"]),
     12f / 24,
-    bundle["game.bgmPrefix"] + bundle["music.$bgmId.title"],
+    String.format(bundle["game.bgmDisplay"], bundle["music.$bgmId.title"]),
     worldW - worldOriginX - 10f,
     -worldOriginY - 15f,
     halign = Align.right,

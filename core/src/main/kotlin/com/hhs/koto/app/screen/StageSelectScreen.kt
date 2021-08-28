@@ -52,7 +52,7 @@ class StageSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
         bundle["ui.stageSelect.title"],
         Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
     ).apply {
-        setPosition(80f, 900f)
+        setPosition(80f, 1100f)
         st += this
     }
     private val grid = ConstrainedGrid(
