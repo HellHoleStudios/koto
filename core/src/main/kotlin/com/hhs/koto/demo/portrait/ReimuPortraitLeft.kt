@@ -23,36 +23,14 @@
  *
  */
 
-package com.hhs.koto.demo.player
+package com.hhs.koto.demo.portrait
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.hhs.koto.stg.PlayerState
-import com.hhs.koto.stg.bullet.ShotSheet
-import com.hhs.koto.stg.graphics.BasicPlayer
-import com.hhs.koto.stg.graphics.BasicPlayerTexture
-import com.hhs.koto.util.A
-import com.hhs.koto.util.SE
-import com.hhs.koto.util.VK
-import com.hhs.koto.util.game
+import com.hhs.koto.stg.dialog.DialogPortrait
+import com.hhs.koto.util.getRegion
 
-open class MarisaPlayer : BasicPlayer(
-    BasicPlayerTexture(A["player/th10_player.atlas"], "th10_marisa"),
-    (A.get<TextureAtlas>("player/th10_player.atlas")).findRegion("hitbox"),
-    3.5f,
-    5f,
-    2f,
-    10,
-) {
-    protected val shotSheet: ShotSheet = A["player/th10_player.shot"]
-
-    override fun tick() {
-        if (playerState != PlayerState.RESPAWNING && !game.inDialog && game.pressed(VK.SHOT)) {
-            if (frame % 4 == 0) {
-                SE.play("shoot")
-                game.playerBullets.add(HomingAmulet(x - 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
-                game.playerBullets.add(HomingAmulet(x + 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))
-            }
-        }
-        super.tick()
+class ReimuPortraitLeft : DialogPortrait("reimuLeft", false) {
+    init {
+        addVariant("smile", getRegion("portrait/reimu/smile.png"), -100f, -100f, 600f)
+        addVariant("laugh", getRegion("portrait/reimu/laugh.png"), -100f, -100f, 600f)
     }
 }

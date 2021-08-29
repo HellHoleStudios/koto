@@ -148,6 +148,7 @@ class Replay {
                 game.maxPower,
                 game.power,
                 game.graze,
+                game.inDialog,
                 game.random.getState(0),
                 game.random.getState(1),
             )
@@ -183,6 +184,7 @@ data class Checkpoint(
     var maxPower: Float,
     var power: Float,
     var graze: Int,
+    var inDialog: Boolean,
     var randomSeed0: Long,
     var randomSeed1: Long,
 ) {
@@ -205,6 +207,7 @@ data class Checkpoint(
         0f,
         0f,
         0,
+        false,
         0L,
         0L,
     )
@@ -226,6 +229,7 @@ data class Checkpoint(
         game.maxPower = maxPower
         game.power = power
         game.graze = graze
+        game.inDialog = inDialog
         game.random.setState(randomSeed0, randomSeed1)
     }
 }

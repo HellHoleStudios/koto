@@ -29,7 +29,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.StateMachine
-import com.hhs.koto.util.safeKeys
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.set
@@ -58,13 +57,13 @@ open class StarGraphStateMachineTexture(
         val vertexRegions = GdxMap<String, GdxArray<TextureAtlas.AtlasRegion>>()
         val edgeRegions = GdxMap<String, GdxArray<TextureAtlas.AtlasRegion>>()
 
-        for (branchName in branches.safeKeys()) {
-            val branch = branches[branchName]
+        branches.forEach {
+            val branch = it.value
             if (branch.vertexRegionName != null && branch.vertexTransitionTime != null) {
-                vertexRegions[branchName] = atlas.findRegions(baseName + branch.vertexRegionName)
+                vertexRegions[it.key] = atlas.findRegions(baseName + branch.vertexRegionName)
             }
             if (branch.edgeRegionName != null && branch.edgeTransitionTime != null) {
-                edgeRegions[branchName] = atlas.findRegions(baseName + branch.edgeRegionName)
+                edgeRegions[it.key] = atlas.findRegions(baseName + branch.edgeRegionName)
             }
         }
 
@@ -88,8 +87,9 @@ open class StarGraphStateMachineTexture(
                 }
             }
         }
-        for (branchName in branches.safeKeys()) {
-            val branch = branches[branchName]
+        branches.forEach {
+            val branchName = it.key
+            val branch = it.value
             if (branch.edgeRegionName == null || branch.edgeTransitionTime == null) {
                 for (i in 0 until vertexRegions[branchName].size) {
                     stateMachine.states[vertexRegions[branchName][i]] = {

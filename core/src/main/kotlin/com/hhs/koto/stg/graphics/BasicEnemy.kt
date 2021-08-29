@@ -132,16 +132,18 @@ open class BasicEnemy(
         attachedTasks.removeNull()
     }
 
-    override fun onHit(damage: Float) {
+    override fun onHit(damage: Float, isBomb: Boolean) {
         if (!invulnerable) {
             hp -= damage
-            if (health < 1000f) {
-                SE.play("damage0")
-            } else {
-                if (hp < 500f) {
-                    SE.play("damage1")
-                } else {
+            if (!isBomb) {
+                if (health < 1000f) {
                     SE.play("damage0")
+                } else {
+                    if (hp < 500f) {
+                        SE.play("damage1")
+                    } else {
+                        SE.play("damage0")
+                    }
                 }
             }
             if (hp <= 0) {

@@ -27,13 +27,16 @@ package com.hhs.koto.stg.task
 
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.graphics.Enemy
+import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.removeNull
 import kotlinx.coroutines.*
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.collections.contains
 import ktx.collections.set
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
 class CoroutineTask(
     index: Int = 0,
@@ -50,6 +53,9 @@ class CoroutineTask(
 
         fun tick(job: Job) {
             map[job].run()
+            if (job.isCancelled && map.contains(job)) {
+                throw KotoRuntimeException("CoroutineTask failed")
+            }
         }
 
         fun remove(job: Job) {
@@ -149,11 +155,14 @@ suspend fun Task.waitForFinish() {
     }
 }
 
+suspend fun Task.attachAndWait() {
+    coroutineContext[CoroutineTask.CoroutineTaskElement]!!.self.attachTask(this)
+    this.waitForFinish()
+}
+
 suspend fun CoroutineScope.attachAndWait(task: Task) {
     self.attachTask(task)
-    while (task.alive) {
-        yield()
-    }
+    task.waitForFinish()
 }
 
 fun CoroutineScope.task(block: suspend CoroutineScope.() -> Unit): Task {

@@ -201,7 +201,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
         portraits.clear()
         descriptions.clear()
         generatePlayer(
-            this, "reimu", getRegion("portrait/reimu/select.png"),
+            this, "reimu", getRegion("portrait/reimu/smile.png"),
             GdxArray.with("reimuA", "reimuB", "reimu"),
             0, 0, 850f, 50f, 560f,
         )

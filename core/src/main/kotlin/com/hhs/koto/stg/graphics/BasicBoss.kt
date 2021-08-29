@@ -150,13 +150,15 @@ abstract class BasicBoss(
         batch.color = tmpColor
     }
 
-    override fun onHit(damage: Float) {
+    override fun onHit(damage: Float, isBomb: Boolean) {
         if (!invulnerable) {
             healthBar.damage(damage)
-            if (healthBar.currentHealth < 500f) {
-                SE.play("damage1")
-            } else {
-                SE.play("damage0")
+            if (!isBomb) {
+                if (healthBar.currentHealth < 500f) {
+                    SE.play("damage1")
+                } else {
+                    SE.play("damage0")
+                }
             }
         }
     }

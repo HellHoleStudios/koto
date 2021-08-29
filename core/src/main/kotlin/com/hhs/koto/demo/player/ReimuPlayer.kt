@@ -46,7 +46,7 @@ open class ReimuPlayer : BasicPlayer(
     protected val shotSheet: ShotSheet = A["player/th10_player.shot"]
 
     override fun tick() {
-        if (playerState != PlayerState.RESPAWNING && game.pressed(VK.SHOT)) {
+        if (playerState != PlayerState.RESPAWNING && !game.inDialog && game.pressed(VK.SHOT)) {
             if (frame % 4 == 0) {
                 SE.play("shoot")
                 game.playerBullets.add(HomingAmulet(x - 10, y, 3f, shotSheet, A["player/th10_player.atlas"]))

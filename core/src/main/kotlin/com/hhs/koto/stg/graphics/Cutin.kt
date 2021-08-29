@@ -28,6 +28,7 @@ package com.hhs.koto.stg.graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
+import com.hhs.koto.util.NO_TINT_HSV
 import com.hhs.koto.util.alpha
 import com.hhs.koto.util.lerp
 
@@ -46,7 +47,7 @@ class Cutin(
     val fadeInTime: Int = 20,
     val sustainTime: Int = 60,
     val fadeOutTime: Int = 20,
-    val color: Color = Color(0f, 1f, 1f, 1f),
+    val color: Color = NO_TINT_HSV,
     override val zIndex: Int = -300,
 ) : SpriteDrawable(
     texture,

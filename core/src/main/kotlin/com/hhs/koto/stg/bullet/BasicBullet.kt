@@ -47,7 +47,7 @@ open class BasicBullet(
     var scaleX: Float = 1f,
     var scaleY: Float = 1f,
     override var rotation: Float = 0f,
-    override var tint: Color = Color(0f, 1f, 1f, 1f),
+    override var tint: Color = NO_TINT_HSV,
     val delay: Int = 8,
 ) : Bullet, Bounded {
     companion object {

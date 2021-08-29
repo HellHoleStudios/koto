@@ -203,18 +203,20 @@ open class BasicPlayer(
                 }
             }
         }
-        if (playerState == PlayerState.DEATHBOMBING) {
-            if (counter <= 0) {
-                playerState = PlayerState.RESPAWNING
-                onDeath()
-            } else if (game.bomb.completedCount > 0 && game.pressed(VK.BOMB)) {
-                onBomb(true)
-                playerState = PlayerState.BOMBING
-            }
-        } else if (playerState == PlayerState.NORMAL) {
-            if (game.bomb.completedCount > 0 && game.pressed(VK.BOMB)) {
-                onBomb(false)
-                playerState = PlayerState.BOMBING
+        if (!game.inDialog) {
+            if (playerState == PlayerState.DEATHBOMBING) {
+                if (counter <= 0) {
+                    playerState = PlayerState.RESPAWNING
+                    onDeath()
+                } else if (game.bomb.completedCount > 0 && game.pressed(VK.BOMB)) {
+                    onBomb(true)
+                    playerState = PlayerState.BOMBING
+                }
+            } else if (playerState == PlayerState.NORMAL) {
+                if (game.bomb.completedCount > 0 && game.pressed(VK.BOMB)) {
+                    onBomb(false)
+                    playerState = PlayerState.BOMBING
+                }
             }
         }
         if (counter > 0) counter--
@@ -290,7 +292,7 @@ open class BasicPlayer(
                         if (it is BasicEnemy && collide(collision, x, y, it.bulletCollision, it.x, it.y)) it.destroy()
                     }
                     game.bosses.forEach {
-                        it.onHit(16f)
+                        it.onHit(16f, true)
                     }
                     yield()
                 }

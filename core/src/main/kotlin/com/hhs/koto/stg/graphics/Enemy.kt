@@ -28,6 +28,6 @@ package com.hhs.koto.stg.graphics
 import com.hhs.koto.stg.Drawable
 
 interface Enemy : Drawable {
-    fun onHit(damage: Float)
+    fun onHit(damage: Float, isBomb: Boolean = false)
     fun destroy()
 }

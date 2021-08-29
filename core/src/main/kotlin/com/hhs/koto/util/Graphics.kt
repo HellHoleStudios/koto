@@ -162,6 +162,10 @@ fun fromHsv(h: Float, s: Float, v: Float, a: Float): Color {
     return color
 }
 
+val NO_TINT_HSV: Color = Color(0f, 1f, 1f, 1f)
+    get() = field.cpy()
+val TRANSPARENT_HSV: Color = Color(0f, 1f, 1f, 0f)
+    get() = field.cpy()
 val WHITE_HSV: Color = Color.WHITE.toHSVColor()
     get() = field.cpy()
 val BLACK_HSV: Color = Color.BLACK.toHSVColor()

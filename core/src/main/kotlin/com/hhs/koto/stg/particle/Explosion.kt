@@ -27,6 +27,7 @@ package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.graphics.SpriteDrawable
+import com.hhs.koto.util.NO_TINT_HSV
 import com.hhs.koto.util.alpha
 import com.hhs.koto.util.getRegion
 import com.hhs.koto.util.lerp
@@ -40,7 +41,7 @@ class Explosion(
     val endSizeY: Float = endSizeX,
     rotation: Float = 0f,
     val duration: Int,
-    color: Color = Color(0f, 1f, 1f, 1f),
+    color: Color = NO_TINT_HSV,
 ) : SpriteDrawable(
     getRegion("particle/explosion.png"),
     x,

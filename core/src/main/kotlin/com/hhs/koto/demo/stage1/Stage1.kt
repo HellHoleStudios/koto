@@ -91,16 +91,18 @@ object Stage1 : BasicStage() {
 
         interpolate(0f, 1f, 60) { game.globalAlpha = it }
 
-        attachAndWait(MidStage1.build())
+        MidStage1.build().attachAndWait()
         wait(240)
 
         val boss = game.addBoss(AyaBoss())
         game.bossNameDisplay.show(boss, 1)
-        boss.healthBar.addSpell(Nonspell1, Stage1Spell1)
-        attachAndWait(boss.creationTask())
+        boss.creationTask().attachAndWait()
 
-        attachAndWait(Nonspell1.build())
-        attachAndWait(Stage1Spell1.build())
+        Stage1Dialog1.build().attachAndWait()
+
+        boss.healthBar.addSpell(Nonspell1, Stage1Spell1)
+        Nonspell1.build().attachAndWait()
+        Stage1Spell1.build().attachAndWait()
 
         boss.healthBar.visible = false
         game.bossNameDisplay.hide()

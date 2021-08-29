@@ -95,7 +95,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             game.spellTimer.show(maxTime)
             boss.spellAttackCircle.reset(maxTime)
 
-            attachAndWait(spellTask)
+            spellTask.attachAndWait()
 
             if (!boss.healthBar.currentSegmentDepleted()) {
                 failedBonus = true
@@ -135,7 +135,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             game.removeListener("player.bomb", bombListener)
             game.removeListener("player.death", deathListener)
 
-            attachAndWait(terminate())
+            terminate().attachAndWait()
         }
 
     open fun getBonus(time: Int): Long = if (isSurvival) {
@@ -159,8 +159,8 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         game.addBoss(boss)
         game.bossNameDisplay.show(boss, 1)
         boss.healthBar.addSpell(this@BasicSpell)
-        attachAndWait(boss.creationTask())
-        attachAndWait(this@BasicSpell.build())
+        boss.creationTask().attachAndWait()
+        this@BasicSpell.build().attachAndWait()
         game.bossNameDisplay.hide()
         boss.healthBar.visible = false
         wait(60)

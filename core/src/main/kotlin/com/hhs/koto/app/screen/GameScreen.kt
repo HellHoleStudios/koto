@@ -116,6 +116,9 @@ class GameScreen : BasicScreen(null, null) {
             game.update()
         }
         super.render(delta)
+        if (!paused) {
+            game.overlay.draw()
+        }
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {

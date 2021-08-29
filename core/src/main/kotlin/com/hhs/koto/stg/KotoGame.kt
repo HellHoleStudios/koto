@@ -33,6 +33,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.RandomXS128
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.StretchViewport
@@ -92,6 +93,7 @@ class KotoGame : Disposable {
     val hud = DrawableLayer<Drawable>().apply {
         addDrawable(VfxOutputDrawable(vfx, -worldOriginX, -worldOriginY, worldW, worldH))
     }
+    val overlay = Stage(app.viewport, app.batch)
     var globalAlpha: Float = 1f
 
     private var subFrameTime: Float = 0f
@@ -176,6 +178,7 @@ class KotoGame : Disposable {
     var maxPower: Float = 4f
     var power: Float = 1f
     var graze: Int = 0
+    var inDialog: Boolean = false
 
     val random = RandomXS128()
     val replay: Replay
@@ -231,6 +234,7 @@ class KotoGame : Disposable {
         backgroundVfx.update(delta)
         vfx.update(delta)
         postVfx.update(delta)
+        overlay.act(delta)
         subFrameTime += delta
     }
 

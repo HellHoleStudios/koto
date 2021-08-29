@@ -25,7 +25,6 @@
 
 package com.hhs.koto.demo.stage1
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.graphics.BasicBoss
 import com.hhs.koto.stg.graphics.StarGraphStateMachineTexture
@@ -35,6 +34,7 @@ import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.RunnableTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.A
+import com.hhs.koto.util.TRANSPARENT_HSV
 import com.hhs.koto.util.game
 import com.hhs.koto.util.getRegion
 import ktx.collections.set
@@ -72,14 +72,14 @@ class AyaBoss(
         spellBackground = TileBackground(
             getRegion("st1/spell_background.png"),
             -100,
-            color = Color(0f, 1f, 1f, 0f),
+            color = TRANSPARENT_HSV,
         )
         spellForeground = TileBackground(
             getRegion("st1/spell_foreground.png"),
             -100,
             -1f,
             1f,
-            color = Color(0f, 1f, 1f, 0f),
+            color = TRANSPARENT_HSV,
         )
         game.background.addDrawable(spellBackground)
         game.background.addDrawable(spellForeground)

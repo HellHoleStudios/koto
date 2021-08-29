@@ -63,7 +63,7 @@ class HealthBar(
     val segmentDivider = getRegion("ui/segment_divider.png")
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (visible) {
+        if (visible && segments.size > 0) {
             if (batch != shapeDrawer.batch) {
                 shapeDrawer = ShapeDrawer(batch, getRegion("ui/blank.png"))
                 shapeDrawer.pixelSize = 0.5f

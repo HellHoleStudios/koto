@@ -91,7 +91,7 @@ object StageExtra : BasicStage() {
 
         interpolate(0f, 1f, 60) { game.background.alpha = it }
 
-        attachAndWait(MidStageExtra.build())
+        MidStageExtra.build().attachAndWait()
         wait(240)
         defaultBonus(7)
     }
