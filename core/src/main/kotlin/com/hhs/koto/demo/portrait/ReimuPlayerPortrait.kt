@@ -25,12 +25,18 @@
 
 package com.hhs.koto.demo.portrait
 
+import com.badlogic.gdx.graphics.Color
 import com.hhs.koto.stg.dialog.DialogPortrait
 import com.hhs.koto.util.getRegion
 
-class ReimuPortraitLeft : DialogPortrait("reimuLeft", false) {
+class ReimuPlayerPortrait : DialogPortrait(
+    "reimuPlayer",
+    false,
+    Color(0f, 0.5f, 1f, 1f),
+) {
     init {
         addVariant("smile", getRegion("portrait/reimu/smile.png"), -100f, -100f, 600f)
         addVariant("laugh", getRegion("portrait/reimu/laugh.png"), -100f, -100f, 600f)
+        addVariant("surprise", getRegion("portrait/reimu/surprise.png"), -100f, -100f, 600f)
     }
 }

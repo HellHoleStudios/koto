@@ -26,7 +26,8 @@
 package com.hhs.koto.demo.stage1
 
 import com.hhs.koto.demo.portrait.AyaPortrait
-import com.hhs.koto.demo.portrait.ReimuPortraitLeft
+import com.hhs.koto.demo.portrait.MarisaPlayerPortrait
+import com.hhs.koto.demo.portrait.ReimuPlayerPortrait
 import com.hhs.koto.stg.dialog.Dialog
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
@@ -36,27 +37,34 @@ import com.hhs.koto.util.bundle
 object Stage1Dialog1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
         val dialog = Dialog()
-        dialog.addPortrait(ReimuPortraitLeft())
+        dialog.addPortrait(ReimuPlayerPortrait())
         dialog.addPortrait(AyaPortrait())
-        dialog.setVariant("reimuLeft", "laugh")
-        dialog.show("reimuLeft")
-        dialog.activate("reimuLeft")
+        dialog.addPortrait(MarisaPlayerPortrait())
         dialog.start()
 
-        dialog.setTextAndWait(bundle["game.dialog.stage1.dialog1"], Dialog.leftColor)
+        dialog.setVariant("reimuPlayer", "laugh")
+        dialog.show("reimuPlayer")
+        dialog.setTextAndWait("reimuPlayer", bundle["game.dialog.stage1.dialog1"])
 
         dialog.setVariant("aya", "smile")
         dialog.show("aya")
-        dialog.activate("aya")
-        dialog.setVariant("reimuLeft", "smile")
-        dialog.setTextAndWait(bundle["game.dialog.stage1.dialog2"], Dialog.rightColor)
+        dialog.setVariant("reimuPlayer", "smile")
+        dialog.setTextAndWait("aya", bundle["game.dialog.stage1.dialog2"])
 
-        dialog.activate("reimuLeft")
-        dialog.setTextAndWait(bundle["game.dialog.stage1.dialog3"], Dialog.leftColor)
+        dialog.setTextAndWait("reimuPlayer", bundle["game.dialog.stage1.dialog3"])
 
         dialog.setVariant("aya", "laugh")
-        dialog.activate("aya")
-        dialog.setTextAndWait(bundle["game.dialog.stage1.dialog4"], Dialog.rightColor)
+        dialog.setTextAndWait("aya", bundle["game.dialog.stage1.dialog4"])
+
+        dialog.setVariant("marisaPlayer", "smile")
+        dialog.setVariant("reimuPlayer", "surprise")
+        dialog.show("marisaPlayer")
+        dialog.setTextAndWait("marisaPlayer", bundle["game.dialog.stage1.dialog5"])
+
+        dialog.setTextAndWait("reimuPlayer", bundle["game.dialog.stage1.dialog6"])
+
+        dialog.setVariant("marisaPlayer", "laugh")
+        dialog.setTextAndWait("marisaPlayer", bundle["game.dialog.stage1.dialog7"])
 
         dialog.end()
     }

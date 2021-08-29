@@ -41,8 +41,8 @@ import ktx.collections.GdxArray
 class Dialog : Group() {
 
     companion object {
-        val leftColor: Color = Color(0.5f, 0.5f, 1f, 1f)
-        val rightColor: Color = Color(0f, 0.5f, 1f, 1f)
+        val leftColor: Color = Color(0f, 0.5f, 1f, 1f)
+        val rightColor: Color = Color(0.5f, 0.5f, 1f, 1f)
     }
 
     val portraits: GdxArray<DialogPortrait> = GdxArray()
@@ -93,6 +93,10 @@ class Dialog : Group() {
         textLabel.color = color
     }
 
+    fun setText(portraitName: String, text: String) {
+        setText(text, portraits.find { it.name == portraitName }!!.textColor)
+    }
+
     suspend fun setTextAndWait(text: String, color: Color = WHITE_HSV, duration: Int = 240) {
         setText(text, color)
         for (i in 0 until duration) {
@@ -102,6 +106,12 @@ class Dialog : Group() {
                 break
             }
         }
+    }
+
+    suspend fun setTextAndWait(portraitName: String, text: String, duration: Int = 240) {
+        val portrait = portraits.find { it.portraitName == portraitName }!!
+        activate(portraitName)
+        setTextAndWait(text, portrait.textColor, duration)
     }
 
     fun addPortrait(portrait: DialogPortrait) {
@@ -133,6 +143,7 @@ class Dialog : Group() {
         portraits.forEach {
             if (it.portraitName == portraitName) {
                 it.activate()
+                it.toFront()
             } else if (it.state == DialogPortrait.DialogPortraitState.ACTIVE) {
                 it.deactivate()
             }

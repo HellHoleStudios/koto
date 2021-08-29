@@ -41,6 +41,7 @@ import ktx.collections.set
 open class DialogPortrait(
     val portraitName: String,
     val rightSide: Boolean,
+    val textColor: Color = if (rightSide) Dialog.rightColor else Dialog.leftColor,
     val inactiveOffsetX: Float = 80f,
     val inactiveOffsetY: Float = 50f,
     val hiddenOffsetX: Float = 200f,

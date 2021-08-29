@@ -80,7 +80,7 @@ fun initAsset() {
         }
     }
     bundle["locale.charset"].split(",").forEach {
-        Gdx.files.internal(it.trim()).readString().forEach { char ->
+        Gdx.files.internal(it.trim()).readString("UTF-8").forEach { char ->
             tmpCharset.add(char)
         }
     }

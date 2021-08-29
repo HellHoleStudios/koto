@@ -206,22 +206,22 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
             0, 0, 850f, 50f, 560f,
         )
         generatePlayer(
-            this, "marisa", getRegion("portrait/marisa/select.png"),
+            this, "marisa", getRegion("portrait/marisa/smile.png"),
             GdxArray.with("marisaA", "marisaB", "marisa"),
             1, 0, 850f, 50f, 560f,
         )
         generatePlayer(
-            this, "sakuya", getRegion("portrait/sakuya/select.png"),
+            this, "sakuya", getRegion("portrait/sakuya/calm.png"),
             GdxArray.with("sakuyaA", "sakuyaB", "sakuya"),
             2, 0, 900f, 50f, 460f,
         )
         generatePlayer(
-            this, "youmu", getRegion("portrait/youmu/select.png"),
+            this, "youmu", getRegion("portrait/youmu/smile.png"),
             GdxArray.with("youmuA", "youmuB", "youmu"),
             3, 0, 800f, 50f, 720f,
         )
         generatePlayer(
-            this, "sanae", getRegion("portrait/sanae/select.png"),
+            this, "sanae", getRegion("portrait/sanae/smile.png"),
             GdxArray.with("sanaeA", "sanaeB", "sanae"),
             4, 0, 770f, 50f, 680f,
         )
