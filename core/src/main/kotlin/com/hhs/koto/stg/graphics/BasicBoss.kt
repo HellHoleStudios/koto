@@ -28,6 +28,9 @@ package com.hhs.koto.stg.graphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.hhs.koto.app.Config.worldOriginX
+import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision
 import com.hhs.koto.stg.PlayerState
@@ -37,7 +40,10 @@ import com.hhs.koto.stg.task.EmptyTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import kotlinx.coroutines.CoroutineScope
+import ktx.actors.alpha
+import ktx.actors.plusAssign
 import ktx.collections.GdxArray
+import kotlin.math.absoluteValue
 
 abstract class BasicBoss(
     override var x: Float,
@@ -64,6 +70,11 @@ abstract class BasicBoss(
     }
     override val spellAttackCircle = SpellAttackCircle(this).apply {
         game.hud.addDrawable(this)
+    }
+    val marker = Image(getRegion("ui/bg.png")).apply {
+        setSize(72f, 36f)
+        game.overlay += this
+        color = Color(0f, 1f, 0.5f, 0f)
     }
 
     abstract val name: String
@@ -104,6 +115,14 @@ abstract class BasicBoss(
 
         magicCircle.tick()
         spellAttackCircle.tick()
+        if (x >= -worldOriginX && x <= worldW - worldOriginX) {
+            marker.setPosition((x + worldOriginX) / worldW * 864f + 36f, 0f)
+            var tmpAlpha = 1f
+            tmpAlpha = tmpAlpha.coerceAtMost(lerp(0f, 1f, (x + worldOriginX) / 50f))
+            tmpAlpha = tmpAlpha.coerceAtMost(lerp(0f, 1f, (worldW - worldOriginX - x / 50f)))
+            tmpAlpha = tmpAlpha.coerceAtMost(lerp(0.5f, 1f, (playerX - x).absoluteValue / 100f))
+            marker.alpha = tmpAlpha
+        }
 
         if (useDistortionEffect) {
             if (!bossDistortionEffect.enabled) bossDistortionEffect.start()
@@ -175,6 +194,7 @@ abstract class BasicBoss(
         attachedTasks.forEach { it.kill() }
         bossDistortionEffect.end()
         bossDistortionEffect.dispose()
+        marker.remove()
         game.backgroundVfx.removeEffectRegistered(bossDistortionEffect)
         return true
     }
