@@ -84,7 +84,7 @@ class MusicRoomScreen : BasicScreen(-1, getRegion("bg/music_room.png")) {
         warning = -1
         titles.selectFirst()
         titles.finishAnimation()
-        comment.style.fontColor = WHITE_HSVx
+        comment.style.fontColor = WHITE_HSV
         comment.setText(bundle["music.0.comment"])
         title.addAction(Actions.moveTo(80f, 900f, 0.5f, Interpolation.pow5Out))
     }
