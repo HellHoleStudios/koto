@@ -39,6 +39,7 @@ data class GameData(
     var bombCount: Int = 0,
     var clearCount: Int = 0,
     var spellPracticeUnlocked: Boolean = false,
+    var musicUnlocked: GdxArray<Boolean> = GdxArray(),
     val data: GdxMap<String, ShottypeElement> = GdxMap(),
 ) {
     val currentElement: GameDataElement

@@ -30,13 +30,11 @@ import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
 import com.esotericsoftware.kryo.Kryo
+import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
 import com.hhs.koto.stg.*
-import ktx.collections.GdxArray
-import ktx.collections.GdxMap
-import ktx.collections.contains
-import ktx.collections.set
+import ktx.collections.*
 import ktx.json.JsonSerializer
 import java.util.*
 
@@ -159,6 +157,10 @@ fun loadGameData() {
         app.logger.info("Creating empty game data file...")
     }
     gameDataHash = gameData.hashCode()
+    if (gameData.musicUnlocked.size != Config.musicCount) {
+        gameData.musicUnlocked.clear()
+        repeat(Config.musicCount) { gameData.musicUnlocked.add(false) }
+    }
     GameBuilder.shottypes.forEach {
         val shottype = it.first
         if (!gameData.data.contains(shottype)) {

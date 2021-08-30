@@ -39,6 +39,8 @@ object BGM {
         if (id == null) {
             stop()
         } else {
+            gameData.musicUnlocked[id] = true
+            saveGameData()
             play(bundle["music.$id.file"], forceRestart)
         }
     }

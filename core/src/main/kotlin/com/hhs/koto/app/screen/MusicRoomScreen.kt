@@ -26,6 +26,7 @@
 package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config
@@ -34,36 +35,63 @@ import com.hhs.koto.app.ui.GridButton
 import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
 import ktx.actors.plusAssign
-import ktx.actors.txt
 
 class MusicRoomScreen : BasicScreen(-1, getRegion("bg/music_room.png")) {
+    private val title = Label(
+        bundle["ui.music.title"],
+        Label.LabelStyle(getFont(72, bundle["font.title"]), WHITE_HSV),
+    ).apply {
+        setPosition(80f, 1100f)
+        st += this
+    }
     private val titles = ConstrainedGrid(
         120f,
         400f,
         1200f,
-        600f,
+        450f,
         animationDuration = 0.5f,
         interpolation = Interpolation.pow5Out,
     ).setCullingToConstraint().register(st, input)
     private val comment = Label("", getUILabelStyle(36)).apply {
         setAlignment(Align.topLeft)
         wrap = true
-        txt = bundle["music.0.comment"]
+        setText(bundle["music.0.comment"])
         setBounds(120f, 100f, 1200f, 300f)
         st += this
     }
+    private var warning: Int = -1
 
     init {
-        for (i in 0 until Config.bgmCount) {
+        for (i in 0 until Config.musicCount) {
             titles.add(GridButton("#${i + 1} " + bundle["music.$i.title"], 36, 0, i) {
-                BGM.stop()
-                BGM.play(bundle["music.$i.file"])
-                comment.txt = bundle["music.$i.comment"]
+                if (gameData.musicUnlocked[i] || warning == i) {
+                    BGM.stop()
+                    BGM.play(i)
+                    comment.style.fontColor = WHITE_HSV
+                    comment.setText(bundle["music.$i.comment"])
+                } else {
+                    warning = i
+                    comment.style.fontColor = RED_HSV
+                    comment.setText(bundle["ui.music.warning"])
+                }
             })
         }
         titles.arrange(0f, 1000f, 0f, -45f)
+    }
+
+    override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
+        super.fadeIn(oldScreen, duration)
+        warning = -1
         titles.selectFirst()
         titles.finishAnimation()
+        comment.style.fontColor = WHITE_HSVx
+        comment.setText(bundle["music.0.comment"])
+        title.addAction(Actions.moveTo(80f, 900f, 0.5f, Interpolation.pow5Out))
+    }
+
+    override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
+        super.fadeOut(newScreen, duration)
+        title.addAction(Actions.moveTo(80f, 1100f, 0.5f, Interpolation.pow5Out))
     }
 
     override fun onQuit() {
