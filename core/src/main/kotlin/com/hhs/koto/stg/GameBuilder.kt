@@ -75,7 +75,7 @@ object GameBuilder {
         for (i in startStageIndex until regularStages.size) {
             builder.add(regularStages[i])
         }
-        if (regularEnding != null) builder.add(regularEnding!!)
+        if (SystemFlag.replay == null && regularEnding != null) builder.add(regularEnding!!)
         builder.add(taskBuilder {
             RunnableTask {
                 game.end()
@@ -102,7 +102,7 @@ object GameBuilder {
         for (i in startStageIndex until extraStages.size) {
             builder.add(extraStages[i])
         }
-        if (extraEnding != null) builder.add(extraEnding!!)
+        if (SystemFlag.replay == null && extraEnding != null) builder.add(extraEnding!!)
         builder.add(taskBuilder {
             RunnableTask {
                 game.end()

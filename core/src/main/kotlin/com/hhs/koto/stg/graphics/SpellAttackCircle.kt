@@ -45,7 +45,7 @@ class SpellAttackCircle(
     val setupTime: Int = 60,
     val numVertex: Int = 2
 ) : Drawable {
-    val texture = getRegion("portrait/aya/attack.png")
+    val texture = getRegion("ui/blank.png")
 
     override var x = 0f
     override var y = 0f
@@ -69,6 +69,7 @@ class SpellAttackCircle(
     var maxTime = 1
     var nowTime = 1
 
+    // TODO
     var shapeDrawer = ShapeDrawer(game.batch, texture).apply {
         pixelSize = 0.1f
     }
@@ -83,9 +84,9 @@ class SpellAttackCircle(
         this.maxTime = maxTime
     }
 
-    fun getTimePercent() = nowTime / (0f + maxTime)
+    private fun getTimePercentage() = nowTime / (0f + maxTime)
 
-    fun halt() {
+    fun end() {
         state = 2 //mark end
         t = 0
         tmp = size
@@ -100,11 +101,11 @@ class SpellAttackCircle(
         when (state) {
             0 -> {
                 size = if (t <= setupTime / 2) {
-                    Interpolation.pow5Out.apply(0f, (1 - getTimePercent()) * maxSize * 2, t / (0f + setupTime))
+                    Interpolation.pow5Out.apply(0f, (1 - getTimePercentage()) * maxSize * 2, t / (0f + setupTime))
                 } else {
                     Interpolation.pow5In.apply(
-                        (1 - getTimePercent()) * maxSize * 2,
-                        (1 - getTimePercent()) * maxSize,
+                        (1 - getTimePercentage()) * maxSize * 2,
+                        (1 - getTimePercentage()) * maxSize,
                         t / (0f + setupTime)
                     )
                 }
@@ -115,7 +116,7 @@ class SpellAttackCircle(
                 }
             }
             1 -> {
-                size = lerp(maxSize, 0f, getTimePercent())
+                size = lerp(maxSize, 0f, getTimePercentage())
             }
             2 -> {
                 size = Interpolation.pow5.apply(tmp, 0f, t / (0f + setupTime))
@@ -136,7 +137,7 @@ class SpellAttackCircle(
             shapeDrawer = ShapeDrawer(batch, texture)
             shapeDrawer.pixelSize = 0.5f
         }
-
+        shapeDrawer.setColor(0f, 0f, 1f, 0.5f)
         shapeDrawer.circle(x, y, size, 5f)
     }
 }

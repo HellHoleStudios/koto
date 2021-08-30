@@ -69,6 +69,7 @@ object Stage2 : BasicStage() {
         game.bossNameDisplay.hide()
         move(boss, -300f, 300f, 120)
         boss.kill()
+
         defaultBonus(2)
         wait(60)
     }

@@ -88,7 +88,7 @@ class GameScreen : BasicScreen(null, null) {
                 passCounter >= 30 && VK.PAUSE.justPressed() && !blurredGameFrame.hasActions()
             ) {
                 resumeGame()
-            } else if (VK.RESTART.justPressed()) {
+            } else if (SystemFlag.gamemode!!.isPractice() && VK.RESTART.justPressed()) {
                 SE.play("ok")
                 retryGame()
             } else if (deltaTimeCounter >= 1 / 60f) {
@@ -123,7 +123,9 @@ class GameScreen : BasicScreen(null, null) {
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
-        reset()
+        if (SystemFlag.ending == null) {
+            reset()
+        }
     }
 
     fun retryGame() {
@@ -166,6 +168,7 @@ class GameScreen : BasicScreen(null, null) {
         SE.stop()
         pauseMenu.reset()
 
+        SystemFlag.ending = null
         GameBuilder.build()
         gameStatus?.remove()
         gameStatus = GameStatus(game)

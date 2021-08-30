@@ -190,7 +190,7 @@ open class BasicPlayer(
             }
         }
         if (playerState == PlayerState.NORMAL) {
-            if (!invincible) {
+            if (!invincible && !game.inDialog) {
                 var hit = false
                 game.bullets.forEach {
                     if (collide(it.collision, it.x, it.y, hitCollision, x, y)) {
@@ -307,6 +307,7 @@ open class BasicPlayer(
     }
 
     override fun onHit() {
+        if (invincible || game.inDialog) return
         SE.play("pldead")
         playerState = PlayerState.DEATHBOMBING
         counter = deathbombTime

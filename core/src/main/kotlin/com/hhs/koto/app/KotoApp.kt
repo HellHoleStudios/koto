@@ -37,6 +37,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.hhs.koto.app.screen.*
 import com.hhs.koto.app.ui.FPSDisplay
+import com.hhs.koto.demo.RegularGameEnding
 import com.hhs.koto.demo.player.MarisaPlayer
 import com.hhs.koto.demo.player.ReimuPlayer
 import com.hhs.koto.demo.stage1.Stage1
@@ -132,6 +133,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         BGM.register(LoopingMusic(bundle["music.0.file"], 2f, 58f))
         BGM.register(LoopingMusic(bundle["music.1.file"], 0f, 12f))
+        BGM.register(LoopingMusic(bundle["music.2.file"]))
         defaultShotSheet = A[Config.defaultShotSheet]
 
         // TODO variants
@@ -153,6 +155,7 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
 
         GameBuilder.regularStages.add(Stage1)
         GameBuilder.regularStages.add(Stage2)
+        GameBuilder.regularEnding = RegularGameEnding
         GameBuilder.extraStages.add(StageExtra)
 
         GameBuilder.spells.add(Stage1Spell1)
@@ -171,6 +174,8 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         screens["playerData"] = PlayerDataScreen()
         screens["musicRoom"] = MusicRoomScreen()
         screens["options"] = OptionsScreen()
+        screens["ending"] = EndingScreen()
+        screens["credit"] = CreditScreen()
         setScreen("blank")
         setScreen("title", 1f)
     }

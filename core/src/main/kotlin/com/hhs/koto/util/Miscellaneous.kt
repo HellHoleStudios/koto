@@ -49,6 +49,7 @@ object SystemFlag {
     var sessionName: String? = null
     var difficulty: GameDifficulty? = null
     var shottype: String? = null
+    var ending: String? = null
 }
 
 val json = Json().apply {

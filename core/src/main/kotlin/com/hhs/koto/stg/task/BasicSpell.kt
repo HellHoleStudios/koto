@@ -65,7 +65,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
                 while (true) {
                     if (t >= maxTime || boss.healthBar.currentSegmentDepleted()) {
                         if (spellTask.alive) spellTask.kill()
-                        boss.spellAttackCircle.halt()
+                        boss.spellAttackCircle.end()
                         break
                     }
                     yield()

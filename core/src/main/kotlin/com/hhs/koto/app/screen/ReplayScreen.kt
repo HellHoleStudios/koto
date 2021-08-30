@@ -58,6 +58,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
             SystemFlag.redirectDuration = 0.5f
             SystemFlag.replay = replay
             SystemFlag.checkpoint = checkpoint
+            SystemFlag.ending = null
             replay.decodeKeys()
             replay.applySystemFlags()
             app.setScreen("blank", 0.5f)

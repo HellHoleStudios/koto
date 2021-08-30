@@ -140,9 +140,6 @@ class KotoGame : Disposable {
     val bosses = DrawableLayer<Boss>(-150).apply {
         stage.addDrawable(this)
     }
-    val bossDistortionEffect = BossDistortionEffect().apply {
-        backgroundVfx.addEffectRegistered(this)
-    }
     val bossNameDisplay = BossNameDisplay().apply {
         hud.addDrawable(this)
     }

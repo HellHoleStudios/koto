@@ -388,6 +388,7 @@ class PlayerSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgrou
             SystemFlag.redirectDuration = 0.5f
             SystemFlag.replay = null
             SystemFlag.checkpoint = null
+            SystemFlag.ending = null
             app.setScreen("blank", 0.5f)
         } else {
             app.setScreen(switchTarget, 0.5f)

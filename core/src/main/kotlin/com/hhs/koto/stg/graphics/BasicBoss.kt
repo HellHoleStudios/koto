@@ -56,10 +56,12 @@ abstract class BasicBoss(
     val magicCircle = MagicCircle()
     var useDistortionEffect: Boolean = true
 
+    val bossDistortionEffect = BossDistortionEffect().apply {
+        game.backgroundVfx.addEffectRegistered(this)
+    }
     override val healthBar = HealthBar(this).apply {
         game.hud.addDrawable(this)
     }
-
     override val spellAttackCircle = SpellAttackCircle(this).apply {
         game.hud.addDrawable(this)
     }
@@ -104,10 +106,10 @@ abstract class BasicBoss(
         spellAttackCircle.tick()
 
         if (useDistortionEffect) {
-            if (!game.bossDistortionEffect.enabled) game.bossDistortionEffect.start()
-            game.bossDistortionEffect.tick(x, y)
+            if (!bossDistortionEffect.enabled) bossDistortionEffect.start()
+            bossDistortionEffect.tick(x, y)
         } else {
-            if (game.bossDistortionEffect.enabled) game.bossDistortionEffect.end()
+            if (bossDistortionEffect.enabled) bossDistortionEffect.end()
         }
         for (i in 0 until attachedTasks.size) {
             if (attachedTasks[i].alive) {
@@ -171,7 +173,9 @@ abstract class BasicBoss(
     override fun kill(): Boolean {
         alive = false
         attachedTasks.forEach { it.kill() }
-        game.bossDistortionEffect.end()
+        bossDistortionEffect.end()
+        bossDistortionEffect.dispose()
+        game.backgroundVfx.removeEffectRegistered(bossDistortionEffect)
         return true
     }
 

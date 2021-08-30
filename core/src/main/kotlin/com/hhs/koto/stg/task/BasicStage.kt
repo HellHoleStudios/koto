@@ -70,6 +70,5 @@ abstract class BasicStage : StageBuilder {
                 }
             }
         },
-        taskBuilder { DelayTask(120) },
     ).build()
 }
