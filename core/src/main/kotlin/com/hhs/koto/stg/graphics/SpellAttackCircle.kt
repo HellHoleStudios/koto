@@ -30,10 +30,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Drawable
-import com.hhs.koto.util.cos
-import com.hhs.koto.util.getRegion
-import com.hhs.koto.util.lerp
-import com.hhs.koto.util.sin
+import com.hhs.koto.util.*
 import ktx.math.vec2
 
 /**
@@ -184,6 +181,8 @@ class SpellAttackCircle(
             vertices[i * 10 + 6] = y + size * sin(angle)
         }
         mesh.setVertices(vertices)
+        batch.setBlending(BlendingMode.ADD)
         mesh.render(batch.shader, GL20.GL_TRIANGLES)
+        batch.setBlending(BlendingMode.ALPHA)
     }
 }
