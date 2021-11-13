@@ -82,6 +82,42 @@ class GameStatus(val game: KotoGame) : Group() {
     }
 
     init {
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(930f, 960f, 500f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(930f, 920f, 500f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(930f, 810f, 500f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(930f, 730f, 500f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(1000f, 640f, 400f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(1000f, 600f, 400f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+        addActor(Image(getRegion("ui/bg.png")).apply {
+            setBounds(1000f, 560f, 400f, 3f)
+            color = Color(0f, 0f, 1f, 0.7f)
+            addScaleAction(this)
+        })
+
         // difficulty
         addActor(Label(
             bundle["ui.game.status.difficulty.${SystemFlag.difficulty!!.name.lowercase()}"],
@@ -107,12 +143,6 @@ class GameStatus(val game: KotoGame) : Group() {
         })
 
         // high score
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(930f, 960f, 500f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
-
         addActor(Label(
             bundle["ui.game.status.highScore"],
             Label.LabelStyle(
@@ -138,12 +168,6 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(highScore)
 
         // score
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(930f, 920f, 500f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
-
         addActor(Label(
             bundle["ui.game.status.score"],
             Label.LabelStyle(
@@ -168,11 +192,6 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(score)
 
         // life
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(930f, 810f, 500f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
         addActor(Label(
             bundle["ui.game.status.life"],
             Label.LabelStyle(
@@ -211,11 +230,6 @@ class GameStatus(val game: KotoGame) : Group() {
         lifeDelay = delay
 
         // bomb
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(930f, 730f, 500f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
         addActor(Label(
             bundle["ui.game.status.bomb"],
             Label.LabelStyle(
@@ -253,12 +267,6 @@ class GameStatus(val game: KotoGame) : Group() {
         bombDelay = delay
 
         // power
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(1000f, 640f, 400f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
-
         addActor(Label(
             bundle["ui.game.status.power"],
             Label.LabelStyle(
@@ -320,11 +328,6 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(powerFraction)
 
         // value
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(1000f, 600f, 400f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
         addActor(Label(
             bundle["ui.game.status.maxPoint"],
             Label.LabelStyle(
@@ -353,11 +356,6 @@ class GameStatus(val game: KotoGame) : Group() {
         addActor(pointValue)
 
         // graze
-        addActor(Image(getRegion("ui/bg.png")).apply {
-            setBounds(1000f, 560f, 400f, 3f)
-            color = Color(0f, 0f, 1f, 0.7f)
-            addScaleAction(this)
-        })
         addActor(Label(
             bundle["ui.game.status.graze"],
             Label.LabelStyle(

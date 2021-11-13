@@ -79,7 +79,10 @@ class SpellInfoDisplay(
     var fontScale = 24f
     var alpha = 0f
     var nameAlpha = 0f
+
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (alpha < 0.001f) return
+
         val distanceAlpha = lerp(
             1f,
             lerp(

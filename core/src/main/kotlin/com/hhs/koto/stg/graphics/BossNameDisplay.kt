@@ -75,10 +75,14 @@ class BossNameDisplay(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        font.draw(batch, textAlpha * parentAlpha, bossName, 10f / 20, x, y + 24, textColor)
-        repeat(spellCount) {
-            star.setPosition(x + it * 12, y)
-            star.draw(batch, parentAlpha)
+        if (textAlpha >= 0.001f) {
+            font.draw(batch, textAlpha * parentAlpha, bossName, 10f / 20, x, y + 24, textColor)
+        }
+        if (star.alpha >= 0.0001f) {
+            repeat(spellCount) {
+                star.setPosition(x + it * 12, y)
+                star.draw(batch, parentAlpha)
+            }
         }
     }
 

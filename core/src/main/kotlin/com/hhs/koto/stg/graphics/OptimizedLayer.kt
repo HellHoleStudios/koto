@@ -107,6 +107,8 @@ open class OptimizedLayer<T : Drawable>(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (alpha < 0.001f) return
+
         var currentBlending = BlendingMode.ALPHA
         for (i in 0 until drawables.size) {
             if (drawables[i] != null) {

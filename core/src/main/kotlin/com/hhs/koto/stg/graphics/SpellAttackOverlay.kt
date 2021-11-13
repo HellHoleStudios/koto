@@ -45,6 +45,8 @@ class SpellAttackOverlay(
     override var alive: Boolean = true
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (sprite.alpha < 0.001f) return
+
         val xOffset = 128f * cos(rotation)
         val yOffset = 128f * sin(rotation)
         sprite.rotation = rotation

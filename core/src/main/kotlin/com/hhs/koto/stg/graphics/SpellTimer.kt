@@ -79,11 +79,11 @@ class SpellTimer(
 
     fun tickTime() {
         time = (time - 1).coerceAtLeast(0)
-        if (time <= 600) {
+        if (time <= options.fps * 10) {
             integer.color = Color(0f, 1f, 0.85f, 1f)
             fraction.color = Color(0f, 1f, 0.85f, 1f)
-            if (time % 60 == 0 && time > 0) {
-                if (time <= 300) {
+            if (time % options.fps == 0 && time > 0) {
+                if (time <= options.fps * 5) {
                     SE.play("timeout1")
                 } else {
                     SE.play("timeout0")
@@ -93,7 +93,7 @@ class SpellTimer(
             integer.color = WHITE_HSV
             fraction.color = WHITE_HSV
         }
-        val splitResult = splitDecimal(time / 60f)
+        val splitResult = splitDecimal(time.toFloat() / options.fps)
         integer.text = splitResult.integer
         fraction.text = splitResult.fraction
     }

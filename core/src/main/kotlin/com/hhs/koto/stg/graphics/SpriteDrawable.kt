@@ -31,6 +31,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.stg.Bounded
 import com.hhs.koto.stg.Drawable
+import com.hhs.koto.util.alpha
 import com.hhs.koto.util.cos
 import com.hhs.koto.util.sin
 
@@ -65,6 +66,8 @@ open class SpriteDrawable(
     override var alive: Boolean = true
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (sprite.alpha < 0.001f) return
+
         sprite.setOriginBasedPosition(
             x + subFrameTime * cos(angle) * speed,
             y + subFrameTime * cos(angle) * speed,

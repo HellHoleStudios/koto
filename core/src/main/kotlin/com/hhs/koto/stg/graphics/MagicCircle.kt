@@ -74,6 +74,8 @@ class MagicCircle(
     }
 
     fun draw(batch: Batch, parentAlpha: Float, x: Float, y: Float) {
+        if (color.a < 0.001f) return
+
         val tmpColor = color.cpy()
         color.a *= parentAlpha
         vertices[Batch.C1] = tmpColor.toFloatBits()

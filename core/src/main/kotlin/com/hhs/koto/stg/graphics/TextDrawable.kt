@@ -48,6 +48,7 @@ open class TextDrawable(
     override fun tick() = Unit
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (color.a < 0.001f) return
         font.draw(batch, parentAlpha, text, fontScale, x, y, color, targetWidth, halign, false)
     }
 }

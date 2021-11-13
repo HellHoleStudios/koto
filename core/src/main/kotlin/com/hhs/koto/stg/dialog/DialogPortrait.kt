@@ -29,12 +29,14 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.hhs.koto.util.NO_TINT_HSV
 import com.hhs.koto.util.TRANSPARENT_HSV
 import com.hhs.koto.util.safeValues
 import ktx.actors.alpha
+import ktx.actors.then
 import ktx.collections.GdxMap
 import ktx.collections.set
 
@@ -55,10 +57,10 @@ open class DialogPortrait(
     var variant: String? = null
         set(value) {
             variants.safeValues().forEach {
-                it.alpha = 0f
+                it.isVisible = false
             }
             variants[value].toFront()
-            variants[value].alpha = 1f
+            variants[value].isVisible = true
             field = value
         }
     val variants: GdxMap<String, Image> = GdxMap()
@@ -87,16 +89,17 @@ open class DialogPortrait(
         width: Float,
         height: Float = width / texture.regionWidth * texture.regionHeight,
     ) {
-        val image = Image(texture).apply {
-            setBounds(x, y, width, height)
-            color = TRANSPARENT_HSV
-        }
+        val image = Image(texture)
+        image.setBounds(x, y, width, height)
+        image.color = TRANSPARENT_HSV
+        image.isVisible = false
         variants[name] = image
         addActor(image)
     }
 
     fun show() {
         state = DialogPortraitState.INACTIVE
+        isVisible = true
         addAction(
             moveTo(
                 offset(staticX, inactiveOffsetX),
@@ -118,7 +121,7 @@ open class DialogPortrait(
                 interpolation,
             )
         )
-        addAction(fadeOut(duration, interpolation))
+        addAction(fadeOut(duration, interpolation) then Actions.hide())
     }
 
     fun activate() {

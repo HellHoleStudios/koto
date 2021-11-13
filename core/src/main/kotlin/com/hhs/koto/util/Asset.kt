@@ -70,7 +70,9 @@ fun initAsset() {
     A.registerFreeTypeFontLoaders()
     A.logger.level = Config.logLevel
     val tmpCharset = GdxSet<Char>()
-    (FreeTypeFontGenerator.DEFAULT_CHARS + "\u2423\u21e6").forEach {
+    val defaultChars =
+        "\u0000ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^\$€-%+=#_&~*\u007F\u2423\u21e6"
+    defaultChars.forEach {
         tmpCharset.add(it)
     }
     options.locales.forEach {
@@ -89,7 +91,7 @@ fun initAsset() {
         charset += it
     }
     // this seems to fix FreeTypeFontGenerator glitch
-    packer = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 1, false)
+    packer = PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 1, false)
 }
 
 fun disposeAsset() {

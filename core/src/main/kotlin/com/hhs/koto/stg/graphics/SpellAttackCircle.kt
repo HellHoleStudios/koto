@@ -168,9 +168,8 @@ class SpellAttackCircle(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
-        if (!visible) {
-            return
-        }
+        if (!visible) return
+
         batch.flush()
         texture.texture.bind()
         for (i in 0 until vertexCount + 1) {

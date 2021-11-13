@@ -84,7 +84,9 @@ class KotoGame : Disposable {
             Gdx.files.classpath("gdxvfx/shaders/default.vert").readString(),
             A["shader/koto_hsv.frag"],
         ),
-    )
+    ).apply {
+        setBlending(BlendingMode.ALPHA)
+    }
     val normalBatch = SpriteBatch()
     val background = DrawableLayer<Drawable>()
     val stage = DrawableLayer<Drawable>().apply {
@@ -219,7 +221,7 @@ class KotoGame : Disposable {
         GameData.ScoreEntry("", Date(), score, creditCount)
 
     fun update() {
-        speedUpMultiplier = if (VK.SPEED_UP.pressed()) {
+        speedUpMultiplier = if (VK.SPEED_UP.pressed() && (inReplay || Config.allowSpeedUpOutOfReplay)) {
             options.speedUpMultiplier
         } else {
             1

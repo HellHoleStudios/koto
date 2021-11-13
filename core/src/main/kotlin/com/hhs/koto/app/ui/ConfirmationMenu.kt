@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.hhs.koto.util.SE
 import com.hhs.koto.util.bundle
+import ktx.actors.then
 
 class ConfirmationMenu(
     yesRunnable: (() -> Unit)? = null,
@@ -86,7 +87,7 @@ class ConfirmationMenu(
     fun getActiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(moveTo(staticX, staticY, 1f, Interpolation.pow5Out))
-        ret.addAction(fadeIn(1f, Interpolation.pow5Out))
+        ret.addAction(show() then fadeIn(1f, Interpolation.pow5Out))
         for (action in actions) {
             ret.addAction(action())
         }
@@ -96,7 +97,7 @@ class ConfirmationMenu(
     fun getInactiveAction(vararg actions: () -> Action): () -> Action = {
         val ret = ParallelAction()
         ret.addAction(moveTo(staticX - 200f, staticY, 1f, Interpolation.pow5Out))
-        ret.addAction(fadeOut(1f, Interpolation.pow5Out))
+        ret.addAction(fadeOut(1f, Interpolation.pow5Out) then hide())
         for (action in actions) {
             ret.addAction(action())
         }

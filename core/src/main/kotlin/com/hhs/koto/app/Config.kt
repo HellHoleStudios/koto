@@ -103,7 +103,6 @@ object Config {
     const val worldOriginX: Float = worldW / 2f
     const val worldOriginY: Float = worldH / 2f
     const val bulletDeleteDistance: Float = 1024f
-    const val safeDistance: Float = 16f
     const val orthoCircleCollision: Boolean = true
     const val cleanupBlankCount: Int = 512
     const val defaultShotSheet: String = "danmakufu_shot.shot"

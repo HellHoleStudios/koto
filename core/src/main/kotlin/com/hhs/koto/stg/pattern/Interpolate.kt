@@ -38,7 +38,11 @@ class Interpolate(
     val action: (Float) -> Unit,
 ) : TemporalPattern(duration) {
     override fun action() {
-        action(interpolation.apply(start, end, t.toFloat() / duration))
+        if (t + 1 >= duration) {
+            action(end)
+        } else {
+            action(interpolation.apply(start, end, (t + 1).toFloat() / duration))
+        }
     }
 }
 

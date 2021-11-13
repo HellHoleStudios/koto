@@ -69,11 +69,11 @@ data class ResolutionMode(
 }
 
 data class BlendingMode(
-    val srcRGB: Int,
-    val dstRGB: Int,
+    val srcColor: Int,
+    val dstColor: Int,
     val srcAlpha: Int,
     val dstAlpha: Int,
-    val equationRGB: Int,
+    val equationColor: Int,
     val equationAlpha: Int,
 ) {
     companion object {
@@ -90,16 +90,23 @@ data class BlendingMode(
             "SUBTRACT", "DANMAKUFU_SUBTRACT" -> SUBTRACT
             "DANMAKUFU_SHADOW" -> BlendingMode(GL20.GL_ZERO, GL20.GL_ONE_MINUS_SRC_COLOR)
             "DANMAKUFU_INV_DESTRGB" -> BlendingMode(GL20.GL_ONE_MINUS_DST_COLOR, GL20.GL_ONE_MINUS_SRC_COLOR)
-            else -> ALPHA
+            else -> throw KotoRuntimeException("Unsupported blend mode: $blendingString")
         }
     }
 
-    constructor(src: Int, dst: Int, equation: Int = GL20.GL_FUNC_ADD) : this(src, dst, src, dst, equation, equation)
+    constructor(src: Int, dst: Int, equation: Int = GL20.GL_FUNC_ADD) : this(
+        src,
+        dst,
+        GL20.GL_ONE,
+        GL20.GL_ONE,
+        equation,
+        GL20.GL_FUNC_ADD,
+    )
 }
 
 fun Batch.setBlending(blending: BlendingMode) {
-    setBlendFunctionSeparate(blending.srcRGB, blending.dstRGB, blending.srcAlpha, blending.dstAlpha)
-    Gdx.gl.glBlendEquationSeparate(blending.equationRGB, blending.equationAlpha)
+    setBlendFunctionSeparate(blending.srcColor, blending.dstColor, blending.srcAlpha, blending.dstAlpha)
+    Gdx.gl.glBlendEquationSeparate(blending.equationColor, blending.equationAlpha)
 }
 
 operator fun Color.plus(other: Color): Color = this.copy().add(other)

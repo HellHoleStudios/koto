@@ -62,6 +62,8 @@ class TileBackground(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
+        if (color.a < 0.001f) return
+
         val tmpOffsetX = safeMod(offsetX + speedX * subFrameTime, tileWidth)
         val tmpOffsetY = safeMod(offsetY + speedY * subFrameTime, tileHeight)
         val startIndexX: Int = if (tmpOffsetX > 0f) {

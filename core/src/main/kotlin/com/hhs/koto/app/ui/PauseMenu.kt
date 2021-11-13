@@ -30,12 +30,15 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.hide
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.show
 import com.hhs.koto.app.screen.GameScreen
 import com.hhs.koto.stg.GameState
 import com.hhs.koto.util.SystemFlag
 import com.hhs.koto.util.bundle
 import com.hhs.koto.util.game
 import ktx.actors.alpha
+import ktx.actors.then
 
 
 class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplexer) : Group() {
@@ -56,13 +59,13 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
         activeAction = {
             setPosition(staticX - 200f, staticY)
             Actions.parallel(
-                Actions.fadeIn(0.5f, Interpolation.pow5Out),
+                show() then Actions.fadeIn(0.5f, Interpolation.pow5Out),
                 Actions.moveTo(staticX, staticY, 0.5f, Interpolation.pow5Out),
             )
         }
         inactiveAction = {
             Actions.parallel(
-                Actions.fadeOut(0.5f, Interpolation.pow5Out),
+                Actions.fadeOut(0.5f, Interpolation.pow5Out) then hide(),
                 Actions.moveTo(staticX - 200f, staticY, 0.5f, Interpolation.pow5Out),
             )
         }
