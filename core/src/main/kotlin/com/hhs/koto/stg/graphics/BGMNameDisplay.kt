@@ -34,7 +34,7 @@ import com.hhs.koto.util.bundle
 import com.hhs.koto.util.getFont
 import com.hhs.koto.util.lerp
 
-class BGMNameDisplay(bgmId: Int, override val zIndex: Int = 1000) : TextDrawable(
+class BGMNameDisplay(bgmId: Int, override val zIndex: Int = 100) : TextDrawable(
     getFont(24, bundle["font.BGMNameDisplay"]),
     12f / 24,
     String.format(bundle["game.bgmDisplay"], bundle["music.$bgmId.title"]),

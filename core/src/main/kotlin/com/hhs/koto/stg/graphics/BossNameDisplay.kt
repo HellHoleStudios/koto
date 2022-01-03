@@ -35,7 +35,7 @@ import com.hhs.koto.stg.Drawable
 import com.hhs.koto.util.*
 
 class BossNameDisplay(
-    override val zIndex: Int = 0,
+    override val zIndex: Int = 300,
 ) : Drawable {
     override var alive: Boolean = true
     override var x: Float = -worldOriginX + 6

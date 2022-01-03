@@ -104,7 +104,7 @@ class KotoGame : Disposable {
     val frameScheduler = FrameScheduler(this)
     val logger = Logger("Game", Config.logLevel)
     val playerBullets = OptimizedLayer<PlayerBullet>(
-        -10, Rectangle(
+        -100, Rectangle(
             -Config.bulletDeleteDistance - worldOriginX,
             -Config.bulletDeleteDistance - worldOriginY,
             Config.bulletDeleteDistance * 2 + worldW,
@@ -136,10 +136,10 @@ class KotoGame : Disposable {
     val particles = OptimizedLayer<Drawable>(200).apply {
         stage.addDrawable(this)
     }
-    val enemies = DrawableLayer<Enemy>(-200).apply {
+    val enemies = DrawableLayer<Enemy>(50).apply {
         stage.addDrawable(this)
     }
-    val bosses = DrawableLayer<Boss>(-150).apply {
+    val bosses = DrawableLayer<Boss>(100).apply {
         stage.addDrawable(this)
     }
     val bossNameDisplay = BossNameDisplay().apply {

@@ -43,6 +43,7 @@ class SpellInfoDisplay(
     val targetX: Float = worldW - worldOriginX,
     val targetY: Float = worldH - worldOriginY - 25,
     var backgroundColor: Color = RED_HSV,
+    override var zIndex: Int = 200,
 ) : Drawable {
     override var alive: Boolean = true
     override var x: Float = targetX

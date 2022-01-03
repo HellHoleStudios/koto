@@ -38,7 +38,7 @@ import com.hhs.koto.util.*
 class SpellTimer(
     override var x: Float = 0f,
     override var y: Float = worldH - worldOriginY - 30f,
-    override val zIndex: Int = 0,
+    override val zIndex: Int = 1000,
 ) : Drawable {
     override var alive: Boolean = true
     var scale: Float = 1f
@@ -47,7 +47,7 @@ class SpellTimer(
         getFont(40, bundle["font.spellTimer"], borderWidth = 3f, borderColor = Color.BLACK),
         20f / 40,
         "",
-        x,
+        x + 3f,
         y,
         0f,
         Align.right,
@@ -57,7 +57,7 @@ class SpellTimer(
         getFont(20, bundle["font.spellTimer"], borderWidth = 3f, borderColor = Color.BLACK),
         10f / 20,
         "",
-        x,
+        x + 3f,
         y - 7f,
         0f,
         Align.left,
@@ -126,9 +126,9 @@ class SpellTimer(
         if (time <= 600) {
             scale = Interpolation.pow5Out.apply(1.3f, 1f, (60 - time % 60) / 60f)
         }
-        integer.x = x
+        integer.x = x + 3f
         integer.y = y
-        fraction.x = x
+        fraction.x = x + 3f
         fraction.y = y - 7f
         integer.tick()
         fraction.tick()

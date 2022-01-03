@@ -40,6 +40,7 @@ class HealthBar(
     val radius: Float = 50f,
     val borderColor: Color = RED_HSV,
     val barColor: Color = WHITE_HSV,
+    override val zIndex: Int = 900,
 ) : Drawable {
     @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
     override var x: Float
