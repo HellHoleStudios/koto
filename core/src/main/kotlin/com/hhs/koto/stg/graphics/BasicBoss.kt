@@ -146,28 +146,18 @@ abstract class BasicBoss(
 
         val tmpColor = batch.color.cpy()
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
-        if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
-            batch.draw(
-                texture,
-                x - textureOriginX,
-                y - textureOriginY,
-                textureOriginX,
-                textureOriginY,
-                width,
-                height,
-                scaleX,
-                scaleY,
-                rotation,
-            )
-        } else {
-            batch.draw(
-                texture,
-                x - textureOriginX,
-                y - textureOriginY,
-                width,
-                height,
-            )
-        }
+        batch.draw(
+            texture,
+            x - textureOriginX,
+            y - textureOriginY,
+            textureOriginX,
+            textureOriginY,
+            width,
+            height,
+            scaleX,
+            scaleY,
+            rotation,
+        )
         batch.color = tmpColor
     }
 

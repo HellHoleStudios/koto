@@ -81,28 +81,18 @@ open class BasicEnemy(
             scaleX
         }
 
-        if (rotation != 0f || tmpScaleX != 1f || scaleY != 1f) {
-            batch.draw(
-                texture.texture,
-                x - textureOriginX,
-                y - textureOriginY,
-                textureOriginX,
-                textureOriginY,
-                width,
-                height,
-                tmpScaleX,
-                scaleY,
-                rotation,
-            )
-        } else {
-            batch.draw(
-                texture.texture,
-                x - textureOriginX,
-                y - textureOriginY,
-                width,
-                height,
-            )
-        }
+        batch.draw(
+            texture.texture,
+            x - textureOriginX,
+            y - textureOriginY,
+            textureOriginX,
+            textureOriginY,
+            width,
+            height,
+            tmpScaleX,
+            scaleY,
+            rotation,
+        )
         batch.color = tmpColor
     }
 

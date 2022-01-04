@@ -27,7 +27,6 @@ package com.hhs.koto.stg.graphics
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
@@ -88,10 +87,8 @@ open class BasicPlayer(
     }
     protected var respawnAnimationPercentage: Float = 0f
     protected var counter: Int = 0
-    protected var hitbox = Sprite(hitboxTexture).apply {
-        setOriginCenter()
-        setSize(64f, 64f)
-        alpha = 0f
+    protected var hitbox = BasicPlayerHitbox(hitboxTexture, this).apply {
+        game.stage.addDrawable(this)
     }
     override var x: Float = spawnX
     override var y: Float = spawnY
@@ -120,38 +117,23 @@ open class BasicPlayer(
         } else {
             clampY(y + speed * dy * subFrameTime)
         }
-        if (rotation != 0f || scaleX != 1f || scaleY != 1f) {
-            game.normalBatch.draw(
-                texture.texture,
-                tmpX - textureOriginX,
-                tmpY - textureOriginY,
-                textureOriginX,
-                textureOriginY,
-                width,
-                height,
-                scaleX,
-                scaleY,
-                rotation,
-            )
-        } else {
-            game.normalBatch.draw(
-                texture.texture,
-                tmpX - textureOriginX,
-                tmpY - textureOriginY,
-                width,
-                height,
-            )
-        }
+
+        game.normalBatch.draw(
+            texture.texture,
+            tmpX - textureOriginX,
+            tmpY - textureOriginY,
+            textureOriginX,
+            textureOriginY,
+            width,
+            height,
+            scaleX,
+            scaleY,
+            rotation,
+        )
         game.normalBatch.color = tmpColor
 
-        hitbox.setPosition(
-            clampX(x + speed * dx * subFrameTime) - hitbox.width / 2,
-            clampY(y + speed * dy * subFrameTime) - hitbox.height / 2,
-        )
-        hitbox.draw(game.normalBatch, parentAlpha)
-        hitbox.rotation = -hitbox.rotation
-        hitbox.draw(game.normalBatch, parentAlpha)
-        hitbox.rotation = -hitbox.rotation
+        hitbox.x = clampX(x + speed * dx * subFrameTime)
+        hitbox.y = clampY(y + speed * dy * subFrameTime)
 
         game.normalBatch.end()
         batch.begin()
@@ -159,16 +141,7 @@ open class BasicPlayer(
 
     override fun tick() {
         frame++
-        hitbox.rotate(4f)
-        if (hitbox.rotation >= 360f) hitbox.rotation -= 360f
         if (playerState != PlayerState.RESPAWNING) {
-            if (game.pressed(VK.SLOW)) {
-                hitbox.alpha = 1f
-                hitbox.setScale((hitbox.scaleX - 0.02f).coerceAtLeast(1f))
-            } else {
-                hitbox.alpha = 0f
-                hitbox.setScale(1.3f)
-            }
             if (playerState != PlayerState.DEATHBOMBING) {
                 move()
             }
@@ -431,6 +404,7 @@ open class BasicPlayer(
         attachedTasks.forEach { it.kill() }
         effect.dispose()
         game.vfx.removeEffectRegistered(effect)
+        game.stage.removeDrawable(hitbox)
         return true
     }
 

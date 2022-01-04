@@ -124,7 +124,6 @@ fun lerp(start: Float, end: Float, a: Float): Float {
     return (end - start) * a + start
 }
 
-
 fun smoothstep(start: Float, end: Float, a: Float): Float {
     if (a < 0f) return start
     if (a > 1f) return end
