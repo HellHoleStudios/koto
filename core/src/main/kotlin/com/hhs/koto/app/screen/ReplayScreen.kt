@@ -220,7 +220,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                         0,
                         i,
                         staticY = 1000f - i * 35f,
-                        staticX = 550f,
+                        staticX = 600f,
                         triggerSound = null,
                     )
                 )
@@ -231,7 +231,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                         0,
                         i,
                         staticY = 1000f - i * 35f,
-                        staticX = 600f,
+                        staticX = 650f,
                         triggerSound = null,
                     )
                 )
@@ -246,7 +246,7 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
                         0,
                         i,
                         staticY = 1000f - i * 35f,
-                        staticX = 750f,
+                        staticX = 800f,
                         triggerSound = null,
                     )
                 )

@@ -291,7 +291,7 @@ fun loadAssetIndex(file: FileHandle) {
 
 fun loadSmart(fileName: String) {
     with(A) {
-        when (fileHandleResolver.resolve(fileName).extension()) {
+        when (fileHandleResolver.resolve(fileName).extension().lowercase()) {
             "png", "jpg", "jpeg", "bmp", "gif" -> load<Texture>(fileName, defaultTextureParameter())
             "wav" -> load<Sound>(fileName)
             "mp3", "ogg" -> load<Music>(fileName)
