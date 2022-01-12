@@ -120,6 +120,18 @@ fun exitApp() {
     Gdx.app.exit()
 }
 
+fun matchLocale(locales: GdxArray<Locale>, locale: Locale): Locale {
+    if (locales.contains(locale,false)) return locale
+
+    val locale2 = Locale(locale.language, locale.country)
+    if (locales.contains(locale2,false)) return locale2
+
+    val locale3 = Locale(locale.language)
+    if (locales.contains(locale3,false)) return locale3
+
+    return Locale.ROOT
+}
+
 fun loadOptions() {
     val tmpOptions = app.callbacks.loadOptions()
     if (tmpOptions != null) {

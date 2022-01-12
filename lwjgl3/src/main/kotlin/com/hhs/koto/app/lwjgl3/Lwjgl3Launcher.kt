@@ -50,7 +50,7 @@ object Lwjgl3Launcher {
     fun main(args: Array<String>) {
         val optionsFile = getFile("options.json")
         val gameDataFile = getFile("game_data.json")
-        var options = readOptions(optionsFile)
+        val options = readOptions(optionsFile)
 
         val callbacks = object : KotoCallbacks {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")
@@ -101,7 +101,8 @@ object Lwjgl3Launcher {
 
             override fun saveReplay(replay: Replay) {
                 val replayFolder = getFile("replay")
-                var replayName = Config.replayPrefix + "_" + dateFormat.format(replay.date)
+                var replayName = "${Config.replayPrefix}_${replay.name}_${dateFormat.format(replay.date)}"
+                replayName = sanitizeFilename(replayName)
                 if (replayFolder.child("$replayName.ktr").exists()) {
                     for (i in 1..1000) {
                         if (!replayFolder.child("${replayName}_$i.ktr").exists()) {
@@ -141,7 +142,7 @@ object Lwjgl3Launcher {
     }
 
     private fun getFile(fileName: String): FileHandle {
-        val osName = System.getProperty("os.name").lowercase(Locale.getDefault())
+        val osName = System.getProperty("os.name").lowercase()
         return when {
             "windows" in osName -> {
                 // Windows
@@ -173,5 +174,19 @@ object Lwjgl3Launcher {
         println("[Main] Creating default options file...")
         prettyPrintJson(options, optionsFile)
         options
+    }
+
+    private const val invalidFilenameChars = "\\/:*?\"<>|"
+
+    private fun sanitizeFilename(filename: String): String {
+        val result = StringBuilder()
+        filename.forEach {
+            if (it.code < 32 || invalidFilenameChars.contains(it)) {
+                result.append("_")
+            } else {
+                result.append(it)
+            }
+        }
+        return result.toString()
     }
 }

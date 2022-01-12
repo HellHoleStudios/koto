@@ -31,6 +31,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.Scaling
 import com.hhs.koto.util.ResolutionMode
+import com.hhs.koto.util.matchLocale
 import ktx.collections.GdxArray
 import java.util.*
 
@@ -46,9 +47,9 @@ data class Options(
     var speedUpMultiplier: Int = 4,
     var musicVolume: Float = 1f,
     var SEVolume: Float = 0.5f,
-    val deadzone: Float = 0.1f,
-    val keyRepeatDelay: Float = 0.4f,
-    val keyRepeatInterval: Float = 0.12f,
+    var deadzone: Float = 0.1f,
+    var keyRepeatDelay: Float = 0.4f,
+    var keyRepeatInterval: Float = 0.12f,
     var keyDown: GdxArray<Int> = GdxArray.with(Keys.DOWN),
     var keyUp: GdxArray<Int> = GdxArray.with(Keys.UP),
     var keyLeft: GdxArray<Int> = GdxArray.with(Keys.LEFT),
@@ -64,7 +65,6 @@ data class Options(
     var keyRestart: GdxArray<Int> = GdxArray.with(Keys.R),
     var keyFullScreen: GdxArray<Int> = GdxArray.with(Keys.F4),
     var keySpeedUp: GdxArray<Int> = GdxArray.with(Keys.CONTROL_LEFT),
-    var locale: Locale = Locale.getDefault(),
     var locales: GdxArray<Locale> = GdxArray.with(
         Locale.ROOT,
         Locale.ENGLISH,
@@ -72,6 +72,7 @@ data class Options(
         Locale.SIMPLIFIED_CHINESE,
         Locale.TRADITIONAL_CHINESE,
     ),
+    var locale: Locale = matchLocale(locales, Locale.getDefault())
 )
 
 object Config {
