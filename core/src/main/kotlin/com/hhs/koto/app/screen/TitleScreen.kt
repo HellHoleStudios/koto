@@ -56,6 +56,10 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         setPosition(100f, 820f)
         titles += this
     }
+    private val versionLabel = Label("ver.alpha 26", getUILabelStyle(28)).apply {
+        setPosition(10f, 10f)
+        st += this
+    }
 
     init {
         grid.add(GridButton(bundle["ui.title.startStory"], 36, 0, -8) {
@@ -101,6 +105,9 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         titles.clearActions()
         titles.setPosition(0f, 400f)
         titles.addAction(moveTo(0f, 0f, duration, Interpolation.pow5Out))
+        versionLabel.setPosition(10f, -60f)
+        versionLabel.clearActions()
+        versionLabel.addAction(moveTo(10f, 10f, duration, Interpolation.pow5Out))
 
         var extraEnabled = false
         gameData.data.safeValues().forEach {
@@ -115,9 +122,11 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
         grid.clearActions()
-        grid.addAction(moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.sineOut))
+        grid.addAction(moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.pow5Out))
         titles.clearActions()
-        titles.addAction(moveTo(0f, 400f, duration, Interpolation.sineOut))
+        titles.addAction(moveTo(0f, 400f, duration, Interpolation.pow5Out))
+        versionLabel.clearActions()
+        versionLabel.addAction(moveTo(10f, -60f, duration, Interpolation.pow5Out))
     }
 
     override fun onQuit() {
