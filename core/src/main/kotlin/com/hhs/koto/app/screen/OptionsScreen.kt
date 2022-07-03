@@ -26,6 +26,8 @@
 package com.hhs.koto.app.screen
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Graphics
+import com.badlogic.gdx.Graphics.DisplayMode
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
@@ -44,34 +46,33 @@ import com.hhs.koto.app.ui.register
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
+import ktx.collections.GdxArray
+import java.util.*
 import kotlin.math.roundToInt
 
 class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     private val grid = ConstrainedGrid(
-        -2048f,
-        72f,
-        5536f,
-        880f,
-        animationDuration = 0.5f,
-        interpolation = Interpolation.sine
+        -2048f, 72f, 5536f, 880f, animationDuration = 0.5f, interpolation = Interpolation.sine
     ).register(st, input)
     private val restartNotification = Label(
         bundle["ui.options.restartRequired"],
         getUILabelStyle(36, RED_HSV),
     ).apply {
-        st += this
+        grid += this
         setPosition(950f, 550f)
         alpha = 0f
     }
-    private val language = Grid(0, -9, false).register(st, input)
-    private val musicVolume = Grid(0, -8, false).register(st, input)
-    private val SEVolume = Grid(0, -7, false).register(st, input)
-    private val vsync = Grid(0, -6, false).register(st, input)
-    private val resolution = Grid(0, -5, false).register(st, input)
-    private val fullscreen = Grid(0, -4, false).register(st, input)
+    private val languageGrid = Grid(0, -9, false).apply { input.addProcessor(this) }
+    private val musicVolumeGrid = Grid(0, -8, false).apply { input.addProcessor(this) }
+    private val SEVolumeGrid = Grid(0, -7, false).apply { input.addProcessor(this) }
+    private val vsyncGrid = Grid(0, -6, false).apply { input.addProcessor(this) }
+    private val resolutionGrid = Grid(0, -5, false).register(st, input)
+    private val displayModeGrid = Grid(0, -4, true).apply { input.addProcessor(this) }
     private var oldOptions: Options? = null
 
-    companion object {
+    private val oldLocale: Locale = options.locale
+
+    private companion object {
         fun getAlternativeActiveAction(button: GridButton, vararg actions: () -> Action): () -> Action = {
             val ret = ParallelAction()
             ret.addAction(
@@ -108,14 +109,14 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     }
 
     init {
-        grid.add(language)
+        grid.add(languageGrid)
         grid.add(GridButton(bundle["ui.options.language"], 36, 0, -9, triggerSound = null))
         for (i in 0 until options.locales.size) {
             val tmpBundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locales[i])
             val button = GridButton(
                 tmpBundle["locale.name"], 36, i, 0, triggerSound = null, ignoreParent = true
             )
-            language.add(button)
+            languageGrid.add(button)
             button.activeAction = getAlternativeActiveAction(button, {
                 Actions.run {
                     options.locale = options.locales[i]
@@ -124,13 +125,13 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
             button.inactiveAction = getAlternativeInactiveAction(button)
         }
 
-        grid.add(musicVolume)
+        grid.add(musicVolumeGrid)
         grid.add(GridButton(bundle["ui.options.musicVolume"], 36, 0, -8, triggerSound = null))
         for (i in 0..20) {
             val button = GridButton(
                 (i * 5).toString() + "%", 36, i, 0, triggerSound = null, ignoreParent = true
             )
-            musicVolume.add(button)
+            musicVolumeGrid.add(button)
             button.activeAction = getAlternativeActiveAction(button, {
                 Actions.run {
                     options.musicVolume = i / 20f
@@ -140,24 +141,24 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
             button.inactiveAction = getAlternativeInactiveAction(button)
         }
 
-        grid.add(SEVolume)
-        val tmpButton1 = GridButton(bundle["ui.options.SEVolume"], 36, 0, -7, triggerSound = null)
-        tmpButton1.activeAction = tmpButton1.getActiveAction({
-            forever(
-                sequence(
-                    delay(1.5f),
-                    Actions.run {
-                        SE.play("pldead")
-                    },
+        grid.add(SEVolumeGrid)
+        grid.add(GridButton(bundle["ui.options.SEVolume"], 36, 0, -7, triggerSound = null).apply {
+            activeAction = getActiveAction({
+                forever(
+                    sequence(
+                        delay(1.5f),
+                        Actions.run {
+                            SE.play("pldead")
+                        },
+                    )
                 )
-            )
+            })
         })
-        grid.add(tmpButton1)
         for (i in 0..20) {
             val button = GridButton(
                 (i * 5).toString() + "%", 36, i, 0, triggerSound = null, ignoreParent = true
             )
-            SEVolume.add(button)
+            SEVolumeGrid.add(button)
             button.activeAction = getAlternativeActiveAction(button, {
                 Actions.run {
                     options.SEVolume = i / 20f
@@ -166,12 +167,12 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
             button.inactiveAction = getAlternativeInactiveAction(button)
         }
 
-        grid.add(vsync)
+        grid.add(vsyncGrid)
         grid.add(GridButton(bundle["ui.options.vsync"], 36, 0, -6, triggerSound = null))
         val vsyncDisableButton = GridButton(
             bundle["ui.no"], 36, 0, 0, triggerSound = null, ignoreParent = true
         )
-        vsync.add(vsyncDisableButton)
+        vsyncGrid.add(vsyncDisableButton)
         vsyncDisableButton.activeAction = getAlternativeActiveAction(
             vsyncDisableButton,
             {
@@ -186,7 +187,7 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         val vsyncEnableButton = GridButton(
             bundle["ui.yes"], 36, 1, 0, triggerSound = null, ignoreParent = true
         )
-        vsync.add(vsyncEnableButton)
+        vsyncGrid.add(vsyncEnableButton)
         vsyncEnableButton.activeAction = getAlternativeActiveAction(
             vsyncEnableButton,
             {
@@ -198,100 +199,198 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         )
         vsyncEnableButton.inactiveAction = getAlternativeInactiveAction(vsyncEnableButton)
 
-        grid.add(resolution)
+        grid.add(resolutionGrid)
         grid.add(GridButton(bundle["ui.options.resolution"], 36, 0, -5, triggerSound = null))
-        for (i in 0 until resolutionModes.size) {
-            val mode = resolutionModes[i]
-            val button = GridButton(mode.name, 36, i, 0, triggerSound = null, ignoreParent = true)
-            resolution.add(button)
-            button.activeAction = getAlternativeActiveAction(button, {
-                Actions.run {
-                    mode.apply(options)
-                    if (!options.fullScreen) Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
-                }
-            })
-            button.inactiveAction = getAlternativeInactiveAction(button)
-        }
-        val customButton = GridButton(
-            bundle["ui.options.resolution.custom"],
-            36,
-            resolutionModes.size,
-            0,
-            triggerSound = null,
-            ignoreParent = true,
-        )
-        resolution.add(customButton)
-        customButton.activeAction = getAlternativeActiveAction(customButton, {
-            Actions.run {
-                options.windowWidth = oldOptions!!.windowWidth
-                options.windowHeight = oldOptions!!.windowHeight
-                options.frameWidth = oldOptions!!.frameWidth
-                options.frameHeight = oldOptions!!.frameHeight
-                if (!options.fullScreen) Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
-            }
-        })
-        customButton.inactiveAction = getAlternativeInactiveAction(customButton)
-        customButton.deactivate()
 
-        grid.add(fullscreen)
-        grid.add(GridButton(bundle["ui.options.fullscreen"], 36, 0, -4, triggerSound = null))
-        val fullscreenDisableButton = GridButton(
-            bundle["ui.no"], 36, 0, 0, triggerSound = null, ignoreParent = true
+        grid.add(displayModeGrid)
+        grid.add(GridButton(bundle["ui.options.display"], 36, 0, -4, triggerSound = null))
+
+        val windowedButton = GridButton(
+            bundle["ui.options.display.windowed"], 36, 0, 0, triggerSound = null, ignoreParent = true
         )
-        fullscreen.add(fullscreenDisableButton)
-        fullscreenDisableButton.activeAction = getAlternativeActiveAction(
-            fullscreenDisableButton,
+        displayModeGrid.add(windowedButton)
+        windowedButton.activeAction = getAlternativeActiveAction(
+            windowedButton,
             {
                 Actions.run {
-                    if (options.fullScreen) {
-                        options.fullScreen = false
-                        if (!resolution.grid.last().enabled) {
-                            val modeIndex = ResolutionMode.findOptimalIndex(Gdx.graphics.displayMode)
-                            resolutionModes[modeIndex].apply(options)
-                            resolution.select(modeIndex, 0, true)
-                        }
-                        Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
+                    // prevents incorrect desktop size caused by fullscreen
+                    if (Gdx.graphics.isFullscreen) {
+                        Gdx.graphics.setWindowedMode(100, 100)
                     }
-                }
-            },
-        )
-        fullscreenDisableButton.inactiveAction = getAlternativeInactiveAction(fullscreenDisableButton)
 
-        val fullscreenEnableButton = GridButton(
-            bundle["ui.yes"], 36, 1, 0, triggerSound = null, ignoreParent = true
-        )
-        fullscreen.add(fullscreenEnableButton)
-        fullscreenEnableButton.activeAction = getAlternativeActiveAction(
-            fullscreenEnableButton,
-            {
-                Actions.run {
-                    if (!options.fullScreen) {
-                        options.fullScreen = true
-                        val displayMode = Gdx.graphics.displayMode
-                        Gdx.graphics.setFullscreenMode(displayMode)
-                        if (!resolution.grid.last().enabled) {
-                            var modeIndex = resolutionModes.indexOfFirst {
-                                displayMode.width <= it.windowWidth || displayMode.height <= it.windowHeight
+                    options.displayMode = "windowed"
+                    resolutionGrid.clearChildren()
+
+                    var modeIndex = -1
+                    for (i in 0 until resolutionModes.size) {
+                        val mode = resolutionModes[i]
+                        if (mode.windowWidth == options.windowWidth &&
+                            mode.windowHeight == options.windowHeight &&
+                            mode.frameBufferWidth == options.frameBufferWidth &&
+                            mode.frameBufferHeight == options.frameBufferHeight
+                        ) {
+                            modeIndex = i
+                        }
+                        val button = GridButton(mode.name, 36, i, 0, triggerSound = null, ignoreParent = true)
+                        resolutionGrid.add(button)
+                        button.activeAction = getAlternativeActiveAction(button, {
+                            Actions.run {
+                                mode.saveTo(options)
+                                Gdx.graphics.setUndecorated(false)
+                                Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
                             }
-                            if (modeIndex == -1) modeIndex = resolutionModes.size - 1
-                            resolutionModes[modeIndex].apply(options)
-                            resolution.select(modeIndex, 0, true)
-                        }
+                        })
+                        button.inactiveAction = getAlternativeInactiveAction(button)
+                    }
+                    if (modeIndex == -1) {
+                        val customButton = GridButton(
+                            bundle["ui.options.resolution.custom"],
+                            36,
+                            resolutionModes.size,
+                            0,
+                            triggerSound = null,
+                            ignoreParent = true,
+                        )
+                        resolutionGrid.add(customButton)
+                        customButton.activeAction = getAlternativeActiveAction(customButton, {
+                            Actions.run {
+                                options.windowWidth = oldOptions!!.windowWidth
+                                options.windowHeight = oldOptions!!.windowHeight
+                                options.frameBufferWidth = oldOptions!!.frameBufferWidth
+                                options.frameBufferHeight = oldOptions!!.frameBufferHeight
+                                Gdx.graphics.setUndecorated(false)
+                                Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
+                            }
+                        })
+                        customButton.inactiveAction = getAlternativeInactiveAction(customButton)
+                        resolutionGrid.selectLast()
+                    } else {
+                        resolutionGrid.select(modeIndex, 0, true)
                     }
                 }
             },
         )
-        fullscreenEnableButton.inactiveAction = getAlternativeInactiveAction(fullscreenEnableButton)
+        windowedButton.inactiveAction = getAlternativeInactiveAction(windowedButton)
+
+        val fullscreenButton = GridButton(
+            bundle["ui.options.display.fullscreen"], 36, 1, 0, triggerSound = null, ignoreParent = true
+        )
+        displayModeGrid.add(fullscreenButton)
+        fullscreenButton.activeAction = getAlternativeActiveAction(
+            fullscreenButton,
+            {
+                Actions.run {
+                    options.displayMode = "fullscreen"
+
+                    val displayModes = GdxArray<DisplayMode>()
+                    Gdx.graphics.displayModes.forEach {
+                        for ((i, mode) in displayModes.withIndex()) {
+                            if (it.width == mode.width && it.height == mode.height) {
+                                if (it.refreshRate > mode.refreshRate) {
+                                    displayModes[i] = it
+                                }
+                                return@forEach
+                            }
+                        }
+                        displayModes.add(it)
+                    }
+                    resolutionGrid.clearChildren()
+
+                    var selectedDisplayMode = 0
+                    for ((i, displayMode) in displayModes.withIndex()) {
+                        if (displayMode.height <= options.windowHeight) {
+                            selectedDisplayMode = i
+                        }
+
+                        var resolutionMode: ResolutionMode? = null
+                        for (mode in resolutionModes.safeIterator()) {
+                            if (mode.windowHeight >= displayMode.height) {
+                                resolutionMode = mode
+                                break
+                            }
+                        }
+                        if (resolutionMode == null) {
+                            resolutionMode = resolutionModes.last()
+                        }
+                        val button = GridButton(
+                            "${displayMode.width}x${displayMode.height}",
+                            36,
+                            i,
+                            0,
+                            triggerSound = null,
+                            ignoreParent = true
+                        )
+                        resolutionGrid.add(button)
+                        button.activeAction = getAlternativeActiveAction(button, {
+                            Actions.run {
+                                resolutionMode!!.saveTo(options)
+                                Gdx.graphics.setFullscreenMode(displayMode)
+                            }
+                        })
+                        button.inactiveAction = getAlternativeInactiveAction(button)
+                    }
+
+                    resolutionGrid.select(selectedDisplayMode, 0, true)
+                }
+            },
+        )
+        fullscreenButton.inactiveAction = getAlternativeInactiveAction(fullscreenButton)
+
+        if (app.graphicsSystem.borderlessAvailable) {
+            val borderlessButton = GridButton(
+                bundle["ui.options.display.borderless"], 36, 2, 0, triggerSound = null, ignoreParent = true
+            )
+            displayModeGrid.add(borderlessButton)
+            borderlessButton.activeAction = getAlternativeActiveAction(
+                borderlessButton,
+                {
+                    Actions.run {
+                        options.displayMode = "borderless"
+                        val (width, height) = app.graphicsSystem.setBorderless()
+                        resolutionGrid.clearChildren()
+                        val button = GridButton(
+                            "${width}x${height}", 36, 0, 0, triggerSound = null, ignoreParent = true
+                        )
+                        var modeExists = false
+                        for (mode in resolutionModes.safeIterator()) {
+                            if (mode.windowHeight >= height) {
+                                mode.saveTo(options)
+                                modeExists = true
+                                break
+                            }
+                        }
+                        if (!modeExists) {
+                            resolutionModes.last().saveTo(options)
+                        }
+
+                        button.activeAction = getAlternativeActiveAction(button)
+                        button.inactiveAction = getAlternativeInactiveAction(button)
+                        resolutionGrid.add(button)
+                        resolutionGrid.selectFirst()
+                    }
+                },
+            )
+            borderlessButton.inactiveAction = getAlternativeInactiveAction(borderlessButton)
+        }
 
         grid.add(GridButton(bundle["ui.options.keyConfig"], 36, 0, -3, enabled = false))
         grid.add(GridButton(bundle["ui.options.reset"], 36, 0, -2) {
             options = Options()
-            ResolutionMode.findOptimal(Gdx.graphics.displayMode).apply(options)
+            ResolutionMode.findOptimal(Gdx.graphics.displayMode).saveTo(options)
             BGM.setVolume(options.musicVolume)
             Gdx.graphics.setVSync(options.vsyncEnabled)
             reset()
         })
         grid.add(GridButton(bundle["ui.options.cancel"], 36, 0, -1, triggerSound = null) {
+            options = oldOptions!!
+            if (options.displayMode == "fullscreen") {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
+            } else {
+                Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
+            }
+            BGM.setVolume(options.musicVolume)
+            Gdx.graphics.setVSync(options.vsyncEnabled)
+            reset()
             super.onQuit()
             app.setScreen("title", 0.5f)
         })
@@ -302,18 +401,19 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         reset()
 
         grid.arrange(950f, 100f, 0f, -45f)
-        language.x = 1200f
-        musicVolume.x = 1200f
-        SEVolume.x = 1200f
-        vsync.x = 1200f
-        resolution.x = 1200f
-        fullscreen.x = 1200f
+        languageGrid.x = 1200f
+        musicVolumeGrid.x = 1200f
+        SEVolumeGrid.x = 1200f
+        vsyncGrid.x = 1200f
+        resolutionGrid.x = 1200f
+        displayModeGrid.x = 1200f
 
-        grid.selectFirst()
+        grid.select(0, -1, true)
+        grid.updateComponent()
     }
 
     override fun render(delta: Float) {
-        if (oldOptions!!.locale != options.locale) {
+        if (oldLocale != options.locale) {
             restartNotification.alpha = 1f
         } else {
             restartNotification.alpha = 0f
@@ -322,38 +422,32 @@ class OptionsScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
     }
 
     private fun reset() {
-        language.select(options.locales.indexOf(options.locale, false), 0, true)
-        musicVolume.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
-        SEVolume.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0, true)
-        vsync.select(if (options.vsyncEnabled) 1 else 0, 0, true)
-        val modeIndex = resolutionModes.indexOfFirst {
-            options.windowWidth == it.windowWidth &&
-                    options.windowHeight == it.windowHeight &&
-                    options.frameWidth == it.frameWidth &&
-                    options.frameHeight == it.frameHeight
-        }
-        if (modeIndex != -1) {
-            resolution.grid.last().disable()
-            resolution.select(modeIndex, 0, true)
-        } else {
-            resolution.grid.last().enable()
-            resolution.selectLast()
-        }
-        fullscreen.select(if (options.fullScreen) 1 else 0, 0, true)
+        languageGrid.select(options.locales.indexOf(options.locale, false), 0, true)
+        musicVolumeGrid.select(clamp((options.musicVolume * 20).roundToInt(), 0, 20), 0, true)
+        SEVolumeGrid.select(clamp((options.SEVolume * 20).roundToInt(), 0, 20), 0, true)
+        vsyncGrid.select(if (options.vsyncEnabled) 1 else 0, 0, true)
+        displayModeGrid.select(
+            when (options.displayMode) {
+                "windowed" -> 0
+                "fullscreen" -> 1
+                "borderless" -> 2
+                else -> throw KotoRuntimeException("Invalid display mode: ${options.displayMode}")
+            }, 0, true
+        )
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
         super.fadeIn(oldScreen, duration)
         oldOptions = options.copy()
         grid.clearActions()
-        grid.setPosition(grid.staticX + 400f, grid.staticY)
+        grid.setPosition(grid.staticX + 500f, grid.staticY)
         grid.addAction(moveTo(grid.staticX, grid.staticY, duration, Interpolation.pow5Out))
     }
 
     override fun fadeOut(newScreen: KotoScreen?, duration: Float) {
         super.fadeOut(newScreen, duration)
         grid.clearActions()
-        grid.addAction(moveTo(grid.staticX + 400f, grid.staticY, duration, Interpolation.sineOut))
+        grid.addAction(moveTo(grid.staticX + 500f, grid.staticY, duration, Interpolation.sineOut))
     }
 
     override fun onQuit() {

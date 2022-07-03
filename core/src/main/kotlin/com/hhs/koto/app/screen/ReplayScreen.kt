@@ -163,101 +163,103 @@ class ReplayScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
         super.fadeIn(oldScreen, duration)
         title.addAction(Actions.moveTo(80f, 900f, 0.5f, Interpolation.pow5Out))
 
-        val replays = loadReplays()
-        grid.clear()
-        selectionBackground.clearActions()
-        if (replays.size > 0) {
-            for (i in 0 until replays.size) {
-                val replay = replays[i]
-                grid.add(GridButton(
-                    replay.name,
-                    28,
-                    0,
-                    i,
-                    staticY = 1000f - i * 35f,
-                    staticX = 0f,
-                ) {
-                    if (replay.checkpoints.size > 1) {
-                        showCheckpointSelectionMenu(replay)
-                    } else {
-                        launchGame(replay, replay.checkpoints.last())
-                    }
-                }.apply {
-                    activeAction = getActiveAction({
-                        Actions.forever(Actions.run {
-                            selectionBackground.clearActions()
-                            selectionBackground.addAction(
-                                Actions.parallel(
-                                    hsvColor(
-                                        Color(i.toFloat() / replays.size, 0.5f, 1f, 0.5f),
-                                        0.5f,
-                                    ),
-                                    Actions.moveTo(
-                                        0f, y - grid.targetY - 2.5f,
-                                        1f,
-                                        Interpolation.pow5Out,
-                                    ),
+        if (oldScreen is TitleScreen) {
+            val replays = loadReplays()
+            grid.clear()
+            selectionBackground.clearActions()
+            if (replays.size > 0) {
+                for (i in 0 until replays.size) {
+                    val replay = replays[i]
+                    grid.add(GridButton(
+                        replay.name,
+                        28,
+                        0,
+                        i,
+                        staticY = 1000f - i * 35f,
+                        staticX = 0f,
+                    ) {
+                        if (replay.checkpoints.size > 1) {
+                            showCheckpointSelectionMenu(replay)
+                        } else {
+                            launchGame(replay, replay.checkpoints.last())
+                        }
+                    }.apply {
+                        activeAction = getActiveAction({
+                            Actions.forever(Actions.run {
+                                selectionBackground.clearActions()
+                                selectionBackground.addAction(
+                                    Actions.parallel(
+                                        hsvColor(
+                                            Color(i.toFloat() / replays.size, 0.5f, 1f, 0.5f),
+                                            0.5f,
+                                        ),
+                                        Actions.moveTo(
+                                            0f, y - grid.targetY + 3f,
+                                            1f,
+                                            Interpolation.pow5Out,
+                                        ),
+                                    )
                                 )
-                            )
+                            })
                         })
                     })
-                })
-                grid.add(
-                    GridButton(
-                        dateFormat.format(replay.date),
-                        28,
-                        0,
-                        i,
-                        staticY = 1000f - i * 35f,
-                        staticX = 300f,
-                        triggerSound = null,
+                    grid.add(
+                        GridButton(
+                            dateFormat.format(replay.date),
+                            28,
+                            0,
+                            i,
+                            staticY = 1000f - i * 35f,
+                            staticX = 300f,
+                            triggerSound = null,
+                        )
                     )
-                )
-                grid.add(
-                    GridButton(
-                        bundle["ui.replay.difficulty.${replay.difficulty!!.name.lowercase()}"],
-                        28,
-                        0,
-                        i,
-                        staticY = 1000f - i * 35f,
-                        staticX = 600f,
-                        triggerSound = null,
+                    grid.add(
+                        GridButton(
+                            bundle["ui.replay.difficulty.${replay.difficulty!!.name.lowercase()}"],
+                            28,
+                            0,
+                            i,
+                            staticY = 1000f - i * 35f,
+                            staticX = 600f,
+                            triggerSound = null,
+                        )
                     )
-                )
-                grid.add(
-                    GridButton(
-                        bundle["ui.replay.shottype.${replay.shottype!!}"],
-                        28,
-                        0,
-                        i,
-                        staticY = 1000f - i * 35f,
-                        staticX = 650f,
-                        triggerSound = null,
+                    grid.add(
+                        GridButton(
+                            bundle["ui.replay.shottype.${replay.shottype!!}"],
+                            28,
+                            0,
+                            i,
+                            staticY = 1000f - i * 35f,
+                            staticX = 650f,
+                            triggerSound = null,
+                        )
                     )
-                )
-                grid.add(
-                    GridButton(
-                        if (replay.stage == "clear") {
-                            bundle["ui.replay.clear"]
-                        } else {
-                            getDisplayName(replay, replay.stage)
-                        },
-                        28,
-                        0,
-                        i,
-                        staticY = 1000f - i * 35f,
-                        staticX = 800f,
-                        triggerSound = null,
+                    grid.add(
+                        GridButton(
+                            if (replay.stage == "clear") {
+                                bundle["ui.replay.clear"]
+                            } else {
+                                getDisplayName(replay, replay.stage)
+                            },
+                            28,
+                            0,
+                            i,
+                            staticY = 1000f - i * 35f,
+                            staticX = 800f,
+                            triggerSound = null,
+                        )
                     )
-                )
+                }
+                grid.selectFirst()
+                grid.finishAnimation()
+                selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY + 3f)
+                noEntry.alpha = 0f
+            } else {
+                selectionBackground.alpha = 0f
+                noEntry.alpha = 1f
             }
-            grid.selectFirst()
-            grid.finishAnimation()
-            selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
-            noEntry.alpha = 0f
-        } else {
-            selectionBackground.alpha = 0f
-            noEntry.alpha = 1f
         }
     }
 

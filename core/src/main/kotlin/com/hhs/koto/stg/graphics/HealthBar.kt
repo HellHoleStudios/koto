@@ -33,6 +33,7 @@ import com.hhs.koto.stg.Drawable
 import com.hhs.koto.stg.task.BasicSpell
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
+import ktx.collections.lastIndex
 import space.earlygrey.shapedrawer.ShapeDrawer
 
 class HealthBar(
@@ -134,7 +135,7 @@ class HealthBar(
     fun currentSegmentDepleted(): Boolean = currentHealth <= 0
 
     fun nextSegment() {
-        if (currentSegment < segments.size - 1) {
+        if (currentSegment < segments.lastIndex) {
             currentSegment++
             currentHealth = segments[currentSegment]
         } else {

@@ -28,10 +28,7 @@ package com.hhs.koto.demo.stage1
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.Cutin
 import com.hhs.koto.stg.pattern.wander
-import com.hhs.koto.stg.task.BasicSpell
-import com.hhs.koto.stg.task.CoroutineTask
-import com.hhs.koto.stg.task.Task
-import com.hhs.koto.stg.task.wait
+import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
 import ktx.collections.GdxArray
 

@@ -170,15 +170,6 @@ enum class VK {
             return false
         }
     },
-    FULL_SCREEN {
-        override val uiKeycode: Int = Input.Keys.F4
-        override val keycodes
-            get() = options.keyFullScreen
-
-        override fun checkController(controller: Controller): Boolean {
-            return false
-        }
-    },
     SPEED_UP {
         override val uiKeycode: Int = Input.Keys.CONTROL_RIGHT
         override val keycodes

@@ -32,7 +32,7 @@ import com.hhs.koto.util.cos
 import com.hhs.koto.util.len
 import com.hhs.koto.util.sin
 
-open class CartesianAcceleration(
+open class CartesianAccelerate(
     val bullet: Bullet,
     var deltaX: Float,
     var deltaY: Float,
@@ -46,14 +46,14 @@ open class CartesianAcceleration(
     }
 }
 
-fun <T : Bullet> T.cartesianAcceleration(deltaX: Float, deltaY: Float, duration: Int = Int.MAX_VALUE): T {
-    attachTask(CartesianAcceleration(this, deltaX, deltaY, duration))
+fun <T : Bullet> T.cartesianAccelerate(deltaX: Float, deltaY: Float, duration: Int = Int.MAX_VALUE): T {
+    attachTask(CartesianAccelerate(this, deltaX, deltaY, duration))
     return this
 }
 
-fun BulletGroup.cartesianAcceleration(deltaX: Float, deltaY: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
+fun BulletGroup.cartesianAccelerate(deltaX: Float, deltaY: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
     forEach {
-        it.attachTask(CartesianAcceleration(it, deltaX, deltaY, duration))
+        it.attachTask(CartesianAccelerate(it, deltaX, deltaY, duration))
     }
     return this
 }

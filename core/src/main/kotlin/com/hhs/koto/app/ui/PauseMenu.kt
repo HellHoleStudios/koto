@@ -44,7 +44,7 @@ import ktx.actors.then
 class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplexer) : Group() {
 
     // confirmationMenu must be registered before pauseMenu!!
-    private val confirmationMenu = ConfirmationMenu(staticX = 680f, staticY = 450f).register(st, input).apply {
+    val confirmationMenu = ConfirmationMenu(staticX = 680f, staticY = 450f).register(st, input).apply {
         alpha = 0f
         deactivate()
         noRunnable = {
@@ -53,7 +53,7 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
         }
         exitRunnable = noRunnable
     }
-    private val pauseMenu = Grid(staticX = 150f, staticY = 400f).register(st, input).apply {
+    val pauseMenu = Grid(staticX = 150f, staticY = 400f).register(st, input).apply {
         alpha = 0f
         deactivate()
         activeAction = {
@@ -70,7 +70,7 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
             )
         }
     }
-    private val saveMenu = SaveMenu(st, input, 240f, 400f) {
+    val saveMenu = SaveMenu(st, input, 240f, 400f) {
         pauseMenu.activate()
     }
 
@@ -102,8 +102,7 @@ class PauseMenu(val screen: GameScreen, val st: Stage, val input: InputMultiplex
             confirmationMenu.selectLast()
             input.removeProcessor(pauseMenu)
             confirmationMenu.yesRunnable = {
-                confirmationMenu.deactivate()
-                screen.retryGame()
+                if (screen.retryGame()) confirmationMenu.deactivate()
             }
         })
         pauseMenu.add(GridButton(bundle["ui.game.pauseMenu.quit"], 36, gridX = 0, gridY = 4) {

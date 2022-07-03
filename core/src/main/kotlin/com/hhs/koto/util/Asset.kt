@@ -46,10 +46,7 @@ import com.hhs.koto.stg.bullet.ShotSheet
 import com.hhs.koto.stg.bullet.ShotSheetLoader
 import ktx.assets.TextAssetLoader
 import ktx.assets.load
-import ktx.collections.GdxArray
-import ktx.collections.GdxMap
-import ktx.collections.GdxSet
-import ktx.collections.contains
+import ktx.collections.*
 import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.json.fromJson
 import kotlin.math.nextUp

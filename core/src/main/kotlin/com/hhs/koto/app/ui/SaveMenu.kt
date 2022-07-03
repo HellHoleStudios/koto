@@ -76,7 +76,7 @@ class SaveMenu(
     }
 
     var text = ""
-    private val keyboardGrid = Grid().register(this)
+    private val keyboardGrid = Grid().apply { this@SaveMenu += this }
     private val textLabel = Label("", getUILabelStyle(36)).apply {
         setBounds(10f, 100f, 500f, 50f)
         addActor(this)

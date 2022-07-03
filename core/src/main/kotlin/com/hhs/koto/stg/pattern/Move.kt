@@ -29,6 +29,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.hhs.koto.stg.Movable
 import com.hhs.koto.stg.task.self
 import com.hhs.koto.stg.task.waitForFinish
+import com.hhs.koto.util.completeInterpolation
 import com.hhs.koto.util.dist
 import com.hhs.koto.util.random
 import kotlinx.coroutines.CoroutineScope
@@ -43,8 +44,8 @@ class Move(
     val startX: Float = target.x
     val startY: Float = target.y
     override fun action() {
-        target.x = interpolation.apply(startX, targetX, t.toFloat() / duration)
-        target.y = interpolation.apply(startY, targetY, t.toFloat() / duration)
+        target.x = completeInterpolation(interpolation, startX, targetX, t, duration)
+        target.y = completeInterpolation(interpolation, startY, targetY, t, duration)
     }
 }
 

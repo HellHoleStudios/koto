@@ -86,22 +86,22 @@ class MagicCircle(
         batch.setBlending(BlendingMode.ADD)
 
         tmpVector.set(-size / 2f, -size / 2f, 0f)
-        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
+        camera.project(tmpVector, -worldW/2f, -worldH/2f, worldW, worldH)
         vertices[Batch.X1] = tmpVector.x + x
         vertices[Batch.Y1] = tmpVector.y + y
 
         tmpVector.set(-size / 2f, size / 2f, 0f)
-        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
+        camera.project(tmpVector, -worldW/2f, -worldH/2f, worldW, worldH)
         vertices[Batch.X2] = tmpVector.x + x
         vertices[Batch.Y2] = tmpVector.y + y
 
         tmpVector.set(size / 2f, size / 2f, 0f)
-        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
+        camera.project(tmpVector, -worldW/2f, -worldH/2f, worldW, worldH)
         vertices[Batch.X3] = tmpVector.x + x
         vertices[Batch.Y3] = tmpVector.y + y
 
         tmpVector.set(size / 2f, -size / 2f, 0f)
-        camera.project(tmpVector, -worldOriginX, -worldOriginY, worldW, worldH)
+        camera.project(tmpVector, -worldW/2f, -worldH/2f, worldW, worldH)
         vertices[Batch.X4] = tmpVector.x + x
         vertices[Batch.Y4] = tmpVector.y + y
 

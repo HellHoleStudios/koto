@@ -27,6 +27,7 @@ package com.hhs.koto.app
 
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Graphics
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.WindowedMean
@@ -56,7 +57,10 @@ import ktx.collections.GdxMap
 import ktx.collections.set
 import java.util.*
 
-class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
+class KotoApp(
+    val fileSystem: NativeFileSystem,
+    val graphicsSystem: NativeGraphicsSystem,
+) : ApplicationListener {
     lateinit var batch: SpriteBatch
     lateinit var normalBatch: SpriteBatch
     lateinit var viewport: Viewport
@@ -79,6 +83,42 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         bundle = I18NBundle.createBundle(Gdx.files.internal("locale/locale"), options.locale, "UTF-8")
         Config.UIFont = bundle["font.ui"]
         Config.UIFontSmall = bundle["font.uiSmall"]
+
+        when (options.displayMode) {
+            "fullscreen" -> {
+                val displayModes = GdxArray<Graphics.DisplayMode>()
+                Gdx.graphics.displayModes.forEach {
+                    for ((i, mode) in displayModes.withIndex()) {
+                        if (it.width == mode.width && it.height == mode.height) {
+                            if (it.refreshRate > mode.refreshRate) {
+                                displayModes[i] = it
+                            }
+                            return@forEach
+                        }
+                    }
+                    displayModes.add(it)
+                }
+
+                var selectedDisplayMode = 0
+                for ((i, displayMode) in displayModes.withIndex()) {
+                    if (displayMode.height <= options.windowHeight) {
+                        selectedDisplayMode = i
+                    }
+                }
+                Gdx.graphics.setFullscreenMode(displayModes[selectedDisplayMode])
+            }
+            "borderless" -> {
+                if (graphicsSystem.borderlessAvailable) {
+                    graphicsSystem.setBorderless()
+                } else {
+                    throw KotoRuntimeException("Borderless mode not available")
+                }
+            }
+            "windowed" -> {
+                Gdx.graphics.setUndecorated(false)
+                Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
+            }
+        }
 
         initAsset()
 
@@ -189,14 +229,6 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
         BGM.update()
         SE.update()
 
-        if (Config.allowFullScreen && VK.FULL_SCREEN.justPressed()) {
-            if (Gdx.graphics.isFullscreen) {
-                Gdx.graphics.setWindowedMode(options.windowWidth, options.windowHeight)
-            } else {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
-            }
-        }
-
         fpsCounter.addValue(Gdx.graphics.deltaTime)
 
         autoSaveCounter += Gdx.graphics.deltaTime
@@ -287,11 +319,20 @@ class KotoApp(val callbacks: KotoCallbacks) : ApplicationListener {
     }
 }
 
-interface KotoCallbacks {
-    fun loadOptions(): Options?
+interface NativeFileSystem {
+    fun loadOptions(): Options
     fun saveOptions(options: Options)
     fun loadGameData(): GameData?
     fun saveGameData(gameData: GameData)
     fun loadReplays(): GdxArray<Replay>
     fun saveReplay(replay: Replay)
+
+
+}
+
+interface NativeGraphicsSystem {
+    val borderlessAvailable: Boolean
+        get() = false
+
+    fun setBorderless(): Pair<Int, Int>
 }

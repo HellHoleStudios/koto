@@ -114,7 +114,6 @@ abstract class BasicBoss(
         }
 
         magicCircle.tick()
-        spellAttackCircle.tick()
         if (x >= -worldOriginX && x <= worldW - worldOriginX) {
             marker.setPosition((x + worldOriginX) / worldW * 864f + 36f, 0f)
             var tmpAlpha = 1f
@@ -142,7 +141,6 @@ abstract class BasicBoss(
 
     override fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float) {
         magicCircle.draw(batch, parentAlpha, x, y)
-        spellAttackCircle.draw(batch, parentAlpha, subFrameTime)
 
         val tmpColor = batch.color.cpy()
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha)
@@ -176,7 +174,7 @@ abstract class BasicBoss(
 
     override fun destroy() {
         // TODO boss death animation
-        // TODO play boss death SE "dossdead"
+        // TODO play boss death SE "bossdead"
     }
 
     override fun kill(): Boolean {

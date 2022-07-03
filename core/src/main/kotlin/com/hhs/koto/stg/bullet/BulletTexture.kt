@@ -45,7 +45,7 @@ class BulletTexture(atlas: TextureAtlas, name: String, frames: Array<Int>) {
     }
 
     fun getFrame(frame: Int): TextureRegion {
-        val tmp = frame % frameTime[frameTime.size - 1]
+        val tmp = frame % frameTime.last()
         for (i in 0 until frameTime.size) {
             if (tmp < frameTime[i]) {
                 return frames[i]

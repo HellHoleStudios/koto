@@ -34,10 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.hhs.koto.app.Config
-import com.hhs.koto.app.ui.ConstrainedGrid
-import com.hhs.koto.app.ui.GridButton
-import com.hhs.koto.app.ui.hsvColor
-import com.hhs.koto.app.ui.register
+import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.util.*
 import ktx.actors.alpha
@@ -119,7 +116,7 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
                                         0.5f,
                                     ),
                                     moveTo(
-                                        0f, y - grid.targetY - 2.5f,
+                                        0f, y - grid.targetY - 3f,
                                         1f,
                                         Interpolation.pow5Out,
                                     ),
@@ -144,7 +141,7 @@ class SpellSelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackgroun
             }
             grid.selectFirst()
             grid.finishAnimation()
-            selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 2.5f)
+            selectionBackground.setPosition(0f, (grid[0] as Actor).y - grid.targetY - 3f)
         } else {
             selectionBackground.alpha = 0f
         }

@@ -115,9 +115,9 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                 Actions.sequence(
                     Actions.show(),
                     Actions.color(Color.WHITE),
-                    Actions.moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
-                    Actions.moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
-                    Actions.moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
+                    moveTo(button.staticX + 2, button.staticY, 0.03f, Interpolation.sine),
+                    moveTo(button.staticX - 4, button.staticY, 0.06f, Interpolation.sine),
+                    moveTo(button.staticX, button.staticY, 0.03f, Interpolation.sine),
                 )
             )
             for (action in actions) {
@@ -247,7 +247,7 @@ class PlayerDataScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground
                                         Color(i.toFloat() / scores.size, 0.5f, 1f, 0.5f),
                                         0.5f,
                                     ),
-                                    Actions.moveTo(
+                                    moveTo(
                                         0f, y - grid.targetY - 2.5f,
                                         1f,
                                         Interpolation.pow5Out,

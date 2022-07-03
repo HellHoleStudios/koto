@@ -25,100 +25,21 @@
 
 package com.hhs.koto.app.lwjgl3
 
-import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle
-import com.badlogic.gdx.files.FileHandle
-import com.esotericsoftware.kryo.io.ByteBufferInput
-import com.esotericsoftware.kryo.io.ByteBufferOutput
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
-import com.hhs.koto.app.KotoCallbacks
 import com.hhs.koto.app.Options
-import com.hhs.koto.stg.GameData
-import com.hhs.koto.stg.Replay
-import com.hhs.koto.util.*
-import ktx.collections.GdxArray
-import ktx.json.fromJson
-import java.text.SimpleDateFormat
-import java.util.*
+import com.hhs.koto.util.getTrueFPSMultiplier
 
 object Lwjgl3Launcher {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val optionsFile = getFile("options.json")
-        val gameDataFile = getFile("game_data.json")
-        val options = readOptions(optionsFile)
-
-        val callbacks = object : KotoCallbacks {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")
-
-            override fun loadOptions(): Options = options
-
-            override fun saveOptions(options: Options) {
-                app.logger.info("Writing options to file...")
-                if (!optionsFile.exists()) {
-                    optionsFile.parent().mkdirs()
-                }
-                prettyPrintJson(options, optionsFile)
-            }
-
-            override fun loadGameData(): GameData? = if (gameDataFile.exists()) {
-                app.logger.info("Reading game data from file...")
-                json.fromJson(gameDataFile)
-            } else {
-                null
-            }
-
-            override fun saveGameData(gameData: GameData) {
-                app.logger.info("Writing game data to file...")
-                if (!gameDataFile.exists()) {
-                    gameDataFile.parent().mkdirs()
-                }
-                json.toJson(gameData, gameDataFile)
-            }
-
-            override fun loadReplays(): GdxArray<Replay> {
-                val result = GdxArray<Replay>()
-                val replayFolder = getFile("replay")
-                if (!replayFolder.exists()) replayFolder.mkdirs()
-                replayFolder.list().forEach {
-                    if (it.extension() == "ktr") {
-                        val input = ByteBufferInput(it.read())
-                        try {
-                            val replay = kryo.readObject(input, Replay::class.java)
-                            result.add(replay)
-                        } catch (e: Exception) {
-                            app.logger.error("Corrupt replay: $it", e)
-                        }
-                        input.close()
-                    }
-                }
-                return result
-            }
-
-            override fun saveReplay(replay: Replay) {
-                val replayFolder = getFile("replay")
-                var replayName = "${Config.replayPrefix}_${replay.name}_${dateFormat.format(replay.date)}"
-                replayName = sanitizeFilename(replayName)
-                if (replayFolder.child("$replayName.ktr").exists()) {
-                    for (i in 1..1000) {
-                        if (!replayFolder.child("${replayName}_$i.ktr").exists()) {
-                            replayName = "${replayName}_$i"
-                            break
-                        }
-                    }
-                }
-                val replayFile = replayFolder.child("$replayName.ktr")
-                val output = ByteBufferOutput(replayFile.write(false))
-                kryo.writeObject(output, replay)
-                output.close()
-            }
-        }
-
-        Lwjgl3Application(KotoApp(callbacks), getConfiguration(options))
+        val lwjgl3FileSystem = Lwjgl3FileSystem()
+        val lwjgl3GraphicsSystem = Lwjgl3GraphicsSystem()
+        val options = lwjgl3FileSystem.loadOptions()
+        Lwjgl3Application(KotoApp(lwjgl3FileSystem, lwjgl3GraphicsSystem), getConfiguration(options))
     }
 
     private fun getConfiguration(options: Options): Lwjgl3ApplicationConfiguration {
@@ -131,62 +52,11 @@ object Lwjgl3Launcher {
             "icon/koto-icon_48x.png",
             "icon/koto-icon_128x.png",
         )
-        if (options.fullScreen) {
-            configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
-        } else {
-            configuration.setWindowedMode(options.windowWidth, options.windowHeight)
+        if (options.displayMode != "fullscreen" && options.displayMode != "borderless") {
+            options.displayMode = "windowed"
         }
         configuration.useVsync(options.vsyncEnabled)
         configuration.setForegroundFPS((options.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
         return configuration
-    }
-
-    private fun getFile(fileName: String): FileHandle {
-        val osName = System.getProperty("os.name").lowercase()
-        return when {
-            "windows" in osName -> {
-                // Windows
-                Lwjgl3FileHandle("AppData/Roaming/koto/$fileName", Files.FileType.External)
-            }
-            "linux" in osName -> {
-                // Linux
-                Lwjgl3FileHandle(".koto/$fileName", Files.FileType.External)
-            }
-            "mac os x" in osName -> {
-                // MacOS
-                // TODO is this appropriate?
-                Lwjgl3FileHandle("Library/Application Support/koto/$fileName", Files.FileType.External)
-            }
-            else -> {
-                // what??
-                Lwjgl3FileHandle(".koto/$fileName", Files.FileType.External)
-            }
-        }
-    }
-
-    private fun readOptions(optionsFile: FileHandle): Options = if (optionsFile.exists()) {
-        println("[Main] Reading options from file...")
-        json.fromJson(optionsFile)
-    } else {
-        val options = Options()
-        ResolutionMode.findOptimal(Lwjgl3ApplicationConfiguration.getDisplayMode()).apply(options)
-        optionsFile.parent().mkdirs()
-        println("[Main] Creating default options file...")
-        prettyPrintJson(options, optionsFile)
-        options
-    }
-
-    private const val invalidFilenameChars = "\\/:*?\"<>|"
-
-    private fun sanitizeFilename(filename: String): String {
-        val result = StringBuilder()
-        filename.forEach {
-            if (it.code < 32 || invalidFilenameChars.contains(it)) {
-                result.append("_")
-            } else {
-                result.append(it)
-            }
-        }
-        return result.toString()
     }
 }

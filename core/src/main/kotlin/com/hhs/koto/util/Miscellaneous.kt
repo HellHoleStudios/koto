@@ -26,13 +26,19 @@
 package com.hhs.koto.util
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
 import com.esotericsoftware.kryo.Kryo
 import com.hhs.koto.app.Config
 import com.hhs.koto.app.KotoApp
 import com.hhs.koto.app.Options
+import com.hhs.koto.app.ui.Grid
 import com.hhs.koto.stg.*
 import ktx.collections.*
 import ktx.json.JsonSerializer
@@ -114,54 +120,44 @@ lateinit var options: Options
 lateinit var gameData: GameData
 lateinit var app: KotoApp
 
-fun safeDeltaTime() = clamp(Gdx.graphics.deltaTime, 0f, 0.1f)
-
 fun exitApp() {
     Gdx.app.exit()
 }
 
 fun matchLocale(locales: GdxArray<Locale>, locale: Locale): Locale {
-    if (locales.contains(locale,false)) return locale
+    if (locales.contains(locale, false)) return locale
 
     val locale2 = Locale(locale.language, locale.country)
-    if (locales.contains(locale2,false)) return locale2
+    if (locales.contains(locale2, false)) return locale2
 
     val locale3 = Locale(locale.language)
-    if (locales.contains(locale3,false)) return locale3
+    if (locales.contains(locale3, false)) return locale3
 
     return Locale.ROOT
 }
 
 fun loadOptions() {
-    val tmpOptions = app.callbacks.loadOptions()
-    if (tmpOptions != null) {
-        options = tmpOptions
-    } else {
-        options = Options()
-        ResolutionMode.findOptimal(Gdx.graphics.displayMode).apply(options)
-        app.logger.info("Creating default options file...")
-        saveOptions()
-    }
+    options = app.fileSystem.loadOptions()
 }
 
 fun saveOptions() {
-    app.callbacks.saveOptions(options)
+    app.fileSystem.saveOptions(options)
 }
 
 fun loadReplays(): GdxArray<Replay> {
-    return app.callbacks.loadReplays()
+    return app.fileSystem.loadReplays()
 }
 
 fun saveReplay(replay: Replay) {
     val tmpReplay = replay.copy()
     tmpReplay.encodeKeys()
-    app.callbacks.saveReplay(tmpReplay)
+    app.fileSystem.saveReplay(tmpReplay)
 }
 
 private var gameDataHash: Int = 0
 
 fun loadGameData() {
-    val tmpGameData = app.callbacks.loadGameData()
+    val tmpGameData = app.fileSystem.loadGameData()
     if (tmpGameData != null) {
         gameData = tmpGameData
     } else {
@@ -218,7 +214,7 @@ fun loadGameData() {
 
 fun saveGameData() {
     if (gameData.hashCode() == gameDataHash) return
-    app.callbacks.saveGameData(gameData)
+    app.fileSystem.saveGameData(gameData)
     gameDataHash = gameData.hashCode()
 }
 
@@ -241,12 +237,6 @@ fun <K, V> GdxMap<K, V>.safeKeys() = ObjectMap.Keys(this)
 
 fun <K, V> GdxMap<K, V>.safeValues() = ObjectMap.Values(this)
 
-fun getTrueFPSMultiplier(fpsMultiplier: Int): Float {
-    if (fpsMultiplier == 0) return 1f
-    if (fpsMultiplier < 0) return 1f / -fpsMultiplier
-    return fpsMultiplier.toFloat()
-}
-
 data class SplitDecimal(val integer: String, val fraction: String)
 
 fun splitDecimal(value: Float, precision: Int = 2, includeDecimalPoint: Boolean = true): SplitDecimal {
@@ -255,4 +245,8 @@ fun splitDecimal(value: Float, precision: Int = 2, includeDecimalPoint: Boolean 
         text.substring(0, text.length - precision - if (includeDecimalPoint) 0 else 1),
         text.substring(text.length - precision),
     )
+}
+
+fun InputMultiplexer.plusAssign(processor: InputProcessor) {
+    this.addProcessor(processor)
 }

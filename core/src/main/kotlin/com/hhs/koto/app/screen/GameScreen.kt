@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.crashinvaders.vfx.VfxManager
 import com.crashinvaders.vfx.effects.GaussianBlurEffect
 import com.hhs.koto.app.Config
@@ -43,18 +44,17 @@ import com.hhs.koto.stg.GameState
 import com.hhs.koto.util.*
 import ktx.actors.alpha
 import ktx.actors.plusAssign
-import ktx.actors.then
 
 class GameScreen : BasicScreen(null, null) {
 
-    val vfxManager = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
+    val blurVfxManager = VfxManager(Pixmap.Format.RGBA8888, options.frameBufferWidth, options.frameBufferHeight)
     val blurEffect = GaussianBlurEffect()
     val gameFrame = VfxOutput().apply {
-        setBounds(72f, 36f, 864f, 1008f)
+        setBounds(72f, 36f, Config.frameWidth, Config.frameHeight)
         st += this
     }
     val blurredGameFrame = VfxOutput().apply {
-        setBounds(72f, 36f, 864f, 1008f)
+        setBounds(72f, 36f, Config.frameWidth, Config.frameHeight)
         st += this
     }
     var gameStatus: GameStatus? = null
@@ -64,48 +64,103 @@ class GameScreen : BasicScreen(null, null) {
         gameBackground.setBounds(0f, 0f, Config.screenWidth, Config.screenHeight)
         st += gameBackground
 
-        vfxManager.addEffect(blurEffect)
+        blurVfxManager.addEffect(blurEffect)
         blurEffect.amount = 10f
     }
 
     private val pauseMenu = PauseMenu(this, st, input)
 
-    private var paused: Boolean = false
-    private var passCounter: Int = 0
+    private var target: ScreenTarget = ScreenTarget.RUNNING
+
+    private enum class ScreenTarget {
+        RUNNING, PAUSE, RETRY
+    }
+
+    private var pauseCounter: Int = 0
+    private val pauseTime: Int = 30
     private var deltaTimeCounter: Float = 0f
+    private var oldOverlayY: Float = 0f
+    private var oldOverlayAlpha: Float = 1f
 
     override fun render(delta: Float) {
         if (state != ScreenState.SHOWN) {
             super.render(delta)
             return
         }
-        if (!paused && game.state != GameState.RUNNING) {
+
+        if (pauseCounter == 0 && game.state != GameState.RUNNING) {
             pauseGame()
         }
-        if (paused) {
+        if (target == ScreenTarget.PAUSE || pauseCounter != 0) {
             deltaTimeCounter += delta
-            if (game.state == GameState.PAUSED &&
-                passCounter >= 30 && VK.PAUSE.justPressed() && !blurredGameFrame.hasActions()
+        } else {
+            deltaTimeCounter = 0f
+        }
+
+        if (target == ScreenTarget.PAUSE) {
+            if (pauseCounter >= pauseTime &&
+                VK.PAUSE.justPressed() && !blurredGameFrame.hasActions() && !pauseMenu.saveMenu.active
             ) {
                 resumeGame()
             } else if (SystemFlag.gamemode!!.isPractice() && VK.RESTART.justPressed()) {
-                SE.play("ok")
-                retryGame()
-            } else if (deltaTimeCounter >= 1 / 60f) {
-                if (passCounter < 30) {
-                    if (passCounter == 0) {
-                        blurredGameFrame.alpha = 1f
-                        vfxManager.useAsInput(game.postVfx.resultBuffer.texture)
-                    } else {
-                        vfxManager.useAsInput(vfxManager.resultBuffer.texture)
+                if (retryGame()) SE.play("ok")
+            } else {
+                while (deltaTimeCounter > 0f) {
+                    deltaTimeCounter = (deltaTimeCounter - 1 / 60f).coerceAtLeast(0f)
+                    if (pauseCounter < pauseTime) {
+                        if (pauseCounter == 0) {
+                            blurVfxManager.useAsInput(game.postVfx.resultBuffer.texture)
+                        } else {
+                            blurVfxManager.useAsInput(blurVfxManager.resultBuffer.texture)
+                        }
+                        blurVfxManager.applyEffects()
+                        game.overlay.root.y = oldOverlayY - Interpolation.pow5Out.apply(
+                            0f, 300f,
+                            pauseCounter.toFloat() / pauseTime,
+                        )
+                        game.overlay.alpha = Interpolation.pow5Out.apply(
+                            oldOverlayAlpha, 0f,
+                            pauseCounter.toFloat() / pauseTime,
+                        )
+                        pauseCounter++
                     }
-                    vfxManager.applyEffects()
-                    passCounter++
                 }
-                deltaTimeCounter = 0f
             }
-
         } else {
+            while (deltaTimeCounter > 0f) {
+                deltaTimeCounter = (deltaTimeCounter - 1 / 60f).coerceAtLeast(0f)
+                if (pauseCounter > 0) {
+                    pauseCounter--
+                    if (target == ScreenTarget.RUNNING) {
+                        if (pauseCounter == 0) {
+                            game.overlay.root.y = oldOverlayY
+                            game.overlay.alpha = oldOverlayAlpha
+                        } else {
+                            game.overlay.root.y = oldOverlayY - Interpolation.pow5In.apply(
+                                0f, 300f,
+                                pauseCounter.toFloat() / pauseTime,
+                            )
+                            game.overlay.alpha = Interpolation.pow5In.apply(
+                                oldOverlayAlpha, 0f,
+                                pauseCounter.toFloat() / pauseTime,
+                            )
+                        }
+                    }
+                }
+            }
+            if (pauseCounter == 0) {
+                if (target == ScreenTarget.RETRY) {
+                    game.dispose()
+                    reset()
+                } else {
+                    game.state = GameState.RUNNING
+                    SE.resume()
+                    BGM.resume()
+                }
+            }
+        }
+
+        if (pauseCounter == 0) {
             if (SystemFlag.replay == null) {
                 if (SystemFlag.gamemode!!.isPractice()) {
                     gameData.practiceTime += delta
@@ -116,9 +171,7 @@ class GameScreen : BasicScreen(null, null) {
             game.update()
         }
         super.render(delta)
-        if (!paused) {
-            game.overlay.draw()
-        }
+        game.overlay.draw()
     }
 
     override fun fadeIn(oldScreen: KotoScreen?, duration: Float) {
@@ -128,40 +181,46 @@ class GameScreen : BasicScreen(null, null) {
         }
     }
 
-    fun retryGame() {
+    fun retryGame(): Boolean {
+        if (pauseCounter != pauseTime) return false
+
+        target = ScreenTarget.RETRY
+
+        blurredGameFrame.clearActions()
+        blurredGameFrame.addAction(fadeOut(0.5f, Interpolation.sine))
         pauseMenu.deactivate()
-        blurredGameFrame.addAction(
-            sequence(
-                fadeOut(0.5f, Interpolation.sine),
-                Actions.run {
-                    game.dispose()
-                    reset()
-                },
-            )
-        )
         gameFrame.alpha = 0f
+
+        return true
     }
 
-    fun resumeGame() {
-        blurredGameFrame.addAction(
-            fadeOut(0.5f, Interpolation.sine) then Actions.run {
-                paused = false
-                game.state = GameState.RUNNING
-                SE.resume()
-                BGM.resume()
-            }
-        )
+    fun resumeGame(): Boolean {
+        if (pauseCounter != pauseTime) return false
+
+        target = ScreenTarget.RUNNING
+
+        blurredGameFrame.clearActions()
+        blurredGameFrame.addAction(fadeOut(0.5f, Interpolation.sine))
         pauseMenu.deactivate()
+
+        return true
     }
 
-    fun pauseGame() {
+    fun pauseGame(): Boolean {
+        if (pauseCounter != 0) return false
+
+        target = ScreenTarget.PAUSE
+
         SE.pause()
         SE.play("pause")
         BGM.pause()
-        paused = true
-        passCounter = 0
-        deltaTimeCounter = 0f
         pauseMenu.activate()
+        blurredGameFrame.clearActions()
+        blurredGameFrame.alpha = 1f
+        oldOverlayY = game.overlay.root.y
+        oldOverlayAlpha = game.overlay.alpha
+
+        return true
     }
 
     fun reset() {
@@ -177,10 +236,14 @@ class GameScreen : BasicScreen(null, null) {
         gameFrame.vfxManager = game.postVfx
         gameFrame.alpha = 1f
 
-        blurredGameFrame.vfxManager = vfxManager
+        blurredGameFrame.vfxManager = blurVfxManager
         blurredGameFrame.alpha = 0f
 
-        paused = false
+        pauseMenu.clearActions()
+        pauseMenu.alpha = 0f
+
+        target = ScreenTarget.RUNNING
+        pauseCounter = 0
     }
 
     fun quit() {
@@ -201,7 +264,7 @@ class GameScreen : BasicScreen(null, null) {
 
     override fun dispose() {
         super.dispose()
-        vfxManager.dispose()
+        blurVfxManager.dispose()
         blurEffect.dispose()
     }
 }

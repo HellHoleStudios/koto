@@ -359,14 +359,8 @@ open class Grid(
     operator fun get(i: Int) = getChild(i) as GridComponent
 }
 
-fun <T : Grid> T.register(st: Stage? = null, input: InputMultiplexer? = null): T {
-    st?.addActor(this)
-    input?.addProcessor(this)
-    return this
-}
-
-fun <T : Grid> T.register(group: Group? = null, input: InputMultiplexer? = null): T {
-    group?.addActor(this)
+fun <T : Grid> T.register(st: Stage, input: InputMultiplexer? = null): T {
+    st.addActor(this)
     input?.addProcessor(this)
     return this
 }

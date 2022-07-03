@@ -23,44 +23,29 @@
  *
  */
 
-package com.hhs.koto.stg.pattern
+package com.hhs.koto.app.lwjgl3
 
-import com.hhs.koto.stg.bullet.Bullet
-import com.hhs.koto.stg.bullet.BulletGroup
-import com.hhs.koto.util.cos
-import com.hhs.koto.util.sin
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics
+import com.hhs.koto.app.NativeGraphicsSystem
+import org.lwjgl.glfw.GLFW
 
-class PolarAcceleration(
-    bullet: Bullet,
-    accSpeed: Float,
-    accAngle: Float,
-    duration: Int = Int.MAX_VALUE,
-) : CartesianAcceleration(bullet, cos(accAngle) * accSpeed, sin(accAngle) * accSpeed, duration) {
-    var accAngle: Float = accAngle
-        set(value) {
-            field = value
-            calculateDelta()
-        }
-    var accSpeed: Float = accSpeed
-        set(value) {
-            field = value
-            calculateDelta()
+class Lwjgl3GraphicsSystem : NativeGraphicsSystem {
+    override val borderlessAvailable: Boolean
+        get() = true
+
+    override fun setBorderless(): Pair<Int, Int> {
+        // prevents incorrect desktop size caused by fullscreen
+        if (Gdx.graphics.isFullscreen) {
+            Gdx.graphics.setWindowedMode(100, 100)
         }
 
-    fun calculateDelta() {
-        deltaX = cos(accAngle) * accSpeed
-        deltaY = sin(accAngle) * accSpeed
+        val mode = Gdx.graphics.displayMode
+        val window = (Gdx.graphics as Lwjgl3Graphics).window
+        val monitor = Gdx.graphics.monitor
+        Gdx.graphics.setWindowedMode(mode.width, mode.height)
+        Gdx.graphics.setUndecorated(true)
+        GLFW.glfwSetWindowPos(window.windowHandle, monitor.virtualX, monitor.virtualY)
+        return mode.width to mode.height
     }
-}
-
-fun <T : Bullet> T.polarAcceleration(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): T {
-    attachTask(PolarAcceleration(this, accSpeed, accAngle, duration))
-    return this
-}
-
-fun BulletGroup.polarAcceleration(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
-    forEach {
-        it.attachTask(PolarAcceleration(it, accSpeed, accAngle, duration))
-    }
-    return this
 }

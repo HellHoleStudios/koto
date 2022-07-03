@@ -43,7 +43,7 @@ import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
-import com.hhs.koto.app.ui.VfxOutputDrawable
+import com.hhs.koto.stg.graphics.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
 import com.hhs.koto.stg.graphics.*
@@ -57,25 +57,25 @@ import java.util.*
 class KotoGame : Disposable {
     var state: GameState = GameState.RUNNING
 
-    val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
-    val vfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
-    val postVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameWidth, options.frameHeight)
+    val backgroundVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameBufferWidth, options.frameBufferHeight)
+    val vfx = VfxManager(Pixmap.Format.RGBA8888, options.frameBufferWidth, options.frameBufferHeight)
+    val postVfx = VfxManager(Pixmap.Format.RGBA8888, options.frameBufferWidth, options.frameBufferHeight)
 
     val tasks = ParallelTask()
     val backgroundViewport =
         StretchViewport(worldW, worldH, OrthographicCamera(worldW, worldH).apply {
-            position.x = worldW / 2f - worldOriginX
-            position.y = worldH / 2f - worldOriginY
+            position.x = worldW / 2 - worldOriginX
+            position.y = worldH / 2 - worldOriginY
         })
     val stageViewport =
         StretchViewport(worldW, worldH, OrthographicCamera(worldW, worldH).apply {
-            position.x = worldW / 2f - worldOriginX
-            position.y = worldH / 2f - worldOriginY
+            position.x = worldW / 2 - worldOriginX
+            position.y = worldH / 2 - worldOriginY
         })
     val hudViewport =
         StretchViewport(worldW, worldH, OrthographicCamera(worldW, worldH).apply {
-            position.x = worldW / 2f - worldOriginX
-            position.y = worldH / 2f - worldOriginY
+            position.x = worldW / 2 - worldOriginX
+            position.y = worldH / 2 - worldOriginY
         })
 
     val batch = SpriteBatch(
@@ -238,11 +238,6 @@ class KotoGame : Disposable {
     }
 
     fun tick() {
-        // ensures game initialized properly before its state can be saved
-        if (VK.PAUSE.pressed()) {
-            state = GameState.PAUSED
-            return
-        }
         if (!inReplay) {
             replay.logKeys()
         } else {
@@ -269,6 +264,11 @@ class KotoGame : Disposable {
         hud.tick()
         tasks.tick()
         frame++
+
+        if (VK.PAUSE.pressed()) {
+            state = GameState.PAUSED
+            return
+        }
     }
 
     fun end() {

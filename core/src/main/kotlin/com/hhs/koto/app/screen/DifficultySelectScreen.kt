@@ -36,6 +36,7 @@ import com.hhs.koto.app.ui.*
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.util.*
+import ktx.collections.lastIndex
 
 class DifficultySelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBackground)) {
     val grid = ScrollingGrid(
@@ -108,7 +109,7 @@ class DifficultySelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBack
                 generateButton(
                     GameBuilder.usedDifficulties[i],
                     0,
-                    -(GameBuilder.usedDifficulties.size - 1 - i),
+                    -(GameBuilder.usedDifficulties.lastIndex - i),
                 )
             )
         }
@@ -128,6 +129,8 @@ class DifficultySelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBack
         grid[4].enabled = SystemFlag.gamemode!!.hasExtraDifficulty()
         (grid[4] as Actor).isVisible = SystemFlag.gamemode!!.hasExtraDifficulty()
 
+        grid.update()
+
         if (grid[1].enabled) {
             grid.select(grid[1], true)
         } else {
@@ -135,8 +138,10 @@ class DifficultySelectScreen : BasicScreen(Config.uiBgm, getRegion(Config.uiBack
         }
         if (SystemFlag.difficulty != null) {
             val buttonIndex = SystemFlag.difficulty!!.ordinal
-            if (buttonIndex < grid.grid.size && grid[buttonIndex].enabled) grid.select(grid[buttonIndex])
+            if (buttonIndex < grid.grid.size && grid[buttonIndex].enabled) grid.select(grid[buttonIndex], true)
         }
+
+        grid.finishAnimation()
     }
 
     override fun onQuit() {

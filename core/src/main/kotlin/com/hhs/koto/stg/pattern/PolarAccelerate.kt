@@ -25,33 +25,42 @@
 
 package com.hhs.koto.stg.pattern
 
-import com.badlogic.gdx.math.Interpolation
-import com.hhs.koto.stg.task.self
-import com.hhs.koto.stg.task.waitForFinish
-import com.hhs.koto.util.completeInterpolation
-import kotlinx.coroutines.CoroutineScope
+import com.hhs.koto.stg.bullet.Bullet
+import com.hhs.koto.stg.bullet.BulletGroup
+import com.hhs.koto.util.cos
+import com.hhs.koto.util.sin
 
-class Interpolate(
-    val start: Float,
-    val end: Float,
-    duration: Int,
-    val interpolation: Interpolation = Interpolation.linear,
-    val action: (Float) -> Unit,
-) : TemporalPattern(duration) {
-    override fun action() {
-        action(completeInterpolation(interpolation, start, end, t, duration))
+class PolarAccelerate(
+    bullet: Bullet,
+    accSpeed: Float,
+    accAngle: Float,
+    duration: Int = Int.MAX_VALUE,
+) : CartesianAccelerate(bullet, cos(accAngle) * accSpeed, sin(accAngle) * accSpeed, duration) {
+    var accAngle: Float = accAngle
+        set(value) {
+            field = value
+            calculateDelta()
+        }
+    var accSpeed: Float = accSpeed
+        set(value) {
+            field = value
+            calculateDelta()
+        }
+
+    fun calculateDelta() {
+        deltaX = cos(accAngle) * accSpeed
+        deltaY = sin(accAngle) * accSpeed
     }
 }
 
-suspend fun CoroutineScope.interpolate(
-    start: Float,
-    end: Float,
-    duration: Int,
-    interpolation: Interpolation = Interpolation.linear,
-    action: (Float) -> Unit,
-) {
-    val task = Interpolate(start, end, duration, interpolation, action)
-    self.attachTask(task)
-    task.waitForFinish()
+fun <T : Bullet> T.polarAccelerate(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): T {
+    attachTask(PolarAccelerate(this, accSpeed, accAngle, duration))
+    return this
 }
 
+fun BulletGroup.polarAccelerate(accSpeed: Float, accAngle: Float, duration: Int = Int.MAX_VALUE): BulletGroup {
+    forEach {
+        it.attachTask(PolarAccelerate(it, accSpeed, accAngle, duration))
+    }
+    return this
+}

@@ -31,6 +31,7 @@ import com.hhs.koto.util.KotoRuntimeException
 import com.hhs.koto.util.StateMachine
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.collections.lastIndex
 import ktx.collections.set
 
 open class StarGraphStateMachineTexture(
@@ -106,7 +107,7 @@ open class StarGraphStateMachineTexture(
                 for (i in 0 until edgeRegions[branchName].size) {
                     stateMachine.states[edgeRegions[branchName][i]] = {
                         when (it) {
-                            branchName -> if (i == edgeRegions[branchName].size - 1) {
+                            branchName -> if (i == edgeRegions[branchName].lastIndex) {
                                 Pair(edgeRegions[branchName][i], branch.edgeTransitionTime)
                             } else {
                                 Pair(edgeRegions[branchName][i + 1], branch.edgeTransitionTime)
@@ -134,7 +135,7 @@ open class StarGraphStateMachineTexture(
                 for (i in 0 until edgeRegions[branchName].size) {
                     stateMachine.states[edgeRegions[branchName][i]] = {
                         when (it) {
-                            branchName -> if (i == edgeRegions[branchName].size - 1) {
+                            branchName -> if (i == edgeRegions[branchName].lastIndex) {
                                 Pair(vertexRegions[branchName][0], branch.edgeTransitionTime)
                             } else {
                                 Pair(edgeRegions[branchName][i + 1], branch.edgeTransitionTime)

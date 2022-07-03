@@ -41,8 +41,8 @@ class GridButton(
     override val gridY: Int = 0,
     override var staticX: Float = 0f,
     override var staticY: Float = 0f,
-    width: Float = 512f,
-    height: Float = 512f,
+    width: Float? = null,
+    height: Float? = null,
     override var activeAction: (() -> Action)? = null,
     override var inactiveAction: (() -> Action)? = null,
     activeStyle: LabelStyle,
@@ -70,7 +70,9 @@ class GridButton(
     override var parent: Grid? = null
 
     init {
-        setBounds(staticX, staticY, width, height)
+        setPosition(staticX, staticY)
+        if (width != null) setWidth(width)
+        if (height != null) setHeight(height)
     }
 
     constructor(
@@ -80,8 +82,8 @@ class GridButton(
         gridY: Int = 0,
         staticX: Float = 0f,
         staticY: Float = 0f,
-        width: Float = 512f,
-        height: Float = fontSize.toFloat(),
+        width: Float? = null,
+        height: Float? = null,
         triggerSound: String? = "ok",
         ignoreParent: Boolean = false,
         enabled: Boolean = true,
