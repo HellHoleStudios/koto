@@ -154,7 +154,7 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
             game.replay.stage = name
         }
         game.resetPlayer()
-        game.replay.createCheckpoint(game, name)
+        if (SystemFlag.replay == null) game.replay.createCheckpoint(game, name)
         val boss = bossBuilder()
         game.addBoss(boss)
         game.bossNameDisplay.show(boss, 1)
@@ -163,7 +163,6 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         this@BasicSpell.build().attachAndWait()
         game.bossNameDisplay.hide()
         boss.healthBar.visible = false
-        wait(60)
         game.end()
         if (SystemFlag.replay == null) {
             gameData.currentElement.spell[name].highScore =

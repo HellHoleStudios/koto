@@ -50,7 +50,7 @@ class TitleScreen : BasicScreen(Config.uiBgm, getRegion("bg/title.png")) {
         titles += this
     }
     private val subtitle = Label(
-        "by Hell Hole Studios 2021",
+        "by Hell Hole Studios 2021-2022",
         LabelStyle(getFont(40, bundle["font.subtitle"], borderColor = null), BLACK_HSV),
     ).apply {
         setPosition(100f, 820f)

@@ -54,7 +54,7 @@ abstract class BasicStage : StageBuilder {
                     game.replay.stage = name
                 }
                 game.resetPlayer()
-                game.replay.createCheckpoint(game, name)
+                if (SystemFlag.replay == null) game.replay.createCheckpoint(game, name)
             }
         },
         taskBuilder { stage() },
