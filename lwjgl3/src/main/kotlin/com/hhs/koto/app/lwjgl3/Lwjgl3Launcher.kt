@@ -55,6 +55,7 @@ object Lwjgl3Launcher {
         if (options.displayMode != "fullscreen" && options.displayMode != "borderless") {
             options.displayMode = "windowed"
         }
+        configuration.setWindowedMode(options.windowWidth,options.windowHeight) // will be overwritten after launch
         configuration.useVsync(options.vsyncEnabled)
         configuration.setForegroundFPS((options.fps * getTrueFPSMultiplier(options.fpsMultiplier)).toInt())
         return configuration
