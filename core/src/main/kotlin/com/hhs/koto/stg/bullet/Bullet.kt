@@ -36,6 +36,14 @@ interface Bullet : Entity, Drawable {
     var angle: Float
     var rotation: Float
     var tint: Color
+
+    /**
+     * Whether this bullet is deleted upon bombing or hitting the player
+     *
+     * Take this into consideration when designing bombs!
+     */
+    var destroyable: Boolean
+
     fun onGraze()
     fun attachTask(task: Task): Bullet
     fun task(index: Int, block: suspend CoroutineScope.() -> Unit): Bullet

@@ -34,6 +34,8 @@ import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.CircleCollision
 import com.hhs.koto.stg.Collision
 import com.hhs.koto.stg.PlayerState
+import com.hhs.koto.stg.particle.DeathParticle
+import com.hhs.koto.stg.particle.Explosion
 import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.EmptyTask
@@ -184,6 +186,7 @@ abstract class BasicBoss(
         bossDistortionEffect.dispose()
         marker.remove()
         game.backgroundVfx.removeEffectRegistered(bossDistortionEffect)
+
         return true
     }
 

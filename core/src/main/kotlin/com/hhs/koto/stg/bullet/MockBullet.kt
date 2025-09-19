@@ -42,6 +42,7 @@ class MockBullet(
     override var y: Float,
     override var speed: Float = 0f,
     override var angle: Float = 0f,
+    override var destroyable: Boolean = true
 ) : Bullet {
     var attachedTasks: GdxArray<Task>? = null
     override var rotation: Float = 0f

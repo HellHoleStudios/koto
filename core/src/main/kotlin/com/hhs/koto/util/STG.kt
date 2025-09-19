@@ -33,6 +33,8 @@ import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.bullet.*
+import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.wait
 
 lateinit var game: KotoGame
 
@@ -72,6 +74,28 @@ val playerX: Float
 val playerY: Float
     get() = game.player.y
 
+fun staticLaser(
+    data: BulletData,
+    x: Float,
+    y: Float,
+    length: Float,
+    width: Float,
+    angle: Float,
+    speed: Float = 0f,
+    color: Color = Color.WHITE,
+    delay: Int = 60,
+    headHit: Float = 0.6f,
+    widthHit: Float = 0.7f,
+    style: Int = 0,
+): StaticLaser {
+    val b = StaticLaser(x, y, length, width, delay, data, headHit, widthHit, style)
+    b.tint = color
+    b.angle = angle
+    b.speed = speed
+    game.addBullet(b)
+    return b
+}
+
 fun create(
     data: BulletData,
     x: Float,
@@ -97,6 +121,61 @@ fun create(
     delay: Int = 8,
     setRotation: Boolean = true,
 ): BasicBullet = create(defaultShotSheet[name], x, y, speed, angle, color, delay, setRotation)
+
+/**
+ * Create an All-in-one(AIO) laser
+ */
+suspend fun laser(
+    env: CoroutineTask,
+    width: Float,
+    length: Float,
+    hitPercent: Float = 0.8f,
+    verticalMargin: Float = 10f,
+    maxSample: Int = 512,
+    sampleDelay: Int = 1,
+    color: Color = RED_HSV,
+    /**
+     * After how many frames will this node start to be considered stable
+     *
+     * A stable node can be removed if it is moribund
+     */
+    protectionFrame: Int = 20,
+    /**
+     * The task to create the laser. The given parameter is laser index. (Should not be used anyway)
+     */
+    creationTask: (Int) -> BasicBullet
+) {
+    env.attachTask(CoroutineTask {
+        var last: BasicBullet? = null
+        var first: BasicBullet? = null
+        var totalDistance = 0f
+        for (it in 0 until maxSample) {
+            val bul = creationTask(it).apply {
+                this.laser = true
+                this.maxLength = length
+                this.width = width
+                this.hitRatio = hitPercent
+                this.prev = last
+                this.tint = color
+                this.verticalMargin = verticalMargin
+                this.protectionFrame = protectionFrame
+                last?.next = this
+            }
+            if (last == null) {
+                first = bul
+            }
+
+            game.addBullet(bul)
+            wait(sampleDelay)
+
+//            println(first!!.getLaserLength())
+            if (first!!.getLaserLength() >= length) {
+                break
+            }
+            last = bul
+        }
+    })
+}
 
 fun <T : Bullet> T.setSpeed(speed: Float): T {
     this.speed = speed

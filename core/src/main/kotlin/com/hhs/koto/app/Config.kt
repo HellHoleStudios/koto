@@ -47,7 +47,7 @@ object Config {
     const val genMipMaps: Boolean = true
     const val windowTitle: String = "Koto"
     const val replayPrefix: String = "koto"
-    const val musicCount: Int = 3
+    const val musicCount: Int = 4
     const val uiBgm: Int = 0
     const val uiBackground: String = "bg/generic.png"
     const val screenWidth: Float = 1440f

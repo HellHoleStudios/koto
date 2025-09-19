@@ -27,6 +27,8 @@ package com.hhs.koto.demo.stage1
 
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.Cutin
+import com.hhs.koto.stg.pattern.cast
+import com.hhs.koto.stg.pattern.cast2
 import com.hhs.koto.stg.pattern.wander
 import com.hhs.koto.stg.task.*
 import com.hhs.koto.util.*
@@ -41,22 +43,39 @@ object Stage1Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
     override val bonus: Long
         get() = defaultBonus(1)
 
+    override fun terminate(): Task {
+        return object : Task {
+            override var alive = true
+            override fun tick() {
+                game.shaking = 0
+                alive = false
+            }
+        }
+    }
+
     override fun spell(): Task = CoroutineTask {
         val boss = getBoss()
+
+        //Create spellcard cutin effect
         game.stage.addDrawable(Cutin(getRegion("portrait/aya/attack.png")))
         repeat(20) {
-            wander(boss, 120)
+            wander(boss, 120) //wander for 120 frames. Touhou bosses love to do this.
+            cast(boss.x, boss.y) //cast effect
+            wait(90)
+
+            cast2(boss.x, boss.y) //another cast effect
             wait(30)
-            boss.usingAction = true
+
+            boss.usingAction = true //use action animation instead of idle
             repeat(3) {
-                ring(
-                    "DS_BALL_M_A_BLUE",
+                ring( //creating patterns is simple!
+                    "DS_BALL_M_A_BLUE", //asset name
                     boss.x,
                     boss.y,
-                    50f,
-                    difficultySelect(8, 12, 16, 20),
-                    startAngle = random(0f, 360f),
-                    speed = 5f,
+                    50f, //radius
+                    difficultySelect(8, 12, 16, 20), //number of bullets, easily scaled by difficulty
+                    startAngle = random(0f, 360f), //angle
+                    speed = 5f, //speed
                 )
                 wait(20)
             }
@@ -65,5 +84,5 @@ object Stage1Spell1 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
         }
     }
 
-    override fun buildSpellPractice(): Task = buildSpellPractice { AyaBoss() }
+    override fun buildSpellPractice(): Task = buildSpellPractice(3) { AyaBoss() }
 }

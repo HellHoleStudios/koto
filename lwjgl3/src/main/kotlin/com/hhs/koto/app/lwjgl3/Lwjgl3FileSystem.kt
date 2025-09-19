@@ -47,6 +47,14 @@ import java.text.SimpleDateFormat
 
 
 class Lwjgl3FileSystem : NativeFileSystem {
+
+    companion object{
+        /**
+         * **MUST CHANGE THIS BEFORE PRODUCTION RELEASE!**
+         */
+        const val INSTANCE_NAME = "koto"
+    }
+
     private val optionsFile = getFile("options.json")
     private val gameDataFile = getFile("game_data.json")
     private val options = readOptions(optionsFile)
@@ -119,19 +127,19 @@ class Lwjgl3FileSystem : NativeFileSystem {
         return when {
             "windows" in osName -> {
                 // Windows
-                Lwjgl3FileHandle("AppData/Roaming/koto/$fileName", Files.FileType.External)
+                Lwjgl3FileHandle("AppData/Roaming/$INSTANCE_NAME/$fileName", Files.FileType.External)
             }
             "linux" in osName -> {
                 // Linux
-                Lwjgl3FileHandle(".local/share/.koto/$fileName", Files.FileType.External)
+                Lwjgl3FileHandle(".local/share/.$INSTANCE_NAME/$fileName", Files.FileType.External)
             }
             "mac os x" in osName -> {
                 // MacOS
-                Lwjgl3FileHandle("Library/Application Support/koto/$fileName", Files.FileType.External)
+                Lwjgl3FileHandle("Library/Application Support/$INSTANCE_NAME/$fileName", Files.FileType.External)
             }
             else -> {
                 // what??
-                Lwjgl3FileHandle(".koto/$fileName", Files.FileType.External)
+                Lwjgl3FileHandle(".$INSTANCE_NAME/$fileName", Files.FileType.External)
             }
         }
     }

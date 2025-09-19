@@ -46,6 +46,12 @@ open class ReimuPlayer : BasicPlayer(
     protected val shotSheet: ShotSheet = A["player/th10_player.shot"]
 
     override fun tick() {
+        if(frame==1){
+            game.stage.addDrawable(ReimuBall(this,-40f,-40f,-20f,20f))
+            game.stage.addDrawable(ReimuBall(this,-20f,-50f,-10f,25f))
+            game.stage.addDrawable(ReimuBall(this,20f,-50f,10f,25f))
+            game.stage.addDrawable(ReimuBall(this,40f,-40f,20f,20f))
+        }
         if (playerState != PlayerState.RESPAWNING && !game.inDialog && game.pressed(VK.SHOT)) {
             if (frame % 4 == 0) {
                 SE.play("shoot")

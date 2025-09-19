@@ -31,6 +31,7 @@ import com.hhs.koto.app.Config.worldW
 import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.graphics.BGMNameDisplay
 import com.hhs.koto.stg.graphics.TileBackground
+import com.hhs.koto.stg.pattern.cast3
 import com.hhs.koto.stg.pattern.interpolate
 import com.hhs.koto.stg.pattern.move
 import com.hhs.koto.stg.task.BasicStage
@@ -99,14 +100,17 @@ object Stage1 : BasicStage() {
         boss.creationTask().attachAndWait()
 
         Stage1Dialog1.build().attachAndWait()
-
-        boss.healthBar.addSpell(Nonspell1, Stage1Spell1)
+//
+        boss.healthBar.startWithSpell(Nonspell1,Stage1Spell1)
         Nonspell1.build().attachAndWait()
         Stage1Spell1.build().attachAndWait()
 
         boss.healthBar.visible = false
         game.bossNameDisplay.hide()
-        move(boss, -300f, 300f, 120)
+//        move(boss, -300f, 300f, 120)
+        game.slowMode=22
+        cast3(boss.x,boss.y)
+        game.slowMode=0
         boss.kill()
 
         defaultBonus(1)

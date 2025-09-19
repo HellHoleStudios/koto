@@ -149,12 +149,16 @@ abstract class BasicSpell<T : Boss>(protected val bossClass: Class<T>) : SpellBu
         }
     }
 
-    fun <T : BasicBoss> buildSpellPractice(bossBuilder: () -> T): Task = CoroutineTask {
+    fun <T : BasicBoss> buildSpellPractice(musicID: Int, bossBuilder: () -> T): Task = CoroutineTask {
         if (SystemFlag.replay == null) {
             game.replay.stage = name
         }
         game.resetPlayer()
         if (SystemFlag.replay == null) game.replay.createCheckpoint(game, name)
+
+        BGM.play(musicID, true)
+        game.hud.addDrawable(BGMNameDisplay(musicID))
+
         val boss = bossBuilder()
         game.addBoss(boss)
         game.bossNameDisplay.show(boss, 1)

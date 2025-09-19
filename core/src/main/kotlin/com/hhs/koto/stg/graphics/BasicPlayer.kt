@@ -168,7 +168,9 @@ open class BasicPlayer(
                 game.bullets.forEach {
                     if (collide(it.collision, it.x, it.y, hitCollision, x, y)) {
                         hit = true
-                        it.kill()
+                        if(it.destroyable) {
+                            it.kill()
+                        }
                     }
                 }
                 if (hit) {
@@ -253,26 +255,9 @@ open class BasicPlayer(
             }
             color = Color.WHITE
         }
+
+        game.stage.addDrawable(BasicPlayerBomb(playerX, playerY))
         task {
-            task {
-                val collision = CircleCollision(10f)
-                repeat(50) {
-                    collision.radius += 10f
-                    game.bullets.forEach {
-                        if (collide(collision, x, y, it.collision, it.x, it.y)) it.destroy()
-                    }
-                    game.enemies.forEach {
-                        if (it is BasicEnemy && collide(collision, x, y, it.bulletCollision, it.x, it.y)) it.destroy()
-                    }
-                    game.bosses.forEach {
-                        it.onHit(16f, true)
-                    }
-                    yield()
-                }
-            }
-            game.items.forEach {
-                it.onCollect(x, y, true)
-            }
             wait(290)
             playerState = PlayerState.NORMAL
             invincible = false

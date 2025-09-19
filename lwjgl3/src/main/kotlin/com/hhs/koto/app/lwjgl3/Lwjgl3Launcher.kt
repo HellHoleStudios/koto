@@ -35,6 +35,9 @@ import com.hhs.koto.util.getTrueFPSMultiplier
 object Lwjgl3Launcher {
 
     @JvmStatic
+    lateinit var lwjgl: Lwjgl3Application
+
+    @JvmStatic
     fun main(args: Array<String>) {
         val lwjgl3FileSystem = Lwjgl3FileSystem()
         val lwjgl3GraphicsSystem = Lwjgl3GraphicsSystem()

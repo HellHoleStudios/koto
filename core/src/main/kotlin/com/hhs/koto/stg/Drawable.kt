@@ -35,5 +35,10 @@ interface Drawable : Task, Movable {
     val blending: BlendingMode
         get() = BlendingMode.ALPHA
 
+    /**
+     * Will this object be recycled when calling [recycle()]
+     */
+    val recyclable: Boolean
+        get() = false
     fun draw(batch: Batch, parentAlpha: Float, subFrameTime: Float)
 }

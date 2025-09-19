@@ -43,6 +43,7 @@ import com.hhs.koto.app.Config.worldH
 import com.hhs.koto.app.Config.worldOriginX
 import com.hhs.koto.app.Config.worldOriginY
 import com.hhs.koto.app.Config.worldW
+import com.hhs.koto.stg.bullet.BasicBullet
 import com.hhs.koto.stg.graphics.VfxOutputDrawable
 import com.hhs.koto.stg.bullet.Bullet
 import com.hhs.koto.stg.bullet.PlayerBullet
@@ -52,6 +53,7 @@ import com.hhs.koto.stg.task.ParallelTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.util.*
 import ktx.app.clearScreen
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.util.*
 
 class KotoGame : Disposable {
@@ -87,6 +89,12 @@ class KotoGame : Disposable {
     ).apply {
         setBlending(BlendingMode.ALPHA)
     }
+
+    /**
+     * Drawer to draw lasers
+     */
+    var drawer = ShapeDrawer(batch, getRegion("ui/blank.png"))
+
     val normalBatch = SpriteBatch()
     val background = DrawableLayer<Drawable>()
     val stage = DrawableLayer<Drawable>().apply {
@@ -164,12 +172,12 @@ class KotoGame : Disposable {
     }
     var creditCount: Int = 0
     val initialLife: FragmentCounter = when (SystemFlag.gamemode!!) {
-        GameMode.SPELL_PRACTICE -> FragmentCounter(3, 0, 0, 8)
+        GameMode.SPELL_PRACTICE -> FragmentCounter(3, 100, 0, 8)
         GameMode.STAGE_PRACTICE -> FragmentCounter(3, 8, 0, 8)
         else -> FragmentCounter(3, 2, 0, 8)
     }
     val initialBomb: FragmentCounter = when (SystemFlag.gamemode!!) {
-        GameMode.SPELL_PRACTICE -> FragmentCounter(5, 0, 0, 8)
+        GameMode.SPELL_PRACTICE -> FragmentCounter(5, 100, 0, 8)
         else -> FragmentCounter(5, 3, 0, 8)
     }
     val life: FragmentCounter = initialLife.copy()
@@ -183,6 +191,21 @@ class KotoGame : Disposable {
     val replay: Replay
     val inReplay: Boolean
 
+    /**
+     * Enable slow mode??
+     * Force limiting FPS to around the number you set
+     *
+     * Set to 0 to disable it
+     */
+    var slowMode:Int = 0
+
+    /**
+     * Enable shaking??
+     * Will shake game screen with different strength
+     *
+     * Set to 0 to disable it
+     */
+    var shaking:Int = 0
     init {
         logger.info("Game instance created.")
         if (SystemFlag.replay != null) {
@@ -259,10 +282,53 @@ class KotoGame : Disposable {
                 )
             )
         }
+
+        //laser deactivate
+        game.bullets.forEach {
+            if(it is BasicBullet){
+                it.laserActivated=false
+            }
+        }
+        game.bullets.forEach {
+            if (it is BasicBullet && it.isLaserHead()) { //tick laser activate
+                var last: BasicBullet? = null
+                val bullet = it as BasicBullet
+                var now = bullet
+                var accumulatedDistance = 0f
+                val len = bullet.getLaserLength()
+                while (true) {
+                    if (last != null) {
+                        accumulatedDistance += dist(last.x, last.y, now.x, now.y)
+                        if (accumulatedDistance in bullet.verticalMargin..len - bullet.verticalMargin) {
+                            now.laserActivated = true
+                        }
+                    }
+                    last = now
+                    if (now.getNextNode() == null) {
+                        break
+                    } else {
+                        now = now.getNextNode()!!
+                    }
+                }
+            }
+        }
+        game.bullets.forEach {
+//            println("Trying to destroy $it with ${(it as BasicBullet).isLaserHead()} ${(it as BasicBullet).getLaserLength()} ${(it as BasicBullet).protectionFrame}")
+            if(it is BasicBullet && it.isLaserHead() && it.isMoribund() && it.protectionFrame==0){
+//                println("Destroying $it")
+                it.destroy()
+            }
+        }
+
         background.tick()
         stage.tick()
         hud.tick()
         tasks.tick()
+
+        if(slowMode!=0){
+            Thread.sleep(1000L/slowMode)
+        }
+
         frame++
 
         if (VK.PAUSE.pressed()) {

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 Hell Hole Studios
+ * Copyright (c) 2021 Hell Hole Studios
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,32 +23,57 @@
  *
  */
 
-package com.hhs.koto.stg.bullet
+package com.hhs.koto.stg.particle
 
 import com.badlogic.gdx.graphics.Color
-import com.hhs.koto.stg.graphics.Enemy
-import com.hhs.koto.util.game
-import kotlin.math.roundToLong
+import com.hhs.koto.stg.graphics.SpriteDrawable
+import com.hhs.koto.util.*
+import ktx.math.vec2
 
-open class PlayerBullet(
-    x: Float,
-    y: Float,
-    var damage: Float,
-    var penetration: Int = 1,
-    speed: Float = 0f,
-    angle: Float = 0f,
-    data: BulletData,
-    scaleX: Float = 1f,
-    scaleY: Float = 1f,
-    rotation: Float = 0f,
-    color: Color = Color.WHITE,
-    delay: Int = 0,
-) : BasicBullet(x, y, speed, angle, data, scaleX, scaleY, rotation = rotation, tint = color,delay = delay) {
-    open fun hit(enemy: Enemy) {
-        enemy.onHit(damage)
-        game.score += (damage * 10).roundToLong()
-        penetration--
-        if (penetration <= 0) {
+/**
+ * Particle displayed during boss cast2 (aka. explode?)
+ */
+class CastParticle2(x: Float, y: Float, val tx: Float, val ty: Float) : SpriteDrawable(
+    getRegion("particle/cast_particle.png"),
+    x,
+    y,
+    0f,
+    atan2(x, y, tx, ty),
+    1f,
+    1f,
+    64f,
+    64f,
+    0f,
+    color = Color(1f,1f,1f,0.9f)
+//    color = arrayOf(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN, Color.WHITE, Color.BLACK)[random(6)].cpy().apply { a=0.4f },
+) {
+
+    val iv = vec2(tx - x, ty - y)
+    var omega = 0f
+    val sx=x
+    val sy=y
+    val sz = random(0.5f, 1.5f)
+
+    init {
+        sprite.setScale(0f)
+    }
+
+    override fun tick() {
+        super.tick()
+
+        sprite.rotation += omega
+        omega += 0.1f
+
+        x=smoothstep(sx,tx,t/60f)
+        y=smoothstep(sy,ty,t/60f)
+
+        sprite.setScale(smoothstep(0f,sz,t/60f))
+
+        if(t>60){
+            sprite.alpha = max(sprite.alpha - 0.1f, 0f)
+        }
+
+        if(t>70){
             kill()
         }
     }

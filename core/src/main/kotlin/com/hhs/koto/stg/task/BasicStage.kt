@@ -59,6 +59,7 @@ abstract class BasicStage : StageBuilder {
         },
         taskBuilder { stage() },
         taskBuilder {
+            game.stage.recycle()
             RunnableTask {
                 if (SystemFlag.replay == null) {
                     if (isFinalStage && game.creditCount == 0) {

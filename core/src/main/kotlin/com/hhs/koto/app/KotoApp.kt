@@ -45,6 +45,8 @@ import com.hhs.koto.demo.stage1.Stage1
 import com.hhs.koto.demo.stage1.Stage1Spell1
 import com.hhs.koto.demo.stage2.Stage2
 import com.hhs.koto.demo.stage2.Stage2Spell1
+import com.hhs.koto.demo.stage2.Stage2Spell2
+import com.hhs.koto.demo.stage2.Stage2Spell3
 import com.hhs.koto.demo.stage_extra.StageExtra
 import com.hhs.koto.stg.GameBuilder
 import com.hhs.koto.stg.GameData
@@ -170,10 +172,13 @@ class KotoApp(
         SE.register("spellcard", "snd/se_cat00.wav")
         SE.register("bonus", "snd/se_bonus.wav")
         SE.register("extend", "snd/se_extend.wav")
+        SE.register("charge","snd/se_ch02.wav")
+        SE.register("charge2","snd/se_kira00.wav")
 
         BGM.register(LoopingMusic(bundle["music.0.file"], 2f, 58f))
         BGM.register(LoopingMusic(bundle["music.1.file"], 0f, 12f))
         BGM.register(LoopingMusic(bundle["music.2.file"]))
+        BGM.register(LoopingMusic(bundle["music.3.file"]))
         defaultShotSheet = A[Config.defaultShotSheet]
 
         // TODO variants
@@ -200,6 +205,8 @@ class KotoApp(
 
         GameBuilder.spells.add(Stage1Spell1)
         GameBuilder.spells.add(Stage2Spell1)
+        GameBuilder.spells.add(Stage2Spell2)
+        GameBuilder.spells.add(Stage2Spell3)
 
         loadGameData()
 

@@ -25,14 +25,18 @@
 
 package com.hhs.koto.demo.stage1
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.hhs.koto.demo.portrait.AyaPortrait
 import com.hhs.koto.demo.portrait.MarisaPlayerPortrait
 import com.hhs.koto.demo.portrait.ReimuPlayerPortrait
 import com.hhs.koto.stg.dialog.Dialog
+import com.hhs.koto.stg.graphics.BGMNameDisplay
 import com.hhs.koto.stg.task.CoroutineTask
 import com.hhs.koto.stg.task.Task
 import com.hhs.koto.stg.task.TaskBuilder
+import com.hhs.koto.util.BGM
 import com.hhs.koto.util.bundle
+import com.hhs.koto.util.game
 
 object Stage1Dialog1 : TaskBuilder {
     override fun build(): Task = CoroutineTask {
@@ -65,6 +69,16 @@ object Stage1Dialog1 : TaskBuilder {
 
         dialog.setVariant("marisaPlayer", "laugh")
         dialog.setTextAndWait("marisaPlayer", bundle["game.dialog.stage1.dialog7"])
+
+        dialog.setTextAndWait("aya", bundle["game.dialog.stage1.dialog8"])
+
+        BGM.play(3, true)
+        game.hud.addDrawable(BGMNameDisplay(3).apply {
+            x=0f
+        })
+
+        dialog.setTextAndWait("aya", bundle["game.dialog.stage1.dialog9"])
+        dialog.setTextAndWait("aya", bundle["game.dialog.stage1.dialog10"])
 
         dialog.end()
     }
