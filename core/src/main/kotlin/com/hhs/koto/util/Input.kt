@@ -51,6 +51,8 @@ class InputBlocker : InputProcessor {
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int) = isBlocking
 
+    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int) = isBlocking
+
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int) = isBlocking
 
     override fun mouseMoved(screenX: Int, screenY: Int) = isBlocking

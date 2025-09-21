@@ -122,6 +122,8 @@ open class Grid(
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int) = false
 
+    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int)=false
+
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int) = false
 
     override fun mouseMoved(screenX: Int, screenY: Int) = false
