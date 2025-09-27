@@ -8,36 +8,6 @@ import com.hhs.koto.stg.particle.GrazeParticle
 import com.hhs.koto.util.*
 
 /**
- * Remember the last collision state to avoid creating new collision shapes every frame
- */
-class RememberedCollisionState {
-    var angle: Float = 0f
-    var length: Float = 0f
-    var laserWidth: Float = 0f
-    var headHit: Float = 0f
-    var widthHit: Float = 0f
-    var collisionShape: CollisionShape? = null
-
-    fun update(angle: Float, length: Float, laserWidth: Float, headHit: Float, widthHit: Float) {
-        this.angle = angle
-        this.length = length
-        this.laserWidth = laserWidth
-        this.headHit = headHit
-        this.widthHit = widthHit
-        this.collisionShape = SLCollision(angle, length, laserWidth, headHit, widthHit)
-    }
-
-    fun isChanged(angle: Float, length: Float, laserWidth: Float, headHit: Float, widthHit: Float): Boolean {
-        return this.angle != angle
-                || this.length != length
-                || this.laserWidth != laserWidth
-                || this.headHit != headHit
-                || this.widthHit != widthHit
-                || this.collisionShape == null
-    }
-}
-
-/**
  * Static Laser: laser that has only 1 rectangle collision
  *
  * @author XGN
@@ -141,4 +111,36 @@ class StaticLaser(
 //            game.drawer.polygon(Polygon(floatArrayOf(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, v4.x, v4.y)))
 //        }
     }
+
+
+    /**
+     * Remember the last collision state to avoid creating new collision shapes every frame
+     */
+    class RememberedCollisionState {
+        var angle: Float = 0f
+        var length: Float = 0f
+        var laserWidth: Float = 0f
+        var headHit: Float = 0f
+        var widthHit: Float = 0f
+        var collisionShape: CollisionShape? = null
+
+        fun update(angle: Float, length: Float, laserWidth: Float, headHit: Float, widthHit: Float) {
+            this.angle = angle
+            this.length = length
+            this.laserWidth = laserWidth
+            this.headHit = headHit
+            this.widthHit = widthHit
+            this.collisionShape = SLCollision(angle, length, laserWidth, headHit, widthHit)
+        }
+
+        fun isChanged(angle: Float, length: Float, laserWidth: Float, headHit: Float, widthHit: Float): Boolean {
+            return this.angle != angle
+                    || this.length != length
+                    || this.laserWidth != laserWidth
+                    || this.headHit != headHit
+                    || this.widthHit != widthHit
+                    || this.collisionShape == null
+        }
+    }
+
 }

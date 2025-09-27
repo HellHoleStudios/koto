@@ -23,7 +23,7 @@ class BasicPlayerBomb(
     }
 
     var radius = 10f
-    var maxradius = 250f
+    var maxradius = 50f
     var alpha = 0.5f
     val collision = CircleCollision(radius)
 

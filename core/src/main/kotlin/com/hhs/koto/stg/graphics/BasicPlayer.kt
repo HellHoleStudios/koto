@@ -235,6 +235,9 @@ open class BasicPlayer(
         texture.update(dx)
     }
 
+    /**
+     * Called when user successfully bombs. You do not need to check whether player has bombs or not.
+     */
     open fun onBomb(isDeathBomb: Boolean) {
         game.event.trigger("player.bomb", isDeathBomb)
         if (SystemFlag.replay == null) {

@@ -34,7 +34,11 @@ import com.hhs.koto.stg.GameDifficulty
 import com.hhs.koto.stg.KotoGame
 import com.hhs.koto.stg.bullet.*
 import com.hhs.koto.stg.task.CoroutineTask
+import com.hhs.koto.stg.task.bullet
 import com.hhs.koto.stg.task.wait
+import kotlinx.coroutines.yield
+import javax.security.auth.Destroyable
+import kotlin.text.Typography.bullet
 
 lateinit var game: KotoGame
 
@@ -74,6 +78,9 @@ val playerX: Float
 val playerY: Float
     get() = game.player.y
 
+/**
+ * Create a static straight laser using the given bullet data
+ */
 fun staticLaser(
     data: BulletData,
     x: Float,
@@ -121,6 +128,51 @@ fun create(
     delay: Int = 8,
     setRotation: Boolean = true,
 ): BasicBullet = create(defaultShotSheet[name], x, y, speed, angle, color, delay, setRotation)
+
+/**
+ * New Curvy Laser. (WIP)
+ */
+fun newLaser(
+    data: BulletData,
+    length: Float,
+    x: Float,
+    y: Float,
+    sample: Int = 100,
+    speed: Float = 0f,
+    angle: Float = 0f,
+    destroyable: Boolean = true,
+    color: Color = Color.WHITE,
+    delay: Int = 8,
+): BasicBullet {
+
+    val polyline = Polyline(length)
+
+    val head = BasicBullet(x, y, speed, angle, data, destroyable = false, delay = delay, autoRotate = true)
+    head.task {
+        while (true) {
+            polyline.add(Polyline.NodeSnapshot(bullet.x, bullet.y, bullet.rotation))
+            yield()
+        }
+    }
+
+    game.addBullet(head)
+
+    for (i in 0 until sample) {
+        val bul = BasicBullet(x, y, 0f, 0f, data, destroyable = destroyable, delay = delay, autoRotate = true).task {
+            while (true) {
+                val snap = polyline.get(length / sample * (i+1))
+                bullet.x = snap.x
+                bullet.y = snap.y
+                bullet.angle = snap.rot
+                yield()
+            }
+        }
+
+        game.addBullet(bul)
+    }
+
+    return head
+}
 
 /**
  * Create an All-in-one(AIO) laser

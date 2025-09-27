@@ -41,7 +41,7 @@ object Stage2Spell3 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
 
     override val health: Float
-        get() = 10000f
+        get() = 300f
     override val maxTime: Int = 30000
     override val bonus: Long
         get() = defaultBonus(2)
@@ -52,10 +52,18 @@ object Stage2Spell3 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
         var base = 0f
         while (true) {
 //
-            staticLaser(defaultShotSheet["DS_BALL_M_A_BLUE"],boss.x,boss.y,350f,18f,base,style=1).task{
-                var cnt=0f
-                while(true){
-                    bullet.angle+=sin(cnt)*1.5f
+            staticLaser(
+                defaultShotSheet["DS_BALL_M_A_BLUE"],
+                boss.x,
+                boss.y,
+                350f,
+                18f,
+                base,
+                style = StaticLaser.DANMAKUFU_STYLE
+            ).task {
+                var cnt = 0f
+                while (true) {
+                    bullet.angle += sin(cnt) * 1.5f
                     yield()
                     cnt++
                 }

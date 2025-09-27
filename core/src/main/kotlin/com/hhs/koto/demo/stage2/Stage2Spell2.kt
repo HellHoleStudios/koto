@@ -40,7 +40,7 @@ object Stage2Spell2 : BasicSpell<AyaBoss>(AyaBoss::class.java) {
     override val availableDifficulties: GdxArray<GameDifficulty> = GameDifficulty.REGULAR_AVAILABLE
 
     override val health: Float
-        get() = 10000f
+        get() = 300f
     override val maxTime: Int = 30000
     override val bonus: Long
         get() = defaultBonus(2)

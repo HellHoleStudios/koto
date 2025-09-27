@@ -57,6 +57,12 @@ open class BasicBullet(
     override var rotation: Float = 0f,
     override var tint: Color = NO_TINT_HSV,
     open val delay: Int = 8,
+    /**
+     * If set, rotation will be set to angle automatically.
+     *
+     * **WARNING: If this is set, setting rotation will have no effect!**
+     */
+    val autoRotate: Boolean = false,
 ) : Bullet, Bounded {
     companion object {
         val tmpColor = Color()
@@ -262,6 +268,10 @@ open class BasicBullet(
         }
         protectionFrame--
         protectionFrame=protectionFrame.coerceAtLeast(0)
+
+        if(autoRotate){
+            rotation=angle
+        }
 
         t++
         if (attachedTasks != null) {

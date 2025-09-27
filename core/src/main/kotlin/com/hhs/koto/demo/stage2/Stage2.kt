@@ -63,10 +63,11 @@ object Stage2 : BasicStage() {
 
         boss.creationTask().attachAndWait()
 
-        boss.healthBar.startWithSpell(Stage2Spell1,Stage2Spell2,Stage2Spell3)
+        boss.healthBar.startWithSpell(Stage2Spell1,Stage2Spell2,Stage2Spell3, Stage2Spell4)
         Stage2Spell1.build().attachAndWait()
         Stage2Spell2.build().attachAndWait()
         Stage2Spell3.build().attachAndWait()
+        Stage2Spell4.build().attachAndWait()
 
         boss.healthBar.visible = false
         game.bossNameDisplay.hide()
